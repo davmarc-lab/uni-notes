@@ -1,0 +1,192 @@
+{
+  "main": {
+    "id": "7a560188ad221d99",
+    "type": "split",
+    "children": [
+      {
+        "id": "280e111f68429173",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "337cd856f9ef73ae",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "New tab"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "22d92c2a95fd8984",
+    "type": "split",
+    "children": [
+      {
+        "id": "804b41e70e0a69e3",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "5ed2c77192ee0898",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "89bd8b5916601186",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "4ed94be0c247f71d",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "e316ad768f70e9c6",
+    "type": "split",
+    "children": [
+      {
+        "id": "f58257c4c5fd6405",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a5fa70ae56af62ad",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Metodi Numerici/Metodi Numerici.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Metodi Numerici"
+            }
+          },
+          {
+            "id": "ae264ec6001a0af7",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Metodi Numerici/Metodi Numerici.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Metodi Numerici"
+            }
+          },
+          {
+            "id": "05dacc3f2c6a5d41",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "4864aa86d5fc9f81",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Metodi Numerici/Metodi Numerici.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Metodi Numerici"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "obsidian-importer:Open Importer": false
+    }
+  },
+  "active": "337cd856f9ef73ae",
+  "lastOpenFiles": [
+    "Metodi Numerici.md",
+    "Metodi Numerici.md~",
+    "assets/image.png",
+    "assets/Pasted image 20250327143626.png",
+    "preamble.sty~",
+    "Metodi Numerici/Metodi Numerici.md~",
+    "assets/Pasted image 20250327120141.png",
+    "assets/Pasted image 20250327120059.png",
+    "assets/Pasted image 20250327115156.png",
+    "assets/Pasted image 20250327115137.png",
+    "assets/Pasted image 20250327114523.png",
+    "Untitled.md",
+    "preamble.sty",
+    "Metodi Numerici/praemble.sty",
+    "praemble.sty",
+    "assets/Pasted image 20250326194406.png",
+    "assets/Pasted image 20250326194414 2.png",
+    "assets/Pasted image 20250326194414 1.png",
+    "assets",
+    "Metodi Numerici",
+    "Welcome.md"
+  ]
+}

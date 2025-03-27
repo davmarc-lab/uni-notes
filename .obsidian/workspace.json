@@ -1,0 +1,220 @@
+{
+  "main": {
+    "id": "4d48cd6fa11ec125",
+    "type": "split",
+    "children": [
+      {
+        "id": "0db5ef0db90a92f8",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "14686ca7f9575276",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "SecondoAnno/MetodiNumerici/MetodiNumerici.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "MetodiNumerici"
+            }
+          }
+        ]
+      },
+      {
+        "id": "53498f8e562b2c69",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a3ce2feac91a0758",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Index.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Index"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "f87169a01f1c8b6c",
+    "type": "split",
+    "children": [
+      {
+        "id": "84917fb893ace136",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "0180e7898fdfe5b7",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "96a9de5b45c2efc1",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "b9c0b0ff66cc4f5a",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "3eaddd9fb375e229",
+    "type": "split",
+    "children": [
+      {
+        "id": "d054d89a66c6ff38",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a8d5089f09585d8c",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "a074b6ed84312742",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "13f15371f4b76fbe",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "ae398cd5da9c83d5",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "obsidian-importer:Open Importer": false
+    }
+  },
+  "active": "14686ca7f9575276",
+  "lastOpenFiles": [
+    "SecondoAnno/SecondoAnno.md",
+    "SecondoAnno/MetodiNumerici/assets/image.png",
+    "SecondoAnno/MetodiNumerici/assets/image 9.png",
+    "SecondoAnno/MetodiNumerici/assets/image 8.png",
+    "SecondoAnno/MetodiNumerici/assets/image 7.png",
+    "SecondoAnno/MetodiNumerici/assets/image 6.png",
+    "SecondoAnno/MetodiNumerici/assets/image 5.png",
+    "SecondoAnno/MetodiNumerici/assets/image 4.png",
+    "SecondoAnno/MetodiNumerici/assets/image 34.png",
+    "SecondoAnno/MetodiNumerici/assets/image 33.png",
+    "SecondoAnno/MetodiNumerici/assets/image 32.png",
+    "SecondoAnno/MetodiNumerici/preamble.sty",
+    "SecondoAnno/MetodiNumerici/assets",
+    "SecondoAnno/MetodiNumerici/MetodiNumerici.md",
+    "SecondoAnno/MetodiNumerici",
+    "Index.md",
+    "TerzoAnno/ComputerGraphics/ComputerGraphics.md",
+    "TerzoAnno/TerzoAnno.md",
+    "create a link.md",
+    "SecondoAnno/AAAA/Metodi Numerici.md",
+    "TerzoAnno/ComputerGraphics",
+    "preamble.sty",
+    "SecondoAnno/AAAA",
+    "SecondoAnno/preamble.sty",
+    "SecondoAnno/AAAA/assets",
+    "TerzoAnno",
+    "SecondoAnno",
+    "Welcome.md"
+  ]
+}
