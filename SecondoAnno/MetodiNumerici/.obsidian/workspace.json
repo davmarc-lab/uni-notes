@@ -11,10 +11,14 @@
             "id": "337cd856f9ef73ae",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "MetodiNumerici.md",
+                "mode": "preview",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "MetodiNumerici"
             }
           }
         ]
@@ -167,6 +171,7 @@
   },
   "active": "337cd856f9ef73ae",
   "lastOpenFiles": [
+    "MetodiNumerici.md",
     "Metodi Numerici.md",
     "Metodi Numerici.md~",
     "assets/image.png",

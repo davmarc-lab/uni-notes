@@ -9,7 +9,6 @@ l.pellegrini@unibo.it
 marcella.lucciardi2@unibo.it
 
 <!--toc:start-->
-    - [Email](#email)
 - [Introduzione](#introduzione)
   - [Problema Numerico](#problema-numerico)
     - [Algoritmo di un problema numerico](#algoritmo-di-un-problema-numerico)
@@ -108,14 +107,14 @@ marcella.lucciardi2@unibo.it
 > Sono gli errori introdotti nella rappresentazione dei numeri (dati in ingresso o risultati di operazioni) sul calcolatore
 ## Problema Numerico
 Per **problema numerico** si intende una **descrizione chiara e non ambigua di una relazione funzionale tra i dati (input) del problema e i risultati desiderati (output)**.
-![[assets/image.png]]
+![[SecondoAnno/MetodiNumerici/assets/image.png]]
 La relazione funzionale (che denotiamo con $f$) può essere espressa in forma esplicita o implicita, ossia possiamo avere le seguenti rappresentazioni semantiche di un problema numerico:
 - $y = f(x)$
 - $f(x, y) = 0)$
 dove, a seconda del tipo di problema, $x$ e $y$ potranno essere numeri reali, vettori ecc.
 ### Algoritmo di un problema numerico
 È una **descrizione completa e ben definita di operazioni**, che permette di trasformare (in un numero finito di passi) ogni vettore di dati $x$ nel corrispondente output $y*$ non necessariamente uguale a $y$. Ad ogni problema numerico possiamo associare più algoritmi, ognuno dei quali in genere fornirà risultati con precisione diversa.
-![[assets/image 1.png]]
+![[SecondoAnno/MetodiNumerici/assets/image 1.png]]
 ### Classificazione dei problemi numerici
 - **Problema diretto**, $x$ e $f$ sono dati, $y$ è incognito
     - calcolo del valore di una funzione assegnata in corrispondenza di un valore fissato della variabile indipendente
@@ -134,7 +133,7 @@ Il problema del denoising consiste nel **rimuovere il rumore indesiderato da** $
 $$u_0(x, y) = u(x, y) + \epsilon(x, y)$$
 La relazione tra l’immagine originale e quella rumorosa (processo di formazione dell’immagine osservata) è data da:
 Siano $u(x, y): \Bbb R^2 \rightarrow \Bbb R$, $u_0(x, y):\Bbb R^2 \rightarrow \Bbb R$ due funzioni continue che rappresentano rispettivamente l’**immagine ideale**, priva di rumore e _l’immagine corrotta dal rumore_ e sia $\epsilon (x, y)$ una distribuzione di rumore casuale.
-![[assets/image 2.png]]
+![[SecondoAnno/MetodiNumerici/assets/image 2.png]]
 Il rumore può essere introdotto in un’immagine durante l’acquisizione.
 Il denoising di immagini è un problema fondamentale nell’elaborazione delle immagini che consiste nel **rimuovere il rumore indesiderato da un’immagine preservando al contempo i dettagli importanti**.
 
@@ -307,8 +306,10 @@ Le funzioni di attivazione possono essere di diversi tipi, ma in generale devono
 > 
 > $net = w_1x_1 + w_2x_2$
 > 
-> $$w_1x_1 + w_2x_2 < \theta \rightarrow w_1x_1 + w_2x_2 - \theta < 0 \quad (x_1, x_2) \text{ sta sopra la retta} \\  
-> w_1x_1 + w_2x_2 > \theta \rightarrow w_1x_1 + w_2x_2 - \theta > 0 \quad (x_1, x_2) \text{ sta sotto la retta}$$
+> $$
+> w_1x_1 + w_2x_2 < \theta \rightarrow w_1x_1 + w_2x_2 - \theta < 0 \quad (x_1, x_2) \text{ sta sopra la retta} \\
+> w_1x_1 + w_2x_2 > \theta \rightarrow w_1x_1 + w_2x_2 - \theta > 0 \quad (x_1, x_2) \text{ sta sotto la retta}
+> $$
 > 
 > ![[assets/image 10.png]]
 > 

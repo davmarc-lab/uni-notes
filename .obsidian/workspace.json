@@ -4,31 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "0db5ef0db90a92f8",
+        "id": "4631fd1eef6a30bc",
         "type": "tabs",
         "children": [
           {
-            "id": "14686ca7f9575276",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "SecondoAnno/MetodiNumerici/MetodiNumerici.md",
-                "mode": "preview",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "MetodiNumerici"
-            }
-          }
-        ]
-      },
-      {
-        "id": "53498f8e562b2c69",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "a3ce2feac91a0758",
+            "id": "8eccf3e7733af77c",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -186,35 +166,53 @@
       "obsidian-importer:Open Importer": false
     }
   },
-  "active": "14686ca7f9575276",
+  "active": "8eccf3e7733af77c",
   "lastOpenFiles": [
-    "SecondoAnno/SecondoAnno.md",
-    "SecondoAnno/MetodiNumerici/assets/image.png",
-    "SecondoAnno/MetodiNumerici/assets/image 9.png",
-    "SecondoAnno/MetodiNumerici/assets/image 8.png",
-    "SecondoAnno/MetodiNumerici/assets/image 7.png",
-    "SecondoAnno/MetodiNumerici/assets/image 6.png",
-    "SecondoAnno/MetodiNumerici/assets/image 5.png",
-    "SecondoAnno/MetodiNumerici/assets/image 4.png",
-    "SecondoAnno/MetodiNumerici/assets/image 34.png",
-    "SecondoAnno/MetodiNumerici/assets/image 33.png",
-    "SecondoAnno/MetodiNumerici/assets/image 32.png",
-    "SecondoAnno/MetodiNumerici/preamble.sty",
-    "SecondoAnno/MetodiNumerici/assets",
-    "SecondoAnno/MetodiNumerici/MetodiNumerici.md",
-    "SecondoAnno/MetodiNumerici",
+    "TerzoAnno/Computer Graphics 2023/Computer Graphics 2023.md",
     "Index.md",
-    "TerzoAnno/ComputerGraphics/ComputerGraphics.md",
+    "TerzoAnno/Computer Graphics 2023/Progetto 2.md",
+    "TerzoAnno/Computer Graphics 2023/Domande Computer Graphic/Domande Computer Graphic.md",
+    "TerzoAnno/Computer Graphics 2023/assets/Untitled 46.png",
+    "TerzoAnno/Computer Graphics 2023/assets/Untitled 30.png",
+    "TerzoAnno/Computer Graphics 2023/assets/Untitled 22.png",
+    "TerzoAnno/Computer Graphics 2023/assets/Untitled 14.png",
+    "TerzoAnno/Computer Graphics 2023/assets/Untitled 9.png",
+    "TerzoAnno/Computer Graphics 2023/assets/image.png",
+    "TerzoAnno/Computer Graphics 2023/assets",
+    "Index.md",
+    "TerzoAnno/Computer Graphics 2023/assets/image 2.png",
+    "TerzoAnno/Computer Graphics 2023/assets/image 1.png",
+    "TerzoAnno/Computer Graphics 2023/assets/Untitled 107.png",
+    "TerzoAnno/Computer Graphics 2023/assets/Untitled 106.png",
+    "TerzoAnno/Computer Graphics 2023/Domande Computer Graphic",
+    "TerzoAnno/Computer Graphics 2023",
+    "TerzoAnno/Computer Graphics/ComputerGraphics.md",
+    "SecondoAnno/MDP/MDP.md",
+    "SecondoAnno/MDP",
+    "TerzoAnno/Secondo Semestre.md",
+    "TerzoAnno/Sessione Estiva.md",
     "TerzoAnno/TerzoAnno.md",
-    "create a link.md",
-    "SecondoAnno/AAAA/Metodi Numerici.md",
-    "TerzoAnno/ComputerGraphics",
-    "preamble.sty",
-    "SecondoAnno/AAAA",
-    "SecondoAnno/preamble.sty",
-    "SecondoAnno/AAAA/assets",
-    "TerzoAnno",
-    "SecondoAnno",
-    "Welcome.md"
+    "SecondoAnno/MetodiNumerici/MetodiNumerici.md",
+    "TerzoAnno/Primo Semestre.md",
+    "TerzoAnno/Tecnologie Web/Progetto Web/Progetto Web.md",
+    "TerzoAnno/Tecnologie Web/Tecnologie Web 2023.md",
+    "TerzoAnno/Tecnologie Web/Specifiche Progetto.md",
+    "TerzoAnno/Tecnologie Web/Progetto Web",
+    "TerzoAnno/Tecnologie Web",
+    "TerzoAnno/Ricerca Operativa/Modulo 2/Modulo 2.md",
+    "TerzoAnno/Ricerca Operativa/Esame RICOP (teoria incompleta)/Esame RICOP (teoria incompleta).md",
+    "TerzoAnno/Ricerca Operativa/Modulo 1/Modulo 1.md",
+    "TerzoAnno/Ricerca Operativa/Ricerca Operativa 2023.md",
+    "TerzoAnno/Ricerca Operativa/Modulo 2",
+    "TerzoAnno/Ricerca Operativa/Modulo 1",
+    "TerzoAnno/Ricerca Operativa/Esame RICOP (teoria incompleta)",
+    "TerzoAnno/Ricerca Operativa",
+    "TerzoAnno/Reti di Telecomunicazioni/Reti di Telecomunicazioni 2023.md",
+    "TerzoAnno/Ingegneria del Software/Esercizi Pratici/Esercizi Pratici.md",
+    "TerzoAnno/Ingegneria del Software/Ingegneria del Software 2023.md",
+    "TerzoAnno/High Performance Computing/High Performance Computing 2023.md",
+    "TerzoAnno/Computer Graphics/Domande Computer Graphic/Domande Computer Graphic.md",
+    "TerzoAnno/Computer Graphics/Progetto 2.md",
+    "TerzoAnno/Visione Artificiale/Visione Artificiale.md"
   ]
 }
