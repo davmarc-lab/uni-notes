@@ -1,14 +1,14 @@
 {
   "main": {
-    "id": "4d48cd6fa11ec125",
+    "id": "fb6df262d3b1b92c",
     "type": "split",
     "children": [
       {
-        "id": "b32abb5f0d25a3be",
+        "id": "f43e24b0de1ac0d8",
         "type": "tabs",
         "children": [
           {
-            "id": "ceb08f1690768cf5",
+            "id": "f6891a7a29316f25",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -23,15 +23,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "f87169a01f1c8b6c",
+    "id": "87fd66610024b4b3",
     "type": "split",
     "children": [
       {
-        "id": "84917fb893ace136",
+        "id": "7fb218dd7b2f2026",
         "type": "tabs",
         "children": [
           {
-            "id": "0180e7898fdfe5b7",
+            "id": "ea44443ee1b37753",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -44,7 +44,7 @@
             }
           },
           {
-            "id": "96a9de5b45c2efc1",
+            "id": "1facfac33c72c4d2",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -61,7 +61,7 @@
             }
           },
           {
-            "id": "b9c0b0ff66cc4f5a",
+            "id": "6288562fb1df8b19",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -77,15 +77,15 @@
     "width": 300
   },
   "right": {
-    "id": "3eaddd9fb375e229",
+    "id": "d8ff92dd53a2e34d",
     "type": "split",
     "children": [
       {
-        "id": "d054d89a66c6ff38",
+        "id": "313437c370d4df9a",
         "type": "tabs",
         "children": [
           {
-            "id": "a8d5089f09585d8c",
+            "id": "c7c0e9927fc8d4e9",
             "type": "leaf",
             "state": {
               "type": "backlink",
@@ -103,7 +103,7 @@
             }
           },
           {
-            "id": "a074b6ed84312742",
+            "id": "189910c9b17e43cd",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
@@ -116,7 +116,7 @@
             }
           },
           {
-            "id": "13f15371f4b76fbe",
+            "id": "2ef6d6fb3750117e",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -131,7 +131,7 @@
             }
           },
           {
-            "id": "ae398cd5da9c83d5",
+            "id": "97e04ef11f7df14a",
             "type": "leaf",
             "state": {
               "type": "outline",
@@ -158,57 +158,9 @@
       "canvas:Create new canvas": false,
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
-      "command-palette:Open command palette": false,
-      "obsidian-importer:Open Importer": false
+      "command-palette:Open command palette": false
     }
   },
-  "active": "ceb08f1690768cf5",
-  "lastOpenFiles": [
-    "TerzoAnno/High Performance 2023/HighPerformance.md",
-    "TerzoAnno/High Performance 2023/High Performance Computing 2023.md",
-    "TerzoAnno/High Performance 2023/assets/Untitled 51.png",
-    "TerzoAnno/High Performance 2023/assets/Untitled 50.png",
-    "TerzoAnno/High Performance 2023/assets/Untitled 49.png",
-    "TerzoAnno/High Performance 2023/assets/Untitled 48.png",
-    "TerzoAnno/High Performance 2023/assets/Untitled 47.png",
-    "TerzoAnno/High Performance 2023/assets/Untitled 46.png",
-    "TerzoAnno/High Performance 2023/assets/Untitled 45.png",
-    "TerzoAnno/High Performance 2023/assets/Untitled 44.png",
-    "TerzoAnno/High Performance 2023/assets/Untitled 43.png",
-    "TerzoAnno/High Performance 2023/assets/Untitled 42.png",
-    "TerzoAnno/High Performance 2023/High Performance Computing 2023/High Performance Computing 2023.md",
-    "TerzoAnno/High Performance 2023/High Performance Computing 2023",
-    "TerzoAnno/High Performance 2023/assets",
-    "TerzoAnno/High Performance 2023/Untitled",
-    "TerzoAnno/High Performance 2023",
-    "SecondoAnno/SecondoAnno.md",
-    "SecondoAnno/MDP/MDP.md",
-    "SecondoAnno/MDP/assets",
-    "Index.md",
-    "TerzoAnno/TerzoAnno.md",
-    "TerzoAnno.md",
-    "TerzoAnno/Computer Graphics 2023/Computer Graphics 2023.md",
-    "TerzoAnno/Computer Graphics 2023/Progetto 2.md",
-    "TerzoAnno/Computer Graphics 2023/Domande Computer Graphic/Domande Computer Graphic.md",
-    "TerzoAnno/Computer Graphics 2023/assets",
-    "TerzoAnno/Computer Graphics 2023/Domande Computer Graphic",
-    "TerzoAnno/Computer Graphics 2023",
-    "TerzoAnno/Computer Graphics/ComputerGraphics.md",
-    "SecondoAnno/MDP",
-    "TerzoAnno/Secondo Semestre.md",
-    "TerzoAnno/Sessione Estiva.md",
-    "SecondoAnno/MetodiNumerici/MetodiNumerici.md",
-    "TerzoAnno/Primo Semestre.md",
-    "TerzoAnno/Tecnologie Web/Progetto Web/Progetto Web.md",
-    "TerzoAnno/Tecnologie Web/Tecnologie Web 2023.md",
-    "TerzoAnno/Tecnologie Web/Specifiche Progetto.md",
-    "TerzoAnno/Tecnologie Web/Progetto Web",
-    "TerzoAnno/Ricerca Operativa/Modulo 2/Modulo 2.md",
-    "TerzoAnno/Ricerca Operativa/Esame RICOP (teoria incompleta)/Esame RICOP (teoria incompleta).md",
-    "TerzoAnno/Ricerca Operativa/Modulo 1/Modulo 1.md",
-    "TerzoAnno/Ricerca Operativa/Ricerca Operativa 2023.md",
-    "TerzoAnno/Reti di Telecomunicazioni/Reti di Telecomunicazioni 2023.md",
-    "TerzoAnno/Ingegneria del Software/Esercizi Pratici/Esercizi Pratici.md",
-    "TerzoAnno/Ingegneria del Software/Ingegneria del Software 2023.md"
-  ]
+  "active": "f6891a7a29316f25",
+  "lastOpenFiles": []
 }
