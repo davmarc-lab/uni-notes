@@ -1,20 +1,24 @@
 {
   "main": {
-    "id": "4d48cd6fa11ec125",
+    "id": "c7deea34da673e55",
     "type": "split",
     "children": [
       {
-        "id": "b32abb5f0d25a3be",
+        "id": "65efb3f0b713a784",
         "type": "tabs",
         "children": [
           {
-            "id": "ceb08f1690768cf5",
+            "id": "aa9856ffa71e8146",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "Ingegneria del Software 2023/IngegneriaSoftware.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "IngegneriaSoftware"
             }
           }
         ]
@@ -23,15 +27,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "f87169a01f1c8b6c",
+    "id": "e9f5a6ae8a7e3184",
     "type": "split",
     "children": [
       {
-        "id": "84917fb893ace136",
+        "id": "9ce5632e6bd8330f",
         "type": "tabs",
         "children": [
           {
-            "id": "0180e7898fdfe5b7",
+            "id": "2d91a1ef5adb81f9",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -44,7 +48,7 @@
             }
           },
           {
-            "id": "96a9de5b45c2efc1",
+            "id": "c6510d5e598ffc31",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -61,7 +65,7 @@
             }
           },
           {
-            "id": "b9c0b0ff66cc4f5a",
+            "id": "53a7e5a02f00f12b",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -77,19 +81,20 @@
     "width": 300
   },
   "right": {
-    "id": "3eaddd9fb375e229",
+    "id": "0697964cf0683b7f",
     "type": "split",
     "children": [
       {
-        "id": "d054d89a66c6ff38",
+        "id": "b6e953cf481a5781",
         "type": "tabs",
         "children": [
           {
-            "id": "a8d5089f09585d8c",
+            "id": "ecfb230ba624560b",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
+                "file": "Ingegneria del Software 2023/IngegneriaSoftware.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -99,24 +104,25 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks"
+              "title": "Backlinks for IngegneriaSoftware"
             }
           },
           {
-            "id": "a074b6ed84312742",
+            "id": "a9c74c2eca37d88f",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "Ingegneria del Software 2023/IngegneriaSoftware.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links"
+              "title": "Outgoing links from IngegneriaSoftware"
             }
           },
           {
-            "id": "13f15371f4b76fbe",
+            "id": "c478289e3c6fe421",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -131,17 +137,18 @@
             }
           },
           {
-            "id": "ae398cd5da9c83d5",
+            "id": "47db11c85287ae69",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
+                "file": "Ingegneria del Software 2023/IngegneriaSoftware.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline"
+              "title": "Outline of IngegneriaSoftware"
             }
           }
         ]
@@ -162,53 +169,23 @@
       "obsidian-importer:Open Importer": false
     }
   },
-  "active": "0180e7898fdfe5b7",
+  "active": "aa9856ffa71e8146",
   "lastOpenFiles": [
-    "TerzoAnno/Ingegneria Del Software 2023",
-    "TerzoAnno/High Performance 2023/HighPerformance.md",
-    "TerzoAnno/High Performance 2023/High Performance Computing 2023.md",
-    "TerzoAnno/High Performance 2023/assets/Untitled 51.png",
-    "TerzoAnno/High Performance 2023/assets/Untitled 50.png",
-    "TerzoAnno/High Performance 2023/assets/Untitled 49.png",
-    "TerzoAnno/High Performance 2023/assets/Untitled 48.png",
-    "TerzoAnno/High Performance 2023/assets/Untitled 47.png",
-    "TerzoAnno/High Performance 2023/assets/Untitled 46.png",
-    "TerzoAnno/High Performance 2023/assets/Untitled 45.png",
-    "TerzoAnno/High Performance 2023/assets/Untitled 44.png",
-    "TerzoAnno/High Performance 2023/assets/Untitled 43.png",
-    "TerzoAnno/High Performance 2023/assets/Untitled 42.png",
-    "TerzoAnno/High Performance 2023/High Performance Computing 2023/High Performance Computing 2023.md",
-    "TerzoAnno/High Performance 2023/High Performance Computing 2023",
-    "TerzoAnno/High Performance 2023/assets",
-    "TerzoAnno/High Performance 2023/Untitled",
-    "TerzoAnno/High Performance 2023",
-    "SecondoAnno/SecondoAnno.md",
-    "SecondoAnno/MDP/MDP.md",
-    "SecondoAnno/MDP/assets",
-    "Index.md",
-    "TerzoAnno/TerzoAnno.md",
-    "TerzoAnno.md",
-    "TerzoAnno/Computer Graphics 2023/Computer Graphics 2023.md",
-    "TerzoAnno/Computer Graphics 2023/Progetto 2.md",
-    "TerzoAnno/Computer Graphics 2023/Domande Computer Graphic/Domande Computer Graphic.md",
-    "TerzoAnno/Computer Graphics 2023/assets",
-    "TerzoAnno/Computer Graphics 2023/Domande Computer Graphic",
-    "TerzoAnno/Computer Graphics 2023",
-    "TerzoAnno/Computer Graphics/ComputerGraphics.md",
-    "SecondoAnno/MDP",
-    "TerzoAnno/Secondo Semestre.md",
-    "TerzoAnno/Sessione Estiva.md",
-    "SecondoAnno/MetodiNumerici/MetodiNumerici.md",
-    "TerzoAnno/Primo Semestre.md",
-    "TerzoAnno/Tecnologie Web/Progetto Web/Progetto Web.md",
-    "TerzoAnno/Tecnologie Web/Tecnologie Web 2023.md",
-    "TerzoAnno/Tecnologie Web/Specifiche Progetto.md",
-    "TerzoAnno/Tecnologie Web/Progetto Web",
-    "TerzoAnno/Ricerca Operativa/Modulo 2/Modulo 2.md",
-    "TerzoAnno/Ricerca Operativa/Esame RICOP (teoria incompleta)/Esame RICOP (teoria incompleta).md",
-    "TerzoAnno/Ricerca Operativa/Modulo 1/Modulo 1.md",
-    "TerzoAnno/Ricerca Operativa/Ricerca Operativa 2023.md",
-    "TerzoAnno/Reti di Telecomunicazioni/Reti di Telecomunicazioni 2023.md",
-    "TerzoAnno/Ingegneria del Software/Esercizi Pratici/Esercizi Pratici.md"
+    "assets/image 6 2.png",
+    "assets/image 5 2.png",
+    "assets/image 4 2.png",
+    "assets/image 3 2.png",
+    "assets/image 2 2.png",
+    "assets/image 1 2.png",
+    "assets/image 33.png",
+    "assets/image 32.png",
+    "assets/image 31.png",
+    "assets/image 30.png",
+    "assets/image 29.png",
+    "Ingegneria del Software 2023/Esercizi Pratici/Esercizi Pratici.md",
+    "Ingegneria del Software 2023/IngegneriaSoftware.md",
+    "assets",
+    "Ingegneria del Software 2023/Esercizi Pratici",
+    "Ingegneria del Software 2023"
   ]
 }
