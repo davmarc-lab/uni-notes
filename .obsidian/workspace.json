@@ -13,13 +13,35 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Index.md",
+                "file": "SecondoAnno/MDP/MDP.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Index"
-            }
+              "title": "MDP"
+            },
+            "group": "309d0c7ec8c0ee4a"
+          }
+        ]
+      },
+      {
+        "id": "378f68c73fdbbbd4",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "47d1a663499623ed",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "SecondoAnno/MDP/MDP.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "MDP"
+            },
+            "group": "309d0c7ec8c0ee4a"
           }
         ]
       }
@@ -168,8 +190,12 @@
   },
   "active": "8eccf3e7733af77c",
   "lastOpenFiles": [
-    "TerzoAnno/Computer Graphics 2023/Computer Graphics 2023.md",
+    "SecondoAnno/MetodiNumerici/assets/image 5.png",
+    "SecondoAnno/MDP/MDP.md",
     "Index.md",
+    "TerzoAnno/TerzoAnno.md",
+    "TerzoAnno.md",
+    "TerzoAnno/Computer Graphics 2023/Computer Graphics 2023.md",
     "TerzoAnno/Computer Graphics 2023/Progetto 2.md",
     "TerzoAnno/Computer Graphics 2023/Domande Computer Graphic/Domande Computer Graphic.md",
     "TerzoAnno/Computer Graphics 2023/assets/Untitled 46.png",
@@ -179,7 +205,6 @@
     "TerzoAnno/Computer Graphics 2023/assets/Untitled 9.png",
     "TerzoAnno/Computer Graphics 2023/assets/image.png",
     "TerzoAnno/Computer Graphics 2023/assets",
-    "Index.md",
     "TerzoAnno/Computer Graphics 2023/assets/image 2.png",
     "TerzoAnno/Computer Graphics 2023/assets/image 1.png",
     "TerzoAnno/Computer Graphics 2023/assets/Untitled 107.png",
@@ -187,11 +212,9 @@
     "TerzoAnno/Computer Graphics 2023/Domande Computer Graphic",
     "TerzoAnno/Computer Graphics 2023",
     "TerzoAnno/Computer Graphics/ComputerGraphics.md",
-    "SecondoAnno/MDP/MDP.md",
     "SecondoAnno/MDP",
     "TerzoAnno/Secondo Semestre.md",
     "TerzoAnno/Sessione Estiva.md",
-    "TerzoAnno/TerzoAnno.md",
     "SecondoAnno/MetodiNumerici/MetodiNumerici.md",
     "TerzoAnno/Primo Semestre.md",
     "TerzoAnno/Tecnologie Web/Progetto Web/Progetto Web.md",
@@ -212,7 +235,6 @@
     "TerzoAnno/Ingegneria del Software/Ingegneria del Software 2023.md",
     "TerzoAnno/High Performance Computing/High Performance Computing 2023.md",
     "TerzoAnno/Computer Graphics/Domande Computer Graphic/Domande Computer Graphic.md",
-    "TerzoAnno/Computer Graphics/Progetto 2.md",
-    "TerzoAnno/Visione Artificiale/Visione Artificiale.md"
+    "TerzoAnno/Computer Graphics/Progetto 2.md"
   ]
 }
