@@ -1034,3 +1034,55 @@ La tangente negli estremi interseca l'asse $x$ all'interno dell'intervallo $\qlr
 ### Metodi Ibridi
 Il metodo di Newton e il metodo delle secanti sono metodi a convergenza locale. La difficoltà pratica sta nel trovare l'intervallo di convergenza, cioè nel trovare un valore iniziale $x_0$ tale che la successione di iterati converga alla soluzione cercata.
 Un metodo pratico è quello di far precedere questi metodi da un metodo a convergenza globale come ad esempio il metodo di bisezione. Dopo alcuni passi del metodo globale si innesca quello di ordine superiore. Se esso non converge, si devono fare altri passi del metodo globale.
+
+# Teorema della formula di Taylor con resto di Lagrange
+> [!important] Problema
+> Data $\fx$ regolare, $x_0 \in dom(f),\ n \in \N$, vogliamo trovare il **polinomio $P_n(x)$ di grado $n$ che approssima meglio $\fx$ vicino $x_0$.
+
+Il teorema della formula di Taylor con il resto di Lagrange è un teorema fondamentale dell'analisi matematica che fornisce **un'approssimazione locale di una funzione derivabile** con un polinomio di Taylor.
+
+> [!important] Enunciato
+> Sia $\fx$ una funzione derivabile $\inc n$ volte in un intervallo di $I$ contenente il punto $x_0$. Allora, per ogni $x \in I$, esiste un punto $c$ tra $x_0$ e $x$ tale che:
+> $$
+\fx = P_n\tlr x + R_n\tlr x
+> $$
+> dove $P_n \tlr x$ è un polinomio di Taylor di ordine $n$ di $\fx$ centrato in $x_0$:
+> $$
+\begin{matrix*}
+> P_n\tlr x = \\
+>  \f{x_0} + \df{x_0}(x-x_0) + \frac{f''\tlr {x_0}}{2!}(x-x_0)^2 + \dots + \frac{f^n\tlr {x_0}}{n!}(x-x_0)^n
+\end{matrix*}
+> $$
+> $R_n\tlr x$ è il resto di Lagrange, dato da:
+> $$
+> R_n\tlr x = \frac{f^n+1\tlr c(x-x_0)^{n+1}}{(n+1)!}
+> $$
+
+> [!important] Interpretazione
+> Il teorema afferma che, **in un intorno di un punto $x_0$, una funzione derivabile $n$ volte può essere approssimata con un polinomio di Taylor di grado $n$**.
+> L'errore di approssimazione è dato dal resto di Lagrange, che tende a zero all'aumentare di $n$.
+
+## Polinomio di Taylor di una funzione bivariata
+Sia $\f{x, y}: \R^2 \to \R$ una funzione derivabile $n$ volte in un intervallo $I \subset \R^2$ contenente il punto $P_0 = \tlr{x_0, y_0}$.
+Il polinomio di Taylor di ordine $n$, $P_n\tlr{x, y}$, di $\f{x, y}$ centrato in $P_0 \equiv \tlr{x_0, y_0}$, rappresenta il polinomio bivariato di grado $n$ che meglio approssima $\f{x, y}$ in un intorno di $P_0$:
+$$
+\begin{matrix*}
+P_n\tlr{x, y} = \f{x_0, y_0} + \sum^n_{i=1}{\sum^n_{j=0}{\frac{1}{i!j!} \frac{\delta^{i+j}\f{x_0, y_0}}{\delta x^i\delta y^i}\tlr{x- x_0}^i\tlr{y-y_0}^j}} \\
+i+ j \le n
+\end{matrix*}
+$$
+- $n=1$
+	$$
+	P_1\tlr x, y) = \f{x_0, y_0}+(x-x_0)\frac{\delta f}{\delta x}\tlr{x_0, y_0}+ \tlr{y-y_0}\frac{\delta f}{\delta y}\tlr{x_0, y_0}
+	$$
+	Rappresenta il piano che meglio approssima la funzione bivariata in un intorno del punto $P_0 = \tlr{x_0, y_0}$ e rappresenta il piano tangente alla superficie in $P_0 = \tlr{x_0, y_o}$
+- $n=2$
+	$$
+	\begin{matrix*}
+	P_n\tlr{x, y} = \f{x_0, y_0} + \tlr{x-x_0}\frac{\delta f}{\delta x}\tlr{x_0, y_0} + \tlr{y-y_0}\frac{\delta f}{\delta y}\tlr{x_0, y_0}+\\
+	{1 \over 2!}\qlr{
+	\tlr{x-x_0}^2\frac{\delta^2 f}{\delta x^2} \tlr{x_0, y_0} + 2\tlr{x-x_0}\tlr{y-y_0}\frac{\delta^2f}{\delta x\delta y}\tlr{x_0, y_0}+ \tlr{y-y_0}^2\frac{\delta^2f}{\delta y^2}\tlr{x_0, y_0}
+	}
+	\end{matrix*}
+	$$
+	Rappresenta il polinomio di grado $2$ bivariato che meglio approssima la funzione bivariata in un intorno del punto $P_0 = \tlr{x_0, y_0}$

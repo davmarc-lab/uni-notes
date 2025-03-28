@@ -8,13 +8,17 @@
         "type": "tabs",
         "children": [
           {
-            "id": "ceb08f1690768cf5",
+            "id": "4d042a9669f57098",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "SecondoAnno/MetodiNumerici/MetodiNumerici.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "MetodiNumerici"
             }
           }
         ]
@@ -74,7 +78,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "3eaddd9fb375e229",
@@ -162,8 +167,10 @@
       "obsidian-importer:Open Importer": false
     }
   },
-  "active": "0180e7898fdfe5b7",
+  "active": "4d042a9669f57098",
   "lastOpenFiles": [
+    "SecondoAnno/SecondoAnno.md",
+    "Index.md",
     "TerzoAnno/Ingegneria Del Software 2023",
     "TerzoAnno/High Performance 2023/HighPerformance.md",
     "TerzoAnno/High Performance 2023/High Performance Computing 2023.md",
@@ -182,10 +189,8 @@
     "TerzoAnno/High Performance 2023/assets",
     "TerzoAnno/High Performance 2023/Untitled",
     "TerzoAnno/High Performance 2023",
-    "SecondoAnno/SecondoAnno.md",
     "SecondoAnno/MDP/MDP.md",
     "SecondoAnno/MDP/assets",
-    "Index.md",
     "TerzoAnno/TerzoAnno.md",
     "TerzoAnno.md",
     "TerzoAnno/Computer Graphics 2023/Computer Graphics 2023.md",
@@ -203,7 +208,6 @@
     "TerzoAnno/Tecnologie Web/Progetto Web/Progetto Web.md",
     "TerzoAnno/Tecnologie Web/Tecnologie Web 2023.md",
     "TerzoAnno/Tecnologie Web/Specifiche Progetto.md",
-    "TerzoAnno/Tecnologie Web/Progetto Web",
     "TerzoAnno/Ricerca Operativa/Modulo 2/Modulo 2.md",
     "TerzoAnno/Ricerca Operativa/Esame RICOP (teoria incompleta)/Esame RICOP (teoria incompleta).md",
     "TerzoAnno/Ricerca Operativa/Modulo 1/Modulo 1.md",
