@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "b32abb5f0d25a3be",
+        "id": "d7c55f269ce94835",
         "type": "tabs",
         "children": [
           {
-            "id": "4d042a9669f57098",
+            "id": "300c6538cece79d3",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "SecondoAnno/MetodiNumerici/MetodiNumerici.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "MetodiNumerici"
+              "title": "New tab"
             }
           }
         ]
@@ -78,8 +74,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "3eaddd9fb375e229",
@@ -167,8 +162,13 @@
       "obsidian-importer:Open Importer": false
     }
   },
-  "active": "4d042a9669f57098",
+  "active": "0180e7898fdfe5b7",
   "lastOpenFiles": [
+    "SecondoAnno/MetodiNumerici/assets/Pasted image 20250331121152.png",
+    "SecondoAnno/MetodiNumerici/assets/Pasted image 20250331121050.png",
+    "SecondoAnno/MetodiNumerici/assets/Pasted image 20250331121004.png",
+    "SecondoAnno/MetodiNumerici/MetodiNumerici.md",
+    "preamble.sty~",
     "SecondoAnno/SecondoAnno.md",
     "Index.md",
     "TerzoAnno/Ingegneria Del Software 2023",
@@ -181,9 +181,6 @@
     "TerzoAnno/High Performance 2023/assets/Untitled 47.png",
     "TerzoAnno/High Performance 2023/assets/Untitled 46.png",
     "TerzoAnno/High Performance 2023/assets/Untitled 45.png",
-    "TerzoAnno/High Performance 2023/assets/Untitled 44.png",
-    "TerzoAnno/High Performance 2023/assets/Untitled 43.png",
-    "TerzoAnno/High Performance 2023/assets/Untitled 42.png",
     "TerzoAnno/High Performance 2023/High Performance Computing 2023/High Performance Computing 2023.md",
     "TerzoAnno/High Performance 2023/High Performance Computing 2023",
     "TerzoAnno/High Performance 2023/assets",
@@ -200,10 +197,8 @@
     "TerzoAnno/Computer Graphics 2023/Domande Computer Graphic",
     "TerzoAnno/Computer Graphics 2023",
     "TerzoAnno/Computer Graphics/ComputerGraphics.md",
-    "SecondoAnno/MDP",
     "TerzoAnno/Secondo Semestre.md",
     "TerzoAnno/Sessione Estiva.md",
-    "SecondoAnno/MetodiNumerici/MetodiNumerici.md",
     "TerzoAnno/Primo Semestre.md",
     "TerzoAnno/Tecnologie Web/Progetto Web/Progetto Web.md",
     "TerzoAnno/Tecnologie Web/Tecnologie Web 2023.md",

@@ -14,7 +14,7 @@
               "type": "markdown",
               "state": {
                 "file": "MetodiNumerici.md",
-                "mode": "preview",
+                "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
@@ -78,7 +78,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "e316ad768f70e9c6",
@@ -171,12 +172,12 @@
   },
   "active": "337cd856f9ef73ae",
   "lastOpenFiles": [
+    "preamble.sty~",
     "MetodiNumerici.md",
     "Metodi Numerici.md",
     "Metodi Numerici.md~",
     "assets/image.png",
     "assets/Pasted image 20250327143626.png",
-    "preamble.sty~",
     "Metodi Numerici/Metodi Numerici.md~",
     "assets/Pasted image 20250327120141.png",
     "assets/Pasted image 20250327120059.png",

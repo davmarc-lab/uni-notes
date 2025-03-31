@@ -1086,3 +1086,190 @@ $$
 	\end{matrix*}
 	$$
 	Rappresenta il polinomio di grado $2$ bivariato che meglio approssima la funzione bivariata in un intorno del punto $P_0 = \tlr{x_0, y_0}$
+
+# Sistemi Lineari
+Consideriamo un sistema lineare:
+$$
+\begin{cases}
+a_{11}x_1 + a_{12}x_2 + a_{13}x_3 + \dots + a_{1n}x_n = b_1 \\
+a_{21}x_1 + a_{22}x_2 + a_{23}x_3 + \dots + a_{2n}x_n = b_2 \\
+a_{31}x_1 + a_{32}x_2 + a_{33}x_3 + \dots + a_{3n}x_n = b_3 \\
+\vdots \\
+a_{m1}x_1 + a_{m2}x_2 + a_{m3}x_3 + \dots + a_{mn}x_n = b_m \\
+\end{cases}
+$$
+
+Noti i coefficienti $a_{ij}, \ i = 1, \dots, m,\ j = 1, \dots, n$, e le componenti del termine noto $b_i,\ i = 1, \dots, m$, si vuole individuare il vettore $x$ incognito di $n$ componenti che soddisfa contemporaneamente le $m$ relazioni lineari.
+In formato matriciale, il sistema può essere espresso come:
+$$ Ax = b$$
+con $A \in R^{m\times n},\ x \inf \R^n,\ b \in \R^m$
+$$
+\underbrace{
+\begin{bmatrix}
+a_{11} & a_{12} & \dots & a_{1n} \\
+a_{21} & a_{22} & \dots & a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{m1} & a_{m2} & \dots & a_{mn} \\
+\end{bmatrix}
+}_{A}
+\underbrace{
+\begin{bmatrix}
+x_1 \\ x_2\\ \vdots \\ x_n
+\end{bmatrix}
+}_{x} = 
+\underbrace{
+\begin{bmatrix}
+b_1 \\ b_2\\ \vdots \\ b_n
+\end{bmatrix}
+}_{b}
+$$
+> [!important] Sistema Lineare Compatibile
+> Un sistema lineare si dice **compatibile**  se ammette almeno una soluzione, si dice **incompatibile** nel caso non ammetta alcuna soluzione.
+
+## Interpretazione geometrica di sistemi lineari
+### Punto di intersezione tra due rette
+![[Pasted image 20250331121004.png]]
+![[Pasted image 20250331121050.png]]
+Le due rette coincidono, **infinite soluzioni**
+![[Pasted image 20250331121152.png]]
+Le due rette sono parallele, **nessuna soluzione**
+
+## Teorema di Rouchè-Capelli
+Il sistema lineare $Ax = b$ ammette soluzioni se e solo se la matrice dei coefficienti $A$ e la matrice completa $\qlr{A \ b}$ hanno lo stesso rango:
+$$
+	\rnk A = r = \rnk{\qlr{A \ b}}
+$$
+Altrimenti se $\rnk A \ne r \ne \rnk{\qlr{A \ b}}$ il sistema non ammette soluzioni.
+Si possono verificare i seguenti casi:
+- $m < n$, cioè abbiamo **più incognite che relazioni lineari tra di esse**, il sistema si dice **indeterminato**. Se indichiamo con $k$ il rango della matrice $A$ e $k < n$, allora il sistema ammette $\infty^{n-k}$ soluzioni
+- $m>n$, cioè abbiamo meno incognite che relazioni lineari tra di esse. Il sistema si dice **sovradeterminato**. In questo caso il sistema non ammette una soluzione esatta, ma una soluzione approssimata.
+- $m =n$, cioè il numero di incognite è uguale al numero di relazioni lineari tra di esse. Il sistema si dice **normale** e sotto opportune ipotesi può ammettere una ed una sola soluzione
+
+> [!important] Non Singolare
+> La matrice quadrata $A$ è detta **non singolare** se soddisfa una delle seguenti condizioni equivalenti:
+> - $det\tlr A \ne 0$
+> - Esiste la matrice inversa $A^{-1}$ di $A$
+> - $\rnk A = n$
+>
+> Altrimenti $A$ è singolare.
+
+Affinché il sistema lineare $Ax=b$, $A \in \R^{m\times n}$, $x \in \R^n$, $b\in \R^n$, ammetta una ed una sola soluzione, comunque si scelga $b$, è che la matrice $A$ sia rango massimo, cioè che la matrice $A$ sia invertibile; si ha perciò:
+$$
+x = A^{-1}b
+$$
+Se il sistema è omogeneo, $b = 0$, ed $A$ è non singolare allora esiste solo la soluzione nulla $x=0$.
+
+Il metodo dell'inversa risulta poco efficiente, perché richiede la soluzione di $n$ sistemi lineari, ma anche poco accurato.
+Un metodo ben noto per la soluzione di sistemi lineari è basato sulla regola di Cramer, che calcola la componente j-esima della soluzione facendo uso del calcolo del determinante.
+Questo metodo comporta una complessità computazionale di circa $\tlr{\inc n}!$ operazioni.
+
+Nella pratica quindi vengono utilizzati altri metodi per la soluzione di un sistema lineare.
+## Condizionamento di un sistema lineare
+In questa sezione si vuole esaminare come perturbazioni sugli elementi della matrice $A$ e sugli elementi del termine noto $b$ influenzano la soluzione $x$ del sistema lineare. Queste perturbazioni sono tipicamente dovute sia agli errori di approssimazione quando la matrice $A$ ed il termine noto $b$ vengono rappresentati con numeri finiti, sia al fatto che tutte le operazioni dell'algoritmo risolutivo vengono effettuate in aritmetica finita.
+
+Sia $A \in \R^{n\times n}$ a rango massimo e sia $\delta A$ una matrice di perturbazione e $\delta b$ il vettore di perturbazione del termine noto, sia $x$ la soluzione di $Ax=b$.
+Un metodo numerico fornisce una soluzione approssimata, $x+\delta x$, $\delta x$ vettore di perturbazione della soluzione, che verifica un sistema perturbato:
+1. **perturbazione solo sul termine noto**
+	$$
+	A\tlr{x+\delta x} = b + \delta b
+	$$
+	Vogliamo stimare $\delta x$ in funzione di $\delta b$:
+	$$
+	\begin{matrix*}
+	Ax + A\delta x = b + \delta b \\
+	x - b + A\delta x = \delta b
+	\end{matrix*}
+	$$
+	Ma per ipotesi $Ax = b$, e quindi $Ax-b = 0$, quindi risulta
+	$$
+	A\delta x = \delta b \ \text{da cui } \delta x = A^{-1}\delta b
+	$$
+	Passando alle norme di ambo i membri
+	$$
+	\nm{\delta x} \le \nm{A^{-1}} \nm{\delta b}
+	$$
+	Inoltre da $Ax=b$ segue che
+	$$
+	\nm b = \nm{Ax} \le \nm A \nm x
+	$$
+	e quindi
+	$$
+	\frac{1}{\nm x} \le \nm A \cdot \frac{1}{\nm b}
+	$$
+	Moltiplicando membro a membro si ha:
+	$$
+	\frac{\nm{\delta x}}{\nm x} \le \nm{A^{-1}}\nm A \cdot \frac{\nm{\delta b}}{\nm b}
+	$$
+	$K\tlr A = \nm{A^-1}\nm A$ rappresenta l'indice di condizionamento del problema del calcolo della soluzione di un sistema lineare.
+
+2. **perturbazione sia sulla matrice che sul termine noto**
+	$$
+	\tlr {A+\delta A}\tlr{x+\delta x} = \tlr{b + \delta b}
+	$$
+	Sotto l'ipotesi che $\nm{A^{-1}} \nm{\delta A} < 1$, vale la seguente relazione:
+	$$
+	\frac{\nm{\delta x}}{\nm x} \le \nm{A^{-1}}\nm A \frac{\frac{\nm{\delta A}}{\nm A} + \frac{\nm{\delta b}}{\nm b}}{1- \nm{A^{-1}}\nm A \frac{\nm{\delta A}}{\nm A}}
+	$$
+	L'indice di condizionamento della matrice identità è uguale ad $1$, $K\tlr I = 1$. In generale l'indice di condizionamento di una matrice, per ogni norma matriciale indotta, è maggiore o uguale ad $1$, $K\tlr A \ge 1$.
+
+> [!note]
+> Se $A$ è ortogonale, cioè se $A^TA = AA^T = I$ (cioè la sua trasposta coincide con l'inversa), allora
+> $$
+> K_2\tlr A = \nm A_2 \nm{A^{-1}}_2 = 1
+> $$
+ Infatti
+> $$
+> \begin{matrix*}
+> \nm A_2 = \sqrt{\rho\tlr{A^TA}} = \sqrt{\rho \tlr I} = 1 \\
+> \nm{A^{-1}}_2 = \nm{A^T}_2 = \sqrt{\rho \tlr{AA^T}} = \sqrt{\rho\tlr I} = 1
+> \end{matrix*}
+> $$
+> **La risoluzione di $Ax = b$ con $A$ ortogonale è sempre un problema ben condizionato**
+
+> [!note]
+> $K\tlr A$ **piccolo** (ordine $10^p, \ p = 0, 1, 2, 3$): il problema/matrice è  **ben condizionato**
+> $K \tlr A$ **grande** (ordine $> 10^3$): il problema/matrice è **mal condizionato**
+
+### Proprietà dell'indice di condizionamento in norma $2$
+Si definisce numero di condizionamento in norma $2$ di $A$ il numero reale
+$$
+\begin{matrix*}
+K_2\tlr A = \frac{\sqrt{\lambda_{\max}\tlr{A^TA}}}{\sqrt{\lambda_{\min}\tlr{A^TA}}} \\
+K_2\tlr{A^TA} = K_2\tlr A^2
+\end{matrix*}
+$$
+## Metodi per la soluzione di un sistema lineare
+I metodi per la soluzione di sistemi lineari vengono usualmente divisi in due raggruppamenti:
+- **Metodi diretti** $\Rightarrow$ questi metodi, in assenza di errori di arrotondamento conducono alla soluzione esatta in un numero finito di passi. Essi sono adatti per la soluzione di sistemi con **matrice dei coefficienti densa e di moderate dimensioni**
+- **Metodi iterativi** $\Rightarrow$ questi metodi generano una successione di soluzioni, che, sotto opportune ipotesi, convergono alla soluzione del sistema. La matrice dei coefficienti non viene modificata durante il calcolo e quindi è più agevole sfruttarne la sparsità.
+  Sono adatti, quindi, per la soluzione di sistemi con **matrice dei coefficienti di grandi dimensioni e sparsa**. In assenza di errori di arrotondamento conducono alla soluzione esatta in un numero finito di passi
+### Metodi diretti
+I metodi diretti trasformano attraverso un numero finito di passi/operazioni un sistema _lineare generico in un sistema lineare equivalente dotato di una struttura particolare_ che ne semplifichi la risoluzione. Sono basati sulla fattorizzazione di $A$ nel prodotto di due matrici $B$ e $C$.
+L'obiettivo della fattorizzazione $A = BC$ è appunto quello di trasformare il sistema lineare $Ax= b$ in un sistema lineare equivalente, la cui risoluzione è più semplice.
+
+Il sistema lineare che si ottiene è della forma:
+$$
+BCx = b
+$$
+che si può spezzare in due problemi di più facile soluzione
+$$
+\begin{cases}
+By = b \\
+Cx = y
+\end{cases}
+$$
+> [!note]
+> Il sistema $Cx=y$ è facilmente risolubile ne caso in cui $C$ sia _triangolare superiore_, poiché facilmente risolvibile con il metodo delle sostituzioni all'indietro.
+> Il termine noto $y$ si ottiene risolvendo il sistema lineare $By=b$ dove $B$ è _triangolare inferiore_ o ortogonale.
+
+Il costo della fattorizzazione è $O\tlr{n^3}$ mentre il costo della risoluzione dei sistemi $By=b$ e $Cx=y$ è $O\tlr{n^2}$.
+#### Metodi diretti e fattorizzazioni associate
+1. **Metodo di eliminazione gaussiana**, associato alla **fattorizzazione $LU$**, $A=LU$ dove $L$ è triangolare inferiore con elementi diagonali $1$ e $U$ triangolare superiore.
+2. **Metodo di Cholesky**, associato alla **fattorizzazione $LL^T$ o $R^TR$**, $A=LL^T=R^TR$ dove $L$ è triangolare inferiore con elementi diagonali positivi mentre $R$ è triangolare superiore con elementi diagonali positivi.
+3. **Metodo di Householder**, associato alla **fattorizzazione $QR$**, $A = QR$ dove $Q$ è ortogonale $\tlr{Q^{-1}=Q^T}$ e $R$ è triangolare superiore.
+> [!note]
+> - La fattorizzazione $QR$ esiste sempre
+> - La fattorizzazione $LL^T$ esiste per matrici simmetriche e definite positive
+> - A differenza delle fattorizzazioni $LU$ e $LL^T$, non è unica
+
+#### Fattorizzazione $LU$ (di Gauss)
