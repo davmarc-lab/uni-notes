@@ -1273,3 +1273,167 @@ Il costo della fattorizzazione è $O\tlr{n^3}$ mentre il costo della risoluzione
 > - A differenza delle fattorizzazioni $LU$ e $LL^T$, non è unica
 
 #### Fattorizzazione $LU$ (di Gauss)
+Fra i vari tipo esistenti di algoritmi di fattorizzazione riveste un ruolo importante la fattorizzazione $LU$ di Gauss di una matrice $A$.
+> [!important] Teorema
+> Data $A \in \R^{n\times n}$, sia $A_k$ la sottomatrice principale di testa di $A$ ottenuta considerando le prime $k$ righe e le prime $k$ colone di $A$.
+> Se $A_k$ è **non singolare per ogni $k = 1, \dots, n-1$** allora esiste ed è unica la fattorizzazione $LU$ di $A$.
+
+^cbfb59
+
+Non è esplicitamente richiesta la non singolarità di $A$ per scrivere la fattorizzazione $LU$. Con l'ipotesi aggiuntiva che la matrice $A$ abbia determinante diverso da zero allora la fattorizzazione $LU$ può essere utilizzata per risolvere un sistema lineare.
+La fattorizzazione $LU$ si basa sull'algoritmo di eliminazione di Gauss, che consiste nel sottoporre il sistema lineare che dobbiamo risolvere ad opportune trasformazioni in modo tale da eliminare successivamente le incognite dalle varie equazioni fino a ridursi ad un sistema triangolare superiore con matrice dei coefficienti $U$, e termine noto trasformato $y$, e quindi costruire la matrice del sistema $A$ in triangolare superiore.
+
+Complessità computazionale dell'algoritmo di fattorizzazione di Gauss: $\cong {1 \over 3}n^3$
+La soluzione del sistema lineare $Ax=b$, con $A$ matrice che soddisfa le ipotesi del teorema, si riduce alla soluzione di due sistemi lineari
+$$
+\begin{cases}
+Ly=b \\
+Ux=y
+\end{cases}
+$$
+##### Algoritmo di fattorizzazione di Gauss
+
+^15b6dd
+
+Si inizializza la matrice $L$ all'identità
+$$
+k = 1, \dots, n-1 \begin{cases}
+l_{ik} = \frac{a_{ik}}{a_{kk}} & i = k+1, \dots, n \\
+a_{ij} = a_{ij}-l_{ik}a_{kj} & i, j = k+1, \dots, n
+\end{cases}
+$$
+Alla fine dell'algoritmo nel triangolo superiore di $A$ viene memorizzato il fattore triangolare superiore $U$ e nella matrice $L$, che risulterà triangolare inferiore con elementi $1$ sulla diagonale, il fattore triangolare inferiore della fattorizzazione.
+##### Matrice di Permutazione $P$
+$$
+P =
+\begin{bmatrix}
+0 & 0 & 1 & 0 \\
+0 & 1 & 0 & 0 \\
+1 & 0 & 0 & 0 \\
+0 & 0 & 0 & 1 \\
+\end{bmatrix}
+$$
+Questa matrice è ottenuta dalla matrice identità scambiando due righe tra di loro. $P$ prende il nome di **matrice di permutazione**.
+
+Effettuare il prodotto $P\cdot A$ equivale a scambiare le stesse due righe della matrice $A$. Effettuare il prodotto $A\cdot P$ equivale a scambiare le stesse due colonne della matrice $A$.
+> [!important] Teorema
+> Data una qualunque matrice $A$ non singolare, esiste una matrice di permutazione $P$ non singolare tale che $PA = LU$.
+
+^ae2395
+
+$P$ non è unica, ossia possono esistere diverse matrici $P$ tali che $PA$ soddisfa le ipotesi del [[#^cbfb59|teorema]].
+
+Dal punto di vista algoritmico questo porta all'algoritmo di _Gauss con pivotaggio_.
+
+Al passo $k$, prima di calcolare il moltiplicatore $I_{ik}$, se $a_{kk} = 0$, si va a cercare nella colonna $k$-esima, a partire dalla riga $k$-esima, la posizione di riga $s$ in cui si trova il primo elemento diverso da zero.
+Se la riga $s$ è diversa dalla riga $k$-esima, si effettua lo scambio tra la riga $k$-esima e la riga $s$-esima della matrice, e poi si procede secondo lo schema dell'algoritmo classico.
+
+Questa scelta garantisce l'esistenza della fattorizzazione $LU$, per la quale è sufficiente che $a_{kk} \ne 0,\ k = 1, \dots, n-1$.
+Esiste un'altra variante dell'algoritmo di Gauss, con **pivotaggio per colonne a perno massimo**, che al passo $k$, prima di calcolare il moltiplicatore $I_{ik}$, va a cercare nella colonna
+$k$-esima, a partire dalla riga $k$-esima, la posizione di riga $s$ in cui si trova **l'elemento di modulo massimo**.
+
+```python
+for k = 1, ..., n-1 :
+	calcola nella colonna k-esima, a partire dall'elemento (k, k) l'indice
+	di riga s a cui appartiene il massimo valore assoluto
+	if s != k :
+		scambia la riga s con la riga k, memorizza lo scambio nella matrice P
+		Esegue l'algoritmo di Gauss (vedi link sotto)
+```
+[[#^15b6dd|Algoritmo di Gauss]]
+
+#### Fattorizzazione di Cholesky
+Per la fattorizzazione delle matrici simmetriche e definite positive è stato studiato un algoritmo di fattorizzazione, detto di Cholesky, che deriva dal seguente teorema
+> [!important] Teorema di Cholesky
+> Sia $A$ una matrice di ordine $n$ simmetrica e definita positiva, allora esiste una matrice triangolare inferiore $L$ con elementi diagonali positivi $\tlr{\tlr{l_{ii}> 0} \quad i = 1, \dots, n}$ tale che
+> $$
+> A = L\cdot L^T
+> $$
+
+Complessità computazionale dell'algoritmo di fattorizzazione di Cholesky: $\cong {1\over 6}n^3$
+Sfruttando questo teorema, la soluzione del sistema lineare $Ax=b$, con $A$ matrice simmetrica e definita positiva, si riduce alla soluzione di due sistemi lineari
+$$
+\begin{cases}
+Ly = b \\
+L^Tx=y
+\end{cases}
+$$
+#### Fattorizzazione QR di una matrice
+> [!important] Teorema QR
+> Sia $A \in M^{m\times n}$ con $m \ge n$ e $\rnk A = n$, ossia le colonne di $A$ sono linearmente indipendenti; allora esistono una matrice $Q \in M^{m\times m}$ ortogonale e una matrice $R = \begin{pmatrix}R_1 \\ 0\end{pmatrix} \in M^{m\times n}$ dove $R_1 \in M^{n\times n}$ è una matrice triangolare superiore non singolare, tale che $A = QR$.
+
+Sfruttando questo teorema, la soluzione del sistema lineare $Ax=b$, con $A$ matrice quadrata e a rango massimo, si riduce alla soluzione di due sistemi lineari.
+$$
+\begin{cases}
+Qy=b\\
+Rx=y
+\end{cases}
+$$
+Essendo $Q$ ortogonale la soluzione del sistema $Qy=b$ si riduce a $y = Q^TB$, poiché l'inversa di una matrice ortogonale coincide con la sua inversa.
+**Costo computazionale**:
+- $m-1 \ge n \ \Rightarrow \ \cong mn^2- {n^3 \over 3}$
+- $m = n \Rightarrow \ \cong {2n^3 \over 3}$
+### Stabilità di un algoritmo di fattorizzazione
+Consideriamo la fattorizzazione
+$$ A = B\cdot C$$
+e studiamo l'effetto che ha sui risultati il fatto che questa fattorizzazione venga eseguita operando con i numeri finiti; poiché le operazioni aritmetiche che compaiono in uno degli algoritmi visti per calcolare la fattorizzazione di una matrice $A$ vengono eseguite in aritmetica finita, alla fine dell'algoritmo si ottengono, anziché i fattori esatti $B$ e $C$, i fattori $\mf B$ e $\mf C$; questi si possono pensare come
+$$
+\mf{B} = B + \delta B \qquad \mf C = C + \delta C
+$$
+
+^b655c0
+
+cioè dati dai fattori esatti più una piccola perturbazione.
+
+Utilizzando la filosofia dell'analisi all'indietro introdotta da Wilkinson, i fattori $\mf B$ e $\mf C$ possono essere pensati come **fattorizzazione esatta di una matrice perturbata**.
+$$
+A + \delta A = \mf B \cdot \mf C
+$$
+
+^0274c6
+
+Si studia perciò da cosa dipenda l'entità della perturbazione $\delta A$.
+
+Dalle relazioni [[#^b655c0|(2)]] e [[#^0274c6|(3)]] si ottiene
+$$
+A + \delta A = \tlr{B + \delta B} \cdot \tlr{C + \delta C}
+$$
+cioè
+$$
+A + \delta A = B \cdot C + B \cdot \delta C + \delta B \cdot C + \delta B \cdot \delta C
+$$
+da cui si segue per $\delta A$ la seguente espressione:
+$$
+\delta A = B \cdot \delta C + \delta B \cdot C + \delta B \cdot \delta C
+$$
+
+Questa relazione mette in evidenza che la perturbazione $\delta A$, non solo dipende dalle piccole perturbazioni $\delta B$ e $\delta C$, ma è tanto più grande quanto più grandi sono gli elementi dei fattori $B$ e $C$.
+Questa osservazione porta al fatto che si definisce la stabilità della fattorizzazione $B \cdot C$ in termini degli elementi di $B$ e di $C$.
+> [!important] Definizione di stabilità di un algoritmo di fattorizzazione $B \cdot C$
+> Data una matrice $A$ i cui elementi sono tutti minori o uguali ad $1$, si dice che un algoritmo di fattorizzazione che produce una fattorizzazione $B \cdot C$ della matrice $A$ è numericamente stabile in senso forte, se esistono delle costanti positive $a$ e $b$, **indipendenti dall'ordine e dagli elementi** di $A$ tali che
+> $$
+\blr{b_{ij}} \le a \quad \blr{c_{ij}} \le b
+> $$
+
+Se le costanti $a$ e $b$ dipendono dall'ordine di $A$ si dice che la fattorizzazione $B \cdot C$ è stabile in senso debole.
+#### Stabilità dell'algoritmo di Gauss
+Nel caso in cui si utilizzi la tecnica di pivotaggio a perno massimo per colonne, che nasce da un'opportuna scelta della matrice di permutazione $P$ del [[#^ae2395|teorema]], si ha
+$$
+\begin{matrix*}
+\blr{l_{ij}} \le 1 \\
+\blr{u_{ij}} \le 2^\dec n max\blr{a_{ij}}
+\end{matrix*}
+$$
+> [!note]
+> L'algoritmo di fattorizzazione di Gauss è stabile in senso debole perché la costante che maggiora gli elementi di $L$ non dipende dall'ordine della matrice, mentre ciò **non accade per la costante che maggiora gli elementi di $U$**, che dipende in maniera esponenziale dall'ordine della matrice.
+
+#### Stabilità dell'algoritmo di Cholesky
+$$
+\max_{ij}{\blr {l_{ij}}} \le \sqrt{\max_{ij}{\blr{a_{ij}}}}
+$$
+L'algoritmo di fattorizzazione di Cholesky è stabile in senso forte.
+#### Stabilità dell'algoritmo di fattorizzazione QR
+$$
+\blr{q_{ij}} \le 1 \qquad \blr{r_{ij}} \le \sqrt n \max_{ij}\blr{a_{ij}}
+$$
+L'algoritmo di fattorizzazione $Q \cdot R$ è stabile in senso debole, perché gli elementi di $R$ in valore assoluto sono maggiorati da $\sqrt n \max_{ij}\blr{a_{ij}}$, ma è più stabile della fattorizzazione $LU$ di Gauss, per la quale gli elementi di $U$ in valore assoluto sono maggiorati da $2^\dec n \max_{ij}{\blr{a_{ij}}}$.
