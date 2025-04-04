@@ -9,6 +9,7 @@ l.pellegrini@unibo.it
 marcella.lucciardi2@unibo.it
 
 <!--toc:start-->
+    - [Email](#email)
 - [Introduzione](#introduzione)
   - [Problema Numerico](#problema-numerico)
     - [Algoritmo di un problema numerico](#algoritmo-di-un-problema-numerico)
@@ -86,6 +87,30 @@ marcella.lucciardi2@unibo.it
     - [Metodi a convergenza locale](#metodi-a-convergenza-locale)
       - [Teorema di convergenza locale](#teorema-di-convergenza-locale)
     - [Metodi Ibridi](#metodi-ibridi)
+- [Teorema della formula di Taylor con resto di Lagrange](#teorema-della-formula-di-taylor-con-resto-di-lagrange)
+  - [Polinomio di Taylor di una funzione bivariata](#polinomio-di-taylor-di-una-funzione-bivariata)
+- [Sistemi Lineari](#sistemi-lineari)
+  - [Interpretazione geometrica di sistemi lineari](#interpretazione-geometrica-di-sistemi-lineari)
+    - [Punto di intersezione tra due rette](#punto-di-intersezione-tra-due-rette)
+  - [Teorema di Rouchè-Capelli](#teorema-di-rouchè-capelli)
+  - [Condizionamento di un sistema lineare](#condizionamento-di-un-sistema-lineare)
+    - [Proprietà dell'indice di condizionamento in norma $2$](#proprietà-dellindice-di-condizionamento-in-norma-2)
+  - [Metodi per la soluzione di un sistema lineare](#metodi-per-la-soluzione-di-un-sistema-lineare)
+    - [Metodi diretti](#metodi-diretti)
+      - [Metodi diretti e fattorizzazioni associate](#metodi-diretti-e-fattorizzazioni-associate)
+      - [Fattorizzazione $LU$ (di Gauss)](#fattorizzazione-lu-di-gauss)
+        - [Algoritmo di fattorizzazione di Gauss](#algoritmo-di-fattorizzazione-di-gauss)
+        - [Matrice di Permutazione $P$](#matrice-di-permutazione-p)
+      - [Fattorizzazione di Cholesky](#fattorizzazione-di-cholesky)
+      - [Fattorizzazione QR di una matrice](#fattorizzazione-qr-di-una-matrice)
+    - [Stabilità di un algoritmo di fattorizzazione](#stabilità-di-un-algoritmo-di-fattorizzazione)
+      - [Stabilità dell'algoritmo di Gauss](#stabilità-dellalgoritmo-di-gauss)
+      - [Stabilità dell'algoritmo di Cholesky](#stabilità-dellalgoritmo-di-cholesky)
+      - [Stabilità dell'algoritmo di fattorizzazione QR](#stabilità-dellalgoritmo-di-fattorizzazione-qr)
+    - [Soluzione di sistemi lineari con matrici triangolari](#soluzione-di-sistemi-lineari-con-matrici-triangolari)
+      - [Sostituzione in avanti (Forward Substitution)](#sostituzione-in-avanti-forward-substitution)
+      - [Sostituzione all'indietro (backward Substitution)](#sostituzione-allindietro-backward-substitution)
+    - [Calcolo Matrice Inversa](#calcolo-matrice-inversa)
 <!--toc:end-->
 
 # Introduzione
@@ -1273,6 +1298,8 @@ Il costo della fattorizzazione è $O\tlr{n^3}$ mentre il costo della risoluzione
 > - A differenza delle fattorizzazioni $LU$ e $LL^T$, non è unica
 
 #### Fattorizzazione $LU$ (di Gauss)
+^8b8885
+
 Fra i vari tipo esistenti di algoritmi di fattorizzazione riveste un ruolo importante la fattorizzazione $LU$ di Gauss di una matrice $A$.
 > [!important] Teorema
 > Data $A \in \R^{n\times n}$, sia $A_k$ la sottomatrice principale di testa di $A$ ottenuta considerando le prime $k$ righe e le prime $k$ colone di $A$.
@@ -1437,3 +1464,106 @@ $$
 \blr{q_{ij}} \le 1 \qquad \blr{r_{ij}} \le \sqrt n \max_{ij}\blr{a_{ij}}
 $$
 L'algoritmo di fattorizzazione $Q \cdot R$ è stabile in senso debole, perché gli elementi di $R$ in valore assoluto sono maggiorati da $\sqrt n \max_{ij}\blr{a_{ij}}$, ma è più stabile della fattorizzazione $LU$ di Gauss, per la quale gli elementi di $U$ in valore assoluto sono maggiorati da $2^\dec n \max_{ij}{\blr{a_{ij}}}$.
+### Soluzione di sistemi lineari con matrici triangolari
+Sia  $L=\begin{bmatrix} l_{11} & 0 & \dots & \dots & 0 \\ l_{21} & l_{22} & \dots & \dots & 0 \\ l_{31} & l_{32} & l_{33} & \dots & 0 \\ \dots & \dots & \dots & \dots & \dots \\ l_{n1} & l_{n2} & l_{n3} & \dots & l_{nn} \\ \end{bmatrix}$ una matrice _triangolare inferiore_ ed $U = \begin{bmatrix}u_{11} & u_{12} & u_{13} & \dots & u_{1n} \\ 0 & u_{22} & u_{23} & \dots & u_{2n} \\ 0 & 0 & u_{33} & \dots & u_{3n} \\ \dots & \dots & \dots & \dots & \dots \\ 0 & 0 & 0 & \dots & u_{nn} \end{bmatrix}$ una matrice _triangolare superiore_.
+La soluzione di sistemi lineari con queste matrici dei coefficienti si ottiene facilmente mediante sostituzione.
+
+_Soluzione del sistema $Lx=b$, nel caso in cui $L$ sia triangolare inferiore_:
+$$
+\begin{align}
+&l_{1,1}x_1 &= b_1 \\
+&l_{2,1}x_1 + l_{2,2}x_2 &= b_2 \\
+&\dots \\
+&l_{i,1}x_1 + l_{i,2}x_2 + \dots + l_{i,i}x_i &= b_i \\
+&\dots \\
+&l_{n,1}x_1 + l{n,2}x_2 + \dots + l_{n,n}x_{n} &= b_n
+\end{align}
+$$
+#### Sostituzione in avanti (Forward Substitution)
+$$
+\begin{cases}
+x_1 = \frac{b_1}{l_{1,1}}\\
+x_2 = \frac{\tlr{b_2-l_{2,1}x_1}}{l_{2,2}}\\
+\dots \\
+x_3 = \frac{\tlr{b_i - \tlr{l_{i,1}x_1 + l_{i,2}x_2 + \dots + l_{i,\dec i}x_\dec i}}}{l_{i,i}} & i = 2, \dots, n
+\end{cases}
+$$
+Cioè in forma algoritmica:
+```python
+for i = 1, 2, ..., n :
+	xi = bi
+		for j = 1, 2, ..., i-1 :
+			xi -= lij*xj
+	xi = xi / lii
+```
+
+_Soluzione del sistema $Ux=b$, nel caso in cui la matrice $U$ sia triangolare superiore_:
+$$
+\begin{align}
+u_{1,1}x_1 + u_{1,2}x_2 + \dots + u_{1,i}x_i + \dots + u_{1,\dec n}x_\dec n + u_{1,n}x_n &= b_1 \\
+u_{i,i}x_i + u_{i,\inc i}x_\inc i + \dots + u_{i,n}x_n &= b_i \\
+u_{\dec n,\dec n}x_\dec n + u_{\dec n,n}x_n &= b_\dec n \\
+u_{n,n}x_n &= b_n
+\end{align}
+$$
+#### Sostituzione all'indietro (backward Substitution)
+$$
+\begin{cases}
+x_n = \frac{b_n}{u_{n,n}} \\
+x_\dec n = \frac{\tlr{b_\dec n - u_{\dec n}x_n}}{u_{\dec n,\dec n}} \\
+\dots \\
+x_i = \frac{\tlr{b_i - \tlr{u_{i, \inc i}x_\inc i + u_{i, \inc[2]i}x_\inc[2]i + \dots + u_{i, n}x_n}}}{u_{i,i}} & i = n-1, n-2, \dots, 1
+\end{cases}
+$$
+cioè in forma algoritmica
+```python
+for i = n, n-1, ..., 1 :
+	xi = bi
+	for j = i+1, ..., n :
+		xi -= uij*xj
+	xi = xi / uii
+```
+
+> [!note] Complessità computazionale
+> La complessità computazionale in termini di operazioni moltiplicative è:
+> $\sum^n_{i=1}{i} = \frac{n\tlr{\inc n}}{2}$, quindi dell'ordine di $O\tlr{{n^2 \over 2}}$.
+
+### Calcolo Matrice Inversa
+Il problema di determinare l'inversa $A^{\dec{}}$ di una matrice $A$ quadrata $n\times n$ non singolare si riconduce al problema di risolvere $n$ sistemi normali:
+$$
+A \cdot A^\dec{} = I
+$$
+Poiché l'$i$-esima colonna della matrice identità è l'$i$-esimo vettore della base canonica:
+$$
+e_i = \begin{bmatrix}
+0 \\ 0 \\ \dots \\ 1 \\ 0 \\ \dots \\ 0
+\end{bmatrix}
+$$
+ed indicando con $x_i$ l'$i$-esima colonna della matrice inversa $\inv A$, il calcolo dell'inversa equivale a risolvere $n$ sistemi lineari con la stessa matrice $A$ (si considera la sua fattorizzazione e la si utilizza per risolvere l'$i$-esimo sistema lineare):
+$$
+Ax_i=e_i \qquad i = 1, \dots, n
+$$
+La soluzione dell'$i$-esimo sistema lineare rappresenta l'$i$-esima colonna della matrice inversa.
+
+Si può effettuare la [[#^8b8885|fattorizzazione LU]] della matrice $PA$, che rimane la stessa per tutti i sistemi lineari e poi utilizzarla per risolvere gli $n$ sistemi lineari:
+$$
+\begin{cases}
+Ly_i = Pe_i \\
+Ux_i = y_i
+\end{cases}
+\qquad i = 1, \dots, n
+$$
+La soluzione $x_i$ dell'$i$-esimo sistema lineare così ottenuta rappresenta l'$i$-esima colonna della matrice inversa.
+
+### Calcolo del determinante di una matrice sfruttando la [[#^8b8885|Fattorizzazione LU]] di $PA$
+$PA = LU$ con $L$ matrice triangolare inferiore con elementi diagonali uguali ad $1$, $U$ matrice triangolare superiore:
+$$
+\begin{matrix*}
+\det {PA} = \det{LU} = \det L \det U = \det U = \prod_{i = 1, \dots, n}{u_{i, i}} \\
+\det{PA} = \det P \det A = \prod_{i = 1, \dots, n}{u_{i, i}} \\
+\det P = \tlr{-1}^s
+\end{matrix*}
+$$
+**dove $s$ è il numero di scambi effettuati**.
+Quindi $\det A = \tlr{-1}^s \prod_{i = 1, \dots, n}{u_{i, i}}$
+Il rango è dato invece dal numero $r$ degli elementi non nulli sulla diagonale di $U$.
