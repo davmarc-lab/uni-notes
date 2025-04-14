@@ -1,0 +1,22 @@
+![[Pasted image 20250414181557.png]]
+- [X] Bisezione
+- [X] Corde
+- [X] Newton
+- [X] Secanti
+- [X] Newton Mod (in caso di multipli zeri)
+- [x] Stima ordine
+- [ ] NewtonSys
+- [ ] NewtonSys Corde
+- [ ] NewtonSys Sham
+- [x] Newton Minimo
+- [x] Newton Minimo Mod (gradiente calcolato con `sympy`)
+- [x] Jacobi
+- [x] Gauss Seidel
+- [x] Gauss Seidel Sor
+- [x] Steepest Descent
+- [x] Conjugate Gradient
+- [x] EQNorm
+- [x] QRLS
+- [x] SVDLS
+- [x] Plagr
+- [x] Interp

@@ -3,6 +3,8 @@ id: Metodi Numerici
 aliases: []
 tags: []
 ---
+### Esame
+[[Scheletri]]
 ### Email
 damiana.lazzaro@unibo.it
 l.pellegrini@unibo.it
@@ -219,7 +221,7 @@ Il denoising di immagini è un problema fondamentale nell’elaborazione delle i
 > ![[assets/image 3.png]]
 ## Definizione
 È la **riproduzione parziale dell’attività intellettuale propria dell’uomo**, riguardo ai processi di apprendimento, di riconoscimento, di scelta, realizzata o attraverso l’elaborazione di modelli ideali, o con la messa a punto di **macchine** che utilizzano per lo più a tale fine elaboratori elettronici.
-## Machine Learning
+## Machine Learning![[image 3.png]]
 La macchina impara (learn) a risolvere i problemi in modo autonomo.
 ![[assets/image 4.png]]
 ### Applicazioni
@@ -690,7 +692,7 @@ Poiché si conoscono le norme di vettori è interessante definire norme di matri
     
     $$Ax = \lambda x$$
     
-    o equivalentemente se $\det({A-\lambda I}) = 0$
+    o equivalentemente se $det\tlr{A - \lambda I} = 0$
     
     ---
     
@@ -1059,7 +1061,25 @@ La tangente negli estremi interseca l'asse $x$ all'interno dell'intervallo $\qlr
 ### Metodi Ibridi
 Il metodo di Newton e il metodo delle secanti sono metodi a convergenza locale. La difficoltà pratica sta nel trovare l'intervallo di convergenza, cioè nel trovare un valore iniziale $x_0$ tale che la successione di iterati converga alla soluzione cercata.
 Un metodo pratico è quello di far precedere questi metodi da un metodo a convergenza globale come ad esempio il metodo di bisezione. Dopo alcuni passi del metodo globale si innesca quello di ordine superiore. Se esso non converge, si devono fare altri passi del metodo globale.
-
+### Stima numerica dell'ordine di convergenza
+Se il metodo ha ordine $p$, per $k$ sufficientemente grande, esiste $C$ indipendente da $k$ tale che:
+$$
+\begin{align}
+\blr{e_\inc k} &\approx C\blr{e_k}^p \\
+\blr{e_\inc[2] k} &\approx C\blr{e_\inc k}^p \\
+\blr{\frac{e_\inc[2] k}{e_\inc k}} &\approx \tlr{\blr{\frac{e_\inc k}{e_k}}}^p \\
+\log\tlr{\blr{\frac{e_\inc[2]k}{e_\inc k}}} &\approx \log\tlr{\blr{\frac{e_\inc k}{e_k}}}^p = p\log\tlr{\blr{\frac{e_\inc k}{e_k}}} \\
+p &\approx \frac{\log\tlr{\blr{\frac{e_\inc[2]k}{e_\inc k}}}}{\log\tlr{\blr{\frac{e_\inc k}{e_k}}}}
+\end{align}
+$$
+essendo
+$$
+e_k = x_k - \a \approx x_k - x_\inc k
+$$
+Si ha che una stima numerica dell'ordine di convergenza è:
+$$
+p \approx \frac{\log\tlr{\blr{\frac{x_\inc[2]k - x_\inc[3]k}{x_\inc k - x_\inc[2]k}}}}{\log\tlr{\blr{\frac{x_\inc k - x_\inc[2]k}{x_k - x_\inc k}}}}
+$$
 # Teorema della formula di Taylor con resto di Lagrange
 > [!important] Problema
 > Data $\fx$ regolare, $x_0 \in dom(f),\ n \in \N$, vogliamo trovare il **polinomio $P_n(x)$ di grado $n$ che approssima meglio $\fx$ vicino $x_0$.
@@ -1567,3 +1587,165 @@ $$
 **dove $s$ è il numero di scambi effettuati**.
 Quindi $\det A = \tlr{-1}^s \prod_{i = 1, \dots, n}{u_{i, i}}$
 Il rango è dato invece dal numero $r$ degli elementi non nulli sulla diagonale di $U$.
+
+# Sistemi di equazioni non lineari
+$f:\R^2 \to \R$ è un **campo scalare** su $\R^2$, cioè una **funzione che associa uno scalare ad un punto di** $\R^2$.
+Definiamo il grafico di $f$, $G_f$ come segue:
+$$
+G_f = \glr{\tlr{x, y, z} \in \R^3 | z = \f{x, y}}
+$$
+Un sistema di equazioni non lineari può essere scritto nella forma:
+$$
+\begin{cases}
+f_1\tlr{x_1, x_2, \dots, x_n} = 0 \\
+f_2\tlr{x_1, x_2, \dots, x_n} = 0 \\
+\dots \\
+f_n\tlr{x_1, x_2, \dots, x_n} = 0 \\
+\end{cases}
+$$
+con $f_i:\R^n \to \R$, $i = 1, \dots, n$ funzioni non lineari continue e differenziabili.
+Consideriamo la funzione $F:\R^n\to\R^n$, **funzione a valori vettoriali**:
+$$
+X = \begin{bmatrix}
+x_1 \\
+x_2 \\
+\dots \\
+x_n
+\end{bmatrix} \in \R^n \to F\tlr{X} = \begin{bmatrix}
+f_1\tlr{x_1, x_2, \dots, x_n} \\
+f_2\tlr{x_1, x_2, \dots, x_n} \\
+\dots \\
+f_n\tlr{x_1, x_2, \dots, x_n} \\
+\end{bmatrix}
+$$
+calcolare **la soluzione del sistema**, cioè calcolare il vettore $\a = \qlr{\a_1, \a_2, \dots, \a_n}^T \in \R^n$ che annulla contemporaneamente le equazioni **equivale a calcolare $\a = \blr{\a_1, \a_2, \dots, \a_n}^T \in \R^n$ tale che $F\tlr\a = 0$**.
+
+Il gradiente di una funzione $f:\R^n\to\R$, differenziabile è dato da:
+$$
+\nabla\f X = \begin{bmatrix}
+\frac{\delta\f X}{\delta x_1} \\
+\frac{\delta\f X}{\delta x_2} \\
+\dots \\
+\frac{\delta\f X}{\delta x_n} \\
+\end{bmatrix}
+$$
+
+Lo **Jacobiano** di $F\tlr X$ è la matrice le cui entrate sono le derivate parziali di ciascuna funzione $f_i\tlr{x_1, x_2, \dots, x_n}$, $i = 1, 2, \dots, n$ rispetto a ciascuna variabile, $j = 1, \dots, n$
+$$
+J\tlr X = \begin{bmatrix}
+\frac{\delta f_1\tlr X}{\delta x_1} & \frac{\delta f_1\tlr X}{\delta x_2} & \dots & \frac{\delta f_1\tlr X}{\delta x_n} \\
+\frac{\delta f_2\tlr X}{\delta x_1} & \frac{\delta f_2\tlr X}{\delta x_2} & \dots & \frac{\delta f_2\tlr X}{\delta x_n} \\
+\dots & \dots & \dots & \dots \\
+\frac{\delta f_n\tlr X}{\delta x_1} & \frac{\delta f_n\tlr X}{\delta x_2} & \dots & \frac{\delta f_n\tlr X}{\delta x_n} \\
+\end{bmatrix}
+$$
+che può essere riscritto come:
+$$
+J\tlr X = \begin{bmatrix}
+\frac{\delta F\tlr X}{\delta x_1} & \frac{\delta F\tlr X}{\delta x_2} & \dots & \frac{\delta F\tlr X}{\delta x_n} \\
+\end{bmatrix}
+$$
+dove $\frac{\lambda F\tlr X}{\lambda x_1} = \begin{bmatrix} \frac{\delta f_1\tlr X}{\delta x_i} \\ \frac{\delta f_2\tlr X}{\delta x_i} \\ \dots \\ \frac{\delta f_n\tlr X}{\delta x_i} \\ \end{bmatrix}$
+
+Poiché
+$$
+\nabla F\tlr X = \begin{bmatrix}
+\frac{\delta F\tlr X}{\delta x_1} \\
+\frac{\delta F\tlr X}{\delta x_2} \\
+\dots \\
+\frac{\delta F\tlr X}{\delta x_n} \\
+\end{bmatrix}
+$$
+si ha quindi che $\nabla F\tlr X = J^T\tlr X$
+## Metodo di Newton Raphson per la soluzione di un sistema di equazioni non lineari
+Dato
+$$
+F\tlr X = F\tlr{x_1, x_2} = \begin{bmatrix}
+f_1\tlr{x_1, x_2} \\
+f_2\tlr{x_1, x_2} \\
+\end{bmatrix}
+$$
+individuare il vettore $\a = \qlr{\a_1, \a_2}^T \in \R^2$ tale che $F\tlr\a = \begin{bmatrix}f_1\tlr{\a_1, \a_2} \\ f_2\tlr{\a_1, \a_2}\end{bmatrix} = \begin{bmatrix}0 \\ 0 \end{bmatrix}$.
+Questo equivale ad individuare un punto del piano in cui entrambe le due funzioni si annullino contemporaneamente.
+Consideriamo il polinomio di Taylor di grado $1$ bivariato centrato in un intorno del punto $X_k = \qlr{x_1^{(k)}, x_2^{(k)}}^T \in \R^2$ per entrambe le funzioni bivariate $f_1\tlr{x_1, x_2}$ e $f_2\tlr{x_1, x_2}$.
+Tali polinomi rappresentano il piano che meglio approssima ciascuna delle due funzioni bivariate in un intorno del punto $X_k = \qlr{x_1^{(k)}, x_2^{(k)}}^T \in \R^2$ e ciascuno di essi rappresenta il piano tangente a ciascuna delle due superfici in $X_k = \qlr{x_1^{(k)}, x_2^{(k)}}^T \in \R^2$.
+$$
+\begin{matrix*}
+x_3 = P_1\tlr{x_1, x_2} = f_1\tlr{x_1^{(k)}, x_2^{(k)}} + \frac{\delta f_1}{\delta x_1}\tlr{x_1^{(k)}, x_2^{(k)}}\tlr{x_1^{(k)} - x_1^{(k)}} + \frac{\delta f_1}{\delta x_2}\tlr{x_1^{(k)}, x_2^{(k)}}\tlr{x_2^{(k)} - x_2^{(k)}} \\
+x_3 = Q_1\tlr{x_1, x_2} = f_2\tlr{x_1^{(k)}, x_2^{(k)}} + \frac{\delta f_2}{\delta x_1}\tlr{x_1^{(k)}, x_2^{(k)}}\tlr{x_1^{(k)} - x_1^{(k)}} + \frac{\delta f_2}{\delta x_2}\tlr{x_1^{(k)}, x_2^{(k)}}\tlr{x_2^{(k)} - x_2^{(k)}}
+\end{matrix*}
+$$
+La notazione $\frac{\delta f_i}{\delta f_j}\tlr{x_1^{(k)}, x_2^{(k)}}$ indica la derivata parziale di $f_i$ rispetto ad $x_j$ valutata in $\tlr{x_1^{(k)}, x_2^{(k)}}$.
+L'obiettivo è di individuare un punto del piano $X_\inc k = \qlr{x_1^{(\inc k)}, x_2^{(\inc k)}}^T$ in cui $F\tlr{X_\inc k} = 0$, cioè entrambe le due funzioni si annullino contemporaneamente.
+Poiché $F$ è non lineare, si usa l'approssimazione lineare fornita dai polinomi di Taylor di ciascuna delle due funzioni bivariate e imponiamo che i piani tangenti da essi rappresentati si annullino contemporaneamente.
+$$
+\begin{cases}
+0 = P_1\tlr{x_1, x_2} = f_1\tlr{x_1^{(k)}, x_2^{(k)}} + \frac{\delta f_1}{\delta x_1}\tlr{x_1^{(k)}, x_2^{(k)}}\tlr{x_1^{(k)} - x_1^{(k)}} + \frac{\delta f_1}{\delta x_2}\tlr{x_1^{(k)}, x_2^{(k)}}\tlr{x_2^{(k)} - x_2^{(k)}} \\
+0 = Q_1\tlr{x_1, x_2} = f_2\tlr{x_1^{(k)}, x_2^{(k)}} + \frac{\delta f_2}{\delta x_1}\tlr{x_1^{(k)}, x_2^{(k)}}\tlr{x_1^{(k)} - x_1^{(k)}} + \frac{\delta f_2}{\delta x_2}\tlr{x_1^{(k)}, x_2^{(k)}}\tlr{x_2^{(k)} - x_2^{(k)}}
+\end{cases}
+$$
+
+^04fbe1
+
+Questo sistema di due equazioni lineari rappresenta l'intersezione dei due piano tangenti alle due superfici in $X_n = \qlr{x_1^{(k)}, x_2^{(k)}}^T$ con il piano $x_3 = 0$.
+
+Geometricamente significa: trovare il punto sulla retta di intersezione dei due piani tangenti in cui si ha $x_3 = 0$, cioè in questo punto la retta attraversa il piano $x_3 = 0$.
+
+Indicato con:
+$$
+J\tlr{X_k} = \begin{bmatrix}
+\frac{\delta f_1}{\delta x_1}\tlr{x_1^{(k)}, x_2^{(k)}} & \frac{\delta f_1}{\delta x_2}\tlr{x_1^{(k)}, x_2^{(k)}} \\
+\frac{\delta f_2}{\delta x_1}\tlr{x_1^{(k)}, x_2^{(k)}} & \frac{\delta f_2}{\delta x_2}\tlr{x_1^{(k)}, x_2^{(k)}} \\
+\end{bmatrix}
+$$
+lo jacobiano di $F\tlr X$, calcolato in $X_k$:
+$$
+\begin{matrix*}
+F\tlr{X_k} = \qlr{f_1\tlr{x_1^{(k)}}, f_2\tlr{x_2^{(k)}}}^T \\
+X - X_k = \qlr{\tlr{x_1 - x_1^{(k)}}, \tlr{x_2-x_2^{(k)}}}^T
+\end{matrix*}
+$$
+Il sistema [[#^04fbe1|(2)]] si può esprimere in forma matriciale come:
+$$
+\begin{matrix*}
+0 = F\tlr{x_k} + J\tlr{X_k}\tlr{X-X_k}\\
+J\tlr{X_k}\tlr{X-X_k} = -F\tlr{X_k}
+\end{matrix*}
+$$
+Sotto l'ipotesi che $\det{J\tlr{X_k}} \ne 0$, si ricava $\tlr{X-X_k}$ premoltiplicando ambo i membri per $\inv J\tlr{X_k}$
+$$
+X - X_k = -\inv J\tlr{X_k}F\tlr{X_k}
+$$
+e si determina il procedimento iterativo:
+$$
+X_\inc k - X_k = -\inv J\tlr{X_k}F\tlr{X_k}
+$$
+Si osserva che $-\inv J\tlr{X_k}F\tlr{X_k}$ è  la soluzione del sistema lineare
+$$
+J\tlr{X_k}s_k = -F\tlr{X_k}
+$$
+quindi
+$$
+X_\inc k = X_k + s_k
+$$
+
+L'algoritmo di Newton Raphson si può così schematizzare:
+Dato $X_0 \in \R^n$ e $F$, per ogni iterazione $k$:
+1. Valutare $J\tlr{X_\dec k}$
+2. Risolvere il sistema lineare $J\tlr{X_\dec k}s_\dec k = -F\tlr{X_\dec k}$
+3. Porre $X_k = X_\dec k + s_\dec k$
+
+**È un metodo a convergenza locale e ordine di convergenza quadratico**.
+### Varianti del Metodo di Newton-Raphson
+La valutazione dello Jacobiano richiede di conoscere o poter valutare $n^2$ derivate parziali.
+Alcune varianti al metodo possono migliorare l'efficienza.
+1. **Metodo delle corde**
+	Si utilizza lo stesso Jacobiano $J\tlr{X_0}$ o una sua approssimazione $A\tlr{X_0}$ per tutte le iterazioni $k$. Si potrebbe quindi fattorizzare $J\tlr{X_0} = LU$ e utilizzare i medesimi $L$ ed $U$ per ogni iterazione.
+2. **Metodo di Shamanskii**
+	Si valuta lo Jacobiano ogni $m$ iterazioni e quindi lo si utilizza per le $m$ iterazioni successive:
+	$$
+	J^\inc[i] k J^i, \quad i = 1, \dots, m \\
+	$$
+	Giunti al calcolo di $x_{x + \inc m}$ si rivaluta lo Jacobiano.
+
+### Approccio grafico per localizzare le soluzioni di un sistema di equazioni non lineari
