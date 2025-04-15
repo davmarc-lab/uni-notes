@@ -8,7 +8,7 @@
         "type": "tabs",
         "children": [
           {
-            "id": "337cd856f9ef73ae",
+            "id": "8bde61617cc7cfcd",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -170,13 +170,16 @@
       "obsidian-importer:Open Importer": false
     }
   },
-  "active": "337cd856f9ef73ae",
+  "active": "8bde61617cc7cfcd",
   "lastOpenFiles": [
+    "assets/Pasted image 20250415142800.png",
+    "assets/Pasted image 20250415125147.png",
+    "preamble.sty~",
+    "4913",
+    "MetodiNumerici.md~",
     "Scheletri.md",
     "assets/Pasted image 20250414181557.png",
     "MetodiNumerici.md",
-    "preamble.sty~",
-    "MetodiNumerici.md~",
     "Metodi Numerici.md",
     "Metodi Numerici.md~",
     "assets/image.png",
@@ -191,7 +194,6 @@
     "Metodi Numerici/praemble.sty",
     "praemble.sty",
     "assets/Pasted image 20250326194406.png",
-    "assets/Pasted image 20250326194414 2.png",
     "assets",
     "Metodi Numerici",
     "Welcome.md"

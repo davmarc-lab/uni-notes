@@ -11,6 +11,7 @@ l.pellegrini@unibo.it
 marcella.lucciardi2@unibo.it
 
 <!--toc:start-->
+    - [Esame](#esame)
     - [Email](#email)
 - [Introduzione](#introduzione)
   - [Problema Numerico](#problema-numerico)
@@ -19,7 +20,7 @@ marcella.lucciardi2@unibo.it
     - [Denoising di immagini](#denoising-di-immagini)
 - [Introduzione all’Intelligenza Artificiale (AI)](#introduzione-allintelligenza-artificiale-ai)
   - [Definizione](#definizione)
-  - [Machine Learning](#machine-learning)
+  - [[#^8baed2|Machine Learning]]
     - [Applicazioni](#applicazioni)
   - [Deep Learning](#deep-learning)
   - [Paradigma generale dell’AI](#paradigma-generale-dellai)
@@ -89,6 +90,7 @@ marcella.lucciardi2@unibo.it
     - [Metodi a convergenza locale](#metodi-a-convergenza-locale)
       - [Teorema di convergenza locale](#teorema-di-convergenza-locale)
     - [Metodi Ibridi](#metodi-ibridi)
+    - [Stima numerica dell'ordine di convergenza](#stima-numerica-dellordine-di-convergenza)
 - [Teorema della formula di Taylor con resto di Lagrange](#teorema-della-formula-di-taylor-con-resto-di-lagrange)
   - [Polinomio di Taylor di una funzione bivariata](#polinomio-di-taylor-di-una-funzione-bivariata)
 - [Sistemi Lineari](#sistemi-lineari)
@@ -113,6 +115,12 @@ marcella.lucciardi2@unibo.it
       - [Sostituzione in avanti (Forward Substitution)](#sostituzione-in-avanti-forward-substitution)
       - [Sostituzione all'indietro (backward Substitution)](#sostituzione-allindietro-backward-substitution)
     - [Calcolo Matrice Inversa](#calcolo-matrice-inversa)
+    - [Calcolo del determinante di una matrice sfruttando la [[#^8b8885|Fattorizzazione LU]] di $PA$](#calcolo-del-determinante-di-una-matrice-sfruttando-la-8b8885fattorizzazione-lu-di-pa)
+- [Sistemi di equazioni non lineari](#sistemi-di-equazioni-non-lineari)
+  - [Metodo di Newton Raphson per la soluzione di un sistema di equazioni non lineari](#metodo-di-newton-raphson-per-la-soluzione-di-un-sistema-di-equazioni-non-lineari)
+    - [Varianti del Metodo di Newton-Raphson](#varianti-del-metodo-di-newton-raphson)
+    - [Approccio grafico per localizzare le soluzioni di un sistema di equazioni non lineari](#approccio-grafico-per-localizzare-le-soluzioni-di-un-sistema-di-equazioni-non-lineari)
+  - [Minimi e massimi di una funzione in due variabili](#minimi-e-massimi-di-una-funzione-in-due-variabili)
 <!--toc:end-->
 
 # Introduzione
@@ -222,6 +230,9 @@ Il denoising di immagini è un problema fondamentale nell’elaborazione delle i
 ## Definizione
 È la **riproduzione parziale dell’attività intellettuale propria dell’uomo**, riguardo ai processi di apprendimento, di riconoscimento, di scelta, realizzata o attraverso l’elaborazione di modelli ideali, o con la messa a punto di **macchine** che utilizzano per lo più a tale fine elaboratori elettronici.
 ## Machine Learning![[image 3.png]]
+
+^8baed2
+
 La macchina impara (learn) a risolvere i problemi in modo autonomo.
 ![[assets/image 4.png]]
 ### Applicazioni
@@ -1749,3 +1760,151 @@ Alcune varianti al metodo possono migliorare l'efficienza.
 	Giunti al calcolo di $x_{x + \inc m}$ si rivaluta lo Jacobiano.
 
 ### Approccio grafico per localizzare le soluzioni di un sistema di equazioni non lineari
+Quando risolviamo un sistema di equazioni non lineari come:
+$$
+\begin{cases}
+f_1\tlr{x_1, x_2} = 0 \\
+f_2\tlr{y_1, y_2} = 0 \\
+\end{cases}
+$$
+stiamo cercando i valori di $x_1, x_2$ che soddisfano entrambe le equazioni contemporaneamente. L'approccio grafico offre un modo intuitivo per visualizzare queste soluzioni.
+Consideriamo le funzioni $\f[1]{x_1, x_2}$ e $\f[2]{x_1, x_2}$ come superfici nello spazio tridimensionale:
+$$
+\begin{matrix*}
+x_3 = \f[1]{x_1, x_2} \\
+x_3 = \f[2]{x_1, x_2} \\
+\end{matrix*}
+$$
+Queste sono due superfici definite sul piano $x_1, x_2$.
+Le soluzioni del sistema corrispondono ai punti in cui entrambe le superfici assumono il valore $x_3 = 0$, ossia dove intersecano il piano $x_3 = 0$, cioè il piano $x_1x_2$.
+Le curve di livello a quota zero sono date da:
+- $\f[1]{x_1, x_2} = 0$ che rappresenta l'intersezione con il piano $x_3 = 0$ (per la prima superficie)
+- $\f[2]{x_1, x_2} = 0$ che  rappresenta l'intersezione con il piano $x_3 = 0$ (per la seconda superficie)
+Queste curve sono tracciate nel piano $\xi\xx$ e descrivono tutti i punti $\t{\xi, \xx}$ dove ciascuna superficie "tocca" il piano orizzontale $x_3 = 0$.
+
+I punti $\xi,\xx$ che si trovano sull'intersezione di queste due curve di livello a quota zero sono esattamente i punti in cui sia $\f[1]{\xi, \xx}$ che $\f[2]{\xi, \xx}$ sono uguali a zero, quindi sono la soluzione del sistema.
+
+Possiamo esaminare il  grafico e stimare le coordinate $\t{\xi, \xx}$ di uni di questi punti di intersezione.
+
+> [!note]
+> Queste coordinate stimate sono una buona approssimazione della soluzione effettiva. Pertanto, possiamo utilizzare queste coordinate come il nostro iterato iniziale per il metodo Newton-Raphson.
+> Iniziando da un punto vicino alla vera soluzione, il metodo di Newton-Raphson convergerà rapidamente a una soluzione precisa.
+
+## Minimi e massimi di una funzione in due variabili
+Chiamiamo **Massimo Relativo** (o massimo locale) per una funzione $z = \fxy$ un punto $P_0 = \t{\xo, \yo}$ tale che
+$$
+\f{\xo, \yo} \ge \fxy
+$$
+per tutti i punti $\t{\xy}$ **che appartengono ad un intorno $\mathcal N$ di $\Po$** contenuto nel dominio della funzione.
++
+Chiamiamo invece **Minimo Relativo** (o minimo locale) un punto $\Po$ tale che
+$$
+\f{\xyo} \le \fxy
+$$
+per tutti i punti $\t\xy$ **che appartengono ad un intorno $\mathcal N$ di $\Po$** contenuto nel dominio della funzione.
+
+Chiamiamo **Massimo Assoluto** (o massimo globale) per una funzione $z = \f\xy$ un punto $\Po = \t\xyo$ tale che
+$$
+\f\xyo \ge \fxy
+$$
+per **tutti i punti $\t\xy$ che appartengono al dominio della funzione**.
+
+Chiamiamo **Minimo Assoluto** (o minimo globale) per una funzione $z = \fxy$ un punto $\Po = \t\xyo$ tale che
+$$
+\f\xyo \le \f\xy
+$$
+per **tutti i punti $\t\xy$ che appartengono al dominio della funzione**.
+![[Pasted image 20250415125147.png]]
+
+I punti in cui si **annulla il gradiente di una funzione $f$** si chiamano punti **critici o punti stazionari** di $f$.
+Si calcola la matrice Hessiana così definita:
+$$
+\t{H\t{x}}_{ij} = \frac{\delta^2\fx}{\delta x_i\delta x_j} \quad i, j = 1, \dots, n
+$$
+Se il **determinante della matrice Hessiana calcolata nel punto di stazionarietà**:
+- è positivo e l'elemento in posizione $\t{1, 1}$ è positivo, si tratta di un minimo locale
+- è positivo e l'elemento in posizione $\t{1, 1}$ è negativo, si tratta di un massimo locale
+- è negativo si tratta di un punto di sella
+- è nullo non ci sono informazioni sulla natura del punto di stazionarietà
+### Funzione Convessa
+Una funzione $f:A \subseteq D \to \R$, definita su un insieme convesso $A$ è detta **convessa** se:
+$$
+\f{t \cdot x + \t{1-t}\cdot x'} \le t\fx + \t{1 -t}\f{x'}
+$$
+Dal punto di vista geometrico, una funzione si dice **convessa** se ogni coppia di punti sul grafico della funzione è congiunta mediante un segmento che sta al di sopra del grafico, oppure coincide con una parte del grafico.
+Per una funzione convessa il minimo relativo coincide con il minimo assoluto.
+>[!note] Teorema
+>Se la funzione $f$ è convessa e differenziabile, $\t{\xo, \yo}$ è un minimo se e solo se $\nabla\f{\xo, \yo} = 0$
+
+## Metodo di Newton-Raphson per il calcolo del minimo di una funzione in più variabili
+Data $f:\R^n \to \R$, $f \in C^2$ (differenziabile due volte con continuità), trovare $X^* \in \R^n$ tale che $X^* = \arg{\min_\limits{X\in\R^n}\f X}$.
+I punti di stazionarietà locale $X^*$ sono soluzione del seguente sistema non lineare
+$$
+\nabla \f{X^*} = 0
+$$
+Applichiamo il metodo di Newton Raphson al sistema non lineare:
+$$
+\begin{matrix*}
+\nabla \f X = 0 \Rightarrow \begin{cases}
+\frac{\delta\f X}{\delta\xi} = 0 \\
+\frac{\delta\f X}{\delta\xx} = 0 \\
+\dots \\
+\frac{\delta\f X}{\delta x_n} = 0 \\
+\end{cases} \\
+X = \begin{bmatrix}
+\xi \\ \xx \\ \dots \\ x_n
+\end{bmatrix}
+\end{matrix*}
+$$
+Per verificare poi se tale punto è un massimo, un minimo oppure un punto sella, occorrerà esaminare la matrice hessiana $H\t X = \nabla^2\f X$ in questo punto, dove la matrice Hessiana è così definita:
+$$
+\t{H\t{x}}_{ij} = \frac{\delta^2\fx}{\delta x_i\delta x_j} \quad i, j = 1, \dots, n
+$$
+$$
+H\t X = \begin{bmatrix}
+\frac{\delta^2\f X}{\delta^2\xi} & \frac{\delta^2\f X}{\delta\xi\delta\xx} & \dots & \frac{\delta^2\f X}{\delta\xi\delta x_n} \\
+\frac{\delta^2\f X}{\delta\xx\delta\xi} & \frac{\delta^2\f X}{\delta^2\xx} & \dots & \frac{\delta^2\f X}{\delta\xx\delta x_n} \\
+\dots & \dots & \dots & \dots \\
+\frac{\delta^2\f X}{\delta x_n\delta\xi} & \frac{\delta^2\f X}{\delta x_n\delta\xx} & \dots & \frac{\delta^2\f X}{\delta^2 x_n} \\
+\end{bmatrix}
+$$
+Per semplicità, consideriamo il caso in cui $n=2$.
+Consideriamo il polinomio di Taylor di grado $1$ bivariato centrato in un intorno del punto $X_k = \qlr{x_1^{(k)}, x_2^{(k)}}^T \in \R^2$ per entrambe le componenti del gradiente $\nabla\f{\xi, \xx}$.
+$$
+\begin{matrix*}
+x_3 = P_1\tlr{x_1, x_2} = \frac{\delta f\t{\xi^{\t k}, \xx^{\t k}}}{\delta x_1} + \frac{\delta^2\f{\xi^\t k , \xx^\t k}}{\delta\xi^2}\tlr{\xi - \xi^\t k} + \frac{\delta^2\f{\xi^\t k, \xx^\t k}}{\delta\xi\delta\xx}\tlr{\xx - \xx^\t k}\\
+x_3 = Q_1\tlr{x_1, x_2} = \frac{\delta f\t{\xi^{\t k}, \xx^{\t k}}}{\delta \xx} + \frac{\delta^2\f{\xi^\t k, \xx^\t k}}{\delta\xx\delta\xi}\tlr{\xi - \xi^\t k} + \frac{\delta^2\f{\xi^\t k, \xx^\t k}}{\delta\xx^2}\tlr{\xx - \xx^\t k}\\
+\end{matrix*}
+$$
+
+Tali polinomi rappresentano il piano che meglio approssima ciascuna delle due funzioni bivariate in un intorno del punto $X_k = \qlr{x_1^{(k)}, x_2^{(k)}}^T \in \R^2$ e ciascuno di essi rappresenta il piano tangente a ciascuna di esse in $X_k = \qlr{x_1^{(k)}, x_2^{(k)}}^T \in \R^2$.
+Il nostro obiettivo è individuare un punto del piano $X_\inc k = \qlr{\xi^{\tlr{\inc k}}, \xx^{\tlr{\inc k}}}^T$ in cui $\nabla\f{X_\dec k} = 0$, cioè entra,be le due derivate parziali si annullino contemporaneamente.
+
+Poiché $\nabla f$ è non lineare, usiamo l'approssimazione lineare fornita dai polinomi di Taylor di ciascuna delle due componenti del gradiente della funzione $f$ in un intorno di $X_k = \qlr{\xi^{\t k}, \xx^\t k}^T$ e imponiamo che i piani tangenti da essi rappresentati si annullino contemporaneamente.
+$$
+\begin{cases}
+x_3 = \frac{\delta f\t{\xi^{\t k}, \xx^{\t k}}}{\delta x_1} + \frac{\delta^2\f{\xi^\t k , \xx^\t k}}{\delta\xi^2}\tlr{\xi - \xi^\t k} + \frac{\delta^2\f{\xi^\t k, \xx^\t k}}{\delta\xi\delta\xx}\tlr{\xx - \xx^\t k}\\
+x_3 = \frac{\delta f\t{\xi^{\t k}, \xx^{\t k}}}{\delta \xx} + \frac{\delta^2\f{\xi^\t k, \xx^\t k}}{\delta\xx\delta\xi}\tlr{\xi - \xi^\t k} + \frac{\delta^2\f{\xi^\t k, \xx^\t k}}{\delta\xx^2}\tlr{\xx - \xx^\t k}\\
+\end{cases}
+$$
+Questo sistema di due equazioni lineari rappresenta l'intersezione dei due piani tangenti alle due componenti del gradiente della funzione $f$ in $X_k = \qlr{\xi^{\t k}, \xx^\t k}^T$ con il piano $x_3 = 0$.
+$$
+\begin{cases}
+0 = \frac{\delta f\t{\xi^{\t k}, \xx^{\t k}}}{\delta x_1} + \frac{\delta^2\f{\xi^\t k , \xx^\t k}}{\delta\xi^2}\tlr{\xi - \xi^\t k} + \frac{\delta^2\f{\xi^\t k, \xx^\t k}}{\delta\xi\delta\xx}\tlr{\xx - \xx^\t k}\\
+0 = \frac{\delta f\t{\xi^{\t k}, \xx^{\t k}}}{\delta \xx} + \frac{\delta^2\f{\xi^\t k, \xx^\t k}}{\delta\xx\delta\xi}\tlr{\xi - \xi^\t k} + \frac{\delta^2\f{\xi^\t k, \xx^\t k}}{\delta\xx^2}\tlr{\xx - \xx^\t k}\\
+\end{cases}
+$$
+Indicata con
+$$
+H\t{X_k} = \begin{bmatrix}
+\frac{\delta^2f}{\delta \xi^2}\t{\xi^\t k, \xx^\t k} &\frac{\delta^2f}{\delta \xi\delta\xx}\t{\xi^\t k, \xx^\t k} \\
+\frac{\delta^2f}{\delta \xx\delta\xi}\t{\xi^\t k, \xx^\t k} &\frac{\delta^2f}{\delta\xx^2}\t{\xi^\t k, \xx^\t k} \\
+\end{bmatrix}
+$$
+l'Hessiana di $\f X$, calcolata in $X_k$:
+$$
+\nabla \f{X_k} = \begin{bmatrix}
+\frac{\delta f}{\delta \xi}\t{\xi^\t k, \xx^\t k} & \frac{\delta f}{\delta \xx}\t{\xi^\t k, \xx^\t k}
+\end{bmatrix}^T
+$$
+il gradiente di $f$ calcolato in $X_k$.
