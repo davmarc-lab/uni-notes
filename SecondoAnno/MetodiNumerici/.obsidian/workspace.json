@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "280e111f68429173",
+        "id": "60f08848ecbd20a6",
         "type": "tabs",
         "children": [
           {
-            "id": "8bde61617cc7cfcd",
+            "id": "c513da2d7cce9299",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -170,30 +170,31 @@
       "obsidian-importer:Open Importer": false
     }
   },
-  "active": "8bde61617cc7cfcd",
+  "active": "c513da2d7cce9299",
   "lastOpenFiles": [
+    "preamble.sty~",
+    "assets/Pasted image 20250416180732.png",
+    "assets/Pasted image 20250416180645.png",
+    "assets/Pasted image 20250416180628.png",
+    "assets/Pasted image 20250416175521.png",
+    "assets/Pasted image 20250416171930.png",
+    "^} + r.md",
+    "MetodiNumerici.md",
+    "^solmida.md",
     "assets/Pasted image 20250415142800.png",
     "assets/Pasted image 20250415125147.png",
-    "preamble.sty~",
     "4913",
     "MetodiNumerici.md~",
     "Scheletri.md",
     "assets/Pasted image 20250414181557.png",
-    "MetodiNumerici.md",
     "Metodi Numerici.md",
     "Metodi Numerici.md~",
     "assets/image.png",
     "assets/Pasted image 20250327143626.png",
     "Metodi Numerici/Metodi Numerici.md~",
-    "assets/Pasted image 20250327120141.png",
-    "assets/Pasted image 20250327120059.png",
-    "assets/Pasted image 20250327115156.png",
-    "assets/Pasted image 20250327115137.png",
-    "assets/Pasted image 20250327114523.png",
     "preamble.sty",
     "Metodi Numerici/praemble.sty",
     "praemble.sty",
-    "assets/Pasted image 20250326194406.png",
     "assets",
     "Metodi Numerici",
     "Welcome.md"

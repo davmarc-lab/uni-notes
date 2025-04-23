@@ -546,7 +546,7 @@ La bassa accuratezza dei risultati prodotti da un processo numerico può essere 
 
 > La stabilità dell’algoritmo non garantisce che il risultato calcolato sia accurato
 Si parla di **stabilità o instabilità numerica** intendendo che gli errori sui dati non sono (o sono) amplificati durante lo sviluppo dell’algoritmo:
-$$\left|E_{alg}\right| \approx g(n) \cdot \varepsilon \qquad |\varepsilon| \le u$$
+$$\left|E_{alg}\right| \approx g(n) \cdot \e \qquad |\e| \le u$$
 - $n$, numero di operazioni effettuate
 - $g(n) = c \cdot n, \quad c > 0$, **crescita dell’errore lineare**
 - $g(n) = c^n, \quad c > 1$, **crescita dell’errore esponenziale**
@@ -565,13 +565,13 @@ S_3 = f(S_2 + x_3) \\
 S_n = f(S_{n-1} + x_n)$$
 Quindi il risultato finale $S_n$ differisce dal risultato teorico $S$. L’errore algoritmico è $\left|\frac{S-S_n}{S}\right|$, dato da:
 $$\left|\frac{S-S_n}{S}\right| \le  
-\frac{(|x_1|n + |x_2|(n-1) + \dots + |x_n|)}{|S|} \cdot 1.01 \cdot \varepsilon$$
-dove $|\varepsilon| \le u$
+\frac{(|x_1|n + |x_2|(n-1) + \dots + |x_n|)}{|S|} \cdot 1.01 \cdot \e$$
+dove $|\e| \le u$
 Da qui si nota che ogni addendo è moltiplicato per un peso fisso. Tale formula mostra che, assegnati i numeri finiti $x_1, x_2, \dots, x_n$ **la maggiorazione dell’errore relativo della loro somma “finita” è minima se si sommano questi numeri in modo che i loro valori assoluti siano in ordine crescente**, cioè $|x_1| \le |x_2| \le \dots \le |x_n|$.
-Infatti ai pesi $(1.01 \cdot \varepsilon)n, (1.01\cdot\varepsilon)(n-1)$ più grandi si associano i numeri $|x_1|, |x_2|, \dots, |x_n|$ più piccoli. Ne segue che l’errore pesa meno e si avranno perciò risultati più attendibili.
+Infatti ai pesi $(1.01 \cdot \e)n, (1.01\cdot\e)(n-1)$ più grandi si associano i numeri $|x_1|, |x_2|, \dots, |x_n|$ più piccoli. Ne segue che l’errore pesa meno e si avranno perciò risultati più attendibili.
 La formula può essere riscritta come:
 $$\left|\frac{S-S_n}{S}\right| \le  
-\frac{|x_{max}}{S}\cdot 1.01\cdot\varepsilon \frac{n\cdot(n+1)}{2}$$
+\frac{|x_{max}}{S}\cdot 1.01\cdot\e \frac{n\cdot(n+1)}{2}$$
 che ci dice anche che l’errore dipende dal quadrato del numero degli elementi che si sommano.
 Se $|x_{max}|$ è elevato ma $S$ è piccola, come può avvenire se si sommano addendi di segno opposto e modulo simile
 $$\frac{|x_{max}|}{|S|}\text{ è grande}$$
@@ -594,9 +594,9 @@ cioè **l’errore relativo può crescere molto**.
     L’errore relativo è
     
     $$\left| \frac{P-P_n}{P} \right| \le  
-    1.01 \cdot (n-1) \cdot \varepsilon$$
+    1.01 \cdot (n-1) \cdot \e$$
     
-    dove $|\varepsilon| \le u$.
+    dove $|\e| \le u$.
     
     L’errore algoritmico del prodotto di $n$ numeri di macchina quindi cresce linearmente con $n$ e non dipende dai valori degli elementi di cui si fa il prodotto.
     
@@ -730,10 +730,11 @@ Data una funzione $f:\Bbb R \to \Bbb R$ non lineare, consideriamo il problema di
 $$P_n(x) = \textstyle\sum_{i=0}^{n}a_ix^i = 0, \quad n \ge 2 \\  
 x + 4\sin(x) = 0, \quad e^x+x^2 = 0,\quad \sqrt{x}- \log(x)= 0$$
 
-> Le radici di un’equazione non lineare non possono in generale venire espresse in “forma chiusa” e anche quando ciò è possibile la corrispondente espressione può risultare molto complessa.
-> 
-> Esistono formule esplicite per il calcolo delle radici di polinomi di grado minore di 5.
+Le radici di un’equazione non lineare non possono in generale venire espresse in “forma chiusa” e anche quando ciò è possibile la corrispondente espressione può risultare molto complessa.
+ 
+Esistono formule esplicite per il calcolo delle radici di polinomi di grado minore di 5.
 L’applicazione di tali formule non è però così immediata come la nota formula per il calcolo di radici di polinomi di secondo grado e risulta sicuramente preferibile disporre di **algoritmi numerici in grado di fornire soluzioni approssimate del problema**. Si ricorre a **metodi numerici iterativi approssimati**.
+
 L’approssimazione numerica di una radice $\alpha$ di $f(x)$ si basa sull’uso di metodi iterativi che consistono nella costruzione di una successione di iterati $x_1, x_2, \dots, x_k, \dots$ che tende alla soluzione $\alpha$ del problema, cioè:
 $$\lim_{k\to+\infty}{x_k} = \alpha$$
 È inoltre necessario **rendere il problema ben posto**, cioè individuare un intervallo $I$ contenente una sola radice e poi applicare il metodo iterativo fino a convergenza alla soluzione (radice).
@@ -747,23 +748,23 @@ $$\lim_{k\to+\infty}{x_k} = \alpha$$
 ### Condizionamento del problema del calcolo degli zeri di una funzione non lineare
 Quando si calcola lo zero di una funzione non lineare con un calcolatore, si ottiene un’approssimazione numerica, non il valore esatto. Occorre valutare quanto differisce questa soluzione da quella vera.
 Sia $\alpha$ tale che $f(\alpha)=0$, il valore calcolato numericamente $\tilde\alpha = \alpha + \delta, \ \delta > 0$ con $\delta$ piccolo, può essere visto come la radice dell’equazione:
-$$\tilde f(x) = f(x) + \varepsilon g(x) = 0 \quad \varepsilon >0$$
-- $\varepsilon$ piccolo
+$$\tilde f(x) = f(x) + \e g(x) = 0 \quad \e >0$$
+- $\e$ piccolo
 - $f(x), g(x)$ differenziabili
 
-dove la differenza $|\tilde f(x) - f(x)| = |\varepsilon g(x)|$ rappresenta la perturbazione sulla funzione originale, quindi sui dati; la differenza $|\tilde a - a| = |\delta|$ è la perturbazione sui risultati.
+dove la differenza $|\tilde f(x) - f(x)| = |\e g(x)|$ rappresenta la perturbazione sulla funzione originale, quindi sui dati; la differenza $|\tilde a - a| = |\delta|$ è la perturbazione sui risultati.
 Si ha quindi che $\tilde f(\tilde a) = 0$, facendo uno sviluppo in serie di Taylor del primo ordine di $\tilde f(x)$ in un intorno di $\alpha$:
 $$0 = \tilde f(\alpha + \delta) = \tilde f(\alpha) + \delta\tilde f(\alpha) + {1 \over 2}\delta^2\tilde f''(\xi) \quad \xi \in (\alpha, \alpha + \delta)$$
 Trascurando i termini del secondo ordine:
 $$0 = \tilde f(\alpha + \delta) \approx \tilde f(\alpha) + \delta\tilde f(\alpha) \\  
-0 \approx f(\alpha) + \varepsilon g(\alpha) + \delta \cdot \big( f'(\alpha) + \varepsilon g'(\alpha)\big) \\  
-\varepsilon g(\alpha) + \delta f'(\alpha) + \varepsilon\cdot \delta \cdot g(\alpha) \approx 0$$
-Proseguendo con un’analisi al $1°$ ordine (ossia considerando $\varepsilon \cdot \delta$ trascurabile), si ottiene:
-$$\varepsilon g(\alpha) + \delta f'(\alpha) \approx 0$$
+0 \approx f(\alpha) + \e g(\alpha) + \delta \cdot \big( f'(\alpha) + \e g'(\alpha)\big) \\  
+\e g(\alpha) + \delta f'(\alpha) + \e\cdot \delta \cdot g(\alpha) \approx 0$$
+Proseguendo con un’analisi al $1°$ ordine (ossia considerando $\e \cdot \delta$ trascurabile), si ottiene:
+$$\e g(\alpha) + \delta f'(\alpha) \approx 0$$
 da cui:
-$$\delta \approx - \frac{\varepsilon g(\alpha)}{f'(\alpha)}$$
+$$\delta \approx - \frac{\e g(\alpha)}{f'(\alpha)}$$
 ossia
-$$|\tilde a - a| = |\delta| \approx K|\varepsilon g(\alpha)|$$
+$$|\tilde a - a| = |\delta| \approx K|\e g(\alpha)|$$
 dove la quantità $K = \frac{1}{|f’(\alpha)|}$ rappresenta l’**indice di condizionamento** del problema di calcolare la radice della funzione $f(x)$.
 
 > Se $|f’(\alpha)$ è molto piccolo, allora il problema è mal condizionato.
@@ -805,11 +806,11 @@ Un metodo numerico convergente genera una successione $\{x_k\}$ di iterati che s
 Il processo viene arrestato all’iterato $k$ per il quale si verifica una delle seguenti due condizioni:
 1. **Condizione di arresto basata sul valore della funzione nell’iterato** $x_k$
     
-    $$|f(x_k)| < \varepsilon$$
+    $$|f(x_k)| < \e$$
     
 2. **Condizione di arresto basata sull’incremento di** $x_k$
     
-    $$|x_k - x-{k-1}| < \varepsilon$$
+    $$|x_k - x-{k-1}| < \e$$
     
 Utilizzando il controllo del valore della funzione nel punto $x_k$ come criterio di arresto, si possono però presentare due situazioni problematiche:
 - **Caso Restrittivo**
@@ -827,7 +828,7 @@ Si può concludere che un criterio d’arresto basato sia sul controllo del valo
 
 > [!important] Nella pratica conviene utilizzare il **criterio di arresto relativo**:
 > 
-> $$\frac{|x_k - x_{k-1}|}{|x_k|} < \varepsilon$$
+> $$\frac{|x_k - x_{k-1}|}{|x_k|} < \e$$
 - **Localizzare le radici**
     
     Determinare il numero delle soluzioni e separare ogni soluzione, cioè individuare, per ogni soluzione, un intervallo che non ne contenga altre, discretizzando l’intervallo iniziale.
@@ -1003,7 +1004,7 @@ Il metodo delle secanti può essere più veloce ma non converge sempre. Non c'è
 ![[Pasted image 20250327115137.png]]
 ![[Pasted image 20250327115156.png]]
 #### Metodo di Newton
-Nel metodo di Newton, ad ogni passo $k$, si considera la retta passante per il punto $\tlr{x_k, \f {x_k}}$ e tangente alla curva $\f x$ e si determina il nuovo iterato come il punto di incontro tra questa retta e l'asse delle $x$. Per far ciò, nella formula ricorsiva $|\tilde\alpha - \alpha| = |\delta| \approx K|\varepsilon \g\alpha|$, si pone $m_k = \df{x_k}$, ottenendo la formula ricorsiva:
+Nel metodo di Newton, ad ogni passo $k$, si considera la retta passante per il punto $\tlr{x_k, \f {x_k}}$ e tangente alla curva $\f x$ e si determina il nuovo iterato come il punto di incontro tra questa retta e l'asse delle $x$. Per far ciò, nella formula ricorsiva $|\tilde\alpha - \alpha| = |\delta| \approx K|\e \g\alpha|$, si pone $m_k = \df{x_k}$, ottenendo la formula ricorsiva:
 $$
 x_\inc k = x_k - \frac{\f {x_k}}{\df {x_k}}
 $$
@@ -1599,6 +1600,545 @@ $$
 Quindi $\det A = \tlr{-1}^s \prod_{i = 1, \dots, n}{u_{i, i}}$
 Il rango è dato invece dal numero $r$ degli elementi non nulli sulla diagonale di $U$.
 
+# Metodi iterativi per la soluzione di sistemi lineari
+Per la risoluzione di un sistema lineare $Ax = b$, oltre ai metodi diretti, è possibile utilizzare anche i metodi iterativi che raggiungono la soluzione esatta come limite di un procedimento iterativo.
+>[!note]
+>Mentre i metodi diretti si basano su una fattorizzazione della matrice $A$ e hanno una complessità di $O\t{n^3}$ i metodi iterativi si basano su una decomposizione della matrice $A$ e presentano una complessità di $O\t{kn^2}$, dove $k$ è il numero di iterazioni.
+
+Pertanto tali metodi risultano particolarmente convenienti quando la matrice $A$ è sparsa, cioè il numero degli elementi non nulli è di molto inferiore al numero degli elementi nulli, applicando i metodi diretti può accadere che vengano generati elementi non nulli in corrispondenza degli elementi nulli della matrice di partenza.
+## Metodi iterativi basati sulla decomposizione di $A$
+Sia $A$ la matrice di ordine $n$ e sia dato il sistema:
+$$
+Ax = b, \quad \det A \ne 0
+$$
+
+^dbbb63
+
+Una famiglia di metodi iterativi per la soluzione del sistema lineare [[#^dbbb63|(1)]] si ottiene utilizzando una **decomposizione della matrice $A$** nella forma:
+$$
+A = M-N, \quad \det M \ne 0
+$$
+In tal modo il sistema [[#^dbbb63|(1)]] diventa:
+$$
+\begin{matrix*}
+\t{M-N}x = b\\
+Mx = Nx + b \\
+\Rightarrow x = \inv MNx + \inv Mb
+\end{matrix*}
+$$
+
+^c2d724
+
+La soluzione del sistema $Ax=b$ è anche la soluzione di:
+$$
+x = \inv MNx + \inv Mb
+$$
+e viceversa poiché le due equazioni sono equivalenti.
+Questa formulazione suggerisce di considerare metodi iterativi le cui iterazioni siano fornite dalle iterazioni successive
+$$
+x^\t k = \inv MNx^\t{\dec k} + \inv M b \qquad \text{per }k = 1, 2, \dots, n
+$$
+L'idea dei metodi iterativi è quindi quella di partire da un vettore $x^\t 0$ iniziale arbitrario, stima iniziale della soluzione del sistema [[#^c2d724|(1.1)]] e di costruire una successione di iterati $x^\t k$ mediante il seguente procedimento iterativo:
+$$
+x^\t k = Tx^\t{\dec k} + q \qquad k = 1, 2, \dots, n
+$$
+
+^79f8da
+
+dove $T = \inv MN$, è detta la **matrice di iterazione** del metodo iterativo e $q = \inv Mb$.
+
+I metodi iterativi della forma [[#^79f8da|(2)]] sono detti usualmente iterativi stazionari, perché $T$ e $q$ non dipendono dall'indice di iterazione $k$.
+### Metodo di Jacobi
+
+^b690e5
+
+Nel metodo di Jacobi la decomposizione di $A$ nella forma $A  = M-N$ si ottiene scegliendo $M=D$ e $N = -\t{E-F}$.
+Pertanto il procedimento iterativo [[#^79f8da|(2)]] diviene:
+$$
+x_i^\t k = -\inv D\t{E+F}x^\t{\dec k}+\inv Db \qquad k = 1, 2, \dots, n
+$$
+
+^979279
+
+In termini di componenti la [[#^979279|(3)]], equivale a calcolare la $i$-esima componente dell'iterato $k$-esimo come:
+$$
+x_i^\t k = \frac{-\sum^n_{j = 1}a_{ij}x_j^\t{\dec k}+b_i}{a_{ii}} \qquad i = 1, 2, \dots, n
+$$
+in quanto la matrice $\inv D$ è una matrice diagonale con elementi uguali ai reciproci degli elementi di $D$.
+
+La matrice di iterazione del metodo di Jacobi è data da:
+$$
+T_j = \inv MN = -\inv D\t{E+F}
+$$
+
+>[!note] Osservazioni
+>L'algoritmo di Jacobi è definito se gli elementi diagonali di $A$ sono diversi da $0$, cioè $a_{ii} \ne 0$.
+>In caso contrario, sempre sotto l'ipotesi che $A$ sia non singolare, si possono riordinare le equazioni, e le incognite del sistema in modo da rendere il metodo definito.
+>
+>Ogni elemento dell'iterato $\t k$ è indipendente dagli altri pertanto il metodo è programmabile in forma parallela. 
+
+### Metodo di Gauss-Seidel
+
+^3a35ab
+
+Nel metodo di Gauss-Seidel la decomposizione di $A = M-N$ si ottiene scegliendo $M=E+D$ e $N=-F$.
+In questo caso la matrice di iterazione del metodo è data da:
+$$
+T_G = \inv MN = -\inv{\t{E+D}}F
+$$
+e la soluzione al passo $k$ si ottiene:
+$$
+x^\t k = -\inv{\t{E+D}}Fx^\t{\dec k}+ \inv{\t{E+D}}b \qquad k = 1, 2, \dots, n
+$$
+per esprimere la soluzione in termini di componenti:
+$$
+x_i^\t k = \frac{-\sum^\dec i_{j = i}{a_{ij}x_j^\t k} - \sum^n_{j = \inc i}{a_{ij}x_j^\t{\dec k}}+ b_i}{a_{ii}} \qquad i = 1, 2, \dots, n
+$$
+Questo metodo ha la caratteristica di utilizzare, per calcolare la nuova componente $i$-esima di un iterato, le nuove componenti già calcolate dell'iterato stesso.
+>[!note] Osservazioni
+>Il metodi di Gauss-Seidel non si presta ad essere parallelizzato in quanto ogni nuova componente dell'iterato $\t k$ dipende da tutte le nuove componenti dello stesso iterato che sono state appena calcolate.
+>
+>La soluzione al passo $k$ si ottiene risolvendo il sistema triangolare inferiore avente $\t D+E$ come matrice dei coefficienti e termine noto $b-Fx^\t{\dec k}$
+>$$
+>\t{E+D}x^\t k = -Fx^\t{\dec k}+b
+ >$$
+
+## Convergenza
+>[!note] Definizione
+>Il procedimento iterativo:
+>$$
+>x^\t k = Tx^\t{\dec k}+q
+>$$
+>si dice **convergente** se, per ogni vettore iniziale $x^\t 0$, la successione $\{x^\t k\}$ converge ad un vettore limite $y$:
+>$$
+>\lim_\limits{k\to \infty}{x^\t k} = y
+>$$
+>cioè se, per ogni $\e > 0$, esiste un indice $v$ tale che per ogni $k > v$ si ha:
+>$$
+>\nm {x^\t k - y} \le \e
+>$$
+
+>[!note] Teorema della convergenza
+>Se il sistema lineare [[#^dbbb63|(1)]], ammette un'unica soluzione $x$ e se il suo processo iterativo [[#^79f8da|(2)]] è convergente, allora il vettore limite $y$ coincide con la soluzione $x$, cioè:
+>$$
+>\lim_\limits{k\to\infty}{x^\t k} = x
+>$$
+
+### Convergenza dei Metodi Iterativi
+Per effettuare lo studio della convergenza di un metodo iterativo si considera la matrice di iterazione $T$, tipica del metodo stesso.
+Inoltre si definisce l'**errore commesso al passo $k$** come il vettore:
+$$
+e^\t k = x^\t k-x, \qquad k = 0, 1, \dots
+$$
+e il **vettore residuo al passo $k$** dato da:
+$$
+r^\t k= Ax^\t k - b, \qquad k = 0, 1, \dots
+$$
+Consideriamo ora la relazione relativa al valore esatto $x$:
+$$
+Mx = Nx + b
+$$
+e la relazione analoga, al generico passo $k$:
+$$
+Mx^\t k = Nx^\t{\dec k} + b
+$$
+Sottraendo la prima alla seconda, otteniamo $Me^\t k = Ne^\t{\dec k}$ da cui:
+$$
+e^\t k = \inv MNe^\t{\dec k} = Te^\t{\dec k} = T^2e^\t{\dec[2]k} = \dots = T^ke^\t 0
+$$
+
+Affinché il procedimento sia convergente si deve avere che, comunque si sceglie $x^\t 0$, ciascuna componente del vettore $e^\t k$ tenda a $0$ per $k$ che tende a $\infty$.
+Questo equivale a cercare delle condizioni per cui:
+$$
+\lim_\limits{k\to\infty}{T^ke^\t 0} = 0
+$$
+che equivale a:
+$$
+\lim_\limits{k\to\infty}{T^k} = 0
+$$
+
+> [!note] Teorema
+> Sia $A = M-N$ una matrice di ordine $n$, con $\det A \ne 0$, e $T=\inv MN$ la matrice di iterazione del procedimento iterativo [[#^79f8da|(2)]]. Condizione necessaria e sufficiente per la convergenza del procedimento iterativo, comunque si scelga il vettore iniziale $x^\t 0$, al vettore soluzione $x$ del sistema $Ax =b$, è che:
+> $$
+> \rho\t T < 1
+> $$
+> ovvero che il *raggio spettrale (autovalore di modulo massimo)* della matrice di iterazione $T$ sia minore di $1$
+
+#### Velocità di convergenza dei metodi iterativi
+Abbiamo visto che:
+$$
+e^\t k = T^ke^\t 0
+$$
+e quindi:
+$$
+\nm{e^\t k} \le \nm T^k\nm{e^\t 0}
+$$
+Si può dimostrare che, per $k$ grande:
+$$
+\nm{e^\t k} \approx C \cdot \rho\t T^k \cdot \nm{e^\t 0}
+$$
+dove $C$ è un'opportuna costante maggiore di zero.
+Da cui segue facilmente che:
+$$
+\frac{\nm{e^\t{\inc k}}}{e^\t k} \approx \rho\t T
+$$
+> [!note]
+> Si tratta quindi di **metodi iterativi a convergenza lineare** e $\rho\t T$ è il fattore costante che descrive quanto l'errore si riduce se $\rho\t T < 1$ (o cresce in caso contrario) a ogni passo, quando il metodo si stabilizza (per $k$ grande).
+
+### Condizioni Sufficienti per la Convergenza
+Il calcolo del raggio spettrale della matrice di iterazione $T$ è, anche utilizzando algoritmi idonei, piuttosto oneroso. Si preferisce quindi o considerare condizioni anche più restrittive, ma facilmente verificabili, o individuare classi di matrici per cui la convergenza è garantita da risultati teorici.
+>[!note] Teorema (garantisce una condizione sufficiente alla convergenza)
+>Se, per una qualche norma, risulta $\nm T < 1$, allora il processo iterativo:
+>$$
+>x^\t k = Tx^\t{\dec k} + \inv Mb \qquad k = 1, 2, \dots
+>$$
+>è convergente per ogni $x^\t 0$.
+
+>[!note] Teorema (convergenza per particolari matrici)
+>Se la matrice $A$ è a **diagonale strettamente dominante**, cioè:
+>$$
+>\|a_{ii}\| > \sum^n_\limits{k=1}{\|a_{ik} \|} \qquad i = 1, 2, \dots, n
+>$$
+>Allora sia il metodi di [[#^b690e5|Jacobi]] che quello di [[#^3a35ab|Gauss-Seidel]] convergono e si ha:
+>$$
+>\nm{T_G} \le \nm{T_J} < 1
+>$$
+>
+>Se la matrice $A$ è simmetrica e definita positiva, il metodo di [[#^3a35ab|Gauss-Seidel]] è convergente
+
+### Velocità di Convergenza e Condizionamento di una matrice
+Un procedimento iterativo, convergente se l'autovalore di modulo massimo della matrice di iterazione è minore di $1$, **è tanto più velocemente convergente di quanto più piccolo è il raggio spettrale delle matrice di iterazione $T$**.
+
+>[!caution] Un problema strettamente legato alla convergenza del procedimento iterativo è quello del mal condizionamento della matrice $A$.
+
+L'influenza del condizionamento di $A$ è infatti responsabile del rallentamento o addirittura della perdita della convergenza nei metodi iterativi.
+Questo perché essendo la matrice di iterazione $T$, calcolata a partire da una matrice mal condizionata, $T$ può avere autovalore massimo molto vicino ad $1$ o maggiore di $1$ e questo causa perdita della convergenza.
+### Accelerazione di un metodo iterativo
+È possibile accelerare la convergenza di un metodo iterativo e rendere convergente un metodo che non lo è; esistono dei metodi chiamati **metodi di rilassamento**.
+
+Poiché la velocità di convergenza di un metodo iterativo dipende dal raggio spettrale della matrice di iterazione associata al metodo, un modo per cercare di accelerare la convergenza è quello di far dipendere la matrice di iterazione da un parametro, detto **parametro di rilassamento**, e di scegliere tale parametro in modo tale che la matrice abbia minimo raggio spettrale.
+
+Il metodo di Gauss-Seidel:
+$$
+x^\t k = -\inv D\t{Ex^\t k + Rx^\t{\dec k}-b} \qquad k = 1, 2, \dots
+$$
+può essere riscritto nella forma:
+$$
+x^\t k = x^\t{\dec k} + r^\t k
+$$
+
+^5ca0c1
+
+dove
+$$
+r^\t k = x^\t k - x^\t{\dec k} = -\inv D\qlr{Ex^\t k + Fx^\t{\dec k} - b}-x^\t{\dec k}
+$$
+
+^b9d29c
+
+Modificando il metodo di [[#^5ca0c1|Gauss-Seidel]] come
+$$
+x^\t k = x^\t{\dec k} + \omega r^\t k
+$$
+
+^17944d
+
+e scegliendo opportunamente il parametro $\omega > 0$ si può accelerare la convergenza in modo significativo. A seconda di come viene scelto tale parametro si distinguono i metodi di rilassamento in:
+- **under-relaxation methods**, con $0 < \omega < 1$
+- **over-relaxation methods**, con $\w > 1$
+
+I metodi di **under-relaxation** possono essere usati per ottenere convergenza su certi sistemi per cui non si ha convergenza con il metodo di Gauss-Seidel, mentre i metodi di **over-relaxation** possono essere usati per accelerare la convergenza in sistemi in cui il metodo di Gauss-Seidel converge ma lentamente.
+Questi ultimi metodi vengono chiamati metodi SOR (Successive Over-Relaxation) e vengono spesso impiegati per risolvere sistemi lineari che si incontrano nella soluzione numerica di alcune equazioni alle derivate parziali.
+
+Il metodo SOR si ottiene sostituendo la [[#^b9d29c|(8)]] nella [[#^17944d|(9)]], ovvero:
+$$
+x^\t k = \t{1 - \w}x^\t{\dec k} - \w\inv D\qlr{Ex^\t k + Fx^\t{\dec k}-b}
+$$
+da cui si ricava:
+$$
+x^\t k = \t{1 - \w}x^\t{\dec k} + \w\qlr{-\inv D\qlr{Ex^\t k + Fx^\t{\dec k}-b}}
+$$
+In termini di componenti si ha ce la componente $i$-esima della soluzione al passo $k$, $x_i^\t k$ diviene:
+$$
+x_i^\t k = \t{1 - \w}x_i^\t{\dec k}+ \frac{\w}{a_{ii}}\qlr{b_i - \sum^\dec i_{j = 1}{a_{ij}x_{j}^\t k}-\sum^n_{j = \inc i}{a_{ij}x_j^\t{\dec k}}} \qquad i = 1, 2, \dots, n
+$$
+
+>[!note]
+>Questa variante del metodo di Gauss-Seidel, dipendente dal parametro $\w$, è detta anche metodo di Gauss-Seidel estrapolato e può essere vista come:
+>$$
+>\begin{cases}
+>\tilde{x}_i^\t k = {1 \over a_{ii}}\qlr{b_i - \sum^\dec i_{j = 1}{a_{ij}x_{j}^\t k}-\sum^n_{j = \inc i}{a_{ij}x_j^\t{\dec k}}} \\
+>x_i^\t k = \t{1-\w}x_i^\t{\dec k}+\w\tilde x_i^\t k
+>\end{cases}
+>$$
+>
+>La matrice di iterazione del metodo è:
+>$$
+>T_\w = \inv{\t{D+\w E}}\qlr{\t{1-\w}D-\w F}
+>$$
+
+Nell'applicazione di un metodo di rilassamento dipendente dal parametro nasce il problema della scelta ottimale del parametro $\w$ che, oltre ad assicurare la convergenza, renda minimo il raggio spettrale della matrice di iterazione $T_\w$ in modo da ottenere la massima velocità di convergenza.
+
+>[!note]
+>È noto infatti che, per matrici simmetriche definite positive e per $0 < \w < 2$, il valore di $\rho\t{T_\w}$ si mantiene minore di $1$, ma c'è un punto in cui è minimo.
+>Il valore corrispondente al minimo del raggio spettrale è detto $w_{ottimo}$
+>![[Pasted image 20250416171930.png]]
+> In generale il calcolo di $w_{ottimo}$ è un problema molto laborioso, per cui si suole andare per tentativi.
+
+#### Criterio d'arresto
+Poiché con un metodo iterativo non è ovviamente possibile calcolare in generale la soluzione in un numero finito di iterazioni, occorre individuare dei criteri per l'arresto del procedimento.
+I criteri più comunemente usati, che consistono nel fissare una tolleranza $\e$ che tiene conto della precisione utilizzata nei calcoli, sono i seguenti:
+$$
+\nm{x^\t k - x^\t{\dec k}} \le \e
+$$
+
+oppure se $x^\t k \ne 0$
+$$
+\frac{\nm{x^\t k - x^\t{\dec k}}}{x^\t k} \le \e
+$$
+>[!note]
+>La scelta della tolleranza $\e$ nel criterio d'arresto viene fatta considerando la percentuale d'errore da cui sono affetti i dati iniziali.
+>
+>La scelta del tipo di norma, in genere, dipende dallo specifico problema in esame, comunque nome comunemente usate sono la norma $\infty$ e la norma $2$.
+# Calcolo differenziale in più variabili
+Sia $f:A\subseteq \R^2 \to \R$, $\t\xy \in \R^2\to\fxy \in \R$, $f:\R^2\to\R$ **è un campo scalare** su $\R^2$, cioè una **funzione che associa uno scalare ad un punto di $\R^2$**.
+
+Definiamo il grafico di $f$, $G_f$ come:
+$$
+G_f = \glr{\t{x, y, z} \in \R^3 | z = \f{x, y, z}}
+$$
+Generalizzato su $\R^n$:
+$$
+G_f = \glr{\t{\xi, \xx, \dots, x_n} \in \R^n | x_n = \f{\xi, \xx, \dots, x_n}}
+$$
+## Curva di livello
+Sia $f:dom\t f \subset \R^2\to^\R$ un numero reale, si definisce **curva di livello** $L\t{f, k}$ l'insieme dei punti del dominio di $f$ che soddisfano l'equazione $\fxy = k$
+$$
+L\t{f, k} = \glr{\t\xy \in dom\t{\fxy}:\fxy = k}
+$$
+Se $k \nin Img\t\fxy$ allora $L\t{f, k} = \varnothing$
+
+Dal punto di vista geometrico le curve di livello sono le proiezioni ortogonali sul piano $xy$ delle curve ottenute intersecando il piano $z = k$ ed il grafico della funzione $z = \fxy$.
+Tutti i punti che appartengono alla stessa curva di livello, avranno immagini, mediante $f$, alla stessa quota $z = k$.
+![[Pasted image 20250416175521.png]]
+## Derivate Parziali
+Sia $\t{\xo, \yo} \in \R^2$, e sia $f$ definita in un intorno di $\t{\xo, yo}$.
+Diciamo che $f$ è derivabile rispetto ad $x$ in $\t{\xo, \yo}$ se esiste ed è finito il limite:
+$$
+\lim_\limits{h\to0}{\frac{\f{\xo + h, \yo} - \f{\xo, \yo}}{h}}
+$$
+e lo denotiamo con $\frac{\delta f}{\delta x}\t{\xo, \yo}$ oppure con $f'_x\t{\xo, \yo}$.
+Diciamo che $f$ è derivabile rispetto ad $y$ in $\t{\xo, \yo}$ se esiste ed è finito il limite:
+$$
+\lim_\limits{h\to0}{\frac{\f{\xo, \yo + h} - \f{\xo, \yo}}{h}}
+$$
+e lo denotiamo con $\frac{\delta f}{\delta y}\t{\xo, \yo}$ oppure con $f'_y\t{\xo, \yo}$.
+### Derivate Parziali: Interpretazione Geometrica
+Per calcolare la derivata parziale della funzione $\fxy$ rispetto ad $x$ nel punto $P = \t{\xo, \yo}$, fissiamo il valore di $\yo$, cioè intersechiamo la superficie che $f$ rappresenta con il piano $y = \yo$.
+La derivata parziale rispetto ad $x$ in $P$ rappresenta il coefficiente angolare della retta tangente in $P$ alla curva che si ottiene intersecando il grafico della funzione $f$ con il piano $y = \yo$.
+![[Pasted image 20250416180628.png]]
+
+Per calcolare la derivata parziale della funzione $\fxy$ rispetto ad $y$ nel punto $P = \t{\xo, \yo}$, fissiamo il valore di $\xo$, cioè sezioniamo la superficie che $f$ rappresenta con il piano $x = \xo$.
+La derivata parziale rispetto ad $y$ in $P$ rappresenta il coefficiente angolare della retta tangente alla curva che si ottiene intersecando il grafico della funzione $f$ con il piano $x = \xo$.
+![[Pasted image 20250416180645.png]]
+
+>[!note] Le due rette $r$ e $s$ definiscono il piano tangente alla superficie in $P$
+>![[Pasted image 20250416180732.png]]
+>
+>Se una funzione è differenziabile in un punto allora tutte le derivate parziali calcolate nel punto esistono, ma non vale il viceversa.
+
+L'esistenza di tutte le derivate parziali in un punto non garantisce la differenziabilità di una funzione in quel punto.
+>[!note] Teorema
+>Sia $A \subseteq \R^2$ aperto, $f:A\to\R$. Se tutte le derivate parziali prime esistono e sono continue, la funzione $f$ è differenziabile.
+>
+>Se $f$ è differenziabile ammette un piano tangente di equazione:
+>$$
+>z = \f{\xo, \yo} + f'_x\t{\xo, \yo}\cdot\t{x-\xo} + f'_y\t{\xo, \yo}\cdot\t{y-\yo}
+>$$
+
+Le due derivate parziali nel punto $P$ della funzione $z = \fxy$ formano un vettore, che prende il nome di **gradiente** della funzione $z = \fxy$ nel punto $P$ e viene indicato con:
+$$
+\nabla\f{\xo, \yo} = \begin{bmatrix}
+\frac{\delta f}{\delta x}\t{\xo, \yo} \\
+\frac{\delta f}{\delta y}\t{\xo, \yo} \\
+\end{bmatrix}
+$$
+Quando applichiamo l'operatore $\nabla$ (gradiente) ad un campo scalare, cioè ad una funzione $f:\R^2\to\R$, otteniamo un **campo vettoriale**.
+### Derivata Direzionale
+Le derivate parziali misurano la variazione di una funzione lungo direzioni parallele agli assi coordinati. Nulla vieta di considerare qualsiasi altra direzione.
+Sia $\t{\xo, \yo} \in \R^2$, $v = \t{v_x, v_y}$ un versore, cioè un vettore che ha norma $2$ unitaria.
+
+L'equazione della retta parametrica passante per $\t{\xo, \yo}$ e con direzione $v$ è data da:
+$$
+\begin{cases}
+x = \xo + tv_x \\
+x = \yo + tv_y \\
+\end{cases}
+$$
+che descrive le coordinate $\t\xy$ di un punto che si muove su tale retta.
+Quando $t = 0$ si ottengono le equazioni del punto $\t{\xo, \yo}$.
+
+Vogliamo calcolare la variazione della funzione $f$ lungo la direzione $v$.
+Sia $f:\R^2\to\R$, $\Po = \t{\xo, \yo} \in \R^2$, sia $v \in \R^2$ un vettore unitario, cioè tale che $\nm v_2 = 1$, se esiste ed è finito il limite:
+$$
+D_vf = \lim_\limits{t\to0}{\frac{\f{\xo + t v_x, \yo + tv_y} - \f{\xo, \yo}}{t}}
+$$
+si definisce **derivata direzionale di $f$**, nel punto $\Po = \t{\xo, \yo}$, lungo la direzione $v$ e lo denotiamo con $\delta_vf$ oppure $D_vf$.
+- se $v = \t{1, 0}$, allora $\delta_vf = \delta_xf$
+- se $v = \t{0, 1}$, allora $\delta_vf = \delta_yf$
+>[!note] Teorema del gradiente
+>Sia $f:A \subseteq \R^2\to \R$, $A$ insieme aperto, $f$ differenziabile in $\t{\xyo} \in A$ e sia $v$ un vettore unitario di componenti $\t{v_x, v_y}$, allora esiste $D_vf$ e vale che:
+>$$
+>D_v\f{\xyo} = \nabla\f{\xyo}\cdot v = \frac{\delta\f\xyo}{\delta x} \cdot v_x + \frac{\delta\f\xyo}{\delta y}\cdot v_y
+>$$
+
+dove $\cdot$ rappresenta il prodotto **scalare** tra i vettori $\nabla\f\xyo \cdot v$.
+>[!note] Osservazione 1
+>Supponiamo $f$ differenziabile in $\t{\xyo}$. **Qual'è la direzione $v$ in cui $f$ ha massima crescita, cioè $D_v\f\xyo$ assume valore massimo?**
+>Il prodotto scalare tra due vettori può essere interpretato nel seguente modo:
+>$$
+>D_v\f\xyo = \nabla\f\xyo \cdot v = \nm{\nabla\f\xyo}\nm v \cos\t\a
+>$$
+>dove $\a$ è l'angolo formato tra la direzione del gradiente e la direzione $v$.
+>Ricordiamo che $-1 \le \cos\t\a \le 1$ e $\nm v = 1$.
+>$$
+>D_v\f\xyo = \nabla\f\xyo \cdot v = \nm{\nabla\f\xyo}\cos\t\a
+>$$
+>$D_v\f\xyo$ **assume valore massimo quando** $\cos\t\a = 1$, e quindi $\a = 0$, cioè se $v$ è la direzione del gradiente stesso $\nabla\f\xyo$, ovvero il vettore di norma unitaria nella direzione del gradiente, $v = \frac{\nabla\f\xyo}{\nm{\nabla\f\xyo}}$.
+>
+>$D_v\f\xyo$ **assume valore minimo quando** $\cos\t\a = -1$, e quindi $\a = \pi$, cioè se $v$ è la direzione opposta al gradiente $\nabla\f\xyo$, ovvero il vettore di norma unitaria nella direzione opposta del gradiente, $v = -\frac{\nabla\f\xyo}{\nm{\nabla\f\xyo}}$.
+>
+>Segue che $\nabla\f\xyo$ è la direzione di massima crescenza di $f$ e che $-\nabla\f\xyo$ è la direzione di massima decrescenza di $f$.
+
+>[!note] Osservazione 2
+>$\nabla\f\xyo$ è **ortogonale** alla direzione della retta tangente alla curva di livello in un determinato punto.
+### Derivate Seconde
+Sia $f:\a \subseteq \R^2\to\R$, $\t\xy \to \fxy$, se $\delta_x\fxy$ e $\delta_y\fxy$ sono derivabili, allora diciamo che $f$ è derivabile $2$ volte.
+Se le derivate di $f$ sono continue allora diciamo che la $f$ è di classe $C^2$.
+$$
+\begin{align}
+&\delta_{xx}\fxy &\frac{\delta^2f}{\delta x^2} &&f_{xx} \\
+&\delta_{xy}\fxy &\frac{\delta^2f}{\delta x\delta y} &&f_{xy} \\
+&\delta_{yx}\fxy &\frac{\delta^2f}{\delta y\delta x} &&f_{yx} \\
+&\delta_{yy}\fxy &\frac{\delta^2f}{\delta y^2} &&f_{yy} \\
+\end{align}
+$$
+
+>[!note] Teorema di Schwarz
+>Sia $f:A\subseteq\R^2\to\R$ di classe $C^2$ allora:
+>$$
+>\frac{\delta^2f}{\delta x\delta y} = \frac{\delta^2f}{\delta y \delta x}
+>$$
+#### Matrice Hessiana
+$$
+H_f\t\xy = \begin{bmatrix}
+\frac{\delta^2\fxy}{\delta x^2} & \frac{\delta^2\fxy}{\delta x\delta y} \\
+\frac{\delta^2\fxy}{\delta y\delta x} & \frac{\delta^2\fxy}{\delta y^2} \\
+\end{bmatrix}
+$$
+### Forma Quadratica
+Una forma quadratica su $\R^n$ è un polinomio di **secondo grado in $n$ variabili**:
+$$
+\begin{matrix*}
+h = \t{h_1, h_2, \dots, h_n} \\
+q\t h = q\t{h_1, h_2, \dots, h_n} = \sum_\limits{i, j = 1}^n{a_{ij}h_ih_j}
+\end{matrix*}
+$$
+Nel caso $n = 2$:
+$$
+q\t{h_1, h_2} = a_{11}h_1^2 + a_{12}h_1h_2 + a_{21}h_2h_1 + a_{22}h_2^2
+$$
+>[!note] La matrice associata a $q\t h$ è:
+>$$
+>A = \begin{bmatrix}
+>a_{11} & a_{12} & \dots & a_{1n} \\
+>a_{21} & a_{22} & \dots & a_{2n} \\
+>\vdots & \vdots & \ddots & \vdots \\
+>a_{n1} & a_{n2} & \dots & a_{nn}
+>\end{bmatrix}
+>$$
+>$q\t h$ **può essere scritta nella forma**:
+>$$
+>q\t h = \qlr{h_1 \ h_2 \ \dots \ h_n} \cdot A \cdot \begin{bmatrix}
+>h_1 \\
+>h_2 \\
+>\vdots \\
+>h_n
+>\end{bmatrix} = h^t\cdot A\cdot h
+>$$
+
+Una forma quadratica si dice **definita positiva** se:
+$$
+q\t h > 0 \quad \forall h \ne 0
+$$
+Una forma quadratica si dice **definita negativa** se:
+$$
+q\t h < 0 \quad \forall h \ne 0
+$$
+Una forma quadratica si dice **semidefinita positiva** se:
+$$
+q\t h \ge 0 \quad \forall h, \ \exists h\ne0 \text{ tale che } q\t h = 0
+$$
+Una forma quadratica si dice **semidefinita negativa** se:
+$$
+q\t h \le 0 \quad \forall h, \ \exists h\ne0 \text{ tale che } q\t h = 0
+$$
+>[!note] Teorema
+>Una forma quadratica $q$ è definita positiva $\Leftrightarrow$ $\det A > 0$ e $a_{11} > 0$, è definita negativa $\Leftrightarrow$ $\det A > 0$ e $a_{11} < 0$.
+>Una forma quadratica $q$ è semidefinita positiva $\Leftrightarrow$ $\det A = 0$ e $a_ {11} > 0$, è semidefinita negativa $\Leftrightarrow$ $\det A = 0$ e $a_{11} < 0$.
+>Una forma quadratica $q$ è **indefinita** $\Leftrightarrow$ $\det A < 0$.
+## Massimi e minimi di una funzione in $2$ variabili
+Chiamiamo **Massimo Relativo** (o massimo locale) per una funzione $z = \fxy$ un punto $P_0 = \t{\xo, \yo}$ tale che
+$$
+\f{\xo, \yo} \ge \fxy
+$$
+per tutti i punti $\t{\xy}$ **che appartengono ad un intorno $\mathcal N$ di $\Po$** contenuto nel dominio della funzione.
++
+Chiamiamo invece **Minimo Relativo** (o minimo locale) un punto $\Po$ tale che
+$$
+\f{\xyo} \le \fxy
+$$
+per tutti i punti $\t\xy$ **che appartengono ad un intorno $\mathcal N$ di $\Po$** contenuto nel dominio della funzione.
+
+Chiamiamo **Massimo Assoluto** (o massimo globale) per una funzione $z = \f\xy$ un punto $\Po = \t\xyo$ tale che
+$$
+\f\xyo \ge \fxy
+$$
+per **tutti i punti $\t\xy$ che appartengono al dominio della funzione**.
+
+Chiamiamo **Minimo Assoluto** (o minimo globale) per una funzione $z = \fxy$ un punto $\Po = \t\xyo$ tale che
+$$
+\f\xyo \le \f\xy
+$$
+per **tutti i punti $\t\xy$ che appartengono al dominio della funzione**.
+![[Pasted image 20250415125147.png]]
+
+I punti in cui si **annulla il gradiente di una funzione $f$** si chiamano punti **critici o punti stazionari** di $f$.
+## Funzione Convessa
+Una funzione $f:A \subseteq D \to \R$, definita su un insieme convesso $A$ è detta **convessa** se:
+$$
+\f{t \cdot x + \t{1-t}\cdot x'} \le t\fx + \t{1 -t}\f{x'}
+$$
+Dal punto di vista geometrico, una funzione si dice **convessa** se ogni coppia di punti sul grafico della funzione è congiunta mediante un segmento che sta al di sopra del grafico, oppure coincide con una parte del grafico.
+Per una funzione convessa il minimo relativo coincide con il minimo assoluto.
+>[!note] Teorema
+>Se la funzione $f$ è convessa e differenziabile, $\t{\xo, \yo}$ è un minimo se e solo se $\nabla\f{\xo, \yo} = 0$
+### Classificazione dei punti critici
+Supponiamo $f:A \subseteq\R^2\to\R$ di classe $C^2$. Sia $\t\xyo \in \R^2$ un punto critico di $f$, cioè **un punto in cui si annulla il gradiente $\nabla\f\xyo = 0$, cioè si risolve il sistema lineare**:
+$$
+\begin{cases}
+f_x'\t\xy = 0 \\
+f_y'\t\xy = 0 \\
+\end{cases}
+$$
+e si trovano le coordinate dei punti critici.
+Allora se:
+- $H_f\t\xyo$ è **definita positiva** $\Rightarrow$ $\t\xyo$ è un punto di **minimo locale**
+- $H_f\t\xyo$ è **definita negativa** $\Rightarrow$ $\t\xyo$ è un punto di **massimo locale**
+- $H_f\t\xyo$ è **indefinita** $\Rightarrow$ $\t\xyo$ non è né un punto di massimo né un punto di minimo. Un tale punto si dice **punto di sella**.
+- $\det{H_f\t\xyo} = 0$, casi dubbi.
+
+
 # Sistemi di equazioni non lineari
 $f:\R^2 \to \R$ è un **campo scalare** su $\R^2$, cioè una **funzione che associa uno scalare ad un punto di** $\R^2$.
 Definiamo il grafico di $f$, $G_f$ come segue:
@@ -1790,33 +2330,7 @@ Possiamo esaminare il  grafico e stimare le coordinate $\t{\xi, \xx}$ di uni di 
 > Queste coordinate stimate sono una buona approssimazione della soluzione effettiva. Pertanto, possiamo utilizzare queste coordinate come il nostro iterato iniziale per il metodo Newton-Raphson.
 > Iniziando da un punto vicino alla vera soluzione, il metodo di Newton-Raphson convergerà rapidamente a una soluzione precisa.
 
-## Minimi e massimi di una funzione in due variabili
-Chiamiamo **Massimo Relativo** (o massimo locale) per una funzione $z = \fxy$ un punto $P_0 = \t{\xo, \yo}$ tale che
-$$
-\f{\xo, \yo} \ge \fxy
-$$
-per tutti i punti $\t{\xy}$ **che appartengono ad un intorno $\mathcal N$ di $\Po$** contenuto nel dominio della funzione.
-+
-Chiamiamo invece **Minimo Relativo** (o minimo locale) un punto $\Po$ tale che
-$$
-\f{\xyo} \le \fxy
-$$
-per tutti i punti $\t\xy$ **che appartengono ad un intorno $\mathcal N$ di $\Po$** contenuto nel dominio della funzione.
-
-Chiamiamo **Massimo Assoluto** (o massimo globale) per una funzione $z = \f\xy$ un punto $\Po = \t\xyo$ tale che
-$$
-\f\xyo \ge \fxy
-$$
-per **tutti i punti $\t\xy$ che appartengono al dominio della funzione**.
-
-Chiamiamo **Minimo Assoluto** (o minimo globale) per una funzione $z = \fxy$ un punto $\Po = \t\xyo$ tale che
-$$
-\f\xyo \le \f\xy
-$$
-per **tutti i punti $\t\xy$ che appartengono al dominio della funzione**.
-![[Pasted image 20250415125147.png]]
-
-I punti in cui si **annulla il gradiente di una funzione $f$** si chiamano punti **critici o punti stazionari** di $f$.
+# Minimi e massimi di una funzione in due variabili
 Si calcola la matrice Hessiana così definita:
 $$
 \t{H\t{x}}_{ij} = \frac{\delta^2\fx}{\delta x_i\delta x_j} \quad i, j = 1, \dots, n
@@ -1826,16 +2340,6 @@ Se il **determinante della matrice Hessiana calcolata nel punto di stazionariet�
 - è positivo e l'elemento in posizione $\t{1, 1}$ è negativo, si tratta di un massimo locale
 - è negativo si tratta di un punto di sella
 - è nullo non ci sono informazioni sulla natura del punto di stazionarietà
-### Funzione Convessa
-Una funzione $f:A \subseteq D \to \R$, definita su un insieme convesso $A$ è detta **convessa** se:
-$$
-\f{t \cdot x + \t{1-t}\cdot x'} \le t\fx + \t{1 -t}\f{x'}
-$$
-Dal punto di vista geometrico, una funzione si dice **convessa** se ogni coppia di punti sul grafico della funzione è congiunta mediante un segmento che sta al di sopra del grafico, oppure coincide con una parte del grafico.
-Per una funzione convessa il minimo relativo coincide con il minimo assoluto.
->[!note] Teorema
->Se la funzione $f$ è convessa e differenziabile, $\t{\xo, \yo}$ è un minimo se e solo se $\nabla\f{\xo, \yo} = 0$
-
 ## Metodo di Newton-Raphson per il calcolo del minimo di una funzione in più variabili
 Data $f:\R^n \to \R$, $f \in C^2$ (differenziabile due volte con continuità), trovare $X^* \in \R^n$ tale che $X^* = \arg{\min_\limits{X\in\R^n}\f X}$.
 I punti di stazionarietà locale $X^*$ sono soluzione del seguente sistema non lineare
@@ -1908,3 +2412,30 @@ $$
 \end{bmatrix}^T
 $$
 il gradiente di $f$ calcolato in $X_k$.
+Il sistema precedente riscritto in termini matriciali diventa:
+$$
+\begin{matrix*}
+0 = \nabla\f{X_k} + H\t{X_k}\t{X- X_k} \\
+H\t{X_k}\t{X- X_k} = -\nabla\f{X_k}
+\end{matrix*}
+$$
+Sotto l'ipotesi che $\det{H\t{X_k}} \ne 0$, si ricava $\t{X-X_k}$ premoltiplicando ambo i membri per $\inv H\t{X_k}$  si ottiene:
+$$
+X-X_k = -\inv H\t{X_k}\nabla\f{X_k}
+$$
+Si osserva che $-\inv H\t{X_k}\nabla\f{X_k}$ è la soluzione del sistema lineare:
+$$
+H\t{X_k}s_k =-\nabla\f{X_k}
+$$
+quindi
+$$
+X_\inc k = X_k + s_k
+$$
+> [!note] L'algoritmo di **Newton-Raphson** per la minimizzazione diventa
+> Dato $x_0 \in \R^n$ ed $F$, per ogni iterazione $k$
+> 1. Valutare $H\t{X_\dec k}$
+> 2. Risolvere il sistema lineare $H\t{X_\dec k}s_\dec k = -\nabla\f{X_\dec k}$
+> 3. Porre $X_k = X_\dec k + s_\dec k$
+> $s_\dec k$ definisce una direzione di discesa da $X_\dec k$ ad $X_k$
+
+Il **criterio d'arresto** sulla grandezza del vettore gradiente blocca l'algoritmo poiché il gradiente si annulla.
