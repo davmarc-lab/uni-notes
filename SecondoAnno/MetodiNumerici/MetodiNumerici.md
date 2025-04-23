@@ -2439,3 +2439,94 @@ $$
 > $s_\dec k$ definisce una direzione di discesa da $X_\dec k$ ad $X_k$
 
 Il **criterio d'arresto** sulla grandezza del vettore gradiente blocca l'algoritmo poiché il gradiente si annulla.
+# Metodi di Discesa
+Per la risoluzione di un sistema lineare $Ax=b$ con matrice $A$ reale, simmetrica e definita positiva, un'altra famiglia di metodi iterativi è data dai così detti **metodi di discesa**.
+>[!attention]
+>Con la notazione $<x, y>$ si intende il prodotto scalare $x^Ty$
+
+>[!note] Teorema
+>Sia $A \in \R^{n\times n}$, **matrice simmetrica e definita positiva**, $b,\ x \in \R^n$, allora la soluzione del sistema lineare $Ax = b$ coincide con il punto minimo della seguente funzione quadratica:
+>$$
+>\begin{matrix*}
+>F\t x = \half<Ax, x> - <b, x> = \half x^TAx - b^x \\
+>= \half \sum_{i=1}^n{\sum^n_{j=1}{a_{ij}x_ix_j}}-\sum^n_{i=1}{b_ix_i}
+>\end{matrix*}
+>$$
+>ove la forma quadratica:
+>$$
+>Q\t x = <Ax, x> = x^TAx \text{ è positiva per } x \ne 0
+>$$
+
+Il teorema afferma che risolvere il sistema equivale a minimizzare la forma quadratica.
+I metodi di discesa possono essere usati per trovare la soluzione dei sistemi lineari con **matrice simmetrica definita positiva** minimizzando la forma quadratica precedente.
+
+Questi metodi iterativi consistono nel determinare, a partire da un vettore $x$ al passo $k$, che indicheremo con $x^\t k$, un vettore direzione $p$ al passo $k$, $p^\t k$, opportuno e nel correggere $x^\t k$ in questa direzione in modo che il valore della funzione quadratica $F$ nel nuovo iterato $x^\t{\inc k} = x^\t k + \a^\t kp^\t k$ diminuisca, cioè:
+$$
+F\t{x^\t k + \a^\t kp^\t k} < F\t{x^\t k}
+$$
+Perché ciò avvenga il parametro $\a^\t k$ e la direzione $p^\t k$ devono essere scelti in modo opportuno. I differenti metodi di discesa sono caratterizzati dalla scelta della direzione di discesa $p^\t k$ fra le direzioni ammissibili.
+
+La determinazione del parametro $\a^\t k$ che permette di rendere minima la $F$ nella direzione $p^\t k$ differenzia i metodi suddetti quando vengono impiegati per la soluzione del sistema lineare $Ax=b$ da quando vengono impiegati per determinare il minimo di una funzione qualsiasi.
+## Metodo di Discesa più ripido (Steepest Descent)
+Il metodo di discesa più ripido (Steepest Descent) è caratterizzato dalla scelta, ad ogni passo $k$, della direzione $p^\t k$ come l'antigradiente della $F$ calcolato nell'iterato $k$-esimo, ovvero:
+$$
+p^\t k = -\nabla F\t{x^\t k} = -Ax^\t k + b= -r^\t k
+$$
+Poiché il gradiente è la direzione di massima crescita, questo significa che ad ogni passo il vettore $p^\t k$ essendo l'antigradiente di $F$ coincide con la direzione di massima decrescita.
+$$
+\begin{matrix*}
+\a^\t k = -\frac{<r^\t k, p^\t k>}{<Ap^\t l, p^\t k} = \frac{<r^\t k, r^\t k>}{Ar^\t k, r^\t k} \\
+x^\t{\inc x} = x^\t k + \a^\t kp^\t k
+\end{matrix*}
+$$
+```python
+x0, k = 0
+while convergenza
+	pk = -grad(fxk)
+	# Scegli ak tale che f(xk + (ak * pk)) < f(xk)
+	ak = (rk.T * rk) / ((A*rk).T * rk)
+	# Aggiorna l'iterato
+	xk1 = xk + ak * pk
+	rk1 = rk + ak * pk
+	k += 1
+```
+Il seguente procedimento raggiunge la convergenza quando $\nm{r^\t{\inc k}}_2 \le toll$
+### Velocità di Convergenza
+La velocità di convergenza di un metodo iterativo si può misurare considerando di quanto si è ridotto l'errore iniziale alla $k$-esima iterazione.
+Per misurare l'errore si definisce la norma indotta dalla matrice simmetrica definita positiva $A$ su $x$ come:
+$$
+\nm x_A^2 = x^TAx
+$$
+Per il metodo del gradiente **Steepest Descent** vale la seguente relazione:
+$$
+\nm{x^\t k - x^*}_A \le \t{\frac{\dec{K\t A}}{\inc{K\t A}}}^k \cdot \nm{x^\t 0 - x^*}_A
+$$
+Pertanto, definendo l'errore al passo $k$
+$$
+e^\t k_A = \nm{x^\t k - x^*}_A
+$$
+si ha:
+$$
+e^\t k_A = \t{\frac{\dec{K\t A}}{\inc{K\t A}}}^k \cdot e^\t 0_A
+$$
+dove $K\t A$ è l'indice di condizionamento di $A$, dato da:
+$$
+K\t A = \nm A \cdot \nm{\inv A} = \lambda_{max} / \lambda_{min}
+$$
+Tanto più $K\t A$ è alto tanto più il rapporto $\t{\frac{\dec{K\t A}}{\inc{K\t A}}} \approx 1$ e quindi tanto più è lenta la convergenza.
+## Gradiente Coniugato
+### Direzioni Coniugate
+Data un'ellisse ed una direzione $P^0$, tutti i punti medi delle corde parallele alla direzione sono allineati e formano una direzione $p^1$ che si dice coniugata alla direzione data.
+![[Pasted image 20250423165800.png]]
+Due direzioni $p^\t k, p^\t{\dec k}$ coniugate rispetto all'ellisse soddisfano la relazione:
+$$
+<Ap^\t k, p^\t{\dec k}> = <p^\t k, Ap^\t{\dec k}> = 0
+$$
+dove $A$ è la matrice dell'ellisse.
+### Metodo del Gradiente Coniugato
+In questo metodo la scelta della direzione di discesa $p^\t k$ tiene conto non solo del gradiente della $F\t{x^\t k}$ cioè $r^\t k$, ma anche della direzione di discesa dell'iterazione precedente $p^\t{\dec k}$.
+In particolare nel metodo del Gradiente Coniugato, al generico passo $k$, partendo dal punto $x^\t k$ che è stato ottenuto muovendosi lungo la direzione $p^\t{\dec k}$, e in cui è stato calcolato il residuo $r^\t k$, si sceglie la nuova direzione di discesa come quella appartenente al piano $\pi_k$ passante per $x^\t k$ e individuato dai due vettori ortogonali $r^\t k$ e $p^\t{\dec k}$.
+Più precisamente si ha:
+$$
+p^\t k = -r^\t k + \gamma_kp^\t{\dec k} \quad k = \, 2, \dots
+$$
