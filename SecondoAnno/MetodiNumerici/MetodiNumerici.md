@@ -2468,6 +2468,9 @@ Perché ciò avvenga il parametro $\a^\t k$ e la direzione $p^\t k$ devono esser
 
 La determinazione del parametro $\a^\t k$ che permette di rendere minima la $F$ nella direzione $p^\t k$ differenzia i metodi suddetti quando vengono impiegati per la soluzione del sistema lineare $Ax=b$ da quando vengono impiegati per determinare il minimo di una funzione qualsiasi.
 ## Metodo di Discesa più ripido (Steepest Descent)
+
+^87ca7e
+
 Il metodo di discesa più ripido (Steepest Descent) è caratterizzato dalla scelta, ad ogni passo $k$, della direzione $p^\t k$ come l'antigradiente della $F$ calcolato nell'iterato $k$-esimo, ovvero:
 $$
 p^\t k = -\nabla F\t{x^\t k} = -Ax^\t k + b= -r^\t k
@@ -2530,3 +2533,66 @@ Più precisamente si ha:
 $$
 p^\t k = -r^\t k + \gamma_kp^\t{\dec k} \quad k = \, 2, \dots
 $$
+
+^a590e6
+
+Poiché il punto di minimo nel piano $\pi_k$ coincide con il centro dell'ellisse, il parametro $\gamma_k$ sarà scelto in modo che la direzione $p^\t k$ punti verso il centro dell'ellisse, cioè sia il **coniugato** rispetto all'ellisse, di $p^\t{\dec k}$. Ciò significa che deve soddisfare la seguente relazione:
+$$
+<Ap^\t k, p^\t{\dec k} = <p^\t k, Ap^\t{\dec k}> = 0
+$$
+Sostituendo [[#^a590e6|(1)]] nella precedente relazione si ottiene:
+$$
+\gamma_k = \frac{<r^\t k, Ap^\t{\dec k}>}{<p^\t{\dec k}, Ap^\t{\dec k}>}
+$$
+Utilizzando tale valore, si ottiene la nuova direzione $p^\t k$ e il nuovo punto $x^\t k$ viene calcolato come punto di minimo nella relazione $p^\t k$, cioè:
+$$
+x^\t{\inc k} = x^\t k + \a_k p^\t k
+$$
+con
+$$
+\begin{matrix*}
+\a_k = -\frac{<r^\t k, p^\t k>}{<Ap^\t k, p^\t k>} \quad k = 1, 2, \dots \\
+r^\t k = r^\t{\dec k} + \a_kAp^\t k
+\end{matrix*}
+$$
+Queste relazioni definiscono il **metodo del gradiente coniugato**.
+>[!note] Teorema
+>Nel metodo del **gradiente coniugato** le direzioni di discesa $p^\t k$, con $k = 0, 1, \dots$, formano un sistema di direzioni coniugate, mentre i valori residui $r^\t k$, con $k = 0, 1, \dots$, formano un sistema ortogonale, cioè:
+>$$
+>\begin{align}
+>&<r^\t k, r^\t j> = 0 &k \ne j,\ j = 0, 1, \dots, \dec k \\
+>&<Ap^\t k, p^\t j> = 0 &k \ne j,\ j = 0, 1, \dots, \dec k \\
+>\end{align}
+>$$
+
+Ciò significa che la direzione $p^\t k$ è coniugata non solo a $p^\t{\dec k}$ ma a tutte le precedenti direzioni di discesa e che il residuo $r^\t k$ è ortogonale a tutti i precedenti residui.
+>[!note] Osservazione
+>Poiché in $\R^n$ non si possono avere più di $n$ vettori che costituiscono un sistema ortogonale, in linea teorica questa classe di metodi appartiene ai metodi diretti poiché viene costruita una successione $\glr{x^\t k}$ con $k = 0, 1, \dots$ di vettori tali che:
+>$$
+>x^\t k = x^* = \inv Ab \quad\text{quando } k = \dec n
+>$$
+
+In pratica a causa degli errori di arrotondamento, il metodo non termina al passo $k = n-1$ e viene quindi utilizzato come metodo iterativo.
+In molti casi comunque si verifica che il numero di iterazioni che occorrono per raggiungere la precisione richiesta è di gran lunga inferiore alla dimensione del sistema e questo rende il metodo molto utile per problemi di grosse dimensioni.
+
+È possibile trovare una nuova espressione semplificata per il parametro $\a_k$, si ottiene:
+$$
+\a_k = \frac{<r^\t k, r^\t k}{<Ap^\t k, p^\t k>} \quad k = 1, 2, \dots
+$$
+
+Inoltre p possibile ottenere una formula più efficiente per $\gamma_k$:
+$$
+\gamma_k = \frac{<r^\t k, r^\t k>}{<r^\t{\dec k}, r^\t{\dec k}>}
+$$
+In definitiva l'algoritmo del **Gradiente Coniugato** può essere schematizzato come segue:
+![[Pasted image 20250424154001.png]]
+#### Velocità di Convergenza
+Per il metodo del gradiente coniugato vale la seguente relazione:
+$$
+e^k_A \le \t{\frac{\sqrt{K\t A}-1}{\sqrt{K\t A} +1}}^k \cdot e^0_A
+$$
+che mostra come la convergenza del metodo, pur rimanendo sempre legata all'indice di condizionamento di $A$ sia più veloce di quella del metodo [[#^87ca7e|Steepest Descent]] a parità di valori di $K\t A$.
+Se la matrice è molto mal condizionata può accadere che siano necessari molti passi di iterazione per ottenere la convergenza, per questo sono state studiate tecniche di precondizionamento che trasformano il problema originale in un problema equivalente ma meglio condizionato.
+>[!note] Osservazione
+>Poiché la funzione quadratica $F\t x$ , assegnandola a $F\t x = const$ rappresenta l'espressione di un iperellissoide con eccentricità legata dal rapporto $\frac{\gamma_{max}}{\gamma_{min}}$, possiamo dire che ad una matrice $A$ mal condizionata corrisponde un'operellissoide molto allungato, mentre ad un $K\t A$ piccolo corrisponde un iperellissoide più arrotondato.
+
