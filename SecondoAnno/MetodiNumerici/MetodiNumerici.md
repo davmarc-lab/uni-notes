@@ -2596,3 +2596,170 @@ Se la matrice è molto mal condizionata può accadere che siano necessari molti 
 >[!note] Osservazione
 >Poiché la funzione quadratica $F\t x$ , assegnandola a $F\t x = const$ rappresenta l'espressione di un iperellissoide con eccentricità legata dal rapporto $\frac{\gamma_{max}}{\gamma_{min}}$, possiamo dire che ad una matrice $A$ mal condizionata corrisponde un'operellissoide molto allungato, mentre ad un $K\t A$ piccolo corrisponde un iperellissoide più arrotondato.
 
+# Interpolazione polinomiale dei dati sperimentali
+Definiamo $\P_n \qlr x$ lo spazio vettoriale dei polinomi nella variabile $x$ di grado minore o uguale ad $n$ e a coefficienti reali.
+$$
+\P_n\qlr x:= \glr{\a_0 + \a_1x + \a_2x^2 + \dots + \a_nx^n\ |\ \a_1 \in \R}
+$$
+La base canonica per lo spazio $\P_n\qlr x$ è rappresentata dalle funzioni base: $\Phi_0\t x = x^0 = 1, \quad \Phi_1\t x = x, \quad \Phi_2 \t x = x^2, \quad \dots, \quad \Phi_n\t x = x^n$
+## Interpolazione
+Le coppie $\t{x_i, y_i} \ i = 0, \dots, n, \quad x_i \ne x_k, i \ne k$, dove $x_i$ sono detti **nodi** ed $y_i \quad i = 0, \dots, n$ rappresentano le valutazioni di un fenomeno nelle posizioni $x_i$, il problema dell'interpolazione polinomiale consiste nel determinare il polinomio $P_n\t x \in \P_n\qlr x$:
+$$
+P_n\t x = \a_0\Phi_0\t x + \a_1\Phi_1\t x + \a_2\Phi_2\t x + \dots + \a_n\Phi_n\t x
+$$
+cioè
+$$
+P_n\t x = \a_0 + \a_1x + \a_2 x^2 + \dots + \a_nx^n
+$$
+in maniera tale che:
+$$
+P_n\t{x_i} = y_i \quad i = 0, \dots, n
+$$
+Questo equivale ad individuare i coefficienti $\a_i, \ i = 0, \dots, n$ del polinomio $P_n\t x$ tali che sia soddisfatta la condizione $P_n\t x = y_i \ i = 0, \dots, n$ detta **condizione di interpolazione**.
+Una volta individuati i coefficienti, avremo a disposizione la formula analitica del polinomio interpolatore che potremo valutare anche in altre posizioni $\bar x$ che non fanno parte del nostro insieme di punti di valutazione.
+Se $\zeta_1 = \min\glr{\xo, \xi, \dots, x_n}$  e $\zeta_2 = \max\glr{\xo, \xi, \dots, x_n}$, parleremo di:
+- **interpolazione** se $\bar x \in \qlr{\zeta_1, \zeta_2}$
+- **estrapolazione** se $\bar x \not\in \qlr{\zeta_1, \zeta_2}$
+Imporre $P_n\t{x_i} = y_i, \ i = 0, \dots, n$ significa:
+$$
+P_n\t{x_i} = \a_0 + \a_1x_im+ \a_2x_i^2 + \dots + \a_nx_i^n = y_i \quad \forall \ i = 0, \dots n
+$$
+Se scriviamo questa relazione per ogni $i$, ricaveremo il seguente sistema lineare:
+$$
+\begin{cases}
+\a_0 + \a_1x_0 + \a_2x_0^2 + \dots + \a_nx_0^n = y_0 \\
+\a_0 + \a_1x_1 + \a_2x_2^2 + \dots + \a_nx_1^n = y_1 \\
+\a_0 + \a_1x_2 + \a_2x_3^2 + \dots + \a_nx_2^n = y_2 \\
+\dots \\
+\a_0 + \a_1x_n + \a_2x_n^2 + \dots + \a_nx_n^n = y_n \\
+\end{cases}
+$$
+Quindi i coefficienti $\a_i \ i = 0, \dots, n$ del polinomio $p\t x$, che soddisfa le condizioni $p\t{x_i} = y_i, \ i = 0, \dots, n$, sono la soluzione del precedente sistema lineare.
+In termini matriciali, questo sistema lineare si può scrivere nel seguente modo:
+$$
+A \alpha = y
+$$
+dove la matrice dei coefficienti $A$ di questo sistema lineare è la matrice di dimensione $\t{\inc n} \times \t{\inc n}$.
+$$
+A = \begin{cases}
+1 & x_0 ^1 & x_0^2 & \dots & x_0^n \\
+1 & x_1 ^1 & x_1^2 & \dots & x_1^n \\
+1 & x_2 ^1 & x_2^2 & \dots & x_2^n \\
+\dots & \dots & \dots & \dots & \dots \\
+1 & x_n^1 & x_n^2 & \dots & x_n^n
+\end{cases}
+$$
+che è la matrice di Vandermonde, $y = \begin{bmatrix}y_0 \\ y_1 \\ y_2 \\ \vdots \\ y_n\end{bmatrix}$ è il vettore di ordine $n+1$, la cui $i$-esima componente è rappresentata dalla $i$-esima valutazione $y_i$, ed $\a = \begin{bmatrix}\a_0 \\ \a_1 \\ \a_2 \\ \vdots \\ \a_n\end{bmatrix}$ è il vettore delle incognite di ordine $\inc n$.
+Il sistema lineare precedente ammette una ed una soluzione se e solo se la matrice dei coefficienti è quadrata ed ha rango massimo.
+La matrice dei coefficienti è quadrata perché il numero delle condizioni che imponiamo è uguale al numero delle incognite. È sempre a rango massimo perché $x_i \ne x_k, \ i \ne k$.
+>[!note] La matrice di Vandermonde ha sempre rango massimo purché $x_i \ne x_k, \ i \ne k$
+
+Quindi siamo sicuri che, dal punto di vista teorico, il problema dell'interpolazione polinomiale ammette sempre soluzione e questa è unica.
+> [!note] Osservazione
+> La matrice dei coefficienti di Vandermonde è una matrice **molto mal condizionata**, per cui la soluzione del sistema lineare è un problema mal condizionato e quindi molto sensibile alle piccole inevitabili perturbazioni sui dati.
+
+Occorre quindi cambiare approccio al problema: basta **cambiare base per lo spazio $\P_n\qlr x$**.
+Una base che fa si che la matrice del sistema lineare che nasce dall'imposizione delle condizioni di interpolazione coincida con la matrice identità è la **base di Lagrange**.
+Gli $\inc n$ polinomi di Lagrange, $L_j^\t n\t x$ sono polinomi di grado $n$ che rappresentano una base per lo spazio dei **polinomi** $\P_n\qlr x$ e soddisfano le condizioni:
+$$
+L_j^\t n\t{x_i} = \begin{cases}
+1 & \text{se } i = j \\
+0 & \text{se } i \ne j \\
+\end{cases}
+$$
+
+^2fb96b
+
+Quindi il polinomio $P_n\t x \in \P_n\qlr x$ nella base di Lagrange si esprime nella forma:
+$$
+P_n\t x = \a_0L_0^\t n\t x + \a_1L_1^\t n\t x + \a_2L_2^\t n\t x + \dots + \a_nL_n^\t n\t x
+$$
+Imponendo le condizioni di interpolazione $P_n\t x = y_i, \ i = o, \dots, n$ ricaveremo il seguente sistema lineare:
+$$
+\begin{cases}
+\a_0L_0^\t n\t{x_0} + \a_1L_1^\t n\t{x_0} + \a_2L_2^\t n\t{x_0} + \dots + \a_nL_n^\t n\t{x_0} = y_0 \\
+\a_0L_0^\t n\t{x_1} + \a_1L_1^\t n\t{x_1} + \a_2L_2^\t n\t{x_1} + \dots + \a_nL_n^\t n\t{x_1} = y_1 \\
+\dots \\
+\a_0L_0^\t n\t{x_n} + \a_1L_1^\t n\t{x_n} + \a_2L_2^\t n\t{x_n} + \dots + \a_nL_n^\t n\t{x_n} = y_n \\
+\end{cases}
+$$
+che scritto in forma matriciale diventa:
+$$
+\begin{bmatrix}
+L_0^\t n\t{x_0} & L_1^\t n\t{x_0} & L_2^\t n\t{x_0} & \dots & L_n^\t n\t{x_0} \\
+L_0^\t n\t{x_1} & L_1^\t n\t{x_1} & L_2^\t n\t{x_1} & \dots & L_n^\t n\t{x_1} \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+L_0^\t n\t{x_n} & L_1^\t n\t{x_n} & L_2^\t n\t{x_n} & \dots & L_n^\t n\t{x_n} \\
+\end{bmatrix}
+\begin{bmatrix}
+\a_0 \\ \a_1 \\ \a_2 \\ \vdots \\ \a_n
+\end{bmatrix} = 
+\begin{bmatrix}
+y_0 \\ y_1 \\ y_2 \\ \vdots \\ y_n
+\end{bmatrix}
+$$
+che per [[#^2fb96b|la proprietà dei polinomi di Lagrange]], si riduce a:
+
+$$
+\begin{bmatrix}
+1 & 0 & 0 & \dots & 0 \\
+0 & 1 & 0 & \dots & 0 \\
+0 & 0 & 1 & \dots & 0 \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+0 & 0 & 0 & \dots & 1 \\
+\end{bmatrix}
+\begin{bmatrix}
+\a_0 \\ \a_1 \\ \a_2 \\ \vdots \\ \a_n
+\end{bmatrix} = 
+\begin{bmatrix}
+y_0 \\ y_1 \\ y_2 \\ \vdots \\ y_n
+\end{bmatrix}
+$$
+e quindi il vettore soluzione $\a$ coincide con il vettore termine noto $y$.
+Ricaviamo le funzioni base $L_j^\t n, \ j = 0, \dots, n$.
+$L_j^\t n$ è un polinomio di grado $n$ che soddisfa le [[#^2fb96b|condizioni]], cioè che si annulla in tutti i punti $x_i \ i \ne j$ ed è diverso da zero solo nel punto $x_j$; sarà quindi nella forma:
+$$
+L_j^\t n = c \t{x - \xo}\t{x - \xi} \dots \t{x - x_{\dec j}}\t{x-x_{\inc j}} \dots\t{x - x_n}
+$$
+Determiniamo $c$ in maniera tale che $L_j^\t n \t{x_j} = 1$:
+$$
+L_j^\t n \t{x_j} = c \prod^n_{k = 0}\t{x_j - x_k} = 1 \quad \text{con } k \ne j
+$$
+da cui segue:
+$$
+c = {1 \over \prod^n_{k = 0 }\t{x_j - x_k}} \quad \text{con } k \ne j
+$$
+e quindi:
+$$
+\begin{matrix*}
+L_j^\t n\t x = \prod^n_{k = 0}{\t{x - x_k} \over \t{x_j - x_k}} \\
+L_j^\t n\t x = \frac{\t{x- x_0}\t{x- x_1}\dots\t{x- x_{\dec j}}\t{x- x_{\inc j}}\dots\t{x - x_n}}{\t{x_j - x0}\t{x_j - x_1}\dots\t{x_j - x_\dec j}\t{x_j - x_\inc j}\dots\t{x_j - x_n}}
+\end{matrix*}
+$$
+I polinomi $L_j^\t n\t x$ sono chiamati **polinomi base di Lagrange**.
+Essi godono della proprietà di partizione dell'unità, cioè:
+$$
+\sum^n_{i = 0}{l_j^\t n\t x} = 1 \quad \forall \ x \in \qlr{\xo, x_n} \text{ se } \xo < \xi < x_2 < \dots < x_n
+$$
+
+## Polinomio Interpolatore nella forma di Lagrange
+Date le coppie $\t{x_i, y_i} \ i = 0, \dots, n$, $x_i \ne x_k \ i \ne k$, il polinomio di grado $n$ che le interpola può essere espresso nella seguente **forma di Lagrange**.
+$$
+P_n\t x = \sum^n_{j = 0}y_jL_j^\t n \t x
+$$
+
+^0ffb28
+
+Sfruttando la [[#^2fb96b|proprietà]] dei polinomi di base di Lagrange, relativi ai punti $\xo, \xi, \dots, x_n$ si vede immediatamente che $P_n\t x$ dato dalla [[#^0ffb28|forma di Lagrange]] fornisce una nuova espressione del polinomio interpolatore dei dati $\t{x_i, y_i} \ i = 0, \dots, n$. Infatti se calcoliamo $P_n\t x$ in un qualunque punto $x_i$ otteniamo:
+$$
+P_n\t{x_i} = \sum^n_{j = 0}{y_jL_j^\t n\t{x_i} = y_i} \quad i = 0, \dots, n
+$$
+Infatti, calcoliamo $P_n\t{x_i}$ e verifichiamo che vale esattamente $y_i$:
+$$
+P_n \t{x_i} = \yo L_0^\t n\t{x_i} + \yi L_1^\t n\t{x_i} + \dots + y_iL_i^\t n\t{x_i} + \dots + y_nL_n^\t n\t{x_i}
+$$
+Nella relazione precedente, per la [[#^2fb96b|proprietà]] dei polinomi di base di Lagrange, l'unico polinomio di Lagrange diverso da zero nel punto $x_i$ è $L_i^\t n\t x$ che nel punto $x_i$ vale $1$, quindi segue che:
+$$
+P_n\t {x_i} = y_i
+$$
+Poiché questo vale per tutti i punti $x_i, \ i = 0, \dots, n$ abbiamo verificato che la [[#^0ffb28|forma di Lagrange]] fornisce un'espressione del polinomio interpolatore di Lagrange.
