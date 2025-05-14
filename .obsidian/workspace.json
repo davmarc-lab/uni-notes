@@ -4,24 +4,39 @@
     "type": "split",
     "children": [
       {
-        "id": "d7c55f269ce94835",
+        "id": "2111eb688771e52f",
         "type": "tabs",
         "children": [
           {
-            "id": "300c6538cece79d3",
+            "id": "e7601943c527fe39",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "TerzoAnno/Computer Graphics 2023/Domande Computer Graphic/Domande Computer Graphic.md",
+                "file": "TerzoAnno/TerzoAnno.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Domande Computer Graphic"
+              "title": "TerzoAnno"
+            }
+          },
+          {
+            "id": "7bbbdc26a0916540",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "TerzoAnno/Ingegneria Del Software 2023/Ingegneria del Software 2023/IngegneriaSoftware.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "IngegneriaSoftware"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -166,8 +181,11 @@
       "obsidian-importer:Open Importer": false
     }
   },
-  "active": "300c6538cece79d3",
+  "active": "7bbbdc26a0916540",
   "lastOpenFiles": [
+    "TerzoAnno/TerzoAnno.md",
+    "TerzoAnno/Ingegneria Del Software 2023/Ingegneria del Software 2023/Esercizi Pratici/Esercizi Pratici.md",
+    "TerzoAnno/Computer Graphics 2023/Domande Computer Graphic/Domande Computer Graphic.md",
     "SecondoAnno/MetodiNumerici/assets/Pasted image 20250331121152.png",
     "SecondoAnno/MetodiNumerici/assets/Pasted image 20250331121050.png",
     "SecondoAnno/MetodiNumerici/assets/Pasted image 20250331121004.png",
@@ -192,11 +210,9 @@
     "TerzoAnno/High Performance 2023",
     "SecondoAnno/MDP/MDP.md",
     "SecondoAnno/MDP/assets",
-    "TerzoAnno/TerzoAnno.md",
     "TerzoAnno.md",
     "TerzoAnno/Computer Graphics 2023/Computer Graphics 2023.md",
     "TerzoAnno/Computer Graphics 2023/Progetto 2.md",
-    "TerzoAnno/Computer Graphics 2023/Domande Computer Graphic/Domande Computer Graphic.md",
     "TerzoAnno/Computer Graphics 2023/assets",
     "TerzoAnno/Computer Graphics 2023/Domande Computer Graphic",
     "TerzoAnno/Computer Graphics 2023",
