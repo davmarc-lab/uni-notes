@@ -1,24 +1,20 @@
 {
   "main": {
-    "id": "4d48cd6fa11ec125",
+    "id": "c7deea34da673e55",
     "type": "split",
     "children": [
       {
-        "id": "103f3f88ddf9862b",
+        "id": "c6c8d4fd1c889eaf",
         "type": "tabs",
         "children": [
           {
-            "id": "910ab99f44d11ef6",
+            "id": "eb9a239271bf066b",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "SecondoAnno/MetodiNumerici/MetodiNumerici.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "MetodiNumerici"
+              "title": "New tab"
             }
           }
         ]
@@ -27,15 +23,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "f87169a01f1c8b6c",
+    "id": "e9f5a6ae8a7e3184",
     "type": "split",
     "children": [
       {
-        "id": "84917fb893ace136",
+        "id": "9ce5632e6bd8330f",
         "type": "tabs",
         "children": [
           {
-            "id": "0180e7898fdfe5b7",
+            "id": "2d91a1ef5adb81f9",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -48,7 +44,7 @@
             }
           },
           {
-            "id": "96a9de5b45c2efc1",
+            "id": "c6510d5e598ffc31",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -65,7 +61,7 @@
             }
           },
           {
-            "id": "b9c0b0ff66cc4f5a",
+            "id": "53a7e5a02f00f12b",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -81,20 +77,20 @@
     "width": 300
   },
   "right": {
-    "id": "3eaddd9fb375e229",
+    "id": "0697964cf0683b7f",
     "type": "split",
     "children": [
       {
-        "id": "d054d89a66c6ff38",
+        "id": "b6e953cf481a5781",
         "type": "tabs",
         "children": [
           {
-            "id": "a8d5089f09585d8c",
+            "id": "ecfb230ba624560b",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
-                "file": "TerzoAnno/IngegneriaSoftware/Ingegneria del Software 2023/IngegneriaSoftware.md",
+                "file": "Ingegneria del Software 2023/IngegneriaSoftware.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -108,20 +104,21 @@
             }
           },
           {
-            "id": "a074b6ed84312742",
+            "id": "a9c74c2eca37d88f",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "Ingegneria del Software 2023/IngegneriaSoftware.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links"
+              "title": "Outgoing links from IngegneriaSoftware"
             }
           },
           {
-            "id": "13f15371f4b76fbe",
+            "id": "c478289e3c6fe421",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -136,18 +133,17 @@
             }
           },
           {
-            "id": "ae398cd5da9c83d5",
+            "id": "47db11c85287ae69",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
-                "file": "TerzoAnno/HighPerformance/HighPerformance.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of HighPerformance"
+              "title": "Outline"
             }
           }
         ],
@@ -169,53 +165,23 @@
       "obsidian-importer:Open Importer": false
     }
   },
-  "active": "910ab99f44d11ef6",
+  "active": "eb9a239271bf066b",
   "lastOpenFiles": [
-    "TerzoAnno/HighPerformance/HighPerformance-OLD.md",
-    "TerzoAnno/IngegneriaSoftware/Ingegneria del Software 2023/IngegneriaSoftware.md",
-    "TerzoAnno/IngegneriaSoftware/Ingegneria del Software 2023/Esercizi Pratici/Esercizi Pratici.md",
-    "TerzoAnno/ComputerGraphics/Progetto 2.md",
-    "TerzoAnno/ComputerGraphics/Computer Graphics 2023.md",
-    "TerzoAnno/TerzoAnno.md",
-    "TerzoAnno/IngegneriaSoftware/Ingegneria del Software 2023/Esercizi Pratici/Tips.md",
-    "Prova",
-    "TerzoAnno/ComputerGraphics/Domande Computer Graphic/Domande Computer Graphic.md",
-    "SecondoAnno/MetodiNumerici/assets/Pasted image 20250331121152.png",
-    "SecondoAnno/MetodiNumerici/assets/Pasted image 20250331121050.png",
-    "SecondoAnno/MetodiNumerici/assets/Pasted image 20250331121004.png",
-    "SecondoAnno/MetodiNumerici/MetodiNumerici.md",
-    "preamble.sty~",
-    "SecondoAnno/SecondoAnno.md",
-    "Index.md",
-    "TerzoAnno/IngegneriaSoftware",
-    "TerzoAnno/High Performance 2023/High Performance Computing 2023.md",
-    "TerzoAnno/HighPerformance/assets/Untitled 51.png",
-    "TerzoAnno/HighPerformance/assets/Untitled 50.png",
-    "TerzoAnno/HighPerformance/assets/Untitled 49.png",
-    "TerzoAnno/HighPerformance/assets/Untitled 48.png",
-    "TerzoAnno/HighPerformance/assets/Untitled 47.png",
-    "TerzoAnno/HighPerformance/assets/Untitled 46.png",
-    "TerzoAnno/HighPerformance/assets/Untitled 45.png",
-    "TerzoAnno/High Performance 2023/High Performance Computing 2023/High Performance Computing 2023.md",
-    "TerzoAnno/High Performance 2023/High Performance Computing 2023",
-    "TerzoAnno/HighPerformance/assets",
-    "TerzoAnno/High Performance 2023/Untitled",
-    "TerzoAnno/HighPerformance",
-    "SecondoAnno/MDP/MDP.md",
-    "SecondoAnno/MDP/assets",
-    "TerzoAnno.md",
-    "TerzoAnno/ComputerGraphics/assets",
-    "TerzoAnno/ComputerGraphics/Domande Computer Graphic",
-    "TerzoAnno/Computer Graphics/ComputerGraphics.md",
-    "TerzoAnno/Secondo Semestre.md",
-    "TerzoAnno/Sessione Estiva.md",
-    "TerzoAnno/Primo Semestre.md",
-    "TerzoAnno/Tecnologie Web/Progetto Web/Progetto Web.md",
-    "TerzoAnno/Tecnologie Web/Tecnologie Web 2023.md",
-    "TerzoAnno/Tecnologie Web/Specifiche Progetto.md",
-    "TerzoAnno/Ricerca Operativa/Modulo 2/Modulo 2.md",
-    "TerzoAnno/Ricerca Operativa/Esame RICOP (teoria incompleta)/Esame RICOP (teoria incompleta).md",
-    "TerzoAnno/Ricerca Operativa/Modulo 1/Modulo 1.md",
-    "TerzoAnno/Ricerca Operativa/Ricerca Operativa 2023.md"
+    "Ingegneria del Software 2023/IngegneriaSoftware.md",
+    "Ingegneria del Software 2023/Esercizi Pratici/Esercizi Pratici.md",
+    "Ingegneria del Software 2023/Esercizi Pratici/Tips.md",
+    "assets/Pasted image 20250513113853.png",
+    "assets/Pasted image 20250513113333.png",
+    "assets/Pasted image 20250513113000.png",
+    "assets/Untitled 56.png",
+    "assets/Pasted image 20250509161709.png",
+    "assets/Pasted image 20250509161642.png",
+    "assets/Pasted image 20250509161300.png",
+    "assets/Pasted image 20250509161050.png",
+    "assets/Pasted image 20250509155355.png",
+    "assets/Pasted image 20250509144606.png",
+    "assets",
+    "Ingegneria del Software 2023/Esercizi Pratici",
+    "Ingegneria del Software 2023"
   ]
 }

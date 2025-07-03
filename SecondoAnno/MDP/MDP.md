@@ -183,7 +183,7 @@ $$
         1. disposizioni semplici se non possono esserci ripetizioni di uno stesso elemento
         2. disposizioni con ripetizione in caso contrario
 
-![[assets/image.png|image 5.png]]
+![[SecondoAnno/MDP/assets/image.png|image 5.png]]
 
 ## Probabilità
 

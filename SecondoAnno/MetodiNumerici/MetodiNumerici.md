@@ -226,15 +226,15 @@ Il denoising di immagini è un problema fondamentale nell’elaborazione delle i
 > 
 > Criterio **oggettivo** per valutare se una macchina è intelligente o dimostra un comportamento intelligente. Si basa su un gioco.
 > 
-> ![[assets/image 3.png]]
+> ![[SecondoAnno/MetodiNumerici/assets/image 3.png]]
 ## Definizione
 È la **riproduzione parziale dell’attività intellettuale propria dell’uomo**, riguardo ai processi di apprendimento, di riconoscimento, di scelta, realizzata o attraverso l’elaborazione di modelli ideali, o con la messa a punto di **macchine** che utilizzano per lo più a tale fine elaboratori elettronici.
-## Machine Learning![[image 3.png]]
+## Machine Learning![[SecondoAnno/MetodiNumerici/assets/image 3.png]]
 
 ^8baed2
 
 La macchina impara (learn) a risolvere i problemi in modo autonomo.
-![[assets/image 4.png]]
+![[SecondoAnno/MetodiNumerici/assets/image 4.png]]
 ### Applicazioni
 1. **Riconoscimento delle immagini**, viene utilizzato per identificare oggetti, persone, luoghi, immagini, digitali, ecc.
     
@@ -257,7 +257,7 @@ La macchina impara (learn) a risolvere i problemi in modo autonomo.
 ## Deep Learning
 Il **deep learning**, o deep natural learning, è un **sottoinsieme del machine learning**, che utilizza le reti neurali per **analizzare diversi fattori con una struttura simile al sistema neurale umano**.
 ## Paradigma generale dell’AI
-![[assets/image 5.png]]
+![[SecondoAnno/MetodiNumerici/assets/image 5.png]]
 1. **Acquisizione dati**: i dati sono l’elemento fondante di qualsiasi applicazione correlata al ML. L’acquisizione di grandi quantità di dati è oggi uno degli obiettivi principali delle migliori aziende
 2. **Data processing**: tutte quelle tecniche con cui vengono elaborati i dati per adattarli al meglio al modello ML sviluppato
 3. **Modello**: è il **nucleo principale** del sistema. Un modello può essere visto come un **insieme di tecniche matematiche e statistiche**, **in grado di apprendere** da una certa distribuzione di dati forniti in input e di generalizzare su nuovi dati
@@ -316,10 +316,10 @@ Di solito, la natura non supervisionata del problema lo rende **più complesso**
 - Raggruppamento di individui in base alle analogie del DNA nella genetica
 - Partizionamento dei geni in gruppi con caratteristiche simili nella bioinformatica
 - Segmentazione non supervisionata nella visione
-![[assets/image 6.png]]
+![[SecondoAnno/MetodiNumerici/assets/image 6.png]]
 # Artificial Neural Networks
 ## Il neurone Artificiale
-![[assets/image 7.png]]
+![[SecondoAnno/MetodiNumerici/assets/image 7.png]]
 $$net_i = \sum_{j = 1, \dots, d}{w_{ji} \cdot in_j + w_{0i}} \\  
 out_i = f(net_i)$$
 - $in_1, in_2, \dots, in_d$ sono i $d$ **ingressi** che il neurone $i$ riceve da assoni di neuroni afferenti
@@ -329,13 +329,13 @@ out_i = f(net_i)$$
 ## Funzioni di attivazione
 Una funzione di attivazione determina se un neurone deve essere **attivato o meno**, si tratta di alcune semplici **operazioni matematiche** per determinare se l’input del neurone alla rete è rilevante o meno nel processo di previsione.
 Le funzioni di attivazione possono essere di diversi tipi, ma in generale devono essere **non lineari** per consentire alla rete di apprendere relazioni complessa tra le sue variabili di input, e **derivabili**.
-![[assets/image 8.png]]
+![[SecondoAnno/MetodiNumerici/assets/image 8.png]]
 
 > [!important] **Singolo neurone artificiale che effettua una separazione lineare tra due classi**
 > 
 > Per semplicità consideriamo il caso di 2 soli input, con $\text{bias } = 0$
 > 
-> ![[assets/image 9.png]]
+> ![[SecondoAnno/MetodiNumerici/assets/image 9.png]]
 > 
 > $$f(net) = \begin{cases}  
 > -1 & net < \theta \\  
@@ -349,7 +349,7 @@ Le funzioni di attivazione possono essere di diversi tipi, ma in generale devono
 > w_1x_1 + w_2x_2 > \theta \rightarrow w_1x_1 + w_2x_2 - \theta > 0 \quad (x_1, x_2) \text{ sta sotto la retta}
 > $$
 > 
-> ![[assets/image 10.png]]
+> ![[SecondoAnno/MetodiNumerici/assets/image 10.png]]
 > 
 > Equazione implicita della retta $w_1x_1 + w_2x_2 - \theta = 0$
 > 
@@ -357,34 +357,34 @@ Le funzioni di attivazione possono essere di diversi tipi, ma in generale devono
 > 
 > Per porter avere separazioni più complicate rispetto a quelle lineari è necessario utilizzare più neuroni artificiali organizzati su diversi (tanti) strati (**layer**) **Multilayer Perceptron** (**MLP**)
 > 
-> ![[assets/image 11.png]]
+> ![[SecondoAnno/MetodiNumerici/assets/image 11.png]]
 ## Tipologie di Reti Neurali
 Le reti neurali sono composte da gruppi di neuroni artificiali organizzati in **livelli**. Tipicamente sono presenti un livello di **input**, un livello di **output** e uno o più **livelli intermedi**.
 I **layer intermedi** sono chiamati **hidden layers** in quanto restano invisibili dall’esterno della rete, la quale si interfaccia all’ambiente solo tramite il layer di ingresso e quello di uscita.
 ### Feedforward FFNN
 Nelle reti **feedforward** le connessioni collegano i neuroni di un libello con i neuroni di un livello successivo. **Non** sono consentite connessioni all’indietro o connessioni verso lo stesso livello. **È di gran lunga il tipo di rete più utilizzata**.
-![[assets/image 12.png]]
+![[SecondoAnno/MetodiNumerici/assets/image 12.png]]
 ### Ricorrenti
 Sono previste connessioni di **feedback**, in genere verso **neuroni dello stesso livello**, ma anche all’indietro. Questo tipo di rete crea una sorta di **memoria** di quanto accaduto in passato e rende quindi l’uscita attuale **non solo dipendente dall’ingresso attuale**, ma anche da tutti gli **ingressi precedenti**.
-![[assets/image 13.png]]
+![[SecondoAnno/MetodiNumerici/assets/image 13.png]]
 ## Addestramento di una rete
-![[assets/image 14.png]]
-![[assets/image 15.png]]
+![[SecondoAnno/MetodiNumerici/assets/image 14.png]]
+![[SecondoAnno/MetodiNumerici/assets/image 15.png]]
 ### Problema
 
 > [!important] Come faccio a capire in automatico se sto incrementando o diminuendo l’errore? Quindi se mi sto avvicinando o allontanando dalla soluzione desiderata.
 > 
 > Il mio obiettivo è una **funzione**, calcolo la derivata di questa funzione e capisco l’andamento.
 > 
-> ![[assets/image 16.png]]
+> ![[SecondoAnno/MetodiNumerici/assets/image 16.png]]
 
 > [!important] **APPRENDERE = MINIMIZZARE LA FUNZIONE OBIETTIVO**
 ### Discesa del gradiente
 Fissata la topologia (numero di livelli e neuroni), l’addestramento di una rete neurale consiste nel determinare il valore dei pesi $w$ che determinano il **mapping desiderato** tra input e output.
 Passo dopo passo, tramite la **discesa del gradiente**, mi avvicino all’obiettivo.
-![[assets/image 17.png]]
+![[SecondoAnno/MetodiNumerici/assets/image 17.png]]
 ### Riassumendo
-![[assets/image 18.png]]
+![[SecondoAnno/MetodiNumerici/assets/image 18.png]]
 ## Loss Function
 
 > [!important] La **loss function**, o funzione di perdita, è una **misura dell’errore della previsione prodotta da un modello di machine learning rispetto ai dati di training**. Essa rappresenta la **discrepanza tra l’output previsto dal modello e l’output reale associato ai dati di training**.
@@ -418,15 +418,15 @@ Nel caso di un task di regressione, le **cost function** più comuni sono:
 ## Perché non bastano gli MLP?
 Le reti di tipo MLP sono computazionalmente troppo pesanti per essere impiegate **nell’elaborazione delle immagini**, in quanto sarebbe necessario prevedere **un neurone per ogni pixel**.
 L’immagine viene appiattita e non si tiene conto della sua struttura 2D, si prevede un neurone per ogni pixel che è connesso con tutti i neuroni del layer successivo. Poiché ciascun neurone viene connesso a tutti i neuroni del layer successivo, il numero di parametri da stimare sarebbe eccessivo per i casi di interesse pratico.
-![[assets/image 19.png]]
+![[SecondoAnno/MetodiNumerici/assets/image 19.png]]
 ## Convolutional Neural Network CNN
 Le **CNN** sono reti disegnate espressamente per **processare immagini**, l’idea alla base è quella di evitare di “srotolare” le immagini in input e cercare di organizzare i neuroni in 3 dimensioni.
-![[assets/image 20.png]]
+![[SecondoAnno/MetodiNumerici/assets/image 20.png]]
 A differenza del MLP, le CNN hanno una struttura a 3 dimensioni:
 - **larghezza** (W)
 - **altezza** (H)
 - **profondità** (C) $\rightarrow$di solito $> 1$, per questo è 3D
-![[assets/image 21.png]]
+![[SecondoAnno/MetodiNumerici/assets/image 21.png]]
 È possibile “collegare” il kernel con l’immagine tramite la **convoluzione** applicata con un meccanismo _sliding-window_.
 ### Convoluzione
 
@@ -435,16 +435,16 @@ Un filtro (_kernel_) $h$ (una piccola maschera 2D di pesi, di dimensione $F\time
 L’output $g(x)$ prende il nome di _features map._
 $$g(x, y) = (f*h)(x, y) = \sum_{i = 0}^{F-1}{\sum_{j=0}^{F-1}{f(x, y)h(x-i, y-j)}}$$
 La convoluzione è l’elemento costruttivo di base di una rete CNN, ogni **kernel** è convoluto con i dati in input, generando una **feature map**.
-![[assets/image 22.png]]
+![[SecondoAnno/MetodiNumerici/assets/image 22.png]]
 Generalmente, profondità $> 1$ $\rightarrow$ più kernel $\rightarrow$ una feature map prodotta per ogni kernel
 Il volume di output è quindi ottenuto mettendo assieme tutte le feature map prodotte.
 Quindi i pesi, dell’MLP, vengono raggruppati nei kernel: ogni cella è un singolo peso che viene appreso.
-![[assets/image 23.png]]
+![[SecondoAnno/MetodiNumerici/assets/image 23.png]]
 I layer convolutivi estraggono vari tipi di informazione visual in maniera gerarchica:
 - nei layer vicini all’input, estraggono informazioni “semplici”
 - nei layer vicini all’output, estraggono informazioni “complesse”
 ### Struttura si una CNN
-![[assets/image 24.png]]
+![[SecondoAnno/MetodiNumerici/assets/image 24.png]]
 ### Altri tipi di layer
 
 > [!important] **Pooling Layer**
@@ -457,7 +457,7 @@ I layer convolutivi estraggono vari tipi di informazione visual in maniera gerar
 > 
 > Esistono diverse funzioni di pooling che possono essere usate: $\max$ (la più usata), $average$, $\dots$
 > 
-> ![[assets/image 25.png]]
+> ![[SecondoAnno/MetodiNumerici/assets/image 25.png]]
 
 > [!important] **Flatten Layer**
 > 
@@ -465,7 +465,7 @@ I layer convolutivi estraggono vari tipi di informazione visual in maniera gerar
 > 
 > È possibile utilizzare altre tecniche per “srotolare” il volume di input.
 > 
-> ![[assets/image 26.png]]
+> ![[SecondoAnno/MetodiNumerici/assets/image 26.png]]
 ### Tipologie di Training
 - **From scratch**, la rete è addestrata partendo da una configurazione random dei pesi; sono richiesti molti dati di training ed è una procedura lunga e complessa
 - **Pre-trained**, viene utilizzata una rete già addestrata, l’output corrisponde a quello originale; non c’è bisogno di training o dati
@@ -479,7 +479,7 @@ I layer convolutivi estraggono vari tipi di informazione visual in maniera gerar
 ## Training: Ingredienti necessari
 1. **Big Data**, disponibilità di dataset **etichettati** di **grandi dimensioni**. La superiorità delle tecniche di deep learning rispetto ad altri approcci si manifesta quando sono disponibili grandi quantità di dati di training
 2. **GPU Computing**, il training di modelli complessi richiede elevate potenze computazionali. La disponibilità di **GPU** con migliaia di core e GB di memoria interna ha consentito di ridurre drasticamente i tempi di training da mesi a giorni
-![[assets/image 27.png]]
+![[SecondoAnno/MetodiNumerici/assets/image 27.png]]
 # Condizionamento di un problema e stabilità
 ## Problema Matematico
 Un **problema matematico**, che indichiamo con $f$ è una descrizione precisa e senza ambiguità di un **legame** tra i dati del problema $x$, input, e i risultati corrispondenti $y$, output.
@@ -636,15 +636,15 @@ $$\|x\|_2 = \sqrt{x^Tx}$$
     
     $$S_2 = \left\{ x \in \Bbb R^2 : \|x\|_2 = \sqrt{x_1^2 + x_2^2} = 1 \right\}$$
     
-    ![[assets/image 28.png]]
+    ![[SecondoAnno/MetodiNumerici/assets/image 28.png]]
     
     $$S_\infty = \left\{ x \in \Bbb R^2 : \|x\|_\infty = \max\{|x_1|, |x_2|\} = 1 \right\}$$
     
-    ![[assets/image 29.png]]
+    ![[SecondoAnno/MetodiNumerici/assets/image 29.png]]
     
     $$S_1 = \left\{ x \in \Bbb R^2 : \|x\|_1 = |x_1| + |x_2| = 1 \right\}$$
     
-    ![[assets/image 30.png]]
+    ![[SecondoAnno/MetodiNumerici/assets/image 30.png]]
     
 $S_2, S_\infty, S_1$ sono note come le sfere unitarie di $\Bbb R^2$ associate rispettivamente alla norma 2, norma infinito, norma 1.
 
@@ -771,7 +771,7 @@ dove la quantità $K = \frac{1}{|f’(\alpha)|}$ rappresenta l’**indice di con
 > 
 > Viceversa il problema risulta ben condizionato e $\tilde f(x) = 0$ ha una radice $\tilde\alpha$ che non differisce molto da $\alpha$.
 > 
-> ![[assets/image 31.png]]
+> ![[SecondoAnno/MetodiNumerici/assets/image 31.png]]
 > 
 > Se $f’(\alpha)$ è molto piccolo, vicino allo zero, il problema è mal condizionato
 
@@ -815,12 +815,12 @@ Il processo viene arrestato all’iterato $k$ per il quale si verifica una delle
 Utilizzando il controllo del valore della funzione nel punto $x_k$ come criterio di arresto, si possono però presentare due situazioni problematiche:
 - **Caso Restrittivo**
     
-    ![[assets/image 32.png]]
+    ![[SecondoAnno/MetodiNumerici/assets/image 32.png]]
 	
 	L'iterato $x_k$ è vicino a $\alpha$ anche se $|f(x_k)|$ è grande
     
 - **Caso Ottimistico**
-	![[assets/image 33.png]]
+	![[SecondoAnno/MetodiNumerici/assets/image 33.png]]
 	Il valore di $x_k$ è lontano da $x^*$ ma $|f(x_k)|$ è piccolo
 
 Si vede quindi che, se la funzione ha una derivata prima alta nell’intorno della soluzione, il test sul valore della funzione può risultare troppo restrittivo, mentre se ha una derivata piccola allora il test può risultare troppo permissivo.
