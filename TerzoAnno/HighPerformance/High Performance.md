@@ -274,6 +274,7 @@ Ci sono due metriche per misurare l'efficienza di un programma parallelo:
 - **strong scaling**, misura quanto migliora il tempo di esecuzione aumentando il numero di processori $p$ mantenendo fissa la dimensione del problema.
 - **weak scaling**, misura quanto migliora il tempo di esecuzione aumentando il numero di processori $p$, contemporaneamente aumento la dimensione del problema in modo tale che ogni singolo processore abbia la stessa quantità di lavoro da svolgere.
   In altre parole quanto bene il programma è in grado di risolvere i problemi più grandi nella stessa quantità di tempo totale all'aumentare del numero di unità di esecuzione
+[Come misurare i tempi: minuto 40>>](https://unibo.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=3898b636-e5f6-401c-a2c0-b1fe00ba1c03)
 ### Strong scaling efficiency
 $$
 \ep = \frac{\sp}{p} = \frac{\tp\tlr 1}{p \times \tpp}
@@ -297,9 +298,107 @@ $$
 $$
 >[!note] La dimensione dell'input deve rimanere costante sia per $\ti$ che per $\tp$
 
-## Misurare il tempo
 
->[!warning] **40 MINUTI ALLA LEZIONE 2024-10-03**
+
+
+
+
+## Presentazione dei dati
+Il miglior modo per rappresentare i risultati è utilizzare grafici con i dati calcolati e misurati.
+### Rappresentare un grafico
+Un grafico deve permettere al lettore di capire immediatamente cosa si sta rappresentando, quindi evitare di utilizzare simboli nella legenda o nelle etichette.
+È necessario fornire un numero sufficiente di informazioni per rendere il grafico più possibile auto-contenuto, cioè deve essere compreso senza che il lettore debba per forza andare a leggere il testo.
+- *asse delle x*, dovrebbe contenere la causa
+- *asse delle y*, dovrebbe contenere l'effetto della causa => $f(x)$
+
+
+
+
+
+
 
 # Parallelizzare i cicli
+L'obiettivo è parallelizzare tutti i cicli enumerativi, cioè quelli che lavorano con un indice che ha un passo di incremento costante e ha una fine stabilita a priori.
+I cicli vengono trasformati ma viene mantenuta la semantica del ciclo stesso
+![[Pasted image 20250704105704.png]]
+>[!note] Ogni unità di esecuzione esegue un iterazione del ciclo
+
+**Problemi**
+- non sempre si effettuano un numero di iterazioni pari al numero di unità di esecuzione, in questi casi una singola unità di esecuzione lavorerà su un blocco di iterazioni del ciclo
+- non tutti i cicli possono essere parallelizzati: bisogna riconoscere le dipendenze all'interno di ogni iterazione, per poter parallelizzare un ciclo bisogna risolvere tutte le dipendenze a ogni iterazione
+- non è possibile sapere l'ordine di esecuzione delle iterazioni: la prima iterazione potrebbe essere eseguita per ultima
+## Data Dependence
+Si verificano quando si effettuano delle operazioni di assegnamento.
+>[!note] Definizione
+> Due accessi alla memoria causano una dipendenza se fanno riferimento alla stessa locazione di memoria e almeno una effettua una scrittura
+> Se il contenuto della memoria rimane costante, anche se effettuo calcoli senza modificare la memoria, non è presente una dipendenza
+
+Ci sono diversi tipi di dipendenze:
+- **Data-Flow or True Dependence**, *RAW* (Read After Write), ho due operazioni che non possono essere invertite
+  ![[Pasted image 20250704111536.png]]
+  $$
+  \begin{matrix*}
+  a = b + c \\
+  d = 2 * a
+  \end{matrix*}
+  $$
+- **Anti Dependence**, *WAR* (Write After Read)
+  ![[Pasted image 20250704111710.png]]
+  $$
+  \begin{matrix*}
+  c = a + b \\
+  a = 2 * a
+  \end{matrix*}
+  $$
+- **Output Dependence**, *WAW* (Write After Write)
+  ![[Pasted image 20250704111907.png]]
+  ```c
+  a = k
+  if (a > 0)
+	  a = 2 * c
+	  ```
+- **Control Dependence**, un istruzione ha una *control dependence* su un altra se il risultato di un'istruzione determina se viene eseguita un istruzione o un altra
+  ![[Pasted image 20250704112501.png]]
+>[!note]
+>![[Pasted image 20250704114826.png|S2 dipende da S1]]
+## Teorema Fondamentale delle Dipendenze
+Ogni permutazione delle istruzioni di un programma che preserva le dipendenze, preserva anche la semantica del programma.
+
+![[Pasted image 20250704115009.png]]
+In questo caso in ogni iterazione non ci sono dipendenze, quindi il ciclo è completamente parallelizzabile.
+- Le operazioni possono essere eseguite in modo concorrente in qualsiasi ordine
+- Le iterazioni possono essere distribuite in diverse unità computazionali
 ## Loop Carried Dependency
+![[Pasted image 20250704115145.png]]
+In questo caso ogni iterazione dipende dall'iterazione precedente, ha quindi una dipendenza ti tipo *RAW*.
+Questo tipo di dipendenze vengono chiamate **loop-carried dependence**, ciò significa che il ciclo non può essere parallelizzato.
+
+![[Pasted image 20250704115345.png]]
+Anche in questo caso si ha una loop-carried dependence. Non può essere parallelizzato in maniera ovvia ma posso applicare il pattern *reduction* e e parallelizzare il ciclo.
+
+## Rimozione delle dipendenze
+Le dipendenze all'interno di una iterazione possono essere rimosse applicando delle particolari tecniche.
+### Allineamento delle iterazioni
+Una possibile soluzione consiste nel riscrivere il ciclo in modo diverso ma mantenendo la semantica e in modo da essere parallelizzato.
+Si allineano le iterazioni del ciclo in modo da rimuovere le dipendenze su iterazioni precedenti o successivi.
+![[Pasted image 20250704132334.png]]
+>[!warning] Attenzione
+>Allineando i cicli non tutti i valori potrebbero essere elaborati dalle unità di esecuzione, perciò bisogna gestire queste situazioni effettuando le operazioni necessarie prima e dopo il ciclo parallelizzato
+### Scambio dei cicli
+Un altro approccio consiste nello scambiare gli indici di cicli, permettendo la parallelizzazione del ciclo esterno, utilizzato per modificare la granularità del parallelismo
+![[Pasted image 20250704133414.png|Parallelizzo l'esecuzione delle righe e non delle colonne]]
+### Wavefront Sweep
+Computazione parallela effettuata in una matrice dove ogni iterazione considera i valori in diagonale della matrice
+![[Pasted image 20250704134918.png]]
+```c
+for (slice=0; slice < n + m - 1; slice++) {
+	z1 = slice < m ? 0 : slice - m + 1;
+	z2 = slice < n ? 0 : slice - n + 1;
+	/* The following loop can be parallelized */
+	for (i = slice - z2; i >= z1; i--) {
+		j = slice - i;
+	/* process a[i][j] … */
+	}
+}
+```
+# OpenMP
