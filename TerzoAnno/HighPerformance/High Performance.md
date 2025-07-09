@@ -402,3 +402,99 @@ for (slice=0; slice < n + m - 1; slice++) {
 }
 ```
 # OpenMP
+È un modello di programmazione parallela per architetture a memoria condivisa. È compatibile con molte architetture diverse essendo il compilatore a "tradurre" il codice OpenMP.
+Consente una forma di *parallelismo incrementale*: si parte dal programma seriale e si inseriscono le direttive per parallelizzare dei cicli ed infine il programma viene compilato dal compilatore.
+Può essere utilizzato per programmi scritti in C, C++ e Fortran.
+>[!note] Vantaggi OpenMP
+> - Permette di separare un programma in regioni seriali e parallele
+> - Offre delle strutture per sincronizzazione
+
+>[!note] Svantaggi
+> - Non parallelizza automaticamente
+> - Non garantisce lo speedup
+> - Non gestisce le race condition
+
+## Modello esecutivo
+Un tipico programma OpenMP fa uso del parallelismo di tipo *fork-join*:
+1. un solo flusso di esecuzione
+2. viene creata una pool di thread che eseguiranno le regioni parallele
+3. al termine di ogni regione parallela avviene una fase di sincronizzazione implicita
+4. la pool di thread viene deallocata
+5. se incontra una nuova regione parallela torna al punto 2
+## Uso di OpenMP
+Per definire una regione parallela in OpenMP si utilizza il `#pragma`, una direttiva che viene gestita dal compilatore non originale del C.
+I compilatori che non riconoscono le istruzioni di OpenMP le ignorano senza dare errore.
+
+Vengono utilizzati dei **blocchi strutturati** per racchiudere le istruzioni delle operazioni svolte in parallelo:
+- un blocco strutturato è caratterizzato da un punto di entrata e un punto di uscita, le operazioni possono essere o una singola riga o se sono più di una si può raggruppare il tutto utilizzando le parentesi graffe `{}`
+- un blocco strutturato ha un solo punto di ingresso e un solo punto di uscita (non è possibile accedere ad un'istruzione all'interno di un blocco strutturato se non dall'inizio del blocco, non è possibile effettuare un `return` all'interno del blocco)
+### `#pragma omp parallel`
+Quando viene utilizzata la direttiva `parallel` viene creato un *team* (pool) di thread e il thread specifico che esegue la direttiva diventa il thread `master` con ID pari a $0$.
+
+Il numero di thread creati se non viene specificato vengono assegnati a seconda dell'implementazione e della macchina dove il programma è in esecuzione.
+
+Il codice all'interno della regione parallela viene copiato all'interno di ogni thread, eseguono la porzione di codice, e alla fine della regione parallela si sincronizzano attendendo che tutti i thread finiscano di eseguire le operazioni (*barrier* virtuale).
+
+>[!note]
+>Alla fine dell'esecuzione il *team* di thread potrebbe non essere eliminato perché il compilatore potrebbe aver ottimizzato le operazioni evitando di allocare nuovamente i thread
+
+```c
+#include <stdio.h>
+#include <omp.h>
+void say_hello( void )
+{
+	int my_rank = omp_get_thread_num();
+	int thread_count = omp_get_num_threads();
+	printf("Hello from thread %d of %d\n",
+	my_rank, thread_count);
+}
+int main( void )
+{
+	#pragma omp parallel
+	say_hello();
+	
+	return 0;
+}
+```
+
+- `omp_get_thread_num()` ritorna il numero di thread attivi nel *team* allocato
+- `omp_get_max_threads()` ritorna il numero massimo di thread che possono essere creati
+
+>[!note] È possibile definire per ogni regione parallela il numero di thread massimi che vengono creati
+>Si utilizza la funzione: `omp_set_num_threads(n)`, dove `n` è il numero di thread da assegnare, oppure si può definire quando si definisce la regione parallela utilizzando: `#pragma omp parallel num_threads(n)`
+### Parallelismo annidato
+È possibile utilizzare una regione parallela all'interno di un'altra regione parallela.
+>[!note] Di default la regione parallela innestata avrà dimensione $1$.
+
+Per utilizzare più thread all'interno di una regione parallela innestata è necessario abilitare la variabile globale: `OMP_NESTED=true`.
+![[Pasted image 20250707153807.png]]
+>[!warning] La funzione per prendere il numero di thread ritornerà il numero di thread del suo rispettivo blocco strutturale da dove viene chiamato
+
+>[!warning] Gli ID dei thread (ranghi) vengono riassegnati da $0$
+
+## Scope
+Nella programmazione parallela in OpenMP è possibile modificare la visibilità delle variabili dichiarate fuori dalla regione parallela.
+Di default tutte le variabili prima della regione parallela sono definite come `shared`, ovvero visibili a tutti i thread della regione parallela; invece le variabili definite all'interno di un blocco parallelo sono definite come `private`.
+
+>[!note]
+>In OpenMP lo *scope* delle variabili viene considerato come la visibilità delle variabili all'interno dei thread in esecuzione
+
+### Tipi di Scope
+I tipi di scope delle variabili sono 3:
+- `shared(x)`, tutti i thread hanno accesso alla stessa area di memoria
+- `private(x)`, ogni thread ha una propria copia della variabile `x`, tutte le istanze **non sono inizializzate**; quando si esce dalla regione parallela tutte le modifiche effettuate alla variabile `x` sono persi, soltanto in OpenMP $\le$ 3.0 i valori rimangono aggiornati
+- `firstprivate(x)`, come in `private` ma la variabile `x` è inizializzata al valore che aveva prima del blocco parallelo
+
+È possibile definire un comportamento di default per tutte le variabili esterne al blocco parallelo. Per farlo si utilizza la direttiva `default(SCOPE)`, dove viene passato come parametro lo scope di default di tutte le variabili (è possibile anche utilizzare come valore `none`).
+>[!note] default(none)
+>Se si utilizza questo scopo è necessario specificare tutti gli scope per ogni variabile esterna al blocco parallelo
+
+```c
+#pragma omp parallel num_threads(10) private(a) shared(b) firstprivate(c)
+```
+
+>[!note]
+>Si può specificare anche lo scope per gli array
+
+
+
