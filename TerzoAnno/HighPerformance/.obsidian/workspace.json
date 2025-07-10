@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "ade1f9d8722c1d00",
+        "id": "fc3e5fd5e8eded27",
         "type": "tabs",
         "children": [
           {
-            "id": "d33b70e5f4a34a76",
+            "id": "d49b7c952a0452d0",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -74,7 +74,8 @@
               "title": "Bookmarks"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -171,21 +172,21 @@
       "obsidian-importer:Open Importer": false
     }
   },
-  "active": "d33b70e5f4a34a76",
+  "active": "d49b7c952a0452d0",
   "lastOpenFiles": [
+    "assets/Pasted image 20250710151848.png",
+    "assets/Pasted image 20250710151708.png",
+    "assets/Pasted image 20250710135639.png",
+    "assets/Pasted image 20250709161609.png",
+    "assets/Pasted image 20250709134338.png",
+    "assets/Pasted image 20250709115803.png",
+    "assets/Pasted image 20250709115001.png",
+    "assets/Pasted image 20250709114332.png",
+    "assets/Pasted image 20250709110333.png",
+    "High Performance.md",
     "assets/Pasted image 20250707153807.png",
     "assets/Pasted image 20250704134918.png",
-    "assets/Pasted image 20250704133414.png",
-    "assets/Pasted image 20250704132334.png",
-    "assets/Pasted image 20250704115345.png",
-    "assets/Pasted image 20250704115145.png",
-    "assets/Pasted image 20250704115009.png",
-    "assets/Pasted image 20250704114826.png",
-    "assets/Pasted image 20250704112501.png",
-    "assets/Pasted image 20250704111907.png",
-    "assets/Pasted image 20250704111710.png",
     "Come.md",
-    "High Performance.md",
     "preamble.sty~",
     "preamble.sty",
     "HighPerformance-OLD.md",

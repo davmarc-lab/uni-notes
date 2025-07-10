@@ -495,6 +495,300 @@ I tipi di scope delle variabili sono 3:
 
 >[!note]
 >Si può specificare anche lo scope per gli array
+## La direttiva `atomic` 
+Questa direttiva garantisce che soltanto un thread alla volta aggiorna una variabile con scope `shared`.
+```c
+#pragma omp parallel
+{
+	partial_result = ...
+#pragma omp atomic
+	result += partial_result;
+}
+```
+>[!note] È possibile utilizzare al posto di `atomic` una `reduction`
+### `critical`
+Questa direttiva funziona come `atomic` con la differenza che in questo blocco strutturato non è necessario effettuare soltanto aggiornamenti, ma consente l'esecuzione seriale delle operazioni nel blocco evitando *race conditions*.
+>[!note] `critical` protegge porzioni di codice invece `atomic` protegge le locazioni di memoria
+## La clausola `reduction`
+OpenMP con questa clausola gestisce le operazioni di riduzione sulle variabili automaticamente.
+```c
+// reduction( <op> : <variable> )
+#pragma omp parallel reduction(+:result)
+{
+	double partial_result = ...
+	result += partial_result;
+}
+```
+>[!note] Non è necessario specificare lo `scope` delle variabili in una reduction
+### Operatori della `reduction`
+Un operatore di una reduction è un operatore di associazione binaria come addizioni, moltiplicazioni, `and` e `or` bit a bit.
+Ad ogni iterazione viene applicato l'operatore binario alla sequenza di operandi per ottenere un unico risultato.
+![[Pasted image 20250709110333.png]]
+#### Funzionamento
+- Viene creata una copia con scope `private` della variabile
+- Ogni copia viene inizializzata con l'elemento neutrale dell'operatore binario specificato (ad esempio $1$ per la moltiplicazione o $0$ per la somma)
+- Ogni thread esegue la regione parallela
+- Quando tutti i thread finiscono l'esecuzione della regione parallela l'operatore di riduzione viene applicato all'ultimo valore che ogni thread ha calcolato e il valore che la variabile aveva prima della regione parallela
+```c
+#include <stdio.h>
+#include <omp.h>
+#define N 10
+int main( void )
+{
+	int s[N] = {0};
+#pragma omp parallel reduction(+:s[:N])
+	{
+		const int my_id = omp_get_thread_num();
+		for (int i = 0; i<N; i++) {
+			s[i] += my_id;
+		}
+	}
+	// If there are P threads,
+	// s[i] = 0 + 1 + … + (P-1), for all i
+	return 0;
+}
+```
+![[Pasted image 20250709114332.png]]
+## La direttiva `omp for`
+Viene utilizzato all'interno di una regione parallela, è necessario posizionare questa direttiva immediatamente sopra ad un ciclo for.
+Gestisce automaticamente le iterazioni del ciclo in modo tale che ogni thread esegue un blocco di operazioni su $n$ elementi (partizionamento a grana grossa).
+>[!note] Le variabili del ciclo for di default hanno lo scope `private`
+### `omp parallel for`
+Permette di creare una regione parallela immediatamente prima di un ciclo for.
+```c
+double trap3( double a, double b, int n )
+{
+	double result = 0;
+	const double h = (b-a)/n;
+#pragma omp parallel for reduction(+:result)
+	for ( int i = 0; i<n-1; i++ ) {
+		result += h*(f(a+i*h) + f(a+(i+1)*h))/2;
+	}
+	return result;
+}
+```
+![[Pasted image 20250709115001.png|Tipi di cicli for che possono essere parallelizzati con questa direttiva]]
+- L'indice deve essere una variabile `int` o un puntatore (non può essere `float` o `double`)
+- Le espressioni `start`, `end` e `incr` devono essere di tipi compatibili
+- Le espressioni `start`, `end` e `incr` non possono variare all'interno di ogni esecuzione delle iterazioni
+- La variabile `index` può essere modificata solo dal ciclo stesso
+### Dipendenze dei Dati
+Questa direttiva non gestisce le dipendenze dei dati all'interno di un ciclo.
+Per poter utilizzare questa direttiva ed ottenere un risultato corretto è necessario risolvere tutte le dipendenze.
+>[!note] Un ciclo può essere parallelizzato?
+>Un ciclo per essere parallelizzato in questo modo non deve avere nessuna dipendenza all'interno (*loop-carried dependence*).
+>Un modo veloce per riconoscere se un ciclo è parallelizzabile consiste nell'eseguire il ciclo al contrario:
+>![[Pasted image 20250709115803.png|Se il risultato è lo stesso allora il ciclo è parallelizzabile (non è affidabile al 100% ma funziona nella maggior parte dei casi]]
 
+## La clausola `schedule(type, chunksize)`
+È possibile modificare il tipo di partizionamento dei dati e la dimensione di ogni partizione.
+**`type`**
+- `static`, le iterazioni sono assegnate ciclicamente ai thread; se non viene specificato il `chunksize` allora viene calcolato come: $chunksize = \lceil n\_iterations / n\_threads\rceil$ 
+- `dynamic` o `guided`, le iterazioni vengono assegnate ai thread utilizzando il paradigma [[#Master-Worker]]; la dimensione di default del chunksize è di $1$
+- `auto`, il compilatore e/o il sistema run-time determina lo schedule
+- `runtime`, lo schedule è determinato a run-time utilizzando la variabile d'ambiente `OMP_SCHEDULE`: `OMP_SCHEDULE="static, 1" ./program.exe`
+>[!note] Lo schedule se non specificato viene specificato è *implementation dependent*: gcc utilizza di default lo schedule `static`
+### Lo schedule dinamico/guided
+Viene utilizzato il paradigma [[#Master-Worker]] dove ogni thread esegue un chunk e alla fine un singolo thread rielabora il risultato.
+>[!note] Schedule `dynamic`
+>Nello schedule dinamico funziona come per lo schedule statico con l'unica differenza che non è presenta un'allocazione predefinita per ogni thread ma viene assegnato il blocco di dati specificato al primo thread libero.
+>Viene utilizzato quando la quantità lavoro è pre-determinata e predicibile per ogni iterazione (poco lavoro a run-time in quanto lo scheduling viene fatto a compile-time)
 
+>[!note] Schedule `guided`
+>Nello schedule guided invece la dimensione del blocco (chunk) viene diminuita ogni volta che un chunk viene completato.
+>Viene utilizzato quando la quantità di lavoro non è predicibile e può variare ad ogni iterazione (maggiore overhead, molto lavoro fatto a run-time con l'uso di logica di scheduling complessa a run-time)
+## La direttiva `collapse`
+Può essere utilizzata per collassare più cicli for annidati in un unico spazio di iterazione suddiviso in base alla clausola `schedule`. Non devono essere presenti righe di codice fra i cicli for che si vogliano collassare.
+```c
+int x, y;
+#pragma omp parallel for collapse(2)
+	for ( y = 0; y < ysize; y++ ) {
+		for ( x = 0; x < xsize; x++ ) { // le variabili x e y sono private
+			drawpixel( x, y );
+		}
+	}
+```
+### Come vengono collassati i cicli
+Se ho per esempio effettuo delle operazioni su una matrice, utilizzando la direttiva `collapse` la matrice viene scomposta per riga: viene assegnato un blocco ad ogni thread, della dimensione specificata, a partire dal primo elemento fino al chunksize-esimo e il successivo blocco partirà dall'elemento subito successivo.
+Quindi in pratica la matrice viene scomposta in un'unico array poi suddiviso in blocchi come se fosse un normale array.
+![[Pasted image 20250709134338.png]]
+```c
+#pragma omp parallel for num_threads(5) collapse(2)
+for (int i=0; i<4; i++) {
+	for (int j=0; j<5; j++) {
+		do_work(i,j);
+	}
+}
+```
+>[!warning] Cicli non rettangolari
+>```c
+>#pragma omp parallel for collapse(2)
+> for (int i=0; i<n; i++) {
+> 	for (int j=i+1; j<n; j++) {
+> 		do_work(i,j);
+> 	}
+> }
+> ```
+> In questi casi soltanto OpenMP 5.0 è in grado di collassare questi due cicli, se non è possibile utilizzare il collapse si può scegliere di parallelizzarne uno dei due
 
+## Esempio: Odd-Even Transposition Sort
+## Sincronizzazione in OpenMP
+### `barrier`
+>[!note]
+>Tutti i thread attivi nel *team* devono raggiungere questo punto prima di procedere con le successive computazioni
+### `master`
+>[!note]
+>Si applica ad un blocco strutturato, permette di eseguire delle operazioni soltanto al thread *master* mentre gli altri saltano questo blocco. Non è presente una [[#`barrier`|barrier]] alla fine quindi non c'è sincronizzazione 
+### `single`
+>[!note]
+>Si applica ad un blocco strutturato, permette di eseguire delle operazioni al primo thread che arriva a questo punto della regione parallela. È presente una [[#`barrier`|barrier]] alla fine del blocco strutturato: tutti gli altri thread che non eseguono queste operazioni devono aspettare il thread che la sta eseguendo fino a quando non conclude la computazione
+
+## Task parallelism con OpenMP
+>[!note] Tasks
+>Un task è un'unità di lavoro indipendente, un task è composto da:
+>- codice da eseguire
+>- dati da elaborare
+>
+> Vengono assegnati dei thread per eseguire il lavoro di ogni task:
+> - il thread che incontra il costrutto di un task può eseguirlo immediatamente
+> - i thread possono eseguire i task non sincronicamente
+> Inoltre i task possono essere innestati fra loro, eventualmente generando altri task
+
+### `pragma omp task`
+Crea un task che eseguirà un blocco strutturato, vengono salvati in una struttura apposita che gestirà OpenMP.
+>[!warning] Non è possibile creare un task all'esterno di una regione parallela
+>Per questo motivo spesso quando si utilizzano i task indirettamente vengono utilizzate le direttive `single` oppure `master` in modo che un solo thread crea i vari task.
+
+La regione parallela termina se tutti i task messi in coda hanno terminato la loro esecuzione.
+#### Scope delle variabili nei task
+Le variabili all'interno di un task vengono prese in considerazione quando il task stesso viene eseguito.
+È possibile specificare lo scope delle variabili come in una normale [[#Scope|regione parallela]]:
+- se una variabile è `shared` ogni riferimento alla variabile all'interno del task fa riferimento alla variabile che era stata create prima dell'inizio del task all'interno della regione parallela
+- se una variabile è `private` viene creata una nuova variabile inizializzata e all'interno del task si fa riferimento alla nuova variabile creata quando il task viene eseguito
+- se una variabile è `firstprivate` viene creata una nuova variabile `private` inizializzata con il valore che aveva prima della creazione del task
+>[!note]
+>Tipicamente lo scope più utilizzato nei task è il `firstprivate`, perché non si può conoscere quando un task viene messo in esecuzione e quindi quella stessa variabile potrebbe essere andata out of scope.
+
+![[Pasted image 20250709161609.png|Semplice esempio sugli scope all'interno dei task, di default tutte le variabili al di fuori della regione parallela sono di tipo shared che successivamente diventano private all'interno dei task. Invece la variabile `b` non viene inizializzata e quindi nel task rimarrà tale]]
+
+#### Quando e dove i task concludono?
+- Se è presente una [[#`barrier`|barrier]], si applica a tutti i task generati nella regione parallela corrente
+- Se è presente la direttiva `taskwait`, ogni i task che raggiungono questa direttiva prima di continuare aspetta che tutti gli altri task si trovino in questo punto del codice:
+  ```c
+  #pragma omp taskwait
+  ```
+# Memoria Distribuita con MPI
+È una libreria usata con linguaggi di programmazione sequenziali come Fortran, C, C++; si basa sul paradigma Single Program Multiple Data (SPMD).
+## Scambio di messaggi con MPI
+- non sono presenti più thread all'interno dello stesso programma ma diversi processi, potrebbero esserci errori di comunicazione
+- programmi più complicati, verbosi ma ottime performance
+Sono necessarie operazioni di comunicazione esplicita per poter comunicare:
+- **Comunicazione**, o punto-punto o collettive
+- **Sincronizzazione**, barrier e non sono presenti mutex non essendo presenti variabili condivise
+- **Query**
+## SPMD
+```c
+MPI_Init(...);
+...
+foo(); /* executed by all processes */
+if ( my_rank == 0 ) {
+	do_something(); /* executed by process 0 only */
+} else {
+	do_something_else(); /* executed by all other processes */
+}
+...
+MPI_Finalize();
+```
+
+>[!note] Lo stesso programma viene eseguito su $p$ processi diversi
+## Ambiente MPI
+- `MPI_Comm_size()` restituisce il numero di processi
+- `MPI_Comm_rank()` restituisce il *rank* del processo corrente $[0, size-1]$
+```c
+#include <stdio.h>
+#include <mpi.h>
+int main( int argc, char *argv[] )
+{
+	int rank, size, len;
+	char hostname[MPI_MAX_PROCESSOR_NAME];
+	MPI_Init( &argc, &argv );
+	MPI_Comm_rank( MPI_COMM_WORLD, &rank );
+	MPI_Comm_size( MPI_COMM_WORLD, &size );
+	MPI_Get_processor_name( hostname, &len );
+	printf("Greetings from process %d of %d running on %s\n",
+	rank, size, hostname);
+	MPI_Finalize();
+	return 0;
+}
+```
+### Invio/Ricezione di messaggi MPI
+I processi MPI sono organizzati in *gruppi*, un gruppo e un contesto insieme formano un *communicator*; quello di default è chiamato `MPI_COMM_WORLD`.
+#### Tipi di dati MPI
+Quando si esegue una comunicazione con MPI i dati trasmessi e ricevuti sono identificati da una tripla (`address, count, datatype`).
+Un tipo in MPI è definito da:
+- un tipo predefinito (`MPI_INT`, `MPI_DOUBLE`)
+- un array contiguo di *MPI Datatypes*
+- un blocco *strided* di *MPI Datatypes*, ovvero un array di dati spaziati fra loro di una grandezza costante
+- un array indicizzato di blocchi di *MPI Datatypes*
+- una struttura arbitraria di *MPI Datatypes*
+![[Pasted image 20250710135639.png]]
+>[!note]
+>È possibile definire tipi di dati personalizzati
+#### Tag MPI
+I messaggi in MPI sono accompagnati da un tag, un numero intero, che assiste durante il processo di ricezione dei messaggi per identificarli. In questo modo è possibile ricevere messaggi soltanto con un tag specifico.
+È inoltre possibile non filtrare i messaggi ricevuti con i tag semplicemente usando `MPI_ANY_TAG` che ignora i tag dei messaggi.
+
+#### `MPI_Send()`
+Operazione bloccante di invio di un messaggio. Bloccante perché quando viene inviato un messaggio ed inserito il contenuto del buffer nel sotto sistema MPI allora la funzione ritorna e si passa all'operazione successiva.
+
+`MPI_Send(&buf, count, MPI_Datatype, dest, tag, MPI_Comm, MPI_Status*)`
+- `buf`, il buffer da inviare
+- `count`, il numero di elementi che contiene il buffer
+- `MPI_Datatype`, il tipo di dati all'interno del buffer
+- `dest`, il rango del processo che riceve il messaggio (`MPI_PROC_NULL` utilizzata per non far fare nulla alla `Send`)
+- `tag`, il tag del messaggio (`MPI_ANY_TAG` per non specificare nessun tag)
+- `MPI_Comm`, il *communicator* utilizzato (`MPI_COMM_WORLD` default)
+- `MPI_Status`, conterrà le informazioni del messaggio (`MPI_STATUS_IGNORE` per non specificarle)
+#### `MPI_Recv()`
+Operazione simmetrica alla [[#`MPI_Send()`|send]]. Bloccante perché il processo prima di eseguire l'operazione successiva rimane in attesa fino alla ricezione di un messaggio da parte del processo sorgente specificato.
+
+`MPI_Send(&buf, count, MPI_Datatype, source, tag, MPI_Comm, MPI_Status*)`
+- `buf`, il buffer dove salvare i dati
+- `count`, il numero di elementi da ricevere (può essere maggiore al numero di elementi inviati ma non inferiore - `MPI_ERR_TRUNCATE` error)
+- `MPI_Datatype`, il tipo di dati all'interno del buffer
+- `source`, il rango del processo che invia il messaggio (`MPI_ANY_SOURCE` utilizzata per ricevere un messaggio da qualsiasi processo)
+- `tag`, il tag del messaggio (`MPI_ANY_TAG` per non specificare nessun tag)
+- `MPI_Comm`, il *communicator* utilizzato (`MPI_COMM_WORLD` default)
+- `MPI_Status`, conterrà le informazioni del messaggio (`MPI_STATUS_IGNORE` per non specificarle)
+#### `MPI_Status`
+È una struttura C che contiene i seguenti campi:
+- `MPI_SOURCE`
+- `MPI_TAG`
+- `MPI_ERROR`
+>[!note] Utile per verificare ad esempio se ci sono stati errori nella comunicazione o chi ha inviato il messaggio
+
+#### `MPI_Get_count()`
+Viene utilizzata per verificare il numero di elementi di uno specifico `MPI_Datatype` sono stati effettivamente ricevuti in un messaggio.
+
+`MPI_Get_count(MPI_Status*, MPI_Datatype, count*`
+- `MPI_Recv` può concludere anche se sono stati ricevuti meno elementi di quanti la variabile `count` specifica: supponendo che la [[#`MPI_Send()`|send]] abbia inviato meno elementi.
+#### Comunicazioni bloccanti e deadlocks
+Il problema principale delle comunicazioni bloccanti in MPI riguarda la capacità dei buffer: se un processo invia un messaggio con una send bloccante ed il buffer di ricezione è pieno, la send non ritornerà mai un valore fino a quando il messaggio non viene copiato nel buffer, ma per copiarlo è necessario che venga svuotato tramite una *receive* di un altro processo.
+
+Se ci sono due processi che effettuano una send ed entrambi si mettono in attesa di ricevere un messaggio subito dopo, se i buffer di ricezione sono pieni e non vengono svuotati si entra in una situazione di deadlock dove nessuno dei due processi entrerà mai nella fase di ricezione di un messaggio.
+![[Pasted image 20250710151708.png|Si illustra la situazione precedentemente spiegata]]
+>[!note] Possibile soluzione al problema
+>Dal lato destinatario si effettua prima una receive e successivamente una send
+>![[Pasted image 20250710151848.png]]
+#### Send non bloccante
+Un altra possibile soluzione allo stesso problema può consistere nell'utilizzare una send non bloccante, che prima di continuare non aspetta la fase di copiatura del messaggio all'interno del buffer di ricezione.
+
+`MPI_Isend(start*, count, MPI_Datatype, dst, tag, MPI_Comm, MPI_Request*`
+- `start*`, puntatore al buffer da inviare
+- `count`, numero di elementi contenuti nel buffer
+- `MPI_Datatype`, tipo di dato contenuto nel buffer
+- `dst`, rango del processo a cui inviare il messaggio all'interno del *communicator*
+- `tag`, il tag del messaggio
+- `MPI_Comm`, il *communicator* utilizzato
+- `MPI_Request*`, indica lo stato dell'operazione (utilizzato per sapere se la richiesta è stata completata: se la richiesta è in corso non è possibile utilizzare il buffer specificato)
+#### Receive non bloccante
