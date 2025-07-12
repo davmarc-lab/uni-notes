@@ -721,9 +721,9 @@ int main( int argc, char *argv[] )
 	return 0;
 }
 ```
-### Invio/Ricezione di messaggi MPI
+## Invio/Ricezione di messaggi MPI
 I processi MPI sono organizzati in *gruppi*, un gruppo e un contesto insieme formano un *communicator*; quello di default è chiamato `MPI_COMM_WORLD`.
-#### Tipi di dati MPI
+### Tipi di dati MPI
 Quando si esegue una comunicazione con MPI i dati trasmessi e ricevuti sono identificati da una tripla (`address, count, datatype`).
 Un tipo in MPI è definito da:
 - un tipo predefinito (`MPI_INT`, `MPI_DOUBLE`)
@@ -734,11 +734,11 @@ Un tipo in MPI è definito da:
 ![[Pasted image 20250710135639.png]]
 >[!note]
 >È possibile definire tipi di dati personalizzati
-#### Tag MPI
+### Tag MPI
 I messaggi in MPI sono accompagnati da un tag, un numero intero, che assiste durante il processo di ricezione dei messaggi per identificarli. In questo modo è possibile ricevere messaggi soltanto con un tag specifico.
 È inoltre possibile non filtrare i messaggi ricevuti con i tag semplicemente usando `MPI_ANY_TAG` che ignora i tag dei messaggi.
 
-#### `MPI_Send()`
+### `MPI_Send()`
 Operazione bloccante di invio di un messaggio. Bloccante perché quando viene inviato un messaggio ed inserito il contenuto del buffer nel sotto sistema MPI allora la funzione ritorna e si passa all'operazione successiva.
 
 `MPI_Send(&buf, count, MPI_Datatype, dest, tag, MPI_Comm, MPI_Status*)`
@@ -749,7 +749,7 @@ Operazione bloccante di invio di un messaggio. Bloccante perché quando viene in
 - `tag`, il tag del messaggio (`MPI_ANY_TAG` per non specificare nessun tag)
 - `MPI_Comm`, il *communicator* utilizzato (`MPI_COMM_WORLD` default)
 - `MPI_Status`, conterrà le informazioni del messaggio (`MPI_STATUS_IGNORE` per non specificarle)
-#### `MPI_Recv()`
+### `MPI_Recv()`
 Operazione simmetrica alla [[#`MPI_Send()`|send]]. Bloccante perché il processo prima di eseguire l'operazione successiva rimane in attesa fino alla ricezione di un messaggio da parte del processo sorgente specificato.
 
 `MPI_Send(&buf, count, MPI_Datatype, source, tag, MPI_Comm, MPI_Status*)`
@@ -760,19 +760,19 @@ Operazione simmetrica alla [[#`MPI_Send()`|send]]. Bloccante perché il processo
 - `tag`, il tag del messaggio (`MPI_ANY_TAG` per non specificare nessun tag)
 - `MPI_Comm`, il *communicator* utilizzato (`MPI_COMM_WORLD` default)
 - `MPI_Status`, conterrà le informazioni del messaggio (`MPI_STATUS_IGNORE` per non specificarle)
-#### `MPI_Status`
+### `MPI_Status`
 È una struttura C che contiene i seguenti campi:
 - `MPI_SOURCE`
 - `MPI_TAG`
 - `MPI_ERROR`
 >[!note] Utile per verificare ad esempio se ci sono stati errori nella comunicazione o chi ha inviato il messaggio
 
-#### `MPI_Get_count()`
+### `MPI_Get_count()`
 Viene utilizzata per verificare il numero di elementi di uno specifico `MPI_Datatype` sono stati effettivamente ricevuti in un messaggio.
 
 `MPI_Get_count(MPI_Status*, MPI_Datatype, count*`
 - `MPI_Recv` può concludere anche se sono stati ricevuti meno elementi di quanti la variabile `count` specifica: supponendo che la [[#`MPI_Send()`|send]] abbia inviato meno elementi.
-#### Comunicazioni bloccanti e deadlocks
+### Comunicazioni bloccanti e deadlocks
 Il problema principale delle comunicazioni bloccanti in MPI riguarda la capacità dei buffer: se un processo invia un messaggio con una send bloccante ed il buffer di ricezione è pieno, la send non ritornerà mai un valore fino a quando il messaggio non viene copiato nel buffer, ma per copiarlo è necessario che venga svuotato tramite una *receive* di un altro processo.
 
 Se ci sono due processi che effettuano una send ed entrambi si mettono in attesa di ricevere un messaggio subito dopo, se i buffer di ricezione sono pieni e non vengono svuotati si entra in una situazione di deadlock dove nessuno dei due processi entrerà mai nella fase di ricezione di un messaggio.
@@ -780,7 +780,7 @@ Se ci sono due processi che effettuano una send ed entrambi si mettono in attesa
 >[!note] Possibile soluzione al problema
 >Dal lato destinatario si effettua prima una receive e successivamente una send
 >![[Pasted image 20250710151848.png]]
-#### Send non bloccante
+### Send non bloccante
 Un altra possibile soluzione allo stesso problema può consistere nell'utilizzare una send non bloccante, che prima di continuare non aspetta la fase di copiatura del messaggio all'interno del buffer di ricezione.
 
 `MPI_Isend(start*, count, MPI_Datatype, dst, tag, MPI_Comm, MPI_Request*`
@@ -791,4 +791,134 @@ Un altra possibile soluzione allo stesso problema può consistere nell'utilizzar
 - `tag`, il tag del messaggio
 - `MPI_Comm`, il *communicator* utilizzato
 - `MPI_Request*`, indica lo stato dell'operazione (utilizzato per sapere se la richiesta è stata completata: se la richiesta è in corso non è possibile utilizzare il buffer specificato)
-#### Receive non bloccante
+### Receive non bloccante
+Analoga alla send non bloccante: non interrompe il flusso delle operazioni ma non è possibile utilizzare il buffer specificato se prima non sono stati memorizzati all'interno di esso
+`MPI_Irecv(start*, count, MPI_Datatype, source, tag, MPI_Comm, MPI_Request*`
+- `start*`, puntatore del buffer dove memorizzare il messaggio
+- `count`, numero di elementi contenuti nel buffer
+- `MPI_Datatype`, tipo di dato contenuto nel buffer
+- `source`, rango del processo che invia il messaggio all'interno del *communicator*
+- `tag`, il tag del messaggio
+- `MPI_Comm`, il *communicator* utilizzato
+- `MPI_Request*`, indica lo stato dell'operazione (utilizzato per sapere se la richiesta è stata completata: se la richiesta è in corso non è possibile utilizzare il buffer specificato)
+È necessario chiamare `MPI_Wait()` o `MPI_Test` per determinare se l'operazione non bloccante è conclusa.
+### `MPI_Test()`
+Funzione non bloccante che determina lo stato corrente della richiesta.
+`MPI_Test(request*, flag*, status*)`
+- `request*`, puntatore alla richiesta di cui si vuole conoscere l'esito
+- `flag*`, valore che può essere $0$ o $1$ rispettivamente se la richiesta è in corso oppure è conclusa
+- `status*`, la variabile di stato della richiesta
+### `MPI_Wait()`
+Aspetta che la richiesta specificata termini prima di proseguire (*busy waiting*)
+`MPI_Wait(request*, status*)`
+- `request*` puntatore alla richiesta
+- `status*`, lo stato della richiesta
+## Interruzione delle operazioni
+Per terminare un programma in esecuzione prima del previsto, non si utilizza la `exit()` o la `abort()` ma si invoca la funzione di MPI chiamata `MPI_Abort(comm, err)`:
+- `comm` è il comunicatore che si vuole interrompere
+- `err` il codice di errore che si vuole ritornare
+## Comunicazioni Collettive
+Si basano su un pattern chiamato: *bulk synchronous* che consiste nell'effettuare delle computazioni sui dati e poi c'è una fase di comunicazione per aggiornare i dati globali.
+Le operazioni collettive vengono eseguite da tutti i processi nel gruppo per eseguire e condividere dei risultati globali.
+![[Pasted image 20250712152240.png]]
+### `MPI_Barrier()`
+È un'operazione di sincronizzazione in un gruppo: quando viene raggiunta quest'istruzione, il processo si blocca fino a quando tutti gli altri processi del gruppo non raggiungono la barrier, successivamente si continua l'esecuzione.
+### `MPI_Bcast()`
+Permette di inviare il contenuto di un buffer a tutti i processi di un comunicatore.
+`MPI_Bcast(buf*, count, MPI_Datatype, src, MPI_Comm)`
+- `buf*`, puntatore al buffer da inviare
+- `count`, numero di elementi nel buffer
+- `MPI_Datatype`, tipo di dato contenuto nel buffer
+- `src`, rango del processo che invia il messaggio
+- `MPI_Comm`, comunicatore dove inviare il messaggio
+>[!note] È necessario che tutti i processi chiamino la `MPI_Bcast()` per poter inviare e ricevere il messaggio
+### `MPI_Scatter()`
+Distribuisce con partizionamento ciclico a grana grossa il contenuto di un array da un processo a tutti gli altri (**versione sincrona**).
+La dimensione del messaggio inviato è uniforme.
+`MPI_Scatter(sendbuf, sendcnt, MPI_Datatype, recvbuf, recvcnt, MPI_Datatype, src, MPI_Comm)`
+- `sendbuf`, buffer dove sono contenuti i dati da inviare
+- `sendcnt`, numero di elementi da inviare a ciascun processo
+- `recvbuf`, buffer dove memorizzare i dati ricevuti
+- `recvcnt`, numero di elementi da ricevere
+- `src`, rango del processo che invia i dati
+![[Pasted image 20250712154011.png]]
+>[!note] La scatter è equivalente ad una serie di send e recv:
+>![[Pasted image 20250712154104.png]]
+>![[Pasted image 20250712154118.png]]
+### `MPI_Gather()`
+Ogni processo ha un proprio buffer e vengono inviati ad un solo processo in un solo buffer locale. Vengono riordinati in base al rango dei processi.
+`MPI_Gather(sendbuf, sendcnt, MPI_Datatype, recvbuf, recvcnt, MPI_Datatype, dst, MPI_Comm)`
+- `sendbuf`, buffer dove sono contenuti i dati da inviare
+- `sendcnt`, numero di elementi che ogni processo invia
+- `recvbuf`, buffer dove memorizzare i dati ricevuti
+- `recvcnt`, numero di elementi da ricevere da ogni processo
+- `dst`, rango del processo che memorizza i dati
+#### `MPI_Allgather()`
+Come la [[#`MPI_Gather()`|gather]] ma il risultato finale viene inviato a tutti i processi del comunicatore.
+`MPI_Allgather(sendbuf, sendcnt, MPI_Datatype, recvbuf, recvcnt, MPI_Datatype, MPI_Comm)`
+- `sendbuf`, buffer dove sono contenuti i dati da inviare
+- `sendcnt`, numero di elementi che ogni processo invia
+- `recvbuf`, buffer dove memorizzare i dati ricevuti
+- `recvcnt`, numero di elementi da ricevere da ogni processo
+>[!note] Manca il parametro `dst` perché appunto tutti i processi ricevono il risultato finale
+### `MPI_Scatterv() / MPI_Gatherv()`
+I messaggi inviati potrebbero non avere la stessa grandezza e potrebbero non essere contigui; inoltre possono essere distribuiti ai processi in qualsiasi ordine.
+`MPI_Scatterv(sendbuf*, sendcnts*, displs*, sendtype, recvbuf*, recvcnt, recvtype, root, MPI_Comm)`
+- `sendbuf*`, puntatore del buffer da inviare
+- `sendcnt*`, array che ha $p$ elementi ($p =$ numero di processi MPI), numeri di elementi di ogni blocco da inviare
+- `displs*`, array che ha $p$ elementi, il numero di elementi che ci sono prima del buffer i-esimo
+- `sendtype`, tipo di dati da inviare
+- `recvbuf*`, puntatore al buffer dove salvare i dati ricevuti
+- `recvcnt`, numero di elementi ricevuti
+- `recvtype`, tipo di dati ricevuti
+- `root`, rango del processo che invia i messaggi
+- `MPI_Comm`, comunicatore dove inviare i messaggi
+```c
+int sendbuf[] = {10, 11, 12, 13, 14, 15, 16}; /* at master */
+int displs[] = {3, 0, 1}; /* assume P=3 MPI processes */
+int sendcnts[] = {3, 1, 4};
+int recvbuf[5];
+
+MPI_Scatterv(sendbuf, sendcnts, displs, MPI_INT, recvbuf, 5,
+MPI_INT, 0, MPI_COMM_WORLD);
+```
+![[Pasted image 20250712165134.png]]
+### `MPI_Reduce()`
+Esegue un'operazione di [[#Reduce|reduce]] con l'operatore specificato e invia il risultato finale ad un processo.
+`MPI_Reduce(sendbuf, recvbuf, count, sendtype, MPI_SUM, dst, MPI_Comm)`
+- `sendbuf`, buffer di invio
+- `recvbuf`, buffer di ricezione
+- `count`, numero di elementi nei buffer sia di ricezione che di invio (uniformi)
+- `sendtype`, tipo di dati da inviare
+- `MPI_SUM`, operatore di riduzione (oppure operazioni di riduzioni *custom*)
+- `dst`, rango del processo che riceve il risultato finale
+- `MPI_Comm`, comunicatore dove inviare i messaggi
+![[Pasted image 20250712165515.png|Con `count` pari a $1$]]
+
+>[!note] Nel caso in cui il numero di elementi è maggiore di $1$ allora il processo che riceve i dati finali ottiene un array contenente la riduzione dell'elemento i-esimo all'interno di ogni processo. Per ottenere il risultato finale è necessario applicare l'operatore di riduzione scelto a quest'ultimo array.
+>![[Pasted image 20250712171240.png|Con `count` pari a $3$]]
+
+#### `MIN_LOC` e `MAX_LOC`
+Questi operatori si applicano a una coppia di dati (`valore, indice`) e restituisce una coppia con il massimo o il minimo e il rispettivo indice.
+![[Pasted image 20250712171523.png|Da notare il tipo di dato `MPI_DOUBLE_INT`]]
+### `MPI_Allreduce()`
+Esegue l'operazione [[#`MPI_Reduce()`|reduce]] ma il risultato viene inviato a tutti i processi del comunicatore.
+Tutti i processi devono avere il buffer di invio e di ricezione.
+![[Pasted image 20250712171752.png]]
+### `MPI_alltoall()`
+Tutti i processi devono avere un array di input da inviare, alla fine i processi avranno un array contenente tutti i dati distribuiti in modo particolare.
+>[!note] È come fare una [[#`MPI_Scatter()`|scatter]] e una [[#`MPI_Gather()`|gather]]
+>Ogni processo effettua una scatter.
+>Utilizzata per fare la trasposta delle matrice invece di calcolarla in modo seriale
+
+`MPI_Alltoall(sendbuf, sendcnt, MPI_INT, recvbuf, recvcnt, MPI_INT, MPI_COMM_WORLD)`
+![[Pasted image 20250712172111.png]]
+
+### `MPI_Scan()`
+Effettua l'operazione [[#Scan|scan]] inclusiva.
+`MPI_Scan(sendbuf, recvbuf, count, MPI_INT, MPI_SUM, MPI_COMM_WORLD)`
+![[Pasted image 20250712172342.png|Con `count` pari a $1$]]
+
+Come per la [[#`MPI_Reduce()`|reduce]] se `count` è maggiore di $1$ allora ogni processo ottiene una array dove ogni i-esimo elemento è la somma degli elementi partendo dal primo fino al $n$-esimo processo, dove $n$ è il rango del processo:
+![[Pasted image 20250712172602.png|Con `count` pari a $3$]]
+## MPI Datatypes
