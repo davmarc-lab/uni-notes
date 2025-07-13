@@ -631,7 +631,6 @@ for (int i=0; i<4; i++) {
 > ```
 > In questi casi soltanto OpenMP 5.0 è in grado di collassare questi due cicli, se non è possibile utilizzare il collapse si può scegliere di parallelizzarne uno dei due
 
-## Esempio: Odd-Even Transposition Sort
 ## Sincronizzazione in OpenMP
 ### `barrier`
 >[!note]
@@ -760,6 +759,27 @@ Operazione simmetrica alla [[#`MPI_Send()`|send]]. Bloccante perché il processo
 - `tag`, il tag del messaggio (`MPI_ANY_TAG` per non specificare nessun tag)
 - `MPI_Comm`, il *communicator* utilizzato (`MPI_COMM_WORLD` default)
 - `MPI_Status`, conterrà le informazioni del messaggio (`MPI_STATUS_IGNORE` per non specificarle)
+### `MPI_Sendrecv()`
+Permette ad un processo di eseguire l'invio di un messaggio e la ricezione di un messaggio in una singola operazione. Utilizzato per esempio nell'*Odd-Even Transposition Sort* per evitare il deadlock durante la comunicazione fra due processi.
+```c
+MPI_Sendrecv(
+	void* sendbuf,
+	int sendcount,
+	MPI_Datatype sendtype,
+	int dest,
+	int sendtag,
+	void* recvbuf,
+	int recvcount,
+	MPI_Datatype recvtype,
+	int source,
+	int recvtag,
+	MPI_Comm comm,
+	MPI_Status* status
+)
+```
+- *dest* e *source* possono essere uguali o differenti
+- MPI gestisce la comunicazione in modo da evitare crash del programma
+>[!note] I parametri sono gli stessi della [[#`MPI_Send()`|send]] e della [[#`MPI_Recv()`|receive]].
 ### `MPI_Status`
 È una struttura C che contiene i seguenti campi:
 - `MPI_SOURCE`
@@ -921,4 +941,140 @@ Effettua l'operazione [[#Scan|scan]] inclusiva.
 
 Come per la [[#`MPI_Reduce()`|reduce]] se `count` è maggiore di $1$ allora ogni processo ottiene una array dove ogni i-esimo elemento è la somma degli elementi partendo dal primo fino al $n$-esimo processo, dove $n$ è il rango del processo:
 ![[Pasted image 20250712172602.png|Con `count` pari a $3$]]
+### Esempio Odd-Event Transposition Sort
+Si ordinano le coppie (pari, dispari) e l'iterazione successiva ordina le coppie (dispari, pari) e così via. **Per ogni fase dell'algoritmo con MPI si alternano i due processi comunicanti**.
+In MPI si divide l'array iniziale in blocchi tanti quanti sono i processi MPI (partizionamento a grana grossa) e viene assegnato ad ogni processo un blocco; ogni processo ordina il suo blocco e successivamente iniziano le iterazioni dell'algoritmo:
+- il processo $i$ invia una copia del proprio blocco al processo $i+1$
+- il processo $i+1$ invia una copia del proprio blocco al processo $i$
+- il processo $i$ esegue l'operzione di merge del suo blocco con quello dell'altro processo, e scarta la parte superiore (dopo la metà) 
+- il processo $i+1$ esegue l'operzione di merge del suo blocco con quello dell'altro processo, e scarta la parte inferiore (prima della metà)
+![[Pasted image 20250713130337.png|Esempio di un'iterazione dell'algoritmo]]
+>[!warning] Questo metodo funziona solo nel caso in cui la dimensione dell'array originale è multiplo del numero di processi MPI utilizzati
+>Per far si che funzioni per qualsiasi dimensione dell'array originale è necessario che nella fase finale, dopo aver scartato la metà corretta, è necessario che ogni processo abbia un risultato con dimensione pari alla dimensione dell'array iniziale **dell'altro processo**. Inoltre bisogna fare attenzione al **massimo numero di elementi** che ogni buffer **può** ricevere.
+>![[Pasted image 20250713131548.png]]
+#### Fasi dell'algoritmo
+![[Pasted image 20250713130504.png]]
+>[!note] Deadlock quando due processi comunicano
+>Essendo presente una send e una receive per ogni processo le operazioni si bloccano ([[#Comunicazioni bloccanti e deadlocks|deadlock]])
+>![[Pasted image 20250713130658.png]]
+>Per questo motivo si utilizza la [[#`MPI_Sendrecv()`|`MPI_Sendrecv()`]].
 ## MPI Datatypes
+MPI consente di definire diversi tipi di dati derivati:
+- *contiguous*, un insieme contiguo di elementi
+- *vector*, array composto da blocchi di dimensioni uniforme equispaziati
+- *indexed*, insieme di blocchi con dimensione arbitraria che sono in posizioni arbitrarie
+- *struct*, una collezione di blocchi anche di tipi diversi
+### `MPI_Type_contiguous()`
+
+```c
+MPI_Datatype rowtype;
+MPI_Type_contiguous( 4, MPI_FLOAT, &rowtype );
+MPI_Type_commit(&rowtype);
+// 1 elemento di tipo rowtype = 4 MPI_FLOAT
+```
+`MPI_Type_contiguous(int count, MPI_Datatype oldtype, MPI_Datatype *newtype)`
+- `count`, numero di elementi
+- `oldtype`, tipo degli elementi
+- `newtype`, puntatore ad un `MPI_Datatype`
+>[!note] Esempio
+>`MPI_Send(&a[2][0], 1, rowtype, dest, tag, MPI_COMM_WORLD);`
+### `MPI_Type_vector()`
+
+```c
+MPI_Datatype columntype;
+MPI_Type_vector( 4, 1, 4, MPI_FLOAT, &columntype );
+MPI_Type_commit(&columntype);
+```
+`MPI_Type_vector(int count, int blocklen, int stride, MPI_Datatype oldtype, MPI_Datatype *newtype)`
+- `count`, numero di blocchi 
+- `blocklen`, lunghezza di ciascun blocco
+- `stride`, distanza tra l'inizio di un blocco e il blocco successivo
+- `odltype`, tipo di dati all'interno del blocco
+- `newtype`, puntatore ad un `MPI_Datatype`
+![[Pasted image 20250713181034.png|Esempio di un type vector]]
+### `MPI_Type_indexed()`
+`MPI_Type_indexed(int count, const int array_of_blklen[], const int array_of_displ[], MPI_Datatype oldtype, MPI_Datatype *newtype)`
+- `count`, numero di blocchi
+- `array_of_blocklen`, numero di elementi in ogni blocco (con `count` elementi)
+- `array_of_displ`, posizione di ogni blocco rispetto all'inizio del buffer (con `count` elementi)
+```c
+int count = 3; int blklens[] = {1, 3, 4}; int displs[] = {2, 5, 12};
+MPI_Datatype newtype;
+MPI_Type_indexed(count, blklens, displs, MPI_FLOAT, &newtype);
+MPI_Type_commit(&newtype);
+```
+![[Pasted image 20250713181811.png]]
+>[!note] Attenzione al tipo di dati MPI che si riceve:
+>![[Pasted image 20250713181925.png|Si invia e si riceve `newtype`]]
+>![[Pasted image 20250713182003.png|Si invia un `newtype` e si ricevono $8$ `MPI_FLOAT`]]
+>A seconda del tipo di dati che si riceve varia il modo in cui viene memorizzato in memoria
+### Combinare Datatypes
+In MPI è possibile combinare due o più tipi di dati derivati baste che siano *contiguous* o *vector* o *indexed*.
+```c
+int count, blocklen, stride;
+MPI_Datatype vec, vecvec;
+count = 2; blocklen = 2; stride = 3;
+MPI_Type_vector(count, blocklen, stride, MPI_FLOAT, &vec);
+MPI_Type_commit(&vec);
+count = 2; blocklen = 1; stride = 3;
+MPI_Type_vector(count, blocklen, stride, vec, &vecvec);
+MPI_Type_commit(&vecvec);
+```
+![[Pasted image 20250713182414.png]]
+### `MPI_Type_create_struct()`
+`MPI_Type_create_struct(int count, int *array_of_blklen, MPI_Aint *array_of_displ, MPI_Datatype *array_of_types, MPI_Datatype *newtype)`
+- `count`, numero di blocchi
+- `array_of_blklen`, numero di elementi in ogni blocco
+- `array_of_displ`, displacements in **byte** di ogni blocco dall'inizio del buffer all'inizio della struttura dati (deve essere di tipo `MPI_Aint`, ricavata con `MPI_Type_get_extent()`)
+- `array_of_types`, array di `MPI_Datatype`
+```c
+typedef struct {
+	float x, y, z, v;
+	int n, t;
+} particle_t;
+
+int count = 2; int blklens[2];
+MPI_Aint displs[2], lb, extent;
+MPI_Datatype oldtypes[2], newtype;
+oldtypes[0] = MPI_FLOAT; blklens[0] = 4; displs[0] = 0;
+MPI_Type_get_extent(MPI_FLOAT, &lb, &extent);
+// prende il numero di byte utilizzati in memoria per creare un MPI_FLOAT
+// lb (lower bound) viene utilizzato per definire dei buchi (se ce ne sono) all'inizio del tipo
+oldtypes[1] = MPI_INT; blklens[1] = 2; displs[1] = 4*extent;
+MPI_Type_create_struct(count, blklens, displs, oldtypes, &newtype);
+MPI_Type_commit(&newtype);
+```
+![[Pasted image 20250713183122.png]]
+## Riassunto
+MPI si basa su un modello semplice di scambio di messaggi, molto a basso livello e pesante causato dalla comunicazione stessa. Il codice è molto verboso e la maggior parte è solamente codice per comunicare.
+# CUDA
+Tecnologia proprietaria di NVIDIA che espone un modello di programmazione *data-parallel*.
+>[!note] Host
+>Comprende la CPU e la sua memoria chiamata *host memory*
+
+>[!note] Device
+>La GPU e la sua memoria chiamata *device memory*
+
+Il programma viene eseguito sulla CPU e una sotto parte viene eseguita sulla GPU. Per poter fare delle operazioni sui dati sfruttando la GPU è necessario prima inviare i dati dall'host al device, sarà l'host a chiamare le funzioni che inizieranno la computazione sulla GPU.
+
+Le fasi di un programma in CUDA sono le seguenti:
+- si copiano i dati dalla memoria della CPU sulla memoria della GPU
+- si carica il programma sulla GPU e viene eseguito, sfruttando la cache al suo interno per aumentare le performance
+- si copiano i risultati dalla memoria della GPU sulla memoria della CPU
+## Architettura di una GPU
+![[Pasted image 20250713210653.png]]
+>[!note]
+>Ottimizzata per l'esecuzione di codice tipo SIMD (Single Instruction Multiple Data).
+>Ha un numero elevato di core ottimizzati per l'esecuzione di un flusso comune di istruzioni.
+
+Comprende i seguenti componenti:
+- una memoria globale
+- i modelli recenti hanno una cache L2
+- un insieme di processori chiamati *streaming multiprocessor*, sono ottimizzati per eseguire operazioni SIMD ed ognuno di essi è composto da: una serie di *streaming processors*, un *warp scheduler*, elevato numero di registri, una cache L1 e una memoria condivisa
+### Dal punto di vista di un programmatore
+Una GPU è composta da *thread*, *block* e *grid*.
+- Un **thread** è la minima unità di lavoro assegnata alla GPU, tutti i thread eseguono la stessa funzione *kernel*. Oppure la computazione che deve essere fatta per produrre un singolo risultato.
+- Un **blocco** è una sottocomponente indipendente di lavoro che può essere eseguito in qualsiasi ordine dal *streaming multiprocessor*. Contiene una matrice 3D di thread.
+- Una **grid** è una parte di lavoro che può essere eseguita sulla GPU: è un insieme di blocchi
+![[Pasted image 20250713211649.png]]
+ 
