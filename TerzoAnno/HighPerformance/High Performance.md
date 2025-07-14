@@ -1077,4 +1077,92 @@ Una GPU è composta da *thread*, *block* e *grid*.
 - Un **blocco** è una sottocomponente indipendente di lavoro che può essere eseguito in qualsiasi ordine dal *streaming multiprocessor*. Contiene una matrice 3D di thread.
 - Una **grid** è una parte di lavoro che può essere eseguita sulla GPU: è un insieme di blocchi
 ![[Pasted image 20250713211649.png]]
- 
+ >[!note] CUDA warp
+ >Un CUDA warp è la minima unità di lavoro mandata in esecuzione ed è composto da 32 thread, è possibile ricavare i thread che fanno parte di uno stesso warp dividendo il loro ID per $32$.
+ >È possibile che warp diversi eseguano diverse istruzioni, ma per rendere la computazione efficiente è necessario che tutti i thread di un warp eseguano le stesse operazioni.
+### SIMD nei thread
+![[Pasted image 20250714101239.png]]
+- Ogni thread esegue le prime due linee di codice
+- Se è presente una divergenza, prima viene eseguita tutta la parte vera del "test" successivamente i thread eseguono la parte falsa della divergenza
+- Alla fine riprendono tutti l'esecuzione del programma
+## Introduzione a CUDA
+```c
+#include <stdio.h>
+__global__ void mykernel(void) { }
+
+int main(void)
+{
+	mykernel<<<1,1>>>( );
+	printf("Hello World!\n");
+	return 0;
+}
+```
+
+La funzione `mykernel` viene chiamata *kernel* e viene eseguita sulla GPU, non può essere chiamata come in un normale programma C, ma bisogna utilizzare una chiamata del tipo: `mykernel<<<1,1>>>( )`.
+La keyword `__global__` distingue una normale funzione da eseguire sull'host da un kernel da eseguire sul device.
+>[!note] I kernel non devono avere nessun `return` di alcun tipo
+>Il compilatore di CUDA, *nvcc* separa il codice sorgente da eseguire sull'host e sul device
+### Gestione della memoria
+La memoria dell'host e del device sono entità separate:
+- la memoria del device riguarda tutta la memoria della GPU
+- la memoria dell'host è tutta la memoria della CPU (cache, ram, etc)
+Tramite CUDA è possibile copiare il contenuto della memoria della CPU alla memoria del device e viceversa tramite la funzione `cudaMemcpy()`.
+>[!note] Non si può dereferenziare la memoria dell'host nel device e viceversa
+
+>[!note] Coordinazione di host e device
+>Le chiamate ai kernel sono asincrone: la CPU una volta che ha chiamato un kernel continua l'esecuzione del suo programma. DI conseguenza prima di prendere i risultati ha bisogno di sincronizzarsi con il device
+>![[Pasted image 20250714111203.png]]
+
+## Esecuzione in parallelo
+### Blocchi CUDA
+```c
+add<<<N, 1>>>();
+```
+La chiamata precedente indica che il kernel `add` viene eseguito utilizzando le seguenti risorse:
+- $N$ blocchi utilizzati dalla GPU
+- $1$ thread utilizzato per ogni blocco utilizzato ($N \times 1$ thread in totale)
+
+Ogni blocco ha un proprio indice all'interno della *grid* e si può ottenere tramite la struttura dati `blockIdx`:
+```c
+_global__ void add(int *a, int *b, int *c)
+{
+	c[blockIdx.x] = a[blockIdx.x] + b[blockIdx.x];
+}
+```
+![[Pasted image 20250714112835.png|Ogni blocco esegue la propria operazione su un elemento dell'array]]
+### Thread CUDA
+Un blocco è diviso in thread paralleli, ognuno con un proprio indice chiamato `threadIdx`, una struttura dati che contiene al suo interno l'indice del thread corrente.
+```c
+__global__ void add(int *a, int *b, int *c)
+{
+	c[threadIdx.x] = a[threadIdx.x] + b[threadIdx.x];
+}
+```
+In questo caso si vuole effettuare la computazione parallela all'interno di un blocco solo.
+![[Pasted image 20250714132052.png]]
+### Combinare Thread e Blocchi
+Supponendo di effettuare un'operazione per thread in 3 blocchi, ogni blocco utilizza 8 thread l'individuazione del singolo thread diventa la seguente:
+```c
+int index = threadIdx.x + blockIdx.x * blockDim.x
+```
+![[Pasted image 20250714144025.png]]
+>[!note] La variabile `blockDIm.x` contiene l'indice del blocco del thread che esegue il kernel.
+
+>[!warning] Caso in cui la dimensione dell'array non è multipla di $1024$ (dimensione di un blocco)
+>È possibile che vengano utilizzati più thread di quanti necessari, per risolvere questo problema è necessario che il kernel sappia la dimensione dell'array, in questo modo se l'indice del blocco-thread è superiore alla dimensione dell'array non viene eseguita l'operazione.
+>![[Pasted image 20250714144406.png]]
+>Invece la chiamata del kernel diventa la seguente:
+>`add<<<(N + BLKDIM-1)/BLKDIM, BLKDIM>>>(d_a, d_b, d_c, N)`
+>La frazione viene arrotondata per eccesso.
+### Espressioni da ricordare
+- `add<<<(N + BLKDIM-1)/BLKDIM, BLKDIM>>>(…)`
+- `blockIdx.x` per accedere al blocco
+- `threadIdx.x` per accedere al thread all'interno di un blocco
+- `int index = threadIdx.x + blockIdx.x * blockDim.x` per assegnare ogni elemento di un array ai thread necessari
+>[!note] I thread in CUDA hanno la possibilità di comunicare e sincronizzarsi fra loro
+
+## Cooperazione fra Thread
+Quando più thread accedono alla stessa locazione di memoria più volte è possibile utilizzare la memoria condivisa di ogni blocco della GPU così da velocizzare l'accesso ai valori.
+Si utilizza la direttiva `__shared__` che memorizza dei valori all'interno della memoria condivisa di ogni blocco; questa memoria è visibile solo ai thread all'interno dello stesso blocco.
+![[Pasted image 20250714150821.png|Modello delle memorie in una GPU moderna]]
+
