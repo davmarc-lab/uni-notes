@@ -1,26 +1,29 @@
 \documentclass[11pt, a4paper]{article}
+\usepackage{caption}
 
 \usepackage{lecture}
 
 \usepackage{notes}
 \usepackage{code}
 \usepackage{quotes}
+\usepackage{tables}
 
 \usepackage{shortcuts}
+\usepackage{images}
 
 \begin{document}
-
+%
 \makefront{}
-
+%
 \tableofcontents
 \newpage
-
+%
 \section{Info}\label{sec:info} % (fold)
 \begin{itemize}
     \item \bf{Mario Bravetti} --- \it{mario.bravetti@unibo.it}
     \item \bf{Lorenzo Bacchiani} --- \it{lorenzo.bacchiani2@unibo.it}
 \end{itemize}
-
+%
 \paragraph{Esame}\label{par:esame} % (fold)
 \begin{itemize}
     \item \bf{Scritto}: $27$ punti
@@ -36,11 +39,11 @@
         Discussione del progetto con tutto il gruppo su \bf{appuntamento} (dopo lo scritto, entro l'inizio della sessione successiva).
 \end{itemize}
 % paragraph Esame (end)
-
+%
 % section Info (end)
-
+%
 \section{Linguaggi Regolari}\label{sec:linguaggi_regolari} % (fold)
-
+%
 \subsection{Concetti di Base}\label{sub:concetti_di_base} % (fold)
 \begin{definition}{Alfabeto}{alf}
     Insieme finito e non vuoto di simboli
@@ -50,27 +53,27 @@
         \item Insieme di tutti i caratteri ASCII
     \end{itemize}
 \end{definition}
-
+%
 \begin{definition}{Stringa}{str}
     Una sequenza finita di simboli da un alfabeto $\Si$, è una stringa su un alfabeto $\{0, 1\}$.
 \end{definition}
-
+%
 \begin{definition}{Stringa vuota}{str_vuota}
     La stringa con zero occorrenze di simboli da $\Si$.
     \begin{itemize}
         \item si denota con $\eps$
     \end{itemize}
 \end{definition}
-
+%
 \begin{definition}{Lunghezza di una stringa}{lunghezza_str}
     Numero di posizioni per i simboli nella stringa.
     \begin{itemize}
-        \item $\ab\om$ denota la lunghezza della stringa $\om$
+        \item $\ab w$ denota la lunghezza della stringa $w$
     \end{itemize}
 \end{definition}
-
+%
 \begin{definition}{Potenze di un alfabeto}{potenze_alf}
-    $\Si k \ =$ inisieme delle stringhe di lunghezza $k$ con simboli da $\Si$
+    $\Si[k] \ =$ inisieme delle stringhe di lunghezza $k$ con simboli da $\Si$
     \begin{example}{}{}
         $\Si = \{0, 1\}$ \\
         $\Si[1] = \{0, 1\}$ \\
@@ -90,7 +93,7 @@
         \]
     \end{example}
 \end{definition}
-
+%
 \begin{definition}{Concatenazione}{concat_str}
     Se $x$ e $y$ sono stringhe, allora $xy$ è la stringa ottenuta collocando una copia di $y$ subito dopo una copia di $x$.
     \begin{equation*}
@@ -104,7 +107,7 @@
         \[ x\eps = \eps x = x \]
     \end{note}
 \end{definition}
-
+%
 \begin{definition}{Linguaggi}{lang}
     Se $\Si$ è un alfabeto, e $L \in \Si[*]$ allora $L$ è un \bf{linguaggio}.
     \begin{itemize}
@@ -132,11 +135,11 @@
         \end{itemize}
     \end{example}
 \end{definition}
-
+%
 % subsection Concetti di Base (end)
-
+%
 \subsection{Automi a stati finiti deterministici}\label{sub:automi_a_stati_finiti_deterministici} % (fold)
-
+%
 \begin{definition}{Automa a stati Finiti Deterministici}{dfa}
 Un \bf{DFA} è una quintupla:
     \begin{equation}
@@ -150,23 +153,47 @@ Un \bf{DFA} è una quintupla:
         \item $F \subseteq Q$ è un insieme di stati finali
     \end{itemize}
 \end{definition}
-
+%
 \begin{example}{Un automa $A$ che accetta $L = \pg{x01y: x, y \in \pg{0, 1}^*}$}{}
     L'automa $\pt{\pg{\qlo, \qli, \qlii}, \pg{0, 1}, \dt, \qlo, \pg \qli}$ definito tramite una \it{tabella di transizione}:
-%%% TABELLA
+    \begin{ctable}{r||c|c}
+        & 0 & 1 \\
+        \midrule
+        \midrule
+        $\rightarrow q_0$ & $q_2$ & $q_0$ \\
+        $\star q_1$       & $q_1$ & $q_1$ \\
+        $q_2$             & $q_2$ & $q_1$ \\
+    \end{ctable}
     Lo stesso automa $A$ definito, più semplicemente, tramite un \it{diagramma di transizione}:
-%%% IMMAGINE
+    \begin{center}
+        \includegraphics[width=.6\textwidth]{assets/diag_trans.png}
+        \captionof{figure}{Diagramma di transizione di un automa}\label{fig:diag_trans}
+    \end{center}
 \end{example}
-
+%
 Un automa a stati finiti (\bf{FA}) \it{accetta} una stringa $w = \ali\alii\dots\aln$ se esiste un cammino nel diagramma di transizione che:
 \begin{enumerate}
     \item Inizia nello stato iniziale
     \item Finisce in uno stato finale (di accettazione)
     \item Ha una sequenza di etichette $\ali\alii\dots\aln$
 \end{enumerate}
-
+L'automa a stati finiti in \cref{fig:diag_trans}, accetta la stringa \tt{01101}.
+\emptyln{}
+La funzione di transizione $\dt$ può essere estesa a $\hdt$ che opera su stati e stringhe (invece che su stati e simboli).
+\begin{flushleft}
+    \begin{tabular}{ll}
+        \bf{Base}: &$\hdt\pt{q, \eps} = q$ \\
+        \bf{Induzione}: &$\hdt\pt{q, xa} = \dt\pt{\hdt\pt{q, x}, a}$
+    \end{tabular}
+\end{flushleft}
+\begin{definition}{Linguaggi Regolari}{reg_lang}
+    Formalmente, il \it{linguaggio accettato} da un automa a stati finiti deterministico $A$ è:
+    \begin{equation*}
+        L(A) = \pg{w: \hdt\pt{\qlo, w} \in F}
+    \end{equation*}
+    I linguaggi accettati da automi a stati finiti sono detti \bf{linguaggi regolari}
+\end{definition}
 % subsection Automi a stati finiti deterministici (end)
-
+%
 % section Linguaggi Regolari (end)
-
 \end{document}
