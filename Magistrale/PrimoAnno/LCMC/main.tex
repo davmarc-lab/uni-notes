@@ -1,0 +1,172 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage{lecture}
+
+\usepackage{notes}
+\usepackage{code}
+\usepackage{quotes}
+
+\usepackage{shortcuts}
+
+\begin{document}
+
+\makefront{}
+
+\tableofcontents
+\newpage
+
+\section{Info}\label{sec:info} % (fold)
+\begin{itemize}
+    \item \bf{Mario Bravetti} --- \it{mario.bravetti@unibo.it}
+    \item \bf{Lorenzo Bacchiani} --- \it{lorenzo.bacchiani2@unibo.it}
+\end{itemize}
+
+\paragraph{Esame}\label{par:esame} % (fold)
+\begin{itemize}
+    \item \bf{Scritto}: $27$ punti
+        \begin{warning}
+            Il voto dello scritto vale solo nella sessione corrente
+        \end{warning}
+    \item \bf{Orale di progetto}: $7$ punti (facoltativo)
+        Realizzazione di un \bf{compilatore} per un semplice linguaggio di programmazione funzionale \it{object-oriented}, chiamato \it{FOOL}.
+        Estensione di quello del \bf{laboratorio}.
+        \emptyln{}
+        Progetto in singolo o in \bf{gruppo max $4$ persone} e che può essere effettuato \bf{parzialmente} (anche solo un estensione minimale).
+        \emptyln{}
+        Discussione del progetto con tutto il gruppo su \bf{appuntamento} (dopo lo scritto, entro l'inizio della sessione successiva).
+\end{itemize}
+% paragraph Esame (end)
+
+% section Info (end)
+
+\section{Linguaggi Regolari}\label{sec:linguaggi_regolari} % (fold)
+
+\subsection{Concetti di Base}\label{sub:concetti_di_base} % (fold)
+\begin{definition}{Alfabeto}{alf}
+    Insieme finito e non vuoto di simboli
+    \begin{itemize}
+        \item $\Si = \{0, 1\}$ alfabeto binario
+        \item $\Si = \{a, b, c, \dots, z\}$ insieme di tutte le lettere minuscole
+        \item Insieme di tutti i caratteri ASCII
+    \end{itemize}
+\end{definition}
+
+\begin{definition}{Stringa}{str}
+    Una sequenza finita di simboli da un alfabeto $\Si$, è una stringa su un alfabeto $\{0, 1\}$.
+\end{definition}
+
+\begin{definition}{Stringa vuota}{str_vuota}
+    La stringa con zero occorrenze di simboli da $\Si$.
+    \begin{itemize}
+        \item si denota con $\eps$
+    \end{itemize}
+\end{definition}
+
+\begin{definition}{Lunghezza di una stringa}{lunghezza_str}
+    Numero di posizioni per i simboli nella stringa.
+    \begin{itemize}
+        \item $\ab\om$ denota la lunghezza della stringa $\om$
+    \end{itemize}
+\end{definition}
+
+\begin{definition}{Potenze di un alfabeto}{potenze_alf}
+    $\Si k \ =$ inisieme delle stringhe di lunghezza $k$ con simboli da $\Si$
+    \begin{example}{}{}
+        $\Si = \{0, 1\}$ \\
+        $\Si[1] = \{0, 1\}$ \\
+        $\Si[2] = \{00, 01, 10, 11\}$ \\
+        $\Si[0] = \{\eps\}$ \\
+        \bf{Domanda}; Quante stringhe ci sono in $\Si[3]$?
+        L'insieme di tutte le stringhe su $\Si$ è denotato da $\Si[*]$:
+        \[
+            \Si[*] = \Si[0] \cup \Si[1] \cup \Si[2] \cup \cdots
+        \]
+        anche:
+        \[
+            \begin{matrix}
+                \Si[+] = \Si[1] \cup \Si[2] \cup \Si[3] \cup \cdots \\
+                \Si[*] = \Si[+] \cup \{\eps\}
+            \end{matrix}
+        \]
+    \end{example}
+\end{definition}
+
+\begin{definition}{Concatenazione}{concat_str}
+    Se $x$ e $y$ sono stringhe, allora $xy$ è la stringa ottenuta collocando una copia di $y$ subito dopo una copia di $x$.
+    \begin{equation*}
+        \begin{matrix}
+            x = a_1a_2\dots a_i, \quad y = b_1b_2\dots b_j \\
+            xy = a_1a_2\dots a_i b_1b_2\dots b_j
+        \end{matrix}
+    \end{equation*}
+    \begin{note}{}{}
+        Per ogni stringa $x$:
+        \[ x\eps = \eps x = x \]
+    \end{note}
+\end{definition}
+
+\begin{definition}{Linguaggi}{lang}
+    Se $\Si$ è un alfabeto, e $L \in \Si[*]$ allora $L$ è un \bf{linguaggio}.
+    \begin{itemize}
+        \item $\emptyset \not= \{\eps\}$
+        \item L'alfabeto $\Si$ è sempre finito
+    \end{itemize}
+    \begin{example}{}{}
+        \begin{itemize}
+            \item L'insieme dele parole italiane legali
+            \item L'insieme dei programmi C legali
+            \item L'insieme delle stringhe che consistono di $n$ zeri seguiti da $n$ uni:
+                \[
+                    \{\eps, 01, 0011, 000111, \dots \}
+                \]
+            \item L'insieme delle stringhe con un numero ugiale di zeri e di uni:
+                \[
+                    \{\eps, 01, 10, 0011, 0101, 1001, \dots \}
+                \]
+            \item $L_P =$ insieme dei numeri binari il cui valore è primo:
+                \[
+                    \{10, 11, 101, 111, 1011, \dots \}
+                \]
+            \item Il linguaggio vuoto $\emptyset$
+            \item Il linguaggio $\{\eps\}$ consiste della stringa vuota
+        \end{itemize}
+    \end{example}
+\end{definition}
+
+% subsection Concetti di Base (end)
+
+\subsection{Automi a stati finiti deterministici}\label{sub:automi_a_stati_finiti_deterministici} % (fold)
+
+\begin{definition}{Automa a stati Finiti Deterministici}{dfa}
+Un \bf{DFA} è una quintupla:
+    \begin{equation}
+        A = \pt{Q, \Si, \dt, q_0, F}
+    \end{equation}
+    \begin{itemize}
+        \item $Q$ è un insieme finito di stati
+        \item $\Si$ è un alfabeto finito (simboli in input)
+        \item $\dt$ è una funzione di transizione da $Q \times \Si$ a $Q$, cioè: $\pt{q, a}\to p$
+        \item $q_0 \in Q$ è lo stato iniziale
+        \item $F \subseteq Q$ è un insieme di stati finali
+    \end{itemize}
+\end{definition}
+
+\begin{example}{Un automa $A$ che accetta $L = \pg{x01y: x, y \in \pg{0, 1}^*}$}{}
+    L'automa $\pt{\pg{\qlo, \qli, \qlii}, \pg{0, 1}, \dt, \qlo, \pg \qli}$ definito tramite una \it{tabella di transizione}:
+%%% TABELLA
+    Lo stesso automa $A$ definito, più semplicemente, tramite un \it{diagramma di transizione}:
+%%% IMMAGINE
+\end{example}
+
+Un automa a stati finiti (\bf{FA}) \it{accetta} una stringa $w = \ali\alii\dots\aln$ se esiste un cammino nel diagramma di transizione che:
+\begin{enumerate}
+    \item Inizia nello stato iniziale
+    \item Finisce in uno stato finale (di accettazione)
+    \item Ha una sequenza di etichette $\ali\alii\dots\aln$
+\end{enumerate}
+
+% subsection Automi a stati finiti deterministici (end)
+
+% section Linguaggi Regolari (end)
+
+\end{document}
