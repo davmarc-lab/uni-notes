@@ -5,6 +5,9 @@
 \usepackage{notes}
 \usepackage{code}
 \usepackage{quotes}
+\usepackage{images}
+
+\usepackage{shortcuts}
 
 \begin{document}
 
@@ -13,5 +16,59 @@
 \tableofcontents
 \newpage
 
+\section{Info}\label{sec:info} % (fold)
+\begin{itemize}
+    \item \bf{Andrea Omicini} --- \it{andrea.omicini@unibo.it}
+    \item \bf{Giovanni Ciatto} --- \it{giovanni.ciatto@unibo.it}
+    \item \bf{Matteo Magnini} --- \it{matteo.magnini@unibo.it}
+\end{itemize}
+%
+Course page $\longrightarrow$ \hyperlink{http://apice.unibo.it/xwiki/bin/view/Course/Ds2526}{APICe Page of the Course}
+\paragraph{Lecture Structure}\label{par:lecture_structure} % (fold)
+\begin{itemize}
+    \item[] \bf{theory (M1)}, introduce foundamental issues of distributed system;
+    \item[] \bf{lab (M2)}, experiment for distributed systems with appropriate technologies;
+    \item[] \bf{prelimiary}, online classes where we introduce some prerequisite knowledge and techniques required for labs;
+    \item[] \bf{seminars}, introduce some advanced contents in the field of distributed system;
+\end{itemize}
+% paragraph Lecture Structure (end)
+%
+\paragraph{Exam}\label{par:exam} % (fold)
+\begin{itemize}
+    \item oral discussion of a project, after the project artefacts check;
+    \item exam date by appointment;
+    \item docs and code will be checked before discussion;
+\end{itemize}
+The project:
+\begin{itemize}
+    \item should cover, or follow from, a specific topic of the course;
+    \item may concern theoretical/technological/methodological aspects;
+    \item may be developed by \it{individuals} or \it{groups};
+    \item has to be negotiated with the professor and/or the tutor, in order to ensure:
+        \begin{itemize}
+            \item its focus on distributed systems;
+            \item its feasibility in a reasonable amount of time;
+        \end{itemize}
+\end{itemize}
+\begin{note}
+    The project activity can be started any time (the sooner the better, usually).
+    Following and understanding classes and labs is practically required in the process, and typically \bf{needs to show up} in the project artefacts.
+\\
+Professors and tutor will try and help you to understand where and how you should display your understanding of distributed systems topics in your project and -- in particular -- in your project artefacts.
+\end{note}
+% paragraph Exam (end)
+%
+% section Info (end)
+\section{The CAP Theorem}\label{sec:the_cap_theorem} % (fold)
+%
+\subsection{Availability, Consistency, Failure}\label{sec:availability_consistency_failure} % (fold)
+Being able to \bf{keep on providing services in spite of failures} is supposed to be one of the main benefit of distributed systems over centralised ones.
+\begin{note}[Intuitive Assumption]
+    Distributed systems \bf{can be designed} so that if one component of the system fails -- or, it becomes disconnected/partioned -- other components can replace it \bf{to hide failures} from the outside world.
+\end{note}
+When a system can hide (most of) it failures, it is basically (almost) \it{always working} (highly available). Basic questions in the design of distributed systems: \it{how much failure} can a given system sustain \it{before failure is noticed}?
 
+% subsubsection Availability, Consistency, Failure (end)
+% section The CAP Theorem (end)
+%
 \end{document}
