@@ -6,6 +6,7 @@
 \usepackage{code}
 \usepackage{quotes}
 \usepackage{images}
+\usepackage{acronyms}
 
 \usepackage{shortcuts}
 
@@ -18,18 +19,18 @@
 
 \section{Info}\label{sec:info} % (fold)
 \begin{itemize}
-    \item \bf{Andrea Omicini} --- \it{andrea.omicini@unibo.it}
-    \item \bf{Giovanni Ciatto} --- \it{giovanni.ciatto@unibo.it}
-    \item \bf{Matteo Magnini} --- \it{matteo.magnini@unibo.it}
+    \item \textbf{Andrea Omicini} --- \textit{andrea.omicini@unibo.it}
+    \item \textbf{Giovanni Ciatto} --- \textit{giovanni.ciatto@unibo.it}
+    \item \textbf{Matteo Magnini} --- \textit{matteo.magnini@unibo.it}
 \end{itemize}
-%
 Course page $\longrightarrow$ \hyperlink{http://apice.unibo.it/xwiki/bin/view/Course/Ds2526}{APICe Page of the Course}
+%
 \paragraph{Lecture Structure}\label{par:lecture_structure} % (fold)
 \begin{itemize}
-    \item[] \bf{theory (M1)}, introduce foundamental issues of distributed system;
-    \item[] \bf{lab (M2)}, experiment for distributed systems with appropriate technologies;
-    \item[] \bf{prelimiary}, online classes where we introduce some prerequisite knowledge and techniques required for labs;
-    \item[] \bf{seminars}, introduce some advanced contents in the field of distributed system;
+    \item[] \textbf{theory (M1)}, introduce foundamental issues of distributed system;
+    \item[] \textbf{lab (M2)}, experiment for distributed systems with appropriate technologies;
+    \item[] \textbf{prelimiary}, online classes where we introduce some prerequisite knowledge and techniques required for labs;
+    \item[] \textbf{seminars}, introduce some advanced contents in the field of distributed system;
 \end{itemize}
 % paragraph Lecture Structure (end)
 %
@@ -43,7 +44,7 @@ The project:
 \begin{itemize}
     \item should cover, or follow from, a specific topic of the course;
     \item may concern theoretical/technological/methodological aspects;
-    \item may be developed by \it{individuals} or \it{groups};
+    \item may be developed by \textit{individuals} or \textit{groups};
     \item has to be negotiated with the professor and/or the tutor, in order to ensure:
         \begin{itemize}
             \item its focus on distributed systems;
@@ -52,23 +53,202 @@ The project:
 \end{itemize}
 \begin{note}
     The project activity can be started any time (the sooner the better, usually).
-    Following and understanding classes and labs is practically required in the process, and typically \bf{needs to show up} in the project artefacts.
+    Following and understanding classes and labs is practically required in the process, and typically \textbf{needs to show up} in the project artefacts.
 \\
 Professors and tutor will try and help you to understand where and how you should display your understanding of distributed systems topics in your project and -- in particular -- in your project artefacts.
 \end{note}
 % paragraph Exam (end)
-%
 % section Info (end)
+%
 \section{The CAP Theorem}\label{sec:the_cap_theorem} % (fold)
 %
 \subsection{Availability, Consistency, Failure}\label{sec:availability_consistency_failure} % (fold)
-Being able to \bf{keep on providing services in spite of failures} is supposed to be one of the main benefit of distributed systems over centralised ones.
+Being able to \textbf{keep on providing services in spite of failures} is supposed to be one of the main benefit of distributed systems over centralised ones.
 \begin{note}[Intuitive Assumption]
-    Distributed systems \bf{can be designed} so that if one component of the system fails -- or, it becomes disconnected/partioned -- other components can replace it \bf{to hide failures} from the outside world.
+    Distributed systems \textbf{can be designed} so that if one component of the system fails -- or, it becomes disconnected/partioned -- other components can replace it \textbf{to hide failures} from the outside world.
 \end{note}
-When a system can hide (most of) it failures, it is basically (almost) \it{always working} (highly available). Basic questions in the design of distributed systems: \it{how much failure} can a given system sustain \it{before failure is noticed}?
-
+When a system can hide (most of) it failures, it is basically (almost) \textit{always working} (highly available). Basic questions in the design of distributed systems: \textit{how much failure} can a given system sustain \textit{before failure is noticed}?
+\\
+\begin{note}[What do we expect from a distributed system?]
+    \begin{itemize}
+        \item \textbf{consistency} -- we would like them to behave \textit{correctly}, to give correct replies when queried;
+        \item \textbf{availability} -- we would like them to work, to make good things happen, to be \textit{live};
+        \item \textbf{unreliability} -- however, we know systems \textit{can} actually experience power losses, crashes, network failures, message loss, malicious attacks, Byzantine failure, and so on;
+    \end{itemize}    
+\end{note}
+The CAP theorem is an example of a more general tradeoff between \textit{safety} and \textit{liveness} in \textit{unreliable} systems.
 % subsubsection Availability, Consistency, Failure (end)
+%
+\subsection{CAP at a Glance}\label{sub:cap_at_a_glance} % (fold)
+\begin{theorem}{CAP Theorem}{cap_thr}
+    The \textbf{CAP} theorem states that is impossible, to satisfy all three of the following guarantees, in distributed applications:
+    \begin{itemize}
+        \item \textbf{Consistency (C)} -- the replicated data is always consistent with each other;
+        \item \textbf{Availability (A)} -- the data is highly available to the users;
+        \item \textbf{Partition tolerance (P)} -- the system can continue providing services to its users even when the network partitions;
+    \end{itemize}
+\end{theorem}
+%
+\begin{note}
+    The three properties are not exactly of the same sort, both technically and conceptually: consistency and availablity range over a spectrum of options, whereas partition tolerance can somehow be seen more as on/off feature.
+All of them are \textit{desirable}, yet forfeiting partition tolerance is not really an option in real-world systems.
+Particularly with pervasive systems in the IoT era, where \textit{instability}, of the network, rules.
+\\
+Long story short, CAP theorem most often forces us to \textit{choose between availability and consistency}
+\end{note}
+%
+\begin{example}{Location-based games}{}
+    \begin{itemize}
+        \item \textbf{services} -- use information about the position of a user/device to provide information, entertainment, security;
+        \item \textbf{games} -- use player's location to evolve and progress the gameplay;
+    \end{itemize}
+    Since the architecture is built around the notion off millions of players rooming physical space \textit{worldwide} with theri mobile devices, forfeiting \textbf{partition tolerance} is not an option:
+    \begin{itemize}
+        \item mobile devices are inherently \textit{unstable} in their network connectivity;
+        \item players are inherently mobile, and so they can move in and out of network coverage;
+        \item players tend to concentrate in some areas, e.g. during special events;
+        \item scalability is a multi-level issue: not just the number of players overall, but also the number of places they can be at, and the number of players at each place;
+    \end{itemize}
+\textbf{Consistency} of the game data, like goals, situations, achievements, is essential to keep players going.
+Location-based games are usually built around logically-centralized architecture; using spatial replication in order to reduce user-perceived latency and improve scalability.
+When storing consistency is required, e.g. for in-game transactions, players might be forced to wait for the app servers to confirm the operation.
+\end{example}
+% subsection CAP at a Glance (end)
+%
+\subsection{CAP Proof}\label{sub:cap_proof} % (fold)
+Brewer's first results required some \textit{proof}, possibly formal; for a proof, a more precise formulation of the conjecture is required.
+\begin{cimage}
+    \includegraphics[width=.5\textwidth]{assets/cap-proof.png}\label{fig:cap-proof}
+    \caption{One way to see CAP}
+\end{cimage}
+\begin{definition}{Availability}{avlb}
+    For a distributed system to be continously \textbf{available}, every request received by a non-failing node in the system must result in a response: if the system is available, we got \textit{responses}.
+\end{definition}
+\begin{definition}{Consistency}{conss}
+    A \textbf{consistent} service is modelled as an \textit{atomic} data object, where:
+    \begin{itemize}
+        \item operations are totally ordered;
+        \item each operation occurs in a single instant of time;
+    \end{itemize}
+    \begin{warning}
+        Here, the meaning of \textit{consistent} is unlike \ac{acid} properties, since it encompasses both A and C there
+    \end{warning}
+    Among the many consequences, consistency implies that all \textit{read} operations over a distributed shared memory occurring after a \textit{write} operation completes must return the value of either this write operation or a later one. If the system is consistent, we got \textit{correct responses}
+\end{definition}
+\begin{definition}{Network partition}{net_part}
+    When a network is partitioned, all messages sent from nodes in one component of the partition to nodes in another component are lost.
+    And, any pattern of message loss can be medelled as a temporary partition separating the communicating nodes at the exact instant the message is lost.
+\end{definition}
+In short if node A send a message to node B, the network is \textit{partitioned} if the message does not take it to B.
+\textit{Availability} is when B receives the message and responds.
+\textit{Consistency} is when B response is correct.
+\emptyln{}
+The proof is given for three sorts of network:
+\begin{itemize}
+    \item synchronous network with message loss;
+    \item synchronous network without message loss;
+    \item partially synchronous network with local clocks;
+\end{itemize}
+For teaching purpose, we focus here on the \textit{asynchronous model}, where:
+\begin{itemize}
+    \item there is no single clock;
+    \item nodes act based on local computation and message received;
+\end{itemize}
+\begin{theorem}
+    It is impossible in the asynchronous network model to implement a read/write data object that guarantees the following properties:
+    \begin{itemize}
+        \item availability;
+        \item atomic consistency;
+    \end{itemize}
+    in all fair executions (including those in which messages are lost)
+    \begin{proof}
+        \\
+        \textbf{Assumptions}
+        \begin{itemize}
+            \item atomicity, availability and partition tolerance are all fulfilled;
+            \item nodes in the network can be partitioned into two disjoint, non-empty sets $G_1$, $G_2$;
+            \item atomic object $o$ has initial value $v_0$, $o$ is expected to be consistent through $G_1$, $G_2$;
+            \item $\al_1$ executes a single write $v_1 \neq v_0$ of $o \in G_1$:
+                \begin{itemize}
+                    \item $\al_1$ is the only request in that time;
+                    \item during $\al_1$ no message are received --- from $G_1$ to $G_2$, from $G_2$ to $G_1$;
+                \end{itemize}
+            \item no messages from $G_1$ are received in $G_2$;
+            \item $\al_2$ executes a single read of $o \in G_2$: during $\al_2$ no message are received --- from $G_1$ to $G_2$, from $G_2$ to $G_1$;
+        \end{itemize}
+        Due to availability, $\al_1$ completes $\pt{v_0 \to v_1}$, and $\al_2$ does too.
+        Executing $\al_1$ and $\al_2$, $G_2$ just sees $\al_2$, and must return $v_0$.
+        \emptyln{}
+        This obviously violates consistency as defined above, which is basically a sort of atomic consistency.
+    \end{proof}
+\end{theorem}
+% subsection CAP Proof (end)
+%
+\subsection{Building on CAP}\label{sub:building_on_cap} % (fold)
+Brewer himself later elaborated on his CAP theorem:
+\begin{enumerate}
+    \item when the network is partitioned, a distributed system should choose a tradeoff between consistency and availability;
+    \item when there is no partition, a system can feature both consistency and availability
+\end{enumerate}
+\begin{note}
+    \acf{acid} semantics might be too strong:
+    \begin{itemize}
+        \item The design space for network services can be partitioned according to the data semantics that each service demands.
+        \item For other Internet services, however, the primary value to the user is not necessarily strong consistency or durability, but rather high availability of data;
+    \end{itemize}
+\end{note}
+Stale data can be temporarily tolerated as long as all copies of data \textit{eventually} reach \textit{consistency} after a short time.
+Soft state, which can be generated at the expense of additional computation or file I/O, is exploited to improve performance; data is not durable.
+\textit{Approximate answers}, based on stale data or incomplete soft state, delivered quickly may be more valuable than exact answers.
+%
+\begin{definition}{BASE}{base}
+    \begin{itemize}
+        \item Basically Available;
+        \item Soft state;
+        \item Eventual consistency;
+    \end{itemize}
+\end{definition}
+Most cloud services nowadays adopts BASE and try to mask inconsistencies from users; Steps ahead are leading to new models, based on, e.g. new data-consistency models.
+\begin{note}[CAP Today]
+    The modern CAP goal should be to maximise combinations of consistency ad availability that makes sense for the specific application.
+    Such an approach incorporates plans for operation during a partition and for recovery afterward, thus helping designers think about CAP beyon its historycally perceived limitations.
+\end{note}
+% subsection Building on CAP (end)
 % section The CAP Theorem (end)
 %
+\section{Dependability in Distributed Systems}\label{sec:dependability_in_distributed_systems} % (fold)
+Distributed systems are playing an ever-increasingly important role in all aspects of our society, governaments, business, and individuals alike.
+They are behind many services on whiche we depend on a daily basis, such as: financial, e-commerce, civil infrastructure, entertainment, personal data storage, etc.
+Their \textit{dependability} matters to business as well as to every individual.
+\\
+The cost of system \textit{failure} is mostly and typically \textbf{enormous}; however also \textbf{dependability} is not cheap at all, which is possibly the reason why nearly 60\% of Fortune 500 companies suffer from more than one hour and a half of downtime per week.
+\\
+In order to reduce the cost of building and maintaining highly-dependable systems, we could try and train more experts that know how to design, implement and maintain dependable distributed systems.
+%
+\subsection{Dependability \& Faults}\label{sub:dependability_faults} % (fold)
+\begin{quote}[Oxford Learner's Dictionaries]
+    The quality of being able to be relied on to do what somebody wants or needs.
+    \\
+    \textbf{synonym} reliability
+\end{quote}
+The term ``dependable systems'', along with the related notions, belongs to the grneral scope of systems engineering, not just to computational systems --- let alone distributed ones.
+In the context of \textit{distributed computing}, dependability refers to the ability of distributed system to provide correct services to its users despite the many different threats, like undetected software defects, hardware failures, malicious attacks\ldots
+\\
+In order to reason about dependability of distributed systems, we need a way to:
+\begin{itemize}
+    \item model a distributed system appropriately;
+    \item model the \textbf{threats} to the system;
+\end{itemize}
+A distributed system is designed to provide a set of \textbf{services} to its users, often referred to as clients.
+Each service has an \textbf{interface} that a client could use to request the service.
+A \textit{functional specification} typically defines what a service should do, at each moment in time, a system is in a given \textbf{state}; what precisely is the state of a distributed system is a very complicated issue.
+\begin{definition}{State}{}
+    The \textbf{state} of a distributed system is determined \textit{collectively} by the state of the processes and threads in the system; it typically consists of the values of its registers, like stack, heap, file descriptors, kernel states etc.
+Part of the state might become either implicitly or explicitly visible through user interaction, which we call \textbf{external state}, or observable state. Basically an abstract state as defined by the functional specification.
+The remaining part of the state that is not visible to users, which we call \textbf{internal state}.
+\end{definition}
+Generally speaking, the state of a system at time $t$ is represented by the (minimum amount of) information that, along with the knowledge about the dynamics of a deterministic system, allows an observer to completely describe the future system behaviour --- from time $t$ on.
+State can be used for \textbf{recovery} after a failure: a system can be recovered to the ``place'' where it was before a failure if its state was consistently captured and not lost due to the failure.
+% subsection Dependability & Faults (end)
+% section Dependability in Distributed Systems (end)
 \end{document}

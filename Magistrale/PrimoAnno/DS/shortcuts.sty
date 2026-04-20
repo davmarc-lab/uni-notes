@@ -1,5 +1,3 @@
-\renewcommand{\bf}[1]{\textbf{#1}}
-\renewcommand{\it}[1]{\textit{#1}}
 \renewcommand{\tt}[1]{\texttt{#1}}
 
 \newcommand{\emptyln}{\newline{}\newline{}}
@@ -37,7 +35,8 @@
 % --- Greek Letters ---
 \newcommand{\power}[2]{{#1}^{#2}}
 
-\newcommand{\hdt}[1][]{\hat{\power{\delta}{#1}}}
+\newcommand{\al}[1][]{\power{\alpha}{#1}}
+\newcommand{\Al}[1][]{\power{\Alpha}{#1}}
 \newcommand{\dt}[1][]{\power{\delta}{#1}}
 \newcommand{\Dt}[1][]{\power{\Delta}{#1}}
 \newcommand{\eps}[1][]{\power{\epsilon}{#1}}
@@ -46,3 +45,6 @@
 \newcommand{\Si}[1][]{\power{\Sigma}{#1}}
 \newcommand{\om}[1][]{\power{\omega}{#1}}
 \newcommand{\Om}[1][]{\power{\Omega}{#1}}
+
+\newcommand{\hdt}[1][]{\hat{\power{\delta}{#1}}}
+
