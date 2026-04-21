@@ -154,7 +154,7 @@ For teaching purpose, we focus here on the \textit{asynchronous model}, where:
     \item there is no single clock;
     \item nodes act based on local computation and message received;
 \end{itemize}
-\begin{theorem}
+\begin{theorem}{}{}
     It is impossible in the asynchronous network model to implement a read/write data object that guarantees the following properties:
     \begin{itemize}
         \item availability;
@@ -239,7 +239,11 @@ In order to reason about dependability of distributed systems, we need a way to:
     \item model a distributed system appropriately;
     \item model the \textbf{threats} to the system;
 \end{itemize}
-A distributed system is designed to provide a set of \textbf{services} to its users, often referred to as clients.
+%
+% subsection Dependability & Faults (end)
+%
+\subsection{System Models}\label{sub:system_models} % (fold)
+System ModelsA distributed system is designed to provide a set of \textbf{services} to its users, often referred to as clients.
 Each service has an \textbf{interface} that a client could use to request the service.
 A \textit{functional specification} typically defines what a service should do, at each moment in time, a system is in a given \textbf{state}; what precisely is the state of a distributed system is a very complicated issue.
 \begin{definition}{State}{}
@@ -249,6 +253,59 @@ The remaining part of the state that is not visible to users, which we call \tex
 \end{definition}
 Generally speaking, the state of a system at time $t$ is represented by the (minimum amount of) information that, along with the knowledge about the dynamics of a deterministic system, allows an observer to completely describe the future system behaviour --- from time $t$ on.
 State can be used for \textbf{recovery} after a failure: a system can be recovered to the ``place'' where it was before a failure if its state was consistently captured and not lost due to the failure.
-% subsection Dependability & Faults (end)
+\begin{note}[How can we capture the state of a distributed system at time $t$?]
+    First of all, we should define the \textbf{boundary} of a system that is, the physical/logical line that separates the system from its surrounding environment: inside the boundary the system's \textbf{components}, outside the boundary the system's \textbf{environment}.
+    The term ``environment'' refers here to all other systems that the current system interact with --- in the very general sense that they affect the system in any possible way.
+    Every definition of component vs. system is determined by the level of abstraction chosen, for example:
+    \begin{itemize}
+        \item at one give level of abstraction, we could observe a system, with its components, interacting with other systems;
+        \item at another given level of abstraction, the same system could be instead described as a component of a larger system;
+    \end{itemize}
+\end{note}
+However, this is not enough to assess that we know how to \textit{capture the state} of a distributed system. Mostly because we do not know (yet) what ``at time $t$'' would mean there: the complex issue of \textbf{time} in distributed systems.
+%
+% subsection System Models (end)
+\subsection{Threat Models}\label{sub:threat_models} % (fold)
+When a system is not compliant with its functional specification, we say that a \textbf{failure} has occurred.
+The failure of a system is \textit{caused} by (part of) its state having wrong values --- i.e., \textbf{errors} in its state; the causal model assumes that errors are caused by some \textbf{faults}.
+\begin{quote}[In other terms\ldots]
+    A system is said to \textit{fail} (failure) when it does not behave as promised, an \textit{error} is a part of a system state that might have caused a failure and an error is a \textit{fault}.
+\end{quote}
+A fault might be \textbf{dormant}: it could not immediately show itself and cause error, like a bug in the software not causing problems until the corresponding code is executed, or a shared variable not lock protected in a multithreaded application until two or more threads try to update i concurrently.
+\\
+Given the typical recursive nature of system composition, the failure of one system may cause a fault in a larger system when the former constitutes a component of the latter.
+Such a relationship between fault, error and failure is referred to as \textbf{\textit{chain of threats}}, which makes the terms ``fault'' and ``failure'' often used interchangeably in the literature --- somehow improperly.
+\begin{cimage}[htp]
+    \includegraphics[width=.8\textwidth]{assets/fault-and-failure.png}
+    \caption{Relationship between faults and failures in larger systems}\label{fig:fault-and-failure}
+\end{cimage}
+% subsection Threat Models (end)
+\subsection{Faults}\label{sub:faults} % (fold)
+Different sorts of faults require different tratment; faults can be classified according to different criteria:
+\begin{itemize}
+    \item the \textit{source} of the fault;
+    \item the \textit{intent} of the fault;
+    \item the \textit{duration} of the fault;
+    \item the \textit{manifestation} of the fault;
+    \item the \textit{reproducibility} of the fault;
+    \item the \textit{relationship} of the fault with other faults;
+\end{itemize}
+\begin{definition}{Source of Faults}{}
+    Based on their \textit{source}, faults can be classified as:
+    \begin{itemize}
+        \item \textbf{hardware faults} if the faults are caused by the failure of hardware components such as power outages, hard drive failures, bad memory chips, etc.;
+        \item \textbf{software faults} if the faults are caused by software bugs such as reace conditions and no-boundary-checks for arrays;
+        \item \textbf{operator faults} if the faults are caused by the operator of the system, for example misconfiguration, wrong upgrade procedures, etc.;
+\end{itemize}
+\end{definition}
+\begin{definition}{Intent of Faults}{}
+    Based on their \textit{intent}, faults can be classified as:
+    \begin{itemize}
+        \item \textbf{non-malicious faults} if the faults are not caused by a person with malicious intent, e.g. a naturally-occurred hardware fault, or some unintended software bugs; 
+        \item \textbf{malicious faults} if the faults are caused by a person with intent to harm the system, for example to deny services to legitimate clients or to compromise the integrity of the service;
+\end{itemize}
+\end{definition}
+% subsection Faults (end)
+%
 % section Dependability in Distributed Systems (end)
 \end{document}
