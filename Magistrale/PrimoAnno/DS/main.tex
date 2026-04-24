@@ -15,6 +15,9 @@
 \makefront{}
 
 \tableofcontents
+
+\tcblistof[\section*]{def}{List of Definitions}
+\tcblistof[\section*]{th}{List of Theorems}
 \newpage
 
 \section{Info}\label{sec:info} % (fold)
@@ -281,7 +284,7 @@ Such a relationship between fault, error and failure is referred to as \textbf{\
 \end{cimage}
 % subsection Threat Models (end)
 \subsection{Faults}\label{sub:faults} % (fold)
-Different sorts of faults require different tratment; faults can be classified according to different criteria:
+Different sorts of faults require different treatment; faults can be classified according to different criteria:
 \begin{itemize}
     \item the \textit{source} of the fault;
     \item the \textit{intent} of the fault;
@@ -293,19 +296,94 @@ Different sorts of faults require different tratment; faults can be classified a
 \begin{definition}{Source of Faults}{}
     Based on their \textit{source}, faults can be classified as:
     \begin{itemize}
-        \item \textbf{hardware faults} if the faults are caused by the failure of hardware components such as power outages, hard drive failures, bad memory chips, etc.;
-        \item \textbf{software faults} if the faults are caused by software bugs such as reace conditions and no-boundary-checks for arrays;
-        \item \textbf{operator faults} if the faults are caused by the operator of the system, for example misconfiguration, wrong upgrade procedures, etc.;
+        \item \textbf{hardware faults}, if the faults are caused by the failure of hardware components such as power outages, hard drive failures, bad memory chips, etc.;
+        \item \textbf{software faults}, if the faults are caused by software bugs such as reace conditions and no-boundary-checks for arrays;
+        \item \textbf{operator faults}, if the faults are caused by the operator of the system, for example misconfiguration, wrong upgrade procedures, etc.;
 \end{itemize}
 \end{definition}
 \begin{definition}{Intent of Faults}{}
     Based on their \textit{intent}, faults can be classified as:
     \begin{itemize}
-        \item \textbf{non-malicious faults} if the faults are not caused by a person with malicious intent, e.g. a naturally-occurred hardware fault, or some unintended software bugs; 
-        \item \textbf{malicious faults} if the faults are caused by a person with intent to harm the system, for example to deny services to legitimate clients or to compromise the integrity of the service;
+        \item \textbf{non-malicious faults}, if the faults are not caused by a person with malicious intent, e.g. a naturally-occurred hardware fault, or some unintended software bugs; 
+        \item \textbf{malicious faults}, if the faults are caused by a person with intent to harm the system, for example to deny services to legitimate clients or to compromise the integrity of the service;
 \end{itemize}
 \end{definition}
+\begin{definition}{Duration of Faults}{}
+    Based on their \textit{duration}, faults can be classified as:
+    \begin{itemize}
+        \item \textbf{transient faults}, if the fault is activated momentarily then goes dormant again, like when a power spike affects a hardware component then disappears;
+        \item \textbf{intermittent faults}, if the fault occurs, vanishes of its own accord, then reappears, and so on, like race conditions occurring when and only when two threads access the same shared variable at the same time;
+        \item \textbf{permanent faults}, if, once activated, the fault stays such unless the faulty component is repaired or the source of the fault is addressed: a power outage is considered a permanent fault because a computer system will remain powered off unless/until power is restored, or a crash fault;
+    \end{itemize}
+\end{definition}
+\begin{definition}{Manifestation of Faults}{}
+    Based on their \textit{manifestation}, faults can be classified as:
+    \begin{itemize}
+        \item \textbf{content faults}, if the faults cause the values passed on to other components to be wrong:
+        \begin{itemize}
+            \item a faulty component may always pass on the same wrong values to other components, or, it may return different values to different components that it interacts with;
+            \item where the latter case is specifically modelled as \textit{Byzantine faults};
+        \end{itemize}
+        \item \textbf{timing faults}, if the faulty component either returns a reply too early, or too late after receiving a request from another component, an extreme case is when the faulty component stops responding at all (e.g., when the component crashes, or hangs due to an infinite loop or a deadlock);
+\end{itemize}
+\end{definition}
+\begin{definition}{Reproducibility of Faults}{}
+    Based on their \textit{reproducibility}, fault can be classified as:
+    \begin{itemize}
+    \item \textbf{reproducible faults} (\textit{deterministic} faults), if the fault happens deterministically and can be easily reproduced, like accessing a null pointer, these sorts of faults are typically easily identified and repaired;
+    \item \textbf{nondeterministic faults}, if the faults appear to happen non-deterministically and is hard to reproduce, if a fault is caused by a specific interleaving of several threads when they access some shared variable, these sorts of faults are also referred to as \textit{Heisenbugs} to highlight their uncertainty;
+\end{itemize}
+\end{definition}
+\begin{definition}{Relationship of Faults}{}
+    Based on their \textit{relationship} with other faults, faults can be classified as:
+    \begin{itemize}
+        \item \textbf{independent faults}, if there is no causal relationship between the faults: given fault $A$ and fault $B$, $B$ is not caused by $A$, and $A$ is not caused by $B$;
+        \item \textbf{correlated faults}, if the faults are causally related: given fault $A$ and fault $B$, either $B$ is caused by $A$, or $A$ is caused by $B$; if multiple components fail due to a common reason, the failures are referred to as \textit{common mode} failures;
+    \end{itemize}
+\end{definition}
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/failure-models-classification.png}
+    \caption{Another classification of Failure Models}\label{fig:failure-models-classification}
+\end{cimage}
+%
+\newpage
+\begin{definition}{Fail-Stop System}{}
+    When the system fails, it is desirable to avoid \textit{catastrophic consequences}, the consequences of the failure of a system can be alleviated by enhancing the system with dependability mechanisms such that when it fails, it stops responding to requests.
+    Such systems are referred to as \textbf{fail-stop systems}.
+\end{definition}
+\begin{definition}{Fail-Safe System}{}
+    Sometimes, a system is such that its failure does not cause great harm either to human life or the environment, such systems are referred to as \textbf{fail-safe systems}.
+    Usually a fail-safe system defines a set of \textit{safe states}, when a fail-safe system can no longer operate according to its specification, it can transit to one of the predefined safe states, e.g., the computer system used to control a nuclear power plant must be a fail-safe system.
+\end{definition}
+\begin{definition}{Fail Fast}{}
+    It is often desirable for a system to halt its operation immediately when it is an error state or encounters an unexpected condition. The software engineering practice to ensure such a behaviour is called \textbf{fail fast}.
+    The fail-fast practice enables \textit{early detection} of software faults and the diagnosis of faults, given that when a fault has been propagated to many other components, it way harder to pinpoint the source of the problem.
+\end{definition}
 % subsection Faults (end)
+\subsection{Dependability Attributes and Evaluation Metrics}\label{sub:dependability_attributes_and_evaluation_metrics} % (fold)
+The main features of dependable systems are:
+\begin{itemize}
+    \item availability;
+    \item reliability;
+    \item safety;
+    \item maintainability;
+\end{itemize}
+Like in \Cref{def:avlb}, availability refers to the property that a system is ready for immediate use.
+This means that availability refers to the \textit{probability} that a system is operating correctly at any given moment, ready to provide users with its functions.
+So, a \textit{highly-available system} is a system that is most likely to be ready and working at any given instant of time.
+\begin{definition}{Reliability}{}
+    \textbf{Reliability} refers to the property that a system can run continuously without a failure.
+    This means that reliability is defined in terms of a \textit{time interval}, rather than of an instant, so a \textit{highly-reliable} system is a system that is most likely to keep on running for a long period of time.
+\end{definition}
+\begin{definition}{Safety}{}
+    \textbf{Safety} refers to the situation that when a system temporarily fails to operate correctly, nothing \textit{catastrophic} happens.
+    This is a very difficult property to be defined, and to be ensured as well; when \textit{catastropich} basically refers to those states of affairs when there is no established path from fault back to normal operation.
+\end{definition}
+\begin{definition}{Maintainability}{}
+    \textbf{Maintainability} refers to how easily a failed system can be repaired.
+    This means that maintainability is closely related to availability, so a \textit{highly-maintainable} system may also show a high degree of availability.
+\end{definition}
+% subsection Dependability Attributes and Evaluation Metrics (end)
 %
 % section Dependability in Distributed Systems (end)
 \end{document}

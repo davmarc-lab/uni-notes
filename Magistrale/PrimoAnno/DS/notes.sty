@@ -20,7 +20,7 @@
 \crefname{axiom}{ass.}{ass.}
 \Crefname{axiom}{Ass.}{Ass.}
 
-\newtcbtheorem[number within=section]{definition}{Definizione}{
+\newtcbtheorem[number within=section, list inside=def]{definition}{Definizione}{
     enhanced, breakable,
     colback=gh-purple-bg,
     colframe=gh-purple,
@@ -31,10 +31,10 @@
     boxrule=0.5pt,
     arc=2pt,
     description font=\itshape,
-    label type=definition
+    label type=definition,
 }{def}
 
-\newtcbtheorem[number within=section]{theorem}{Teorema}{
+\newtcbtheorem[number within=section, list inside=th]{theorem}{Teorema}{
     enhanced, breakable,
     colback=gh-red-bg,
     colframe=gh-red,
@@ -94,7 +94,7 @@
 }{prf}
 \newenvironment{proofblock}[1]{\begin{outerproof}{}{#1}}{\end{outerproof}}
 
-\newtcbtheorem[number within=section]{proposition}{Proposizione}{
+\newtcbtheorem[number within=section, list inside=prop]{proposition}{Proposizione}{
     enhanced, breakable,
     colback=gray!2,
     colframe=gh-gray-border,
@@ -108,7 +108,7 @@
     label type=proposition
 }{prop}
 
-\newtcbtheorem[number within=section]{lemma}{Lemma}{
+\newtcbtheorem[number within=section, list inside=lem]{lemma}{Lemma}{
     enhanced, breakable,
     colback=gh-blue-bg,
     colframe=gh-blue!50!gh-gray-border,
@@ -122,7 +122,7 @@
     label type=lemma
 }{lem}
 
-\newtcbtheorem[number within=section]{corollary}{Corollario}{
+\newtcbtheorem[number within=section, list inside=cor]{corollary}{Corollario}{
     enhanced, breakable,
     colback=white,
     colframe=gh-gray-border,
@@ -163,7 +163,7 @@
     description font=\itshape,
 }{rem}
 
-\newtcbtheorem[number within=section]{axiom}{Assioma}{
+\newtcbtheorem[number within=section, list inside=ax]{axiom}{Assioma}{
     enhanced, breakable,
     colback=gh-red-bg,
     colframe=gh-red,
