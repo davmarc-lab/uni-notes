@@ -383,7 +383,122 @@ So, a \textit{highly-available system} is a system that is most likely to be rea
     \textbf{Maintainability} refers to how easily a failed system can be repaired.
     This means that maintainability is closely related to availability, so a \textit{highly-maintainable} system may also show a high degree of availability.
 \end{definition}
-% subsection Dependability Attributes and Evaluation Metrics (end)
 %
+\subsubsection{Attributes of a Dependable System}\label{sec:attributes_of_a_dependable_system} % (fold)
+A dependable system has a number of \textit{desirable \textbf{attributes}}:
+\begin{itemize}
+    \item availability;
+    \item reliability;
+    \item integrity;
+    \item maintainability;
+    \item safety;
+\end{itemize}
+\begin{quote}
+    Some attributes can be used as \textit{evaluation metrics} for the system, like availability and reliability; while the others are difficult to quantify.
+    \\
+    Some attributes are \textit{fundamental} to all distributed systems, like availability, reliability and integrity; while the others are secondary or not applicable to all systems.
+\end{quote}
+% subsubsection Attributes of a Dependable System (end)
+% subsection Dependability Attributes and Evaluation Metrics (end)
+\subsection{Availability}\label{sub:availability} % (fold)
+Availability is a measure of the readiness of a dependable system at a(ny) point in time, i.e., when a client needs to use a service provided by the system, the probability that the system is there to provide the service to the client.
+\begin{note}[Availability Factors]
+    \begin{itemize}
+        \item \ac{mttf}, the average time until a system fails;
+        \item \ac{mttr}, the average time needed to repair a system;
+        \item \ac{mtbf}, just $MTTF + MTTR$;
+    \end{itemize}
+\end{note}
+\begin{equation*}
+    \text{Availability} = MTTF / \pt{MTTF + MTTR} = MTTF / MTBF
+\end{equation*}
+The availability of a system is typically represented in terms of \textit{how many 9s.}
+For example, if a system is claimed to offer \textit{five 9s availability}, it means that the system will be available with a probability of $99,999\%$.
+If the system has $\power{10}{-5}$ probability to be unavailable when a client tries to access the service at any time --- which means that the system may have at most $5,256$ minutes of downtime a year.
+% subsection Availability (end)
+\subsection{Reliability}\label{sub:reliability} % (fold)
+Reliability is a measure of the system's capability of providing correct services \textit{continuously} for a period of time.
+It is proportional to \ac{mttf}, and it's often represented as the probability for the system to do so for a given period of time $\Dt t$.
+\begin{equation*}
+    R\pt{\Dt t} = \power{e}{-\lb \Dt t} \quad \lb \in \itro{0, \ift}
+\end{equation*}
+\begin{warning}[availability $\ne$ reliability]
+    A system failing frequently but recovering very quickly may have high availability, and at the same time very low reliability.
+\end{warning}
+% subsection Realiability (end)
+\subsection{Integrity}\label{sub:integrity} % (fold)
+\begin{definition}{Integrity}{}
+    Refers to the capability of a system to protect its state from being compromised under various threats.
+\end{definition}
+In dependable computing research, integrity typically translates into the consistency of server replicas, if redundancy is exploited.
+As long as the number of faulty replicas does not exceed a pre-defined threshold, the consistency of the correct replicas naturally implies system integrity.
+% subsection Integrity (end)
+\subsection{Maintainability}\label{sub:maintainability} % (fold)
+Maintainability refers to the capability of a system to evolve after it is deployed.
+Once a software fault is detected, applying a repairing patch should not involve uninstalling the existing software and reinstalling an updated one. The same patching/software update mechanism may be used to add new features or improve the performance of the existing system.
+\begin{quote}
+    Ideally a highly-maintainable system is easy to repair/improve (live upgrade)
+\end{quote}
+% subsection Maintainability (end)
+\subsection{Safety}\label{sub:safety} % (fold)
+Safety means that when a system fails, it does not cause \textit{catastrophic consequences.}
+The system must be fail-safe: system that are used to control operations that may cause catastrophic consequences, such as nuclear power plants, or endanger human lives, such as hospital operation rooms, must bear the safety attribute.
+Safety attribute is not important for systems not operating in such environments, e.g., e-commerce.
+% subsection Safety (end)
+%
+\section{Means to Achieve Dependability}\label{sec:means_to_achieve_dependability} % (fold)
+\subsection{Fault Avoidance}\label{sub:fault_avoidance} % (fold)
+Achieved by building and using quality software components and hardware that are less prone to failures.
+As far as software is concerned, fault avoidance aims at ensuring correct design specification and correct implementation before a distributed system is deployed:
+\begin{itemize}
+    \item \textit{rigorous software design}, possibly with the use of formal method to assess and verify the system properties;
+    \item \textit{rigorous software testing}, to identify and remove software bugs due to design deficiency or introduced during implementation;
+\end{itemize}
+% subsection Fault Avoidance (end)
+\subsection{Fault Detection \& Diagnosis}\label{sub:fault_detection_diagnosis} % (fold)
+The \textit{detection} can be tricky, crash faults are trivial to detect: we can periodically probe each component to check on its health, however components in a practical system might fail in various ways other than crash implementation, so probing does not always help.
+\begin{note}
+    If a fault is not detected, the integrity of the system cannot be guaranteed.
+\end{note}
+Once the fault is detected, \textit{diagnosis} is required to determine that a fault indeed has occurred, and to localize the source of the fault.
+\begin{example}{Exception Handling}{}
+    An example of fault detection and handling in represented by \textit{exception handling} in modern programming languages.
+\end{example}
+% subsection fault Detection \& Diagnosis (end)
+\subsection{Fault Removal}\label{sub:fault_removal} % (fold)
+Once a fault is detected and localized, it should be isolated and removed from the system.
+Then the faulty component is either repaired or replaced, and reintroduced in the system, which typically requires reconfiguration.
+In a distributed system, this typically requires a notion of \textit{membership}:
+\begin{itemize}
+    \item the faulty component is excluded from the system;
+    \item the repaired component becomes part of the membership again;
+\end{itemize}
+\begin{quote}
+    Software updates are special cases
+\end{quote}
+% subsection Fault Removal (end)
+\subsection{Fault Tolerance}\label{sub:fault_tolerance} % (fold)
+Because of hardware failures, robust software itself is not enough to delivery high dependability, unless a system is fully stateless: simply restarting after a failure would not automatically restore its state before the failure.
+Hence, fault tolerance techniques are essential to improve the dependability of distributed systems to the next level.
+\begin{note}[Fault tolerance techniques vs.\ dependability requirements]{}
+    Different fault tolerance techniques can be used to target different levels of dependability requirements.
+    For applications that need high availability, but not necessarily high reliability, \textbf{logging} and \textbf{checkpointing}, could be enough; more demanding applications could adopt \textbf{recovery oriented} computing techniques.
+    Both classes of techniques rely on \textbf{rollback recovery} --- that is, back to the most recent recorded correct state
+\end{note}
+\begin{example}{Masking Failure by Redundancy}{}
+    \textbf{Idea:} hiding failures from other processes, the key technique for masking faults is \textbf{redundancy.}
+    Type of redundancy:
+    \begin{itemize}
+        \item \textbf{information}, extra bits;
+        \item \textbf{time}, redos after transaction aborts;
+        \item \textbf{physical}, typical in biological systems;
+    \end{itemize}
+\end{example}
+% subsection Fault Tolerance (end)
+% section Means to Achieve Dependability (end)
 % section Dependability in Distributed Systems (end)
+%
+\section{Roots of Distributed Systems Computation in Space \% Time}\label{sec:roots_of_distributed_systems_computation_in_space_time} % (fold)
+
+% section Roots of Distributed Systems Computation in Space \% Time (end)
 \end{document}
