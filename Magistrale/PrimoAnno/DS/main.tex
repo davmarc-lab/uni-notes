@@ -498,7 +498,85 @@ Hence, fault tolerance techniques are essential to improve the dependability of 
 % section Means to Achieve Dependability (end)
 % section Dependability in Distributed Systems (end)
 %
-\section{Roots of Distributed Systems Computation in Space \% Time}\label{sec:roots_of_distributed_systems_computation_in_space_time} % (fold)
-
-% section Roots of Distributed Systems Computation in Space \% Time (end)
+\section{Roots of Distributed Systems Computation in Space \& Time}\label{sec:roots_of_distributed_systems_computation_in_space_time} % (fold)
+%
+% section Roots of Distributed Systems Computation in Space \& Time (end)
+%
+\section{Logging \& Checkpointing Towards Recovery of Distributed Systems}\label{sec:logging_checkpointing_towards_recovery_of_distributed_systems} % (fold)
+%
+\subsection{Interaction, Dependencies, Causality, Time}\label{sub:interaction_dependencies_causality_time} % (fold)
+Components of a system pay different roles in the overall system operation; they have different:
+\begin{itemize}
+    \item \textit{functions}, to perform;
+    \item \textit{services}, to provide;
+    \item \textit{tasks}, to execute;
+    \item \textit{goals}, to achieve;
+\end{itemize}
+Mostly depending on the system paradigm of choice, assuming some conceptual integrity for the system.
+\subsubsection{Interaction}\label{sec:interaction} % (fold)
+Components of a system \textbf{interact} with each other:
+\begin{itemize}
+    \item components of a concurrent system interact with each other over \textit{time};
+    \item components of a distributed system interact with each other over \textit{space};
+\end{itemize}
+\begin{quote}[Why?]
+    Because otherwise there would be no reason to build a system, and then because components depend on each other.
+\end{quote}
+% subsubsection Interaction (end)
+%
+\subsubsection{subsubsection name}\label{sec:subsubsection_name} % (fold)
+Components of a system \textbf{depend} on each other for whatever they are up to, the successful completion of their operation depends on one or more of the other components.
+The \textit{inter-component dependencies} span over different process contexts:
+\begin{itemize}
+    \item over time in concurrent systems;
+    \item over space in distributed systems;
+\end{itemize}
+% subsubsection subsubsection name (end)
+%
+\subsubsection{Causality}\label{sec:causality} % (fold)
+\begin{note}[Cause as cognitive tool]
+    The ``cause-effect'' link is a tool for humans to understand the dynamics of reality.
+    It is one of the basic mechanism for us to \textbf{explain and predict} the world around us, we even use motivations and goals in order to understand, explain and predict the course of actions of other humans we observe: which is called \textit{mind reading.}
+\end{note}
+\begin{note}[Cause in science]
+    Things are not as simple as that, two observations over physic scientific literature:
+    \begin{itemize}
+        \item the word ``cause'' is quite often used in the \textit{title} of the physics paper of the nineteenth century;
+        \item the word ``cause'' is almost never used in the \textit{body} of the physics papers of the nineteenth century;
+    \end{itemize}
+\end{note}
+Association of effects might be a confounding factor, e.g., let us hypotheses that some ``carcinogenic genotype'' in humans exists that leads to both lung cancer and predisposition to smoke.
+As a result, even a strong \textit{correlation} in numbers between lung cancer and smokers would not allow us to point out any casual relationship.
+This was actually used in the tobacco industry when fighting back on the first research results to forestall antismoking legislation.
+\emptyln{}
+We will use the notion of cause as strictly related to the abstraction of \textit{system model}, in order to define dependencies between components --- typically sequential processes --- and possibly to approximate some useful notion of distributed time.
+% subsubsection Causality (end)
+%
+\subsubsection{Time}\label{sec:time} % (fold)
+Time is an essential issue in distributed systems.
+The basic idea here is that a causal link determines a temporal relationship between two events, where, according to our intuition, a \textbf{cause} temporally precedes its \textbf{effects}.
+% subsubsection Time (end)
+% subsection Interaction, Dependencies, Causality, Time (end)
+%
+\subsection{Basic Techniques for Dependability}\label{sub:basic_techniques_for_dependability} % (fold)
+\textbf{Checkpointing} and \textbf{logging} are the most fundamental techniques to achieve dependability in distributed systems, by providing a path towards \textit{distributed system recovery} after failure.
+By themselves, they provide a form of fault tolerance that is relatively easy to implement and incurs low runtime overhead.
+They have limitations, mostly when they are used by themselves, e.g, some information could be lost, if only checkpointing is used, when a fault occurs, also the recovery time after a fault is typically larger than that of more sophisticated fault tolerance approaches.
+However, they are both used in \textit{all levels} of dependability mechanisms.
+\begin{definition}{Checkpointing}{}
+    A \textbf{checkpoint} of a distributed system refers to a \textbf{copy of the system state}, if the checkpoint is available after the system fails, it can be used to \textit{recover the system} to the state when the checkpoint was taken.
+    Technically, checkpointing refers to the action of, periodically, taking a copy of the system state, and \textit{saving} the checkpoint to a stable storage that can survive the faults tolerated.
+\end{definition}
+To recover the system to the point right before it fails, other recovery information must be logged \textit{in addition} to periodical checkpointing, to this end all incoming messages to the system are typically logged.
+Also other non-deterministic events may have to be logged as well to ensure proper recovery.
+Checkpointing and logging provide a form of \textit{rollback recovery}, since they can recover the system to a state prior to the failure.
+% subsection Basic Techniques for Dependability (end)
+\subsection{Models}\label{sub:models} % (fold)
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/system-model.png}\label{fig:system-model}
+\end{cimage}
+$N$ processes interacting through \textit{message exchange}, also interacting with the outside world via input \& output.
+% subsection Models (end)
+% section Logging \& Checkpointing Towards Recovery of Distributed Systems (end)
+%
 \end{document}
