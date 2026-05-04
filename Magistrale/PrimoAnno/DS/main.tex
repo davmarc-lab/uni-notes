@@ -576,7 +576,112 @@ Checkpointing and logging provide a form of \textit{rollback recovery}, since th
     \includegraphics[width=.6\textwidth]{assets/system-model.png}\label{fig:system-model}
 \end{cimage}
 $N$ processes interacting through \textit{message exchange}, also interacting with the outside world via input \& output.
+\subsubsection{Fault Model}\label{sec:fault_model} % (fold)
+\textbf{Assumptions}:
+\begin{itemize}
+    \item failure occurs in a process;
+    \item when a process fails, it simply execution and loses all its volatile state --- fail-stop;
+    \item communication is reliable --- e.g, \ac{tcp} --- and \ac{fifo};
+    \begin{itemize}
+        \item message ordering maintained;
+        \item no network partition;
+    \end{itemize}
+\end{itemize}
+% subsubsection Fault Model (end)
+%
+\subsubsection{Process State}\label{sec:process_state} % (fold)
+\textbf{Assumptions}:
+\begin{itemize}
+    \item the state of each individual process is defined by its entire address space in the operating system;
+    \begin{itemize}
+        \item a generic checkpointing library just saves the entire address space as a checkpoint of the process;
+    \end{itemize}
+    \item the specific nature of the process and the application semantics can be exploited to define a smaller and more specific notion of process state;
+\end{itemize}
+% subsubsection Process State (end)
+%
+\subsubsection{Global State}\label{sec:global_state} % (fold)
+The state of a distributed system is usually referred to as the \textbf{global state} of the system: which is meant to include the state of every process in the system.
+Aggregation of process state is not enough: the states of different processes in a distributed system are \textit{related}:
+\begin{itemize}
+    \item because message exchanges, moving information between processes;
+    \item information exchange causing change of state;
+    \item processes causally depend on other processes;
+    \item process states are \textit{interdependent};
+\end{itemize}
+\begin{critical}
+    Dependencies cannot be lost in the global state
+\end{critical}
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/global-states-type.png}\label{fig:global-states-type}
+\end{cimage}
+\begin{example}{Inconsistent Global State}{}
+    Checkpoints taken by different processes are \textit{incompatible}, they cannot be used to recover the system upon failure.
+    In fact: $C_1$ reflects reception of $m_0$, $C_0$ does not.
+    For example, $P_0$ and $P_1$ represent two bank accounts $A$ and $B$, respectively, $m_0$ represents a $100\$$ deposit from $A$ to $B$; if $P_0$ crashes after $m_0$, and $P_1$ after checkpoint $C_1$, recovery from $C_0$ and $C_1$ would make $100\$$ appear from nowhere.
+    Global state from the wrong set of checkpoints is not \textit{admissible}, i.e., it's not reachable from the initial state of the system.
+    This is what is called an \textbf{inconsistent global state}.
+\end{example}
+\begin{example}{Consistent Global State}{}
+    Checkpoints taken by different processes are \textit{compatible}, they could be used to recover the system upon failure.
+    In fact: $C_1$ reflects reception of $m_0$, so does $C_0$, the same holds for $C_1$, $C_2$, and $m_1$; e.g., $P_0$ and $P_1$ represent two bank accounts $A$ and $B$, respectively, $m_0$ represents a $100\$$ deposit from $A$ to $B$, if $P_0$ crashes after $C_0$, and $P_1$ after $C_1$, recovery from $C_0$ and $C_1$ would make $100\$$ correctly move from $A$ to $B$.
+\end{example}
+\begin{example}{Consistent yet Unrecoverable Global State}{cons_unr_state}
+    Checkpoints taken by different processes are \textit{compatible}, yet they could not be used to recover the system upon failure.
+    In fact: checkpoints are consistent, since they represent a reachable state for the system, yet \textit{dependencies} on $m_0$ and $m_1$ would be lost on recovery; e.g., in the example, $100\$$ would possibly disappear.
+    The problem is the loss of the messages in transit, in order to accommodate this scenario, a further sort of state is required: \textbf{channel state}.
+\end{example}
+% subsubsection Global State (end)
+\subsubsection{System Model Refined}\label{sec:system_model_refined} % (fold)
+A set of $N$ processes:
+\begin{itemize}
+    \item a process consists of a set of states and a set of events;
+    \item one state is the initial state;
+    \item events trigger the change of state of a process;
+\end{itemize}
+A set of channels:
+\begin{itemize}
+    \item a channel is a uni-directional reliable communication channel between two processes;
+    \item the state of a channel is the set of messages that are in transit along the channel --- that is, not yet received by the target process;
+    \item a \ac{tcp} connection is two channels;
+\end{itemize}
+In scenario \cref{ex:cons_unr_state}, if $m_0$ is saved in $C_0$ as channel state, and $m_1$ in $C_1$ the same way, recovery from $C_0$ and $C_1$ is possible.
+% subsubsection System Model Refined (end)
+\begin{definition}{Piecewise Deterministic Assumption}{}
+    Checkpoint-based protocols only ensure to recover the system up to the most recent consistent global state that has been recovered, and all executions happened afterward are lost.
+    Instead, logging (log-based protocols) can be used to recover the system to the state right before the failure, provided that all events are logged, and the log is available upon recovery.
+    They work based on a model assumption, referred to as the \textbf{piecewise deterministic assumption}, that is:
+    \begin{itemize}
+        \item each state evolves deterministically until a nondeterministic even happens, such as the reception of a message;
+        \item all nondeterministic events can be identified;
+        \item enough information is logged for each event;
+    \end{itemize}
+\end{definition}
+\subsubsection{Output Commit}\label{sec:output_commit} % (fold)
+A distributed system interacts with the outside world, such as the clients of the services provided by the distributed system.
+Once output is emitted, a portion of the state of the distributed system becomes \textit{observable} by the outside world --- as a sort of commitment, or achievement.
+Recovery should also account for a \textit{observably-consistent view} of the system from the outside.
+Even though, if a failure occurs, the outside world cannot be relied upon recovery: this is the \textbf{output commit problem}.
+\begin{warning}
+   Observable consistency requires that enough recovery information is logged before the system commits to an output message. 
+\end{warning}
+% subsubsection Output Commit (end)
+\subsubsection{Stable Storage}\label{sec:stable_storage} % (fold)
+An essential requirement for logging and checkpointing protocols is the availability of \textbf{stable storage}, stable storage can survive process failures in that upon recovery.
+The information stored in the stable storage is readily available to the recovering process, as such, all checkpoints and messages logged must be stored in stable storage.
+There are various forms of stable storage:
+\begin{itemize}
+    \item to tolerate only process failures, local disks are enough;
+    \item to tolerate disk failures, redundant disks --- e.g., RAID-1 or RAID-5 --- could be used as stable storage;
+    \item replicated file systems, or cloud-based file systems can be used as more robust stable storage;
+\end{itemize}
+% subsubsection Stable Storage (end)
 % subsection Models (end)
+%
+\subsection{Checkpoint-Based Protocols}\label{sub:checkpoint_based_protocols} % (fold)
+Focussing on a state, rather than on events, checkpoint-based protocols do not rely on the piecewise deterministic assumption: they are simpler to implement and less restrictive --- since there is no need to identify all forms of nondeterministic events and log them properly.
+However, if we cannot take a checkpoint before every event, loss of execution has to be tolerated, and taking a checkpoint before every event is typically not realistic.
+% subsection Checkpoint-Based Protocols (end)
 % section Logging \& Checkpointing Towards Recovery of Distributed Systems (end)
 %
 \end{document}
