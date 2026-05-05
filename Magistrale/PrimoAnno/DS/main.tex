@@ -681,6 +681,49 @@ There are various forms of stable storage:
 \subsection{Checkpoint-Based Protocols}\label{sub:checkpoint_based_protocols} % (fold)
 Focussing on a state, rather than on events, checkpoint-based protocols do not rely on the piecewise deterministic assumption: they are simpler to implement and less restrictive --- since there is no need to identify all forms of nondeterministic events and log them properly.
 However, if we cannot take a checkpoint before every event, loss of execution has to be tolerated, and taking a checkpoint before every event is typically not realistic.
+%
+\subsubsection{Uncoordinated Checkpointing}\label{sec:uncoordinated_checkpointing} % (fold)
+In \textit{uncoordinated checkpointing}, each process in the distributed system is autonomously decided when to checkpoints.
+The intuition is that, when a failure occurs, the recovery processes goes backwards to select the most recent set of consistent checkpoints for the recovery of the global state.
+The main problem is that the checkpoints taken by the processes might not allow reconstruction of a consistent global state.
+\\
+To enable the selection of a set of consistent checkpoints during recovery, the \textit{dependency} between the checkpoints has to be determined and recorded together with each checkpoint.
+\begin{warning}{}{}
+    This incurs additional overhead and increases the complexity of the implementation
+\end{warning}
+% subsubsection Uncoordinated Checkpointing (end)
+%
+\subsubsection{Tamir and Sequin Checkpointing Protocol}\label{sec:tamir_and_sequin_checkpointing_protocol} % (fold)
+The Tamir and Sequin global checkpointing protocol is a \textit{coordinated checkpointing protocol}, where:
+\begin{itemize}
+    \item one of the processes is designated as the \textbf{coordinator}, and knows all the other processes in the system;
+    \item the remaining processes are \textbf{participants};
+    \item the coordinator uses a \textbf{two-phase commit protocol} to ensure that:
+    \begin{itemize}
+        \item the checkpoints taken at individual processes are consistent with each other;
+        \item the global checkpointing operation is either carried out as an atomic transaction or aborted --- that is, either all processes successfully create a new set of checkpoints or they abandon the current round and revert to their previous set of checkpoints;
+    \end{itemize}
+    \item first phase aims at creating a \textit{quiescent} point of the distributed system state;
+    \item second phase aims at atomically moving from the old checkpoint to the new one;
+    \item checkpointing round is aborted when a participant fails to respond;
+\end{itemize}
+\begin{note}[Control Messages]{}
+    \begin{itemize}
+        \item \textbf{CHECKPOINT} message --- used to initiate a global checkpoint, also used to establish a quiescent point of the distributed system where all processes have stopped normal execution
+        \item \textbf{SAVED} message --- used to initiate a global checkpoint, also used to establish a quiescent point of the distributed system where all processes have stopped normal execution
+        \item \textbf{FAULT} message --- used for participant to inform the coordinator that it has done a local checkpoint;
+        \item \textbf{RESUME} message --- used by the coordinator to inform the participants that they now can resume normal execution;
+    \end{itemize}
+\end{note}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/finite-state-machine.png}
+    \caption{Finite State Machine for Coordinator}\label{fig:finite-state-machine}
+\end{cimage}
+%
+\begin{note}[Coordinator Behaviour]{}
+    
+\end{note}
+% subsubsection Tamir and Sequin Checkpointing Protocol (end)
 % subsection Checkpoint-Based Protocols (end)
 % section Logging \& Checkpointing Towards Recovery of Distributed Systems (end)
 %
