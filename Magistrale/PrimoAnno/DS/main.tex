@@ -716,14 +716,75 @@ The Tamir and Sequin global checkpointing protocol is a \textit{coordinated chec
     \end{itemize}
 \end{note}
 \begin{cimage}
-    \includegraphics[width=.6\textwidth]{assets/finite-state-machine.png}
-    \caption{Finite State Machine for Coordinator}\label{fig:finite-state-machine}
+    \includegraphics[width=.6\textwidth]{assets/finite-state-machine-coordinator.png}
+    \caption{Finite State Machine for Coordinator}\label{fig:finite-state-machine-coordinator}
 \end{cimage}
 %
 \begin{note}[Coordinator Behaviour]{}
-    
+    \begin{itemize}
+        \item starts first phase by stopping normal execution and sending CHECKPOINT message to every process;
+        \item waits for CHECKPOINT incoming messages from all processes --- aborts when some are missing;
+        \item checkpoints its state;
+        \item waits for SAVED messages from every process --- aborts when some are missing;
+        \item sending FAULT messages, switches to the new checkpoint, and sends RESUME message to every process;
+        \item resumes normal execution; 
+    \end{itemize}
 \end{note}
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/finite-state-machine-participant.png}
+    \caption{Finite State Machine for Participant}\label{fig:finite-state-machine-participant}
+\end{cimage}
+\begin{note}[Participant Behaviour]{}
+    \begin{itemize}
+        \item stops normal execution upon CHECKPOINT message reception;
+        \item sends CHECKPOINT messages through all outgoing channels and waits for CHECKPOINT from all incoming channels --- aborts when some are missing;
+        \item checkpoints its state;
+        \item passes SAVED message from one of its downstream neighbour processes up to its upstream neighbour;
+        \item propagates RESUME message through every outgoing channels --- except the one that just sent RESUME;
+        \item resumes normal execution;
+    \end{itemize}
+\end{note}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/system-topology.png}
+    \caption{System Topology}\label{fig:system-topology}
+\end{cimage}
+%
 % subsubsection Tamir and Sequin Checkpointing Protocol (end)
+\newpage
+\subsubsection{Chandy and Lamport Distributed Snapshot Protocol}\label{sec:chandy_and_lamport_distributed_snapshot_protocol} % (fold)
+The Tamir and Sequin global checkpointing protocol is a \textit{blocking protocol}: normal execution is suspended during each round of global checkpointing.
+The Chandy and Lamport \textbf{distributed snapshot protocol} is a non-blocking protocol: normal execution is not interrupted by the global checkpointing.
+However, unlike the Tamir and Sequin protocol, the Chandy an Lamport protocol is only concerned with how to produce a consistent global checkpoint.
+It prescribes no mechanism on how to determine the end of the checkpointing round, and how to atomically switch over to the new global checkpoint.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/chandy-lamport-snapshot-protocol.png}
+    \caption{Chandy and Lamport Distributed Snapshot Protocol}\label{fig:chandy-lamport-snapshot-protocol}
+\end{cimage}
+\begin{note}[Protocol Description]{}
+    Processes can be either \textit{Normal} or \textit{Checkpointing} state.
+    Any process can initiate global checkpointing, taking a local checkpoint and sending a Marker message to all outgoing channels --- state to Checkpointing.
+    Upon Marker message reception, a process moves from Normal to Checkpointing state, does the same as above plus records the Marker Certificate --- which needs to be completed, when the Marker Certificate is completed, a process goes back into Normal state.
+\end{note}
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/chandy-lamport-system-topology.png}
+    \caption{Chandy and Lamport System Topology}\label{fig:chandy-lamport-system-topology}
+\end{cimage}
+% subsubsection Chandy and Lamport Distributed Snapshot Protocol (end)
+%
+\begin{quote}[Analogies]{}
+    Both protocols rely on basically the same system model, and use a special control message to propagate and coordinate the global checkpointing.
+    They both recognize the need to capture the channel state to ensure the recoverability of the system, the mechanism to capture the channel state is virtually the same for both protocols.
+    The communication overhead of the two protocols is identical.
+\end{quote}
+\begin{quote}[Differences]{}
+    \begin{itemize}
+        \item the blocking protocol is more conservative;
+        \item the blocking protocol is more complete and robust;
+        \item the non-blocking protocol provides no mechanism for the atomicity of the global checkpointing round;
+        \item the blocking protocol leverages on a coordinated checkpointing protocol, whereas the non-blocking one promotes autonomy of the protocol initiation --- which may fit differently diverse sorts of distributed systems;
+    \end{itemize}
+\end{quote}
+%
 % subsection Checkpoint-Based Protocols (end)
 % section Logging \& Checkpointing Towards Recovery of Distributed Systems (end)
 %
