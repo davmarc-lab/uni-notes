@@ -786,6 +786,30 @@ It prescribes no mechanism on how to determine the end of the checkpointing roun
 \end{quote}
 %
 % subsection Checkpoint-Based Protocols (end)
+\subsection{Log-Based Protocols}\label{sub:log_based_protocols} % (fold)
+Checkpoint-based protocols leverage on saving state and recovery from there, at the possible expense of some loss of execution.
+Logging leverage on saving events, which can be used to recover the system to the state right before the failure, provided that the \textit{piecewise state intervals} --- intervals between (non-deterministic) events.
+Each state interval is initiated by a non-deterministic event --- such as the receiving of a message --- or the initialization of the process, and followed by a sequence of deterministic state changes.
+As long as the non-deterministic event is logged, the entire state interval can be replayed.
+Sorts of logging protocols:
+\begin{itemize}
+    \item \textbf{pessimistic} logging --- message received is synchronously logged prior to its execution;
+    \item \textbf{optimistic} logging --- to reduce the latency overhead, the non-deterministic events are first stored in volatile memory, then logged asynchronously to stable storage: the failure of a process might result in permanent loss of some messages, which would force a rollback to a state earlier than the state when the process fails;
+    \item \textbf{causal} loggin --- the non-deterministic events not yet logged to stable storeage are piggybacked with each message sent. With the piggybacked information, a process can have access to all the non-deterministic events that may have causal effects on its state, thereby enabling a consistent recovery of the system upon a failure;
+\end{itemize}
+In both optimistic and casual logging protocols, the dependency of the processes has to be tracked and sufficient dependency information has to be piggybacked with each message sent.
+This not only increases the complexity of the logging mechanisms, but most importantly, makes the failure recovery more sophisticated and expensive because the recovering process has to find a way to examine its logs and determines if it is missing any messages and often causes cascading recovery operationsat other processes.
+\\
+Pessimistic logging protocols are much simpler in their design and implementation and failure recovery can be made much faster.
+\emptyln{}
+For all practical purposes, logging is always used in conjuction with checkpointing, so that states are saved as checkpoints, and events are logged from one checkpoint to the next one.
+In this way there are two benefits:
+\begin{itemize}
+    \item limiting the recovery time because to recover from a failure in the process can be restarted from its last checkpoint (instead from its initial state), and its state can be recovered prior to the failure by replaying the logged non-deterministic events;
+    \item limiting the size of the log: by taking a checkpoint periodically, the logged events prior to the checkpoint can be garbage collected;
+\end{itemize}
+%
+% subsection Log-Based Protocols (end)
 % section Logging \& Checkpointing Towards Recovery of Distributed Systems (end)
 %
 \end{document}
