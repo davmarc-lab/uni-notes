@@ -1,4 +1,5 @@
 \documentclass[11pt, a4paper]{article}
+\usepackage[italian]{babel}
 
 \usepackage{lecture}
 
@@ -22,9 +23,7 @@
 
 \section{Info}\label{sec:info} % (fold)
 \begin{itemize}
-    \item \textbf{Andrea Omicini} --- \textit{andrea.omicini@unibo.it}
-    \item \textbf{Giovanni Ciatto} --- \textit{giovanni.ciatto@unibo.it}
-    \item \textbf{Matteo Magnini} --- \textit{matteo.magnini@unibo.it}
+    \item \textbf{Davide Maltoni} --- \textit{davide.maltoni@unibo.it}
 \end{itemize}
 %
 \paragraph{Lecture Structure}\label{par:lecture_structure} % (fold)
@@ -33,5 +32,244 @@
 \paragraph{Exam}\label{par:exam} % (fold)
 % paragraph Exam (end)
 % section Info (end)
+%
+\section{Introduzione}\label{sec:introduzione} % (fold)
+\begin{definition}{Intelligenza}{int}
+    Complesso di facoltà psichiche e mentali che consentono all'uomo di pensare, comprendere o spiegare i fatti o le azioni, elaborare modelli astratti della realtà, intendere e farsi intendere dagli altri, giudicare e lo rendono insieme capace di adattarsi a situazioni nuove e di modificare la situazione stessa quando questa presenta ostacoli all'adattamento.
+\end{definition}
+\begin{definition}{Intelligenza Artificiale}{ia}
+    Riproduzione parziale dell'attività intellettuale propria dell'uomo (con particolare riguardo ai processi di apprendimento, di riconoscimento, di scelta) realizzata o attraverso l'elaborazione di modelli ideali, o, concretamente, con la messa a punto di macchine che utilizzano per lo più a tale fine elaboratori elettronici.
+\end{definition}
+%
+\subsection{Ragionamento}\label{sub:ragionamento} % (fold)
+\begin{definition}{Deduttivo}{}
+    \textbf{Aristotele}, nel ragionamento deduttivo, o sillogismo, la verità delle premesse garantisce la verità della conclusione.
+    \[
+        \begin{matrix}
+            \text{REGOLA } \pt{C \to R}: \text{ Tutti gli uomini sono mortali} \\
+            \text{CASO } \pt{C_1}: \text{ Socrate è un uomo} \\
+            \textit{quindi} \\
+            \text{RISULTATO } \pt{R_1}: \text{ Socrate è mortale} \\
+        \end{matrix}
+    \]
+\end{definition}
+Il ragionamento deduttivo è il fondamento di gran parte delle dimostrazioni e teoremi della matematica, ma non ci permette di scoprire o prevedere fatti nuovi e quindi di ampliare le nostre conoscenze, compiendo un `salto' dal noto all'ignoto.
+\begin{definition}{Induttivo}{}
+    Nel ragionamento induttivo, diversamente da quello deduttivo, le premesse (caso/i particolare/i) forniscono un'evidenza più o meno forte a sostegno della conclusione (generalizzazione), ma non ne garantiscono necessariamente la verità.
+\end{definition}
+I ragionamenti induttivi comportano quindi un rischio da cui sono esenti quelli deduttivi: possono portare da premesse vere a conclusioni false.
+Il ragionamento induttivo è quindi un ragionamento \textbf{probabilistico}, le cui conclusioni dipendono dal grado di probabilità delle informazioni contenute nelle premesse.
+\[
+    \begin{matrix}
+        \text{CASO } \pt{C_1}: \text{ Socrate era un uomo} \\
+        \text{RISULTATO } \pt{R_1}: \text{ Socrate morì} \\
+        \textit{quindi} \\
+        \text{REGOLA } \pt{C \to R}: \text{ Tutti gli uomini sono mortali} \\
+    \end{matrix}
+\]
+La forma più comune di ragionamento induttivo è la \textbf{generalizzazione}, con cui otteniamo informazioni su un gruppo di cose, persone, eventi, oggetti e così via, esaminando una porzione --- o campione --- di quel gruppo.
+\emptyln{}
+Una forma di <<induzione molto potente>> è il ragionamento per \textbf{Analogia}, che consiste con qualcos'altro.
+Questo permette agli esseri umani di:
+\begin{itemize}
+    \item utilizzare metafore;
+    \item astrarre concetti <<portandoli>> da un domino all'altro;
+    \item essere creativi;
+\end{itemize}
+\begin{definition}{Abduttivo}{}
+    Il ragionamento è probabilistico, ma invece di generalizzare ci si muove \textit{lateralmente}, ipotizzando che un'implicazione valga anche al contrario.
+\[
+    \begin{matrix}
+        \text{REGOLA } \pt{C \to R}: \text{ Tutti gli uomini sono mortali} \\
+        \text{RISULTATO } \pt{R_1}: \text{ Socrate morì} \\
+        \textit{quindi} \\
+        \text{CASO } \pt{C_1}: \text{ Socrate era un uomo} \\
+    \end{matrix}
+\]
+\textit{induzione per scienziati, l'abduzione per investigatori\ldots}
+\end{definition}
+%
+% subsection Ragionamento (end)
+\subsection{Intelligenza Artificiale e Machine Learning}\label{sub:intelligenza_artificiale_e_machine_learning} % (fold)
+L'\ac{ia} è una disciplina molto vasta che copre diverse tematiche, tra cui:
+\begin{itemize}
+    \item Problem Solving:
+    \begin{itemize}
+        \item Search algorithms;
+        \item Adversarial Search and Games;
+        \item Constraint Satisfaction Problems;
+    \end{itemize}
+    \item Knowledge, Reasoning and Planning:
+    \begin{itemize}
+        \item First Order Logic, Inference;
+        \item Prolog;
+    \end{itemize}
+    \item Uncertain Knowledge:
+    \begin{itemize}
+        \item Probabilistic Reasoning;
+        \item Bayesian Network;
+    \end{itemize}
+    \item Multi-Agents;
+    \item Machine Learning:
+    \begin{itemize}
+        \item Classificazione, Regressione, Clustering;
+        \item Neural networks and Deep Learning;
+        \item Generative AI and Large Language Models;
+    \end{itemize}
+\end{itemize}
+%
+% subsection Intelligenza Artificiale e Machine Learning (end)
+\subsection{Machine Learning}\label{sub:machine_learning} % (fold)
+Un modello di Machine Learning (apprendimento automatico) durante la fase di training apprende a partire da esempi.
+Successivamente è in grado id generalizzare e gestire nuovi dati nello stesso dominio applicativo.
+Più formalmente: ``impara dagli esempi a migliorare le proprie prestazioni per la gestione di nuovi dati provenienti dalla stessa sorgente''.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/ai-simbolica.png}
+    \caption{AI sub-simbolica}\label{fig:ai-sub-simbol}
+\end{cimage}
+Il machine learning è oggi l'approccio più importante nell'ambito dell'intelligenza artificiale.
+L'apprendimento è una componente chiave del ragionamento; inoltre permette di gestire la complessità di applicazioni reali, talvolta troppo complesse per poter essere modellate efficacemente.
+Apprendere il comportamento desiderato dai dati/esempi forniti, semplifica lo sviluppo di applicazioni; rende possibile esplorare/comprendere i dati (mining) senza la necessità di programmazione esplicita.
+% subsection Machine Learning (end)
+\subsection{Intelligenza artificiale e ``forza bruta''}\label{sub:intelligenza_artificiale_e_forza_bruta_} % (fold)
+\begin{definition}{Brute-Force}{brute-force}
+    In alcuni domini applicativi un calcolatore è in grado di risolvere problemi in modo ottimo semplicemente enumerando e valutando tutte le possibili alternative.
+\end{definition}
+Nella maggior parte dei casi però la valutazione esaustiva di tutte le possibili soluzioni non è computazionalmente gestibile, e si usano tecniche di ricerca che utilizzano \textbf{euristici} (più o meno intelligenti) per ridurre il numero di casi da valutare.
+\\
+Talvolta si utilizza il termine \textbf{Weak AI} per caratterizzare sistemi capaci di risolvere problemi complessi senza però capacità di ragionamento e comprensione.
+Una particolare famiglia di algoritmi denominata \textbf{Evolutionary Computing}, tra cui \textit{Genetic Algorithms}, è oggetto di grande interesse nell'ambito dell'Intelligenza Artificiale.
+Questi algoritmi s'ispirano al principio di evoluzione degli esseri viventi.
+%
+% subsection Intelligenza artificiale e ``forza bruta'' (end)
+% section Introduzione (end)
+%
+\section{Fondamenti}\label{sec:fondamenti} % (fold)
+%
+\subsection{Dati e Pattern}\label{sub:dati_e_pattern} % (fold)
+I dati sono un ingrediente fondamentale del machine learning dove il comportamento dei modelli non è pre-programmato ma appreso dai dati stessi; termini come Data Science, Data Mining, Big Data enfatizzano il ruolo dei dati.
+Generalmente un campione (multidimensionale) nel dominio di interesse è definito \textbf{Data-point}.
+Si utilizza \textbf{Pattern} come sinonimo di data-point.
+\\
+Il \textbf{Pattern Recognition} è la disciplina che studia il riconoscimento dei pattern (non solo con tecniche di learning ma anche con algoritmi pre-programmati).
+L'intersezione con il Machine Learning è molto ampia.
+\subsubsection{Tipi di Pattern}\label{sec:tipi_di_pattern} % (fold)
+\paragraph{Numerici}\label{par:numerici} % (fold)
+Sono valori associati a caratteristiche misurabili o conteggi.
+Tipicamente continui in ogni caso soggetti a ordinamento.
+Rappresentabili naturalmente come vettori numerici nello spazio multidimensionale.
+L'estrazione di caratteristiche da segnali (come immagini o suoni) produce vettori numerici detti anche feature vectors.
+% paragraph Numerici (end)
+\paragraph{Categorici}\label{par:categorici} % (fold)
+Sono valori associati a caratteristiche qualitative e alla presenza/assenza di una caratteristica, talvolta ordinati.
+Naturalmente gestiti da sistemi a regole e alberi di classificazione.
+Attraverso tecniche di \textit{encoding}, o \textit{embedding}, è possibile mapparli su numeri, e quindi utilizzare modelli che operano solo su dati numerici.
+Attenzione a \textit{ordinal encoding} arbitrari che non preservano semantica.
+% paragraph Categorici (end)
+% subsubsection Tipi di Pattern (end)
+\paragraph{Sequenze}\label{par:sequenze} % (fold)
+Pattern sequenziali con relazioni spaziali o temporali, spesso di lunghezza variabile.
+La posizione nella sequenza e le relazioni con i predecessori e successori sono molto importanti.
+\\
+Allineamento spaziale/temporale, e <<memoria>> per tener conto del passato.
+\\
+Approcci moderni: Deep-learning: Long Short-Term Memory (LSTM), Transformers.
+% paragraph Sequenze (end)
+\paragraph{Altri dati strutturati}\label{par:altri_dati_strutturati} % (fold)
+Output organizzati in strutture complesse quali alberi e grafi.
+Applicazioni in Bioinformatics, Natural Language Processing, Speech Recognition, ecc.
+Esempio nella traduzione di una frase in linguaggio naturale, l'output desiderato è l'insieme dei \textit{parse tree} plausibili.
+% paragraph Altri dati strutturati (end)
+\paragraph{Dati Tabulari}\label{par:dati_tabulari} % (fold)
+In molte applicazioni aziendali, i dati sono organizzati in una tabella, come nel modello relazionale dei DBMS, nelle cui colonne troviamo gli attributi (features) e nelle righe i record (data point).
+Le colonne possono avere un formato numerico o categorico, e sono eterogenee.
+I dati possono essere incompleti e fortemente sbilanciati; non è semplice definire una metrica di similarità tra record.
+\\
+Le tecniche di deep learning hanno superato i metodi pre-esistenti nelle applicazioni che lavorano con dati omogenei non strutturati (immagini, audio, linguaggio), ma non sono altrettanto competitive su dati tabulari.
+% paragraph Dati Tabulari (end)
+\paragraph{Encoding}\label{par:encoding} % (fold)
+Dato un campo materiale con i seguenti $5$ valori possibili: $\{$Acciaio, Cemento, Ghisa, Polietilene, PVC$\}$ è possibile codificarlo in due modi:
+\begin{definition}{One-Hot Encoding}{}
+    Si rimuove il campo e al suo posto si aggiungono tanti campi (o colonne) quanti sono i valori distinti ($5$ in questo caso).
+    Ciascun campo è associato a un materiale diverso e può assumere sono valore $0/1$, dove $1$ indica che il pattern è di quel materiale.
+    \\
+    Svantaggioso con un numero elevato di pattern possibili.
+\end{definition}
+\begin{definition}{Ordinal Encoding}{}
+    Si trasforma il campo originale in campo numerico associando ai materiali dei valori ordinali.
+    \\
+    Alcuni modelli interpretano numeri vicini come fattore di somiglianza.
+\end{definition}
+Fortunatamente i multi-classificatori basati su alberi tollerano bene l'ordinal encoding e spesso non è necessario ricorrere a one-hot encoding o altri embedding più complessi.
+% paragraph Encoding (end)
+%
+\subsubsection{Classificazione}\label{sec:classificazione} % (fold)
+\begin{definition}{Classificazione}{}
+    Operazione di assegnazione di una \textbf{classe} a un pattern, si usa spesso anche il termine riconoscimento.
+    È necessario apprendere una funzione capace di eseguire il mapping dallo spazio dei pattern allo spazio delle classi.
+    Nel caso di due sole classi si usa il termine \textit{binary classification}, con più di due classi \textit{multi-class classification}.
+\end{definition}
+\begin{definition}{Classe}{}
+    Una classe è un insieme di pattern aventi proprietà comuni. Il concetto di classe è semantico e dipende strettamente dall'applicazione.
+\end{definition}
+\begin{example}{Problemi di Classificazione}{}
+    \begin{itemize}
+        \item Spam detection;
+        \item Credit Card fraud detection;
+        \item Face recognition;
+        \item Pedestrian recognition;
+        \item Medical diagnosys;
+        \item Stock Trading;
+    \end{itemize}
+\end{example}
+%
+% subsubsection Classificazione (end)
+%
+\subsubsection{Regressione}\label{sec:regressione} % (fold)
+\begin{definition}{Regressione}{}
+    Assegnazione di un valore continuo a un pattern, utile per la predizione di valori continui.
+    \\
+    Risolvere un problema di regressione corrisponde ad apprendere una funzione approssimante delle coppie <<input/output>> date.
+\end{definition}
+\begin{cimage}
+    \includegraphics[width=.45\textwidth]{assets/weight-height-estimation.png}
+    \caption{Stima dell'altezza di una persona in base al peso}\label{fig:weight-height-estimation}
+\end{cimage}
+\begin{example}{Problemi di Regressione}{}
+    \begin{itemize}
+        \item Stima di prezzi di vendita di appartamenti nel mercato immobiliare;
+        \item Stima del rischio per compagnie assicurative;
+        \item Predizione energia prodotta da impianto fotovoltaico;
+        \item Modelli sanitari di predizione dei costi;
+        \item Object detection;
+    \end{itemize}
+\end{example}
+% subsubsection Regressione (end)
+%
+\subsubsection{Clustering}\label{sec:clustering} % (fold)
+\begin{definition}{Clustering}{}
+    Individuare gruppi (cluster) di pattern con caratteristiche simili.
+    Le classi del problema non sono note e i pattern non etichettati: la natura non supervisionata del problema lo rende più complesso della classificazione.
+    Spesso il numero dei cluster è noto a priori, ognuno dei quali se individuati nell'apprendimento possono essere poi utilizzati come classi.
+\end{definition}
+\begin{cimage}
+    \includegraphics[width=.45\textwidth]{assets/clusters.png}\label{fig:clusters}
+\end{cimage}
+\begin{example}{Problemi di Clustering}{}
+    \begin{itemize}
+        \item Marketing: definizione di gruppi utenti in base ai consumi;
+        \item Genetica: raggruppamento di individui sulla base di analogie del DNA;
+        \item Bioinformatica: partizionamento dei geni in gruppi con caratteristiche simili;
+        \item Visione: segmentazione non supervisionata.
+    \end{itemize}
+\end{example}
+% subsubsection Clustering (end)
+%
+\subsubsection{Riduzione Dimensionalità}\label{sec:riduzione_dimensionalita} % (fold)
+
+% subsubsection Riduzione Dimensionalita (end)
+%
+% subsection Dati e Pattern (end)
+% section Fondamenti (end)
 %
 \end{document}
