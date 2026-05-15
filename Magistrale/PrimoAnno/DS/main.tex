@@ -795,14 +795,14 @@ Sorts of logging protocols:
 \begin{itemize}
     \item \textbf{pessimistic} logging --- message received is synchronously logged prior to its execution;
     \item \textbf{optimistic} logging --- to reduce the latency overhead, the non-deterministic events are first stored in volatile memory, then logged asynchronously to stable storage: the failure of a process might result in permanent loss of some messages, which would force a rollback to a state earlier than the state when the process fails;
-    \item \textbf{causal} loggin --- the non-deterministic events not yet logged to stable storeage are piggybacked with each message sent. With the piggybacked information, a process can have access to all the non-deterministic events that may have causal effects on its state, thereby enabling a consistent recovery of the system upon a failure;
+    \item \textbf{causal} logging --- the non-deterministic events not yet logged to stable storage are piggybacked with each message sent. With the piggybacked information, a process can have access to all the non-deterministic events that may have causal effects on its state, thereby enabling a consistent recovery of the system upon a failure;
 \end{itemize}
-In both optimistic and casual logging protocols, the dependency of the processes has to be tracked and sufficient dependency information has to be piggybacked with each message sent.
-This not only increases the complexity of the logging mechanisms, but most importantly, makes the failure recovery more sophisticated and expensive because the recovering process has to find a way to examine its logs and determines if it is missing any messages and often causes cascading recovery operationsat other processes.
+In both optimistic and casual logging protocols, the dependency of the processes has to be tracked, and sufficient dependency information has to be piggybacked with each message sent.
+This not only increases the complexity of the logging mechanisms, but most importantly, makes the failure recovery more sophisticated and expensive because the recovering process has to find a way to examine its logs and determines if it is missing any messages and often causes cascading recovery operations at other processes.
 \\
 Pessimistic logging protocols are much simpler in their design and implementation and failure recovery can be made much faster.
 \emptyln{}
-For all practical purposes, logging is always used in conjuction with checkpointing, so that states are saved as checkpoints, and events are logged from one checkpoint to the next one.
+For all practical purposes, logging is always used in conjunction with checkpointing, so that states are saved as checkpoints, and events are logged from one checkpoint to the next one.
 In this way there are two benefits:
 \begin{itemize}
     \item limiting the recovery time because to recover from a failure in the process can be restarted from its last checkpoint (instead from its initial state), and its state can be recovered prior to the failure by replaying the logged non-deterministic events;
@@ -811,5 +811,31 @@ In this way there are two benefits:
 %
 % subsection Log-Based Protocols (end)
 % section Logging \& Checkpointing Towards Recovery of Distributed Systems (end)
+%
+\section{Replication \& Consistency in Distributed Systems}\label{sec:replication_consistency_in_distributed_systems} % (fold)
+%
+\subsection{Why Replication?}\label{sub:why_replication_} % (fold)
+The replication of data:
+\begin{itemize}
+    \item increases the reliability of systems;
+    \item improves preformance;
+    \item allows scaling in numbers and in geographical area;
+\end{itemize}
+\begin{quote}[Replication for Reliability]{}
+    If a file system has been replicated, system operation may continue after one replica crashes by simply switching to one of the other replicas.
+    Maintaining multiple copies allows for better protection against corrupted data: if we have three copies of a file, and perform every read and write operation on each copy, we could hide a single failing write operation by considering as correct the value returned by at least two copies.
+\end{quote}
+\\
+\begin{quote}[Replication for Performance]{}
+    Replication for performance is important when a distributed system needs to scale in terms of size or the geographical area covered:
+    \begin{itemize}
+        \item scaling regarding size occurs when an increasing number of processes needs to access data managed by a single server. Performance can be improved by size replicating the server, and geographical area subsequently dividing workload among the processes accessing the data;
+        \item when scaling over a geographical area, time to access data decreases by placing a copy of data near to the process using them: performance as perceived by that process increases, but keeping all replicas up to date may consume more network bandwidth;
+    \end{itemize}
+\end{quote}
+%
+% subsection Why Replication? (end)
+%
+% section Replication \& Consistency in Distributed Systems (end)
 %
 \end{document}
