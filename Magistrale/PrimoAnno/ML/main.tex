@@ -266,10 +266,236 @@ Fortunatamente i multi-classificatori basati su alberi tollerano bene l'ordinal 
 % subsubsection Clustering (end)
 %
 \subsubsection{Riduzione Dimensionalità}\label{sec:riduzione_dimensionalita} % (fold)
-
+\begin{definition}{Riduzione di dimensionalità}{}
+    Ridurre il numero di dimensioni dei pattern di input.
+    Consiste nell'apprendimento di un mapping da $\R^d$ a $\R^k$, con $k < d$.
+    L'operazione comporta una perdita di informazioni, l'obiettivo principale è quello di conservare le informazioni <<importanti>>.
+    La definizione formale di importanza dipende dall'applicazione.
+\end{definition}
+Molto utile per rendere trattabili problemi con dimensionalità molto elevata, per scartare informazioni ridondanti e/o instabili, e per visualizzare in 2D o 3D pattern con $d > 3$.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/rid-dim-es.png}
+\end{cimage}
 % subsubsection Riduzione Dimensionalita (end)
-%
 % subsection Dati e Pattern (end)
+%
+\subsection{Representation Learning}\label{sec:representation_learning} % (fold)
+Il successo di molte applicazioni di machine learning dipende dall'efficacia di rappresentazione dei pattern in termini di features.
+La definizione di features ad-hoc (\textbf{hand-crafted}) per le diverse applicazioni prende il nome di \textit{feature engineering}.
+\\
+Gran parte delle tecniche di deep learning, come le \textit{convolutional neural networks}, apprendono le feature direttamente dai raw data.
+Utilizzano come input i raw data ed estraendo automaticamente da essi le feature necessarie per risolvere il problema di interesse.
+\paragraph{Problemi nel dominio Visione}\label{par:problemi_nel_dominio_visione} % (fold)
+\begin{itemize}
+    \item \textbf{Classification}: determina la classe di un oggetto;
+    \item \textbf{Localization}: determina la classe dell'oggetto e la sua posizione nell'immagine;
+    \item \textbf{Detection}: per ogni oggetto presente determina la classe e la posizione nell'immagine;
+    \item \textbf{Segmentation}: al posto di una bounding box, etichetta i singoli pixel dell'immagine in classi con indici delle classi.
+        Applicazioni in ambito telerilevamento, immagini mediche, guida automatica.
+\end{itemize}
+% paragraph Problemi nel dominio Visione (end)
+%
+% subsection Representation Learning (end)
+%
+\subsection{Modelli Discriminativi vs Generativi}\label{sec:modelli_discriminativi_vs_generativi} % (fold)
+I modelli \textbf{discriminativi} (classificatori), hanno l'obiettivo di assegnare un nuovo datapoint a una classe.
+La cosa importante è apprendere il decision boundary che separa le classi.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/mod-discri.png}
+    \caption{Classificazione $\equiv$ su quale lato del decision boundary cade il nuovo dato?}
+\end{cimage}
+\newpage
+I modelli \textbf{generativi} apprendono (esplicitamente/implicitamente) la distribuzione probabilistica degli esempi usati per il loro addestramento.
+Dopo l'addestramento possono:
+\begin{itemize}
+    \item generare nuovi dati sintetici a partire da numeri casuali;
+    \item modificare o trasformare l'input fornito;
+    \item classificare l'input comparando le probabilità che sia generato dalle diverse classi;
+\end{itemize}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/mod-gen.png}
+\end{cimage}
+% subsection Modelli Discriminativi vs Generativi (end)
+\subsection{Generative AI}\label{sec:generative_ai} % (fold)
+La moderna \ac{genai} fa largo uso di modelli generativi basati su reti neurali profonde (GAN, VAE, LLM).
+\begin{warning}
+    Il termine generative può essere ambiguo in quanto le tecniche di \ac{genai} possono anche risolvere problemi che non richiedono la produzione creativa di contenuti.
+    Pertanto generativo, da non confondere con creativo, si riferisce ai sottostanti modelli generativi usati.
+\end{warning}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/gen-es.png}
+\end{cimage}
+% subsection Generative AI (end)
+%
+\subsection{Apprendimento}\label{sec:apprendimento} % (fold)
+\begin{definition}{Addestramento Supervisionato}{}
+    Sono note le classi dei pattern utilizzati per l'addestramento:
+    \begin{itemize}
+        \item il training set è etichettato;
+        \item situazione tipica nella classificazione, regressione e in alcune tecniche di riduzione di dimensionalità;
+    \end{itemize}
+\end{definition}
+\begin{definition}{Addestramento Non Supervisionato}{}
+    Non sono note le classi dei pattern utilizzati per l'addestramento.
+    \begin{itemize}
+        \item il training set non è etichettato;
+        \item situazione tipica nel clustering e nella maggior parte di tecniche di riduzione di dimensionalità;
+        \item anomaly detection è spesso considerata un'applicazione unsupervised: si hanno molti esempi di funzionamento normale, ma pochi casi di errore;
+    \end{itemize}
+\end{definition}
+\begin{definition}{Addestramento Semi-Supervisionato}{}
+    \begin{itemize}
+        \item il training set è etichettato parzialmente;
+        \item la distribuzione dei pattern non etichettati può aiutare a ottimizzare la regola di classificazione;
+    \end{itemize}
+\end{definition}
+\begin{definition}{Batch}{}
+    L'addestramento è effettuato una sola volta su un training set dato.
+    Una volta terminato il training, il sistema passa in <<working mode>> e non è in grado di apprendere ulteriormente.
+    Attualmente la maggior parte dei sistemi di machine learning opera in questo modo.
+\end{definition}
+\begin{definition}{Incrementale}{}
+    A seguito dell'addestramento iniziale, sono possibili ulteriori sessioni di addestramento:
+    \begin{itemize}
+        \item \textbf{scenari}: sequenze di Batch, Unsupervised Tuning;
+        \item \textbf{rischio}: Catastrofic Forgetting (il sistema dimentica quello che ha appreso in precedenza);
+    \end{itemize}
+\end{definition}
+\begin{definition}{Naturale}{}
+    Addestramento continuo (per tutta la vita): attivo in working mode, coesistenza di approccio supervisionato e non.
+\end{definition}
+%
+% subsection Apprendimento (end)
+%
+\subsection{Reinforcement Learning (RL)}\label{sec:reinforcement_learning_rl_} % (fold)
+L'obiettivo è apprendere un comportamento ottimale a partire dalle esperienze passate.
+Un agente esegue azioni che modificano l'ambiente, provocando messaggi da uno stato all'altro.
+Quando l'agente ottiene risultati positivi riceve una ricompensa (\textit{reward}) che però può essere temporalmente ritardata rispetto all'azione, o alla sequenza di azioni, che l'hanno determinata.
+L'obiettivo è quello di apprendere l'azione ottimale in ciascun stato, in modo da massimizzare la somma dei reward ottenuti nel lungo periodo.
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/rl.png}
+\end{cimage}
+\\
+Nella pratica è molto difficile ottenere esempi che siano allo stesso tempo corretti e rappresentativi di tutte le situazioni in cui l'agente deve agire.
+Pertanto il classico approccio supervisionato non è facilmente applicabile.
+Numerose sono le applicazioni in robotica, e uno degli approcci più noti è il \textbf{Q Learning}.
+\\
+Una sua estensione (deep) denominata \ac{deeprl} è alla base dei successi ottenuti da Google DeepMind.
+% subsection Reinforcement Learning (RL) (end)
+%
+\subsection{Parametri e Funzione Obiettivo}\label{sec:parametri_e_funzione_obiettivo} % (fold)
+In generale, il comportamento di un modello $M$ di machine learning è regolato da un set di parametri $\te$.
+Per rendere esplicita questa dipendenza indichiamo il modello come $M\pt \te$.
+L'apprendimento consiste nel determinare il valore ottimo $\te[*]$ di questi parametri.
+\\
+Dato un training set $Train$ e un insieme di parametri, la \textbf{funzione obiettivo} $f\pt{Train, M\pt \te}$ può indicare:
+\begin{itemize}
+    \item l'ottimalità della soluzione (da massimizzare)
+        \[\te[*] = \argmax_{\te}{f\pt{Train, M\pt \te}}\]
+    \item oppure l'errore o perdita (\textbf{loss-function}) da minimizzare
+        \[\te[*] = \argmin_{\te}{f\pt{Train, M\pt \te}}\]
+\end{itemize}
+$f\pt{Train, M\pt \te}$ può essere ottimizzata:
+\begin{itemize}
+    \item \textbf{esplicitamente}, con metodi che operano a partire dalla sua definizione matematica;
+    \item \textbf{implicitamente}, utilizzando euristici che modificano i parametri in modo coerente con $f$;
+\end{itemize}
+% subsection Parametri e Funzione Obiettivo (end)
+%
+\subsubsection{Iperparametri}\label{sec:iperparametri} % (fold)
+Stabilito il modello da utilizzare, prima dell'apprendimento vero e proprio, deve essere definito il valore dei cosiddetti \textbf{iperparametri}.
+Gli iperparametri $H$ definiscono i dettagli architetturali del modello e della corrispondente procedura di training.
+Per rendere esplicita anche questa dipendenza si utilizza $M\pt{H, \te}$.
+\begin{example}{}{}
+    \begin{itemize}
+        \item numero di neuroni in una rete neurale;
+        \item numero di vicini $k$ in un classificatore $k$-NN;
+        \item grado di un polinomio utilizzato in una regressione;
+        \item tipo di loss function;
+    \end{itemize}
+\end{example}
+Per l'addestramento si procede con un approccio a due livelli: a livello esterno si fissano gli iperparametri $H$; a livello interno si esegue l'apprendimento e si valutano le prestazioni.
+Al termine della procedura si scelgono gli iperparametri $H^*$ che hanno fornito prestazioni migliori.
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/sel-iperpar.png}
+\end{cimage}
+% subsubsection Iperparametri (end)
+\subsubsection{Training, Validation, Test}\label{sec:training_validation_test} % (fold)
+\begin{definition}{Training Set}{}
+    Il Training Set è l'insieme di pattern su cui addestrare il modello, trovando il valore ottimo per i parametri $\te$.
+\end{definition}
+\begin{definition}{Validation Set}{}
+    Il Validation Set è l'insieme di pattern su cui tarare gli iperparametri $H$ (ciclo esterno).
+\end{definition}
+\begin{definition}{Test Set}{}
+    Il Test Set è l'insieme di pattern su cui valutare le prestazioni finali.
+\end{definition}
+Nei benchmark classici di machine learning la suddivisione dei pattern in Train, Valid e Test è spesso predefinita, per rendere confrontabili i risultati.
+In caso contrario è compito del progettista definire la suddivisione.
+Si può optare per:
+\begin{itemize}
+    \item Set disgiunti;
+    \item K-fold Cross-Validation;
+\end{itemize}
+%
+\paragraph{Set Disgiunti}\label{par:set_disgiunti} % (fold)
+Se i dati sono sufficientemente numerosi per la complessità del problema e del modello scelto, si possono usare i Set Disgiunti.
+Aumentare la partizione di Train consente di addestrare meglio il modello.
+D'altro canto Validation e Test troppo piccoli non permettono di misurare con sufficiente confidenza le prestazioni e la generalizzazione.
+\\
+La dimensione del validation/test dipende anche dall'entità dell'errore atteso.
+Se l'errore di classificazione del sistema è del $10\%$, con un test set di $2500$ esempi avremo $250$ casi di errore.
+Se l'errore è lo $0.2\%$ avremo solo $5$ errori con conseguente scarsa affidabilità statistica.
+\emptyln{}
+Lo split può essere random (shuffling) oppure mirato, es. per mantenere separati periodi temporali di train e set.
+Nel caso di \textit{serie temporali}, dove il sistema è addestrato su un periodo storico e produrre previsioni per un periodo successivo, uno split random non è corretto (porta a una sovrastima delle prestazioni) in quanto il training set include data point temporalmente vicini a quelli di test.
+% paragraph Set Disgiunti (end)
+%
+\paragraph{K-fold Cross-Validation}\label{par:paragraph_name} % (fold)
+Una scelta più robusta degli iperparametri si ottiene con la procedura di K-fold Cross-Validation.
+Nell'ipotesi di $15000$ pattern totali e $k = 5$:
+\begin{itemize}
+    \item $5000$ pattern sono scorporati a priori per il Test;
+    \item i $10000$ pattern rimanenti sono suddivisi in $5$ gruppi (fold) da $2000$ pattern ciascuno;
+\end{itemize}
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/k-fold-cross-val.png}
+\end{cimage}
+Per ogni combinazione di iperparametri $H_i$ che si vuole valutare:
+\begin{itemize}
+    \item si esegue $5$ volte il training scegliendo uno dei fold come Valid e i $4$ rimanenti come Train;
+    \item si calcola l'accuratezza $avg\_acc_i$ come media/mediana delle $5$ accuratezze sui rispettivi Valid;
+\end{itemize}
+Si sceglie la combinazione di iperparametri con migliore $avg\_acc$.
+Scelti gli iperparametri ottimali si riaddestra il modello su tutto il training set ($5$ fold) e, solo a questo punto, si verificano le prestazioni sul \textit{test set}.
+\begin{note}[Leave-one-out]{}
+    Caso estremo di cross-validation dove i fold hanno dimensione $1$.
+    Visto il costo computazionale, si utilizza quando i pattern sono pochi.
+\end{note}
+% paragraph K-fold Cross-Validation (end)
+%
+\paragraph{Cherry Picking}\label{par:cherry_picking} % (fold)
+Uno studio recente ha condotto una revisione sistematica di $27$ lavori scientifici che utilizzano il machine learning per il trading di azioni.
+Tutti i lavori considerati dichiarano predizioni accurate e strategie profittevoli.
+Al tempo stesso non si ha evidenza di casi reali di chiaro successo in ambito AI-driven trading.
+\\
+La quasi totalità dei lavori considerati esegue molteplici esperimenti per la scelta della strategia/modello migliore.
+I modelli sono poi validati sul test set, e viene scelto il migliore (\textbf{cherry picking}).
+In questo modo si ha \textit{overfitting} del test set.
+\begin{warning}
+    Non usare il test set per orientare le scelte durante lo sviluppo di un sistema, specialmente quando le dimensioni del test set sono limitate ed è forte il rischio di overfitting.
+\end{warning}
+% paragraph Cherry Picking (end)
+%
+\subsubsection{Partizionare i Dati}\label{sec:partizionare_i_dati} % (fold)
+Partizionare i dati in dati in Training, Validation e Test, richiede in genere di generare gli indici degli elementi da assegnare ai diversi insieme per poi procedere alla suddivisione facendo attenzione a dividere nello stesso modo anche le etichette o valori target.
+\\
+La funzione \texttt{train\_test\_split} di Scikit Learn automatizza questa fase, a partire dalle proporzioni specifiche in input, fornendo anche supporto per shuffling (ordinamento casuale dei pattern) e stratification.
+\\
+Relativamente a Cross Validation Scikit Learn mette a disposizione la funzione \texttt{cross\_val\_score} che a partire da un unico training set e il numero $K$ di fold, valuta $K$ volte il sistema e ritorna un array di $K$ score.
+% subsubsection Partizionare i Dati (end)
+% subsubsection Training, Validation, Test (end)
+%
 % section Fondamenti (end)
 %
 \end{document}
