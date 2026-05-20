@@ -486,6 +486,7 @@ In questo modo si ha \textit{overfitting} del test set.
     Non usare il test set per orientare le scelte durante lo sviluppo di un sistema, specialmente quando le dimensioni del test set sono limitate ed è forte il rischio di overfitting.
 \end{warning}
 % paragraph Cherry Picking (end)
+% subsubsection Training, Validation, Test (end)
 %
 \subsubsection{Partizionare i Dati}\label{sec:partizionare_i_dati} % (fold)
 Partizionare i dati in dati in Training, Validation e Test, richiede in genere di generare gli indici degli elementi da assegnare ai diversi insieme per poi procedere alla suddivisione facendo attenzione a dividere nello stesso modo anche le etichette o valori target.
@@ -494,7 +495,36 @@ La funzione \texttt{train\_test\_split} di Scikit Learn automatizza questa fase,
 \\
 Relativamente a Cross Validation Scikit Learn mette a disposizione la funzione \texttt{cross\_val\_score} che a partire da un unico training set e il numero $K$ di fold, valuta $K$ volte il sistema e ritorna un array di $K$ score.
 % subsubsection Partizionare i Dati (end)
-% subsubsection Training, Validation, Test (end)
+%
+\subsubsection{Selezione Automatica Iperparametri}\label{sec:selezione_automatica_iperparametri} % (fold)
+La ricerca di valori ottimali per gli iperparametri può essere lunga e noiosa.
+\paragraph{Grid Search}\label{par:grid_search} % (fold)
+Per ogni iperparametro si definisce un insieme di valori da provare.
+Il sistema è valutato su tutte le combinazioni di valori di tutti gli iperparametri.
+Può essere molto costoso: raffinamento incrementale dei valori.
+Prestare particolare attenzione se vengono selezionato valori di bordo per uno o più iperparametri.
+\begin{example}{Esempio con funzione \texttt{GridSearchCV}}{}
+    Come mostrato in \cref{fig:grid-search-es}, ogni $\{\}$ corrisponde a una grid search:
+    \begin{itemize}
+        \item nella prima si valuta un classificatore SVM con kernel lineare e con $4$ valori di $C \to 4$ valutazioni;
+        \item nella seconda si valuta il classificatore con kernel RBF, $4$ valori di $C$ e $2$ valori di $\gm \to 8$ valutazioni;
+        \item in totale $12$ valutazioni, ciascuna delle quali fatta con Cross Validatio;
+    \end{itemize}
+\end{example}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/grid-search-es.png}
+    \caption{Esempio di iperparamentri}\label{fig:grid-search-es}
+\end{cimage}
+% paragraph Grid Search (end)
+\paragraph{Random Search}\label{par:random_search} % (fold)
+Sorteggia casualmente valori di iperparametri dai range/distribuzioni specificati/e, eseguendo un numero prefissato di iterazioni.
+Funzione \texttt{RandomizedSearchCV}.
+% paragraph Random Search (end)
+% subsubsection Selezione Automatica Iperparametri (end)
+%
+\subsubsection{Auto-ML}\label{sec:auto_ml} % (fold)
+
+% subsubsection Auto-ML (end)
 %
 % section Fondamenti (end)
 %
