@@ -204,7 +204,7 @@ Fortunatamente i multi-classificatori basati su alberi tollerano bene l'ordinal 
 % paragraph Encoding (end)
 %
 \subsubsection{Classificazione}\label{sec:classificazione} % (fold)
-\begin{definition}{Classificazione}{}
+\begin{definition}{Classificazione}{clsf}
     Operazione di assegnazione di una \textbf{classe} a un pattern, si usa spesso anche il termine riconoscimento.
     È necessario apprendere una funzione capace di eseguire il mapping dallo spazio dei pattern allo spazio delle classi.
     Nel caso di due sole classi si usa il termine \textit{binary classification}, con più di due classi \textit{multi-class classification}.
@@ -523,9 +523,64 @@ Funzione \texttt{RandomizedSearchCV}.
 % subsubsection Selezione Automatica Iperparametri (end)
 %
 \subsubsection{Auto-ML}\label{sec:auto_ml} % (fold)
-
+I sistemi Auto-ML effettuano la scelta automatica del modello migliore (es. SVM, Random Forest, Rete Neurale MLP), per la risoluzione di un problema.
+Oltre al modello possono essere scelte automaticamente tecniche di data/feature processing.
+L'approccio naive prevede un ulteriore <<ciclo esterno>> è sul tipo di modello.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/mod-picker-automl.png}
+\end{cimage}
+Auto-ML è solitamente eseguito su risorse remote in Cloud (dimensionate opportunamente), ma esistono versioni per computazione locale, ad esempio Auto-Sklearn.
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/automl.png}
+\end{cimage}
 % subsubsection Auto-ML (end)
 %
+\subsection{Metriche per la misura di prestazioni}\label{sub:metriche_per_la_misura_di_prestazioni} % (fold)
+Una possibilità consiste nell'utilizzare direttamente la funzione obiettivo per quantificare le prestazioni.
+In genere però si preferisce una misura legata direttamente alla semantica del problema.
+In un problema di Classificazione \cref{sec:classificazione}, l'accuratezza di classificazione $\ps{0\dots100\%}$ è la percentuale di pattern correttamente classificati.
+L'errore di classificazione è il complemento.
+\[
+    \begin{matrix}
+        Accuratezza = \frac{\text{pattern correttamente classificati}}{\text{pattern classificati}} \\ \\
+        Errore = 100\% - Accuratezza
+    \end{matrix}
+\]
+Attenzione ai problemi di classificazione con cardinalità classi molto sbilanciate:
+\begin{example}{}{}
+    In un problema di classificazione binaria, se una delle due classi è rara, un classificatore <<dummy>> che non la predice mai potrebbe raggiungere un'accuratezza di classificazione vicina al $100\%$.
+    Meglio usare Precision/Recall in questo caso.
+\end{example}
+Nei problemi di Regressione \cref{sec:regressione}, si valuta in genere l'\ac{rmse}, ovvero la radice media dei quadrati degli scostamenti tra valore vero e valore predetto.
+\[
+    RMSE = \sqrt{\frac{1}{N}\sum_{i = 1\dots N}{\pt{pred_i - true_i}^2}}
+\]
+%
+\subsubsection{Matrice di Confusione}\label{sec:matrice_di_confusione} % (fold)
+La matrice di confusione (confusion matrix) è molto utile nei problemi di classificazione \cref{sec:classificazione}, per capire come sono distribuiti gli errori.
+Nell'esempio di un problema di classificazione digit ($10$ classi):
+\begin{itemize}
+    \item assumiamo che sulle righe ci siano le classi \texttt{True} (o \textit{Real} o \textit{Actual}), e sulle colonne le classi \texttt{Predicted} (non sempre così: a vole vengono scambiate);
+    \item una cella $(r, c)$ riporta il numero di casi in cui il sistema ha predetto di classe $c$ un pattern di classe vera $r$;
+    \item idealmente la matrice dovrebbe essere diagonale.
+        Valori elevati (fuori diagonale) indicano casi di errore;
+\end{itemize}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/conf-matrix.png}
+\end{cimage}
+La matrice può essere normalizzata per righe (classi \textit{True}) per passare da numero di errori a percentuali di errore.
+Dopo la normalizzazione i valori sulle righe hanno somma $1$.
+\newpage
+\begin{quote}{}{}
+    Funzione \texttt{plot\_confusion\_matrix} disponibile in scikit-learn
+\end{quote}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/norm-conf-matrix.png}
+    \caption{Matrice di confusione normalizzata}\label{fig:norm-conf-matrix}
+\end{cimage}
+% subsubsection Matrice di Confusione (end)
+%
+% subsection Metriche per la misura di prestazioni (end)
 % section Fondamenti (end)
 %
 \end{document}
