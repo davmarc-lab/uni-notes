@@ -854,15 +854,117 @@ Per il \textbf{teorema di Bayes}:
 % paragraph Approccio Bayesiano (end)
 %
 \subsection{Classificatore di Bayes}\label{sub:classificatore_di_bayes} % (fold)
-
+Dato un pattern $x$ da classificare in una delle $s$ classi $\wli, \wlii, \dots, w_s$ di cui sono note:
+\begin{itemize}
+    \item le \textbf{probabilità a priori}, $\p\wli, \p\wlii, \dots, \p{w_s}$;
+    \item le \textbf{densità di probabilità condizionali}, $\dba{x}{\wli}, \dba{x}{\wlii}, \dots, \dba{x}{w_s}$;
+\end{itemize}
+la regola di classificazione di Bayes assegna $x$ alla classe $b$ per cui è massima la probabilità a posteriori:
+\[
+    b = \argmax_{i = 1, \dots, s}{\pg{\ba{\wi}{x}}}
+\]
+\begin{note}
+    Massimizzare la probabilità a posteriori significa \textbf{massimizzare} la densità di probabilità condizionale tenendo comunque conto della probabilità a priori delle classi.
+\end{note}
+La regola si dimostra \textit{ottima} in quanto minimizza l'\textbf{errore di classificazione}.
+Ad esempio nel caso di $2$ classi e $d = 1$:
+\[
+    \p{\text{error}} = \int_{\fr_1}{\dba{x}{w_2}\p\wlii\id} + \int_{\fr_2}{\dba{x}{w_1}\p\wli\id}
+\]
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/bayer-class-graph.png}
+    \caption{Rappresentazione dell'errore di classificazione}\label{fig:bayer-class-graph}
+\end{cimage}
+\begin{example}{Classificare maschi/femmine in base a peso e altezza}{}
+    \begin{center}
+        \includegraphics[width=.4\textwidth]{assets/training-set-es.png}
+        \captionof{figure}{Training set di esempio}\label{fig:training-set-es}
+    \end{center}
+    A partire dal training set in \cref{fig:training-set-es}:
+    \begin{itemize}
+        \item $V$ è uno spazio a $2$ dimensioni, $d = 2$;
+        \item $W = \pg{\wli, \wlii}$, dove $\wli$ sono i maschi (blu) e $\wlii$ sono le femmine (rosso)
+    \end{itemize}
+    Una stima (grossolana) delle probabilità a priori e delle densità può essere effettuata a partire dal training set come segue:
+    \begin{itemize}
+        \item \textbf{probabilità a priori} --- si considera semplicemente l'occorrenza dei pattern nel training set, in questo caso: $\p\wli = 8/18$, $\p\wlii = 10/18$;
+        \item \textbf{densità di probabilità condizionali} --- per un nuovo pattern $x$ da classificare: si conano le occorrenze dei pattern nel training set delle due classi in un intorno di $x$:
+            \begin{itemize}
+                \item $\dba{x}{\wli} = 1/8$;
+                \item $\dba{x}{\wlii} = 2/10 = 1/5$;
+                \item $\dpb{x} = \frac{1}{8} \times \frac{8}{18} + \frac{1}{5} \times \frac{10}{18} = \frac{1}{18} + \frac{2}{18} = \frac{1}{6}$;
+            \end{itemize}
+    \end{itemize}
+    Si ottiene quindi:
+    \[
+        \begin{matrix}
+            \ba{\wli}{x} = \dfrac{\dba{x}{\wli} \cdot \p\wli}{\dpb x} = \dfrac{1/18}{1/6} = \dfrac{1}{3} \\\\
+            \ba{\wlii}{x} = \dfrac{\dba{x}{\wlii} \cdot \p\wlii}{\dpb x} = \dfrac{2/18}{1/6} = \mathbf{\dfrac{2}{3}} \\\\
+        \end{matrix}
+    \]
+    L'approccio Bayesiano assegna il pattern $x$ alla classe $w_2$ (femmine).
+\end{example}
+Mentre la stima delle probabilità a priori è abbastanza semplice, se non si hanno elementi si possono ipotizzare le classi equiprobabili, la \textbf{conoscenza} delle densità condizionali è possibile ``solo in teoria''; nella pratica esistono due soluzioni:
+\begin{itemize}
+    \item \textbf{Approccio parametrico};
+    \item \textbf{Approccio non parametrico};
+\end{itemize}
 %
 \subsubsection{Approccio parametrico}\label{sec:approccio_parametrico} % (fold)
-
+Si fanno ipotesi sulla forma delle distribuzioni, es. \textit{distribuzione multinormale}, e si apprendono i parametri fondamentali (vettore medio, matrice di covarianza) dal training set.
+\\
+Generalmente utilizzato quando, oltre ad avere una ragionevole certezza (o \textit{speranza}) che la forma della distribuzione sia adeguata, la dimensione del training set non è sufficiente per una buona stima delle densità.
+Infatti è generalmente caratterizzato da un minor numero di gradi di libertà e il rischio di overfittintg dei dati, quando il training set è piccolo, è minore.
 % subsubsection Approccio parametrico (end)
 %
 \subsubsection{Approccio non parametrico}\label{sec:approccio_non_parametrico} % (fold)
-%
+Si apprendono le distribuzioni dal training set, es. attraverso il metodo \textbf{Parzen Window}.
 % subsubsection Approccio non parametrico (end)
+%
+\subsubsection{Distribuzione Normale $d=1$}\label{sec:distribuzione_normale_d_} % (fold)
+La densità di probabilità della distribuzione normale, $d = 1$, è:
+\[
+    \dpb x = \dfrac{1}{\si\sqrt{2\pi}}e^{-\dfrac{\pt{x-\mu}^2}{2\si[2]}}
+\]
+dove $\mu$ è il \textbf{valore medio} e $\si$ è la \textbf{deviazione standard} (o scarto quadratico medio) e il suo quadrato $\si[2]$ la \textbf{varianza}.
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/distr-norm-graph.png}
+    \caption{Grafico della distribuzione normale}\label{fig:distr-norm-graph}
+\end{cimage}
+\\
+Solo il $5\%$ circa del ``volume'' è esterno all'intervallo $\itc{\mu - 2\si, \mu + 2\si}$.
+Solitamente si assume che la distribuzione valga $0$ a distanze maggiori di $3\si$ dal valore medio.
+\begin{example}{Stima di $\mu$ e $\si$ per $d = 1$}{}
+    Dato un training set di pattern mono-dimensionali composto da $n = 10$ elementi:
+    \begin{center}
+        \includegraphics[width=.8\textwidth]{assets/var-med-stima.png}
+    \end{center}
+    La stima dei parametri per massima verosimiglianza (\textbf{maximum likelihood}) si dimostra essere:
+    \begin{itemize}
+        \item stima per $\mu$: media campionaria dei valori;
+            \[
+                \mu = \frac{1}{n}\sum_{i = 1}^n{x_i} = \frac{3 + 7 + 9 + (-2) + 15 + 54 + (-11) + 23 + (-8)}{10} = \frac{90}{10} = 9
+            \]
+        \item stima per $\si[2]$: varianza campionaria dei valori;
+            \[
+                \si[2] = \frac{1}{n}\sum_{i = 1}^n{\pt{x_i - \mu}^2} = \cdots = 318.8
+            \]
+    \end{itemize}
+    \begin{center}
+        \includegraphics[width=.6\textwidth]{assets/var-med-sol-graph.png}
+        \captionof{figure}{Soluzione in forma grafica}\label{fig:var-med-sol-graph}
+    \end{center}
+    \begin{warning}[Siamo nel continuo]
+        $p$ è una densità di probabilità: $\dpb{25}$ non è la probabilità del valore $25$, ma la densità di probabilità nel punto $25$.
+        Solo considerando un intervallo di valori, anche piccolo, sulla base possiamo parlare di probabilità.
+        In altre parole l'intervallo $\itc{x, x + \id}$ ha probabilità: $\dpb x\id$.
+    \end{warning}
+\end{example}
+% subsubsection Distribuzione Normale $d=1$ (end)
+%
+\subsubsection{Distribuzione Normale Multivariata}\label{sec:distribuzione_normale_multivariata} % (fold)
+
+% subsubsection Distribuzione Normale Multivariata (end)
 %
 % subsection Classificatore di Bayes (end)
 %
