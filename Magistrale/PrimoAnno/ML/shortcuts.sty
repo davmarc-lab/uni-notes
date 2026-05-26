@@ -1,6 +1,24 @@
+\usepackage{xparse}
+
 \newcommand{\emptyln}{\newline{}\newline{}}
 
 % Math shortcuts
+
+% --- inc/dec ---
+\NewDocumentCommand{\dec}{m O{1}}{
+    {#1 - #2}
+}
+
+\NewDocumentCommand{\inc}{m O{1}}{
+    {#1 + #2}
+}
+
+% --- Prob ---
+\newcommand{\p}[1]{P\pt{#1}}
+\newcommand{\dpb}[1]{p\pt{#1}}
+
+\newcommand{\ba}[2]{\p{{#1}|{#2}}}
+\newcommand{\dba}[2]{\dpb{{#1}|{#2}}}
 
 % --- Parentheses ---
 \newcommand{\ab}[1]{\left | {#1} \right |}
@@ -39,6 +57,13 @@
 \newcommand{\qli}{\lw[1]{q}}
 \newcommand{\qlii}{\lw[2]{q}}
 \newcommand{\qln}{\lw[n]{q}}
+
+\newcommand{\wlo}{\lw[0]{w}}
+\newcommand{\wli}{\lw[1]{w}}
+\newcommand{\wlii}{\lw[2]{w}}
+\newcommand{\wln}{\lw[n]{w}}
+
+\newcommand{\wi}{\lw[i]{w}}
 
 % --- Greek Letters ---
 \newcommand{\power}[2]{{#1}^{#2}}

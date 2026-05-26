@@ -1,4 +1,4 @@
-\documentclass[11pt, a4paper]{article}
+\documentclass[12pt, a4paper]{article}
 \usepackage[italian]{babel}
 
 \usepackage{lecture}
@@ -203,7 +203,7 @@ Dato un campo materiale con i seguenti $5$ valori possibili: $\{$Acciaio, Cement
 Fortunatamente i multi-classificatori basati su alberi tollerano bene l'ordinal encoding e spesso non è necessario ricorrere a one-hot encoding o altri embedding più complessi.
 % paragraph Encoding (end)
 %
-\subsubsection{Classificazione}\label{sec:classificazione} % (fold)
+\subsubsection{Classificazione}\label{sub:classificazione} % (fold)
 \begin{definition}{Classificazione}{clsf}
     Operazione di assegnazione di una \textbf{classe} a un pattern, si usa spesso anche il termine riconoscimento.
     È necessario apprendere una funzione capace di eseguire il mapping dallo spazio dei pattern allo spazio delle classi.
@@ -373,7 +373,7 @@ Un agente esegue azioni che modificano l'ambiente, provocando messaggi da uno st
 Quando l'agente ottiene risultati positivi riceve una ricompensa (\textit{reward}) che però può essere temporalmente ritardata rispetto all'azione, o alla sequenza di azioni, che l'hanno determinata.
 L'obiettivo è quello di apprendere l'azione ottimale in ciascun stato, in modo da massimizzare la somma dei reward ottenuti nel lungo periodo.
 \begin{cimage}
-    \includegraphics[width=.8\textwidth]{assets/rl.png}
+    \includegraphics[width=.6\textwidth]{assets/rl.png}
 \end{cimage}
 \\
 Nella pratica è molto difficile ottenere esempi che siano allo stesso tempo corretti e rappresentativi di tutte le situazioni in cui l'agente deve agire.
@@ -538,11 +538,11 @@ Auto-ML è solitamente eseguito su risorse remote in Cloud (dimensionate opportu
 \subsection{Metriche per la misura di prestazioni}\label{sub:metriche_per_la_misura_di_prestazioni} % (fold)
 Una possibilità consiste nell'utilizzare direttamente la funzione obiettivo per quantificare le prestazioni.
 In genere però si preferisce una misura legata direttamente alla semantica del problema.
-In un problema di Classificazione \cref{sec:classificazione}, l'accuratezza di classificazione $\ps{0\dots100\%}$ è la percentuale di pattern correttamente classificati.
+In un problema di Classificazione \cref{sub:classificazione}, l'accuratezza di classificazione $\ps{0\dots100\%}$ è la percentuale di pattern correttamente classificati.
 L'errore di classificazione è il complemento.
 \[
     \begin{matrix}
-        Accuratezza = \frac{\text{pattern correttamente classificati}}{\text{pattern classificati}} \\ \\
+        Accuratezza = \dfrac{\text{pattern correttamente classificati}}{\text{pattern classificati}} \\ \\
         Errore = 100\% - Accuratezza
     \end{matrix}
 \]
@@ -553,11 +553,11 @@ Attenzione ai problemi di classificazione con cardinalità classi molto sbilanci
 \end{example}
 Nei problemi di Regressione \cref{sec:regressione}, si valuta in genere l'\ac{rmse}, ovvero la radice media dei quadrati degli scostamenti tra valore vero e valore predetto.
 \[
-    RMSE = \sqrt{\frac{1}{N}\sum_{i = 1\dots N}{\pt{pred_i - true_i}^2}}
+    RMSE = \sqrt{\dfrac{1}{N}\sum_{i = 1\dots N}{\pt{pred_i - true_i}^2}}
 \]
 %
 \subsubsection{Matrice di Confusione}\label{sec:matrice_di_confusione} % (fold)
-La matrice di confusione (confusion matrix) è molto utile nei problemi di classificazione \cref{sec:classificazione}, per capire come sono distribuiti gli errori.
+La matrice di confusione (confusion matrix) è molto utile nei problemi di classificazione \cref{sub:classificazione}, per capire come sono distribuiti gli errori.
 Nell'esempio di un problema di classificazione digit ($10$ classi):
 \begin{itemize}
     \item assumiamo che sulle righe ci siano le classi \texttt{True} (o \textit{Real} o \textit{Actual}), e sulle colonne le classi \texttt{Predicted} (non sempre così: a vole vengono scambiate);
@@ -580,7 +580,340 @@ Dopo la normalizzazione i valori sulle righe hanno somma $1$.
 \end{cimage}
 % subsubsection Matrice di Confusione (end)
 %
+\subsubsection{Classificazione Binaria}\label{sec:classificazione_binaria} % (fold)
+Dato un \textbf{classificatore binario}, e $T = P + N$ pattern da classificare ($P$ positivi e $N$ negativi), il risultato di ciascuno dei tentativi di classificazione può essere:
+\begin{itemize}
+    \item \textbf{\ac{tp}}: un pattern positivo è stato correttamente assegnato ai positivi;
+    \item \textbf{\ac{tn}}: un pattern negativo è stato correttamente assegnato ai negativi;
+    \item \textbf{\ac{fp}}: un pattern \textit{negativo} è stato erroneamente assegnato ai positivi; detto anche errore di \textbf{Tipo I} o \textbf{False};
+    \item \textbf{\ac{fn}}: un pattern \textit{positivo} è stato erroneamente assegnato ai negativi; detto anche errore di \textbf{Tipo II} o \textbf{Miss};
+\end{itemize}
+Passando da errori a frequenze/probabilità, che corrisponde a normalizzare per righe la \hyperref[sec:matrice_di_confusione]{Matrice di Confusione}:
+\[
+    \begin{matrix}
+        \text{\acf{tpr}} = \dfrac{TP}{P} \\ \\
+        \text{\acf{tnr}} = \dfrac{TN}{N} \\ \\
+        \text{\acf{fpr}} = \dfrac{FP}{N} \\ \\
+        \text{\acf{fnr}} = \dfrac{FN}{P} \\ \\
+    \end{matrix}
+\]
+Con questa notazione l'accuratezza di classificazione può essere scritta come:
+\[
+    Accuracy = \dfrac{TP + TN}{T = P + N}
+\]
+\\
+I $4$ casi (\ac{tn}, \ac{fp}, \ac{fn}, \ac{tp}) sono facilmente collocabili sulle $4$ celle della matrice di confusione ($2\times 2$).
+Le relative frequenze (\ac{tnr}, \ac{fpr}, \ac{fnr}, \ac{tpr}) occupano le stesse posizioni sulla matrice di confusione normalizzata.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/conf-mat-err.png}
+    \caption{Errori sulla matrice di confusione normalizzata e non}\label{fig:conf-mat-err}
+\end{cimage}
+%
+% subsubsection Classificazione Binaria (end)
+%
+\subsubsection{\ac{det} e \ac{roc}}\label{sec:det_e_roc} % (fold)
+L'output di un classificatore è spesso \textbf{probabilistico} (valore continuo in $0\dots1$).
+In un problema di classificazione binaria i pattern possono essere predetti come positivi (o negativi) confrontando l'output (della classe positiva) con una soglia $t$.
+Soglie restrittive (elevate) riducono i false positive a discapito dei false negative; viceversa soglie tolleranti (basse) riducono i false negative a discapito dei false positive.
+\\
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/fpr-fnr-error-t.png}
+    \caption{False Positive e Negative Rate al variare della tolleranza}\label{fig:fpr-fnr-error-t}
+\end{cimage}
+\\
+Le due curve in \cref{fig:fpr-fnr-error-t}, possono essere <<condensate>> in una curva \ac{det} che nasconde la soglia.
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/det-curve.png}
+\end{cimage}
+Piuttosto usata è anche la rappresentazione \ac{roc} che in ordinata riporta True Positive invece di False Negative (ribaltata verticalmente rispetto a \ac{det}).
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/roc-curve.png}
+\end{cimage}
+\newpage
+\paragraph{Area Under Curve (AUC)}\label{par:area_under_curve_auc_} % (fold)
+Area Under Curve (AUC)Quale dei due sistemi (rosso, blu) è migliore dell'altro?
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/sys-com-roc.png}
+\end{cimage}
+\begin{quote}
+    Il sistema migliore è quello la cui curva è più <<alta>>, ma in questo caso le curve si intersecano\dots{} e l'ottimalità dipende dal punto di lavoro desiderato.
+\end{quote}
+Un confronto può essere fatto <<mediando>> sui diversi punti di lavoro del sistema.
+L'\textbf{area sotto la curva} \ac{roc}, chiamata \textbf{\ac{auc}}, è uno scalare in $\ps{0, 1}$ che caratterizza la prestazione media (maggiore è, meglio è).
+Può essere calcolata come integrale numerico attraverso il metodo dei trapezi.
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/auc.png}
+\end{cimage}
+%
+% paragraph Area Under Curve (AUC) (end)
+% subsubsection det e roc (end)
+%
+\subsubsection{Precision e Recall}\label{sec:precision_e_recall} % (fold)
+Notazione molto usata in Information Retrieval e in generale nelle applicazioni di detection o di classificazione, con classi sbilanciate.
+Precision/Recall sono definiti a partire da \ac{tn}, \ac{fp}, \ac{fn}, \ac{tp} (\hyperref[sec:classificazione_binaria]{classificazione binaria}).
+\begin{itemize}
+    \item \textbf{Precision}, indica quanto è accurato il sistema:
+        \[
+            Precision = \frac{TP}{TP + FP}
+        \]
+    \item \textbf{Recall}, indica quanto è selettivo (già disponibile nella matrice di confusione normalizzata):
+        \[
+            Recall = \frac{TP}{TP + FN} = \frac{TP}{P} = TPR
+        \]
+\end{itemize}
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/prec-recall-cake.png}
+    \caption{}\label{fig:prec-recall-cake}
+\end{cimage}
+\paragraph{Precision e Recall su matrice $2\times2$}\label{par:precision_e_recall_su_matrice_times_} % (fold)
+La rappresentazione grafica più utile per comprendere Precision e Recall è la matrice di confusione $2\times2$ che evidenzia \ac{tn}, \ac{tp}, \ac{fp}, \ac{fn}:
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/prec-recall-2-2.png}
+\end{cimage}
+Nella classificazione multi-classe, precision e recall si possono calcolare per ciascuna classe (considerando la classe come Positive e gli esempi di tutte le altre come Negative), come nell'esempio sopra.
+% paragraph Precision e Recall su matrice $2\times2$ (end)
+% subsubsection Precision e Recall (end)
+%
+\subsubsection{Indicatori compatti}\label{sec:indicatori_compatti} % (fold)
+Gli indicatori compatti (a singolo valore) sono utili per comparare l'accuratezza di diversi modelli.
+\paragraph{F1-score}\label{par:f_score} % (fold)
+Comprende valori continui in $0\dots1$, viene calcolato come \textit{media armonica} di Precision e Recall:
+\[
+    F1 - score = 2 \times \dfrac{Precision \times Recall}{Precision + Recall}
+\]
+La media armonica:
+\begin{itemize}
+    \item corrisponde alla media aritmetica se $Precision = Recall$;
+    \item <<penalizza maggiormente>> rispetto alla media aritmetica quando i valori sono diversi;
+\end{itemize}
+% paragraph F1-score (end)
+\paragraph{\acf{ap}}\label{par:_acf_ap_} % (fold)
+È una sorta di \ac{auc} sul grafico Recall/Precision:
+\[
+    AP = \sum_n{\pt{R_n - R_{\dec n}}}P_n
+\]
+dove $P_n$ e $R_n$ sono i valori di precision e recall alla soglia $n$.
+Differentemente da \ac{auc} si usa l'integrazione con rettangoli (e non trapezi) per evitare il risultato over-ottimistico.
+\\
+Nelle applicazioni dove è importante operare a Precision (o Recall) definiti meglio derivare esplicitamente dal grafico Recall/Precision:
+\[
+    \begin{matrix}
+        Precision \text{ @ } Recall = X \\
+        Recall \text{ @ } Precision = X
+    \end{matrix}
+\]
+% paragraph \acf{ap} (end)
+% subsubsection Indicatori compatti (end)
+%
+\subsubsection{Sensitivity e Specificity}\label{sec:sensitivity_e_specificity} % (fold)
+In diagnostica medica si usano i termini Sensitivity e Specificity per caratterizzare la bontà di un test.
+La classe negative corrisponde ai soggetti <<sani/non-infetti>>, la classe positive ai soggetti <<malati/infetti>>.
+Partendo dalla \cref{fig:prec-recall-cake} si può ricavare:
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/sens-spec-form.png}
+\end{cimage}
+\\
+Si può dire sia che $Sensitivity \equiv Recall \equiv TPR$, sia $Specificity \equiv TNR$.
+Mentre la Specificity indica quanto è accurato il sistema: corrisponde alla Recall della \textbf{classe negativa}.
+\begin{quote}
+    Entrambe le misurazioni sono disponibili sulla diagonale della matrice di confusione normalizzata.
+\end{quote}
+% subsubsection Sensitivity e Specificity (end)
+%
 % subsection Metriche per la misura di prestazioni (end)
+%
+\subsection{Object Detection: AP e mAP}\label{sub:object_detection_ap_e_map} % (fold)
+\begin{definition}{Detection}{}
+    Per ogni oggetto presente in un'immagine o frame di un video, determina la probabilità di appartenenza alla classe più probabile e la corrispondente bounding box.
+\end{definition}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/det-sample.png}
+    \caption{Esempio di detection di oggetti diversi}\label{fig:det-sample}
+\end{cimage}
+Diversi sono i tipi di errore, tra cui: oggetto non trovato, classe errata, bounding box sbagliata o imprecisa.
+Come si può quantificare il tutto con uno scalare per rendere i sistemi confrontabili?
+\\
+\begin{itemize}
+    \item \textbf{\acf{ap}} è calcolata per oggetti di una singola classe su tutto il database;
+    \item \textbf{\acf{map}} è la media di \ac{ap} su tutte le classi;
+\end{itemize}
+Per calcolare \ac{tp} e \ac{fp} si considera una prediction corretta quando la classe è giusta e la \ac{iou} delle due bounding box (rilevata e vera) è maggiore di un valore scalare dato.
+%
+\subsubsection{Problemi Closed e Open set}\label{sec:problemi_closed_e_open_set} % (fold)
+Nel caso più semplice, e più comune nei benchmark di machine learning, si assume che il pattern da classificare appartenga a una delle classi note (\textbf{closed set}).
+In molti casi reali invece i pattern da classificare possono appartenere a una delle classi note o a nessuna di queste (\textbf{open set}).
+\\
+Due soluzioni:
+\begin{itemize}
+    \item si aggiunge alle classi un'ulteriore classe fittizia <<il resto del mondo>> e si aggiungono al training set i cosiddetti <<esempi negativi>>;
+    \item si consente al sistema di non assegnare il pattern.
+        A tal fine si definisce una \textbf{soglia} e si assegna il pattern alla classe più probabile solo quando la probabilità è superiore alla soglia;
+\end{itemize}
+\begin{example}{}{}
+    Consideriamo un problema id classificazione binario, dove le due classi corrispondono a esempi \textit{Positivi} (vera classe) e \textit{Negativi} (classe fittizia resto del mondo).
+    Come in Face detection dove sono positive tutte le porzioni di immagine in cui appaiono i volti, e negative in quelle dove non compaiono.
+    \\
+    Analogamente possiamo considerare solo la classe \textbf{positivi} e un sistema (con soglia) in grado di calcolare la probabilità $p$ di appartenenza di un pattern alla classe.
+    Sia $t$ il valore di soglia, allora il pattern vioene classificato come positivo se $p > t$, come negativo in caso contrario.
+\end{example}
+% subsubsection Problemi Closed e Open set (end)
+%
+\paragraph{Sistemi Biometrici}\label{par:sistemi_biometrici} % (fold)
+Un sistema biometrico esegue la \textbf{verifica d'identità} ($1:1$) o \textbf{identificazione} ($1:N$) di un soggetto sulla base di una sua caratteristica fisica o comportamentale.
+La verifica d'identità può essere assimilata a un problema di classificazione binario:
+\begin{itemize}
+    \item False Positive e False Negative in questo caso prendono il nome di \textbf{False Acceptance} e \textbf{False Rejection};
+    \item \ac{fpr} e \ac{fnr} prendono il nome di \textbf{\ac{far}} e \textbf{\ac{frr}}.
+\end{itemize}
+L'identificazione è un problema open set multi'classe.
+\begin{quote}
+    Gli errori sono \textbf{\ac{fpir}} e \textbf{\ac{fnir}}
+\end{quote}
+% paragraph Sistemi Biometrici (end)
+% subsection Object Detection: AP e mAP (end)
+%
+\subsection{Convergenza}\label{sub:convergenza} % (fold)
+Il primo obiettivo da perseguire durante l'addestramento è la \textbf{convergenza} sul Train set.
+\\
+Consideriamo un classificatore il cui addestramento prevede un processo \textit{iterativo}.
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/conv.png}
+    \caption{Esempio di convergenza}\label{fig:conv}
+\end{cimage}
+Si ha convergenza quando:
+\begin{itemize}
+    \item la \textbf{loss} (output della loss function) ha andamento \textbf{decrescente};
+    \item l'accuratezza ha andamento \textbf{crescente};
+\end{itemize}
+\begin{critical}
+    \begin{itemize}
+        \item se la \textbf{loss} non decresce (o oscilla significativamente) il sistema non converge: 
+            \begin{itemize}
+                \item il metodo di ottimizzazione non è efficace;
+                \item gli iperparamentri sono fuori range;
+                \item il learning rate è inadeguato;
+                \item ci sono errori di implementazione;
+            \end{itemize}
+        \item se la loss decresce ma l'accuratezza non cresce, probabilmente è stata scelta una loss-function errata;
+        \item se l'accuratezza non si avvicina al $100\%$ sul Train, i gradi di libertà del classificatore non sono sufficienti per gestire la complessità del problema;
+    \end{itemize}
+\end{critical}
+%
+\subsubsection{Generalizzazione e Overfitting}\label{sec:generalizzazione_e_overfitting} % (fold)
+Ricordando che l'obiettivo è massimizzare l'accuratezza sul Test.
+Nell'ipotesi che Valid sia rappresentativo di Test, si pone l'obiettivo di massimizzare l'accuratezza su Valid.
+\\
+Per \textbf{generalizzazione} si intente la capacità di trasferire l'elevata accuratezza raggiunta su Train a Valid.
+Se i gradi di libertà del classificatore sono eccessivi, si raggiunge elevata accuratezza sul Train, ma non su Valid (scarsa generalizzazione).
+In questo caso si parla di \textbf{overfitting} di Train.
+Questa situazione si verifica molto facilmente quando Train è di piccole dimensioni.
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/es-overfitting.png}
+\end{cimage}
+Nei processi di addestramento iterativo, tipicamente dopo un certo numero di iterazioni l'accuratezza su Valid non aumenta più, e può iniziare a decrescere, a causa dell'overfitting.
+Monitorando l'andamento si può \textbf{arrestare l'addestramento} nel punto ideale, chiamato \textbf{early stopping}.
+\paragraph{Controllare l'Overfitting}\label{par:controllare_l_overfitting} % (fold)
+per massimizzare la Generalizzazione.
+\\
+I gradi di libertà del classificatore non devono essere eccessivi, ma adeguati rispetto alla complessità del problema.
+Buona norma partire con pochi gradi di libertà (controllabili attraverso iperparametri) e via via aumentarli monitorando accuratezza su Train e Valid.
+\\\\
+Inoltre influenzano la regolarità della soluzione appresa, come ad esempio la regolarità del decision boundary nella classificazione o regolarità di una funzione approssimante nella regressione.
+La regolarità della soluzione può essere talvolta controllata aggiungendo un fattore regolarizzante alla loss-function che penalizza le soluzioni irregolari.
+% paragraph Controllare l'Overfitting (end)
+% subsubsection Generalizzazione e Overfitting (end)
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/main-recipe.png}
+\end{cimage}
+% subsection Convergenza (end)
 % section Fondamenti (end)
+%
+\section{Classificazione}\label{sec:classificazione} % (fold)
+\paragraph{Approccio Bayesiano}\label{par:approccio_bayesiano} % (fold)
+Il problema è posto in  termini probabilistici.
+\\
+Se tutte le distribuzioni in gioco sono note l'approccio Bayesiano costituisce la migliore regola di classificazione possibile: soluzione \textbf{ottima}.
+\\
+\\
+Sia $V$ uno spazio di pattern $d$-dimensionali e $W = \pg{w_1, w_2, \dots, w_s}$ un insieme di $s$ classi disgiunte costituite da elementi di $V$.
+\\\\
+Per ogni $x \in V$ e per ogni $\wi \in W$, indichiamo con $p\pt{x|\wi}$ la densità di probabilità condizionale (o condizionata) di $x$ data $\wi$, ovvero la densità di probabilità che il prossimo pattern sia $x$ sotto l'ipotesi che la sua classe di appartenenza sia $\wi$.
+\\\\
+Per ogni $\wi \in W$, indichiamo con $P\pt\wi$ la \textbf{probabilità a priori} di $\wi$, ovvero la probabilità, indipendentemente dall'osservazione, che il prossimo pattern da classificare sia di classe $\wi$.
+\\\\
+Per ogni $x \in V$ indichiamo con $p\pt x$ la densità di probabilità assoluta di $x$, ovvero la densità di probabilità che il prossimo pattern da classificare sia $x$:
+\[
+    p\pt x = \sum_{i = 1}^{s}{p\pt{x|\wi} \cdot P\pt\wi} \qquad\qquad\qquad \text{dove } \sum_{i = 1}^{s}{P\pt\wi} = 1
+\]
+\\
+Per ogni $\wi \in W$ e per ogni $x \in V$ indichiamo con $P\pt{\wi|x}$ la \textbf{probabilità a posteriori} di $\wi$ dato $x$, ovvero la probabilità che avendo osservato il pattern $x$, la classe di appartenenza sia $\wi$.
+Per il \textbf{teorema di Bayes}:
+\[
+    \ba{\wi}{x} = \dfrac{p\pt{x|\wi} \cdot \p\wi}{p\pt x}
+\]
+% paragraph Approccio Bayesiano (end)
+%
+\subsection{Classificatore di Bayes}\label{sub:classificatore_di_bayes} % (fold)
+
+%
+\subsubsection{Approccio parametrico}\label{sec:approccio_parametrico} % (fold)
+
+% subsubsection Approccio parametrico (end)
+%
+\subsubsection{Approccio non parametrico}\label{sec:approccio_non_parametrico} % (fold)
+%
+% subsubsection Approccio non parametrico (end)
+%
+% subsection Classificatore di Bayes (end)
+%
+\subsection{Nearest Neighbor}\label{sub:nearest_neighbor} % (fold)
+%
+\subsubsection{k-NN}\label{sec:k_nn} % (fold)
+
+% subsubsection k-NN (end)
+%
+\subsubsection{Metriche}\label{sec:metriche} % (fold)
+
+% subsubsection Metriche (end)
+% subsection Nearest Neighbor (end)
+%
+\subsection{SVM}\label{sub:svm} % (fold)
+%
+\subsubsection{Lineari: pattern linearmente separabili e non}\label{sec:lineari_pattern_linearmente_separabili_e_non} % (fold)
+
+% subsubsection Lineari: pattern linearmente separabili e non (end)
+%
+\subsubsection{Non lineari}\label{sec:non_lineari} % (fold)
+
+% subsubsection Non lineari (end)
+%
+\subsubsection{Caso multiclasse}\label{sec:caso_multiclasse} % (fold)
+
+% subsubsection Caso multiclasse (end)
+% subsection SVM (end)
+%
+\subsection{Multi classificatori}\label{sub:multi_classificatori} % (fold)
+%
+\subsubsection{Fusione a livello di decisione}\label{sec:fusione_a_livello_di_decisione} % (fold)
+
+% subsubsection Fusione a livello di decisione (end)
+%
+\subsubsection{Fusione a livello di confidenza}\label{sec:fusione_a_livello_di_confidenza} % (fold)
+
+% subsubsection Fusione a livello di confidenza (end)
+%
+\subsubsection{Random Forest (Bagging)}\label{sec:random_forest_bagging_} % (fold)
+
+% subsubsection Random Forest (Bagging) (end)
+%
+\subsubsection{AdaBoost (Boosting)}\label{sec:adaboost_boosting_} % (fold)
+
+% subsubsection AdaBoost (Boosting) (end)
+%
+\subsubsection{Gradient Boosting}\label{sec:gradient_boosting} % (fold)
+
+% subsubsection Gradient Boosting (end)
+% subsection Multi classificatori (end)
+% section Classificazione (end)
 %
 \end{document}
