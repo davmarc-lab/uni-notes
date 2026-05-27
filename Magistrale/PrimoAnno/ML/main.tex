@@ -15,11 +15,14 @@
 
 \makefront{}
 
-\tableofcontents
+\begingroup
+    \hypersetup{linkbordercolor=white, linkcolor=black} 
+    \tableofcontents
 
-\tcblistof[\section*]{def}{List of Definitions}
-\tcblistof[\section*]{th}{List of Theorems}
-\newpage
+    \tcblistof[\section*]{def}{List of Definitions}
+    \tcblistof[\section*]{th}{List of Theorems}
+    \newpage
+\endgroup
 
 \section{Info}\label{sec:info} % (fold)
 \begin{itemize}
@@ -848,9 +851,9 @@ Per ogni $x \in V$ indichiamo con $p\pt x$ la densità di probabilità assoluta 
 \\
 Per ogni $\wi \in W$ e per ogni $x \in V$ indichiamo con $P\pt{\wi|x}$ la \textbf{probabilità a posteriori} di $\wi$ dato $x$, ovvero la probabilità che avendo osservato il pattern $x$, la classe di appartenenza sia $\wi$.
 Per il \textbf{teorema di Bayes}:
-\[
+\begin{equation}\label{eq:theor-bayes}
     \ba{\wi}{x} = \dfrac{p\pt{x|\wi} \cdot \p\wi}{p\pt x}
-\]
+\end{equation}
 % paragraph Approccio Bayesiano (end)
 %
 \subsection{Classificatore di Bayes}\label{sub:classificatore_di_bayes} % (fold)
@@ -872,8 +875,8 @@ Ad esempio nel caso di $2$ classi e $d = 1$:
     \p{\text{error}} = \int_{\fr_1}{\dba{x}{w_2}\p\wlii\id} + \int_{\fr_2}{\dba{x}{w_1}\p\wli\id}
 \]
 \begin{cimage}
-    \includegraphics[width=.6\textwidth]{assets/bayer-class-graph.png}
-    \caption{Rappresentazione dell'errore di classificazione}\label{fig:bayer-class-graph}
+    \includegraphics[width=.6\textwidth]{assets/bayes-class-graph.png}
+    \caption{Rappresentazione dell'errore di classificazione}\label{fig:bayes-class-graph}
 \end{cimage}
 \begin{example}{Classificare maschi/femmine in base a peso e altezza}{}
     \begin{center}
@@ -963,8 +966,203 @@ Solitamente si assume che la distribuzione valga $0$ a distanze maggiori di $3\s
 % subsubsection Distribuzione Normale $d=1$ (end)
 %
 \subsubsection{Distribuzione Normale Multivariata}\label{sec:distribuzione_normale_multivariata} % (fold)
-
+\begin{note}[Notazione]{}
+    Per evitare confusione utilizziamo a pedice l'indice del pattern e (ove necessario) ad apice la componente (scalare):
+    \begin{itemize}
+        \item $x_i$ pattern i-esimo (vettore);
+        \item $x_i^j$ componente j-esima del pattern i-esimo (scalare);
+    \end{itemize}
+\end{note}
+La densità di probabilità nella distribuzione multinormale $d > 1$:
+\[
+    \dpb{x} = \dfrac{1}{\pt{2\pi}^{d/2}\ab{\Si}^{1/2}} e^{-\dfrac{1}{2}\pt{x - \mu}^t\Si[-1]\pt{x - \mu}}
+\]
+dove $\mu = \ps{\mu^1, \mu^2, \dots, \mu^d}$ è il \textbf{vettore medio}, e $\Si = \ps{\si[ij]}$ è la \textbf{matrice di covarianza} di dimensione $\pt{d\times d}$.
+\emptyln{}
+\begin{itemize}
+    \item Si assume che i vettori siano di tipo <<colonna>>. L'apice $t$ (trasposto) li trasforma in righe.
+    \item $\ab\Si$ e $\Si[-1]$ sono rispettivamente il determinante e l'inversa di $\Si$.
+    \item La matrice di covarianza è sempre simmetrica e definita positiva, pertanto ammette l'inversa.
+        Essendo simmetrica il numero di parametri che la definisce è $d\cdot \pt{\inc d} / 2$.
+    \item Gli elementi diagonali $\si[ii]$ sono le varianze dei rispettivi $x^i$ (ovvero ${\pt{\si[i]}}^2$); gli elementi non diagonali $\si[ij]$ sono le covarianze tra $x^i$ e $x^j$:
+        \begin{itemize}
+            \item se $x^i$ e $x^j$ sono statisticamente indipendenti, allora $\si[ij] = 0$;
+            \item se $x^i$ e $x^j$ sono correlati positivamente, allora $\si[ij] > 0$;
+            \item se $x^i$ e $x^j$ sono correlati negativamente, allora $\si[ij] < 0$;
+        \end{itemize}
+\end{itemize}
+%
+\paragraph{Rappresentazione Grafica Normale Multivariata}\label{par:rappresentazione_grafica_normale_multivariata} % (fold)
+Per $d = 2$ la forma della distribuzione è quella di un'ellisse.
+\begin{cimage}
+    \includegraphics[width=.5\textwidth]{assets/norm-multi-visual.png}
+    \caption{Le diverse ellissi individuano luoghi di punti a densità costante}\label{fig:norm-multi-visual}
+\end{cimage}
+\begin{itemize}
+    \item $\mu = \ps{\mu^1, \mu^2}$ controlla la posizione del centro.
+    \item $\si[11]$ e $\si[22]$ determinano l'allungamento sui due assi rispetto agli assi cartesiani.
+    \item $\si[12] = \si[21]$ controlla la rotazione dell'ellisse rispetto agli assi cartesiani:
+        \begin{itemize}
+            \item se $= 0$, matrice di covarianza \textit{diagonale}, la distribuzione multinormale è definita come prodotto di $d$ normali monodimensionali. In tal caso gli assi dell'ellisse sono paralleli agli assi cartesiani;
+            \item se $> 0$, come in \cref{fig:norm-multi-visual}, $x^1$ e $x^2$ sono positivamente correlate (quando aumenta $x^1$ aumenta anche $x^2$);
+            \item se $< 0$, $x^1$ e $x^2$ sono negativamente correlate (quando aumenta $x^1$ cala $x^2$);
+        \end{itemize}
+    \item gli assi dell'ellisse sono paralleli agli autovalori di $\Si$.
+\end{itemize}
+% paragraph Rappresentazione Grafica Normale Multivariata (end)
+%
+\paragraph{Distanza Mahalanobis}\label{par:distanza_mahalanobis} % (fold)
+\indent
+\begin{definition}{Distanza Mahalanobis}{}
+    La \textbf{distanza di Mahalanobis} $r$ tra $x$ e $\mu$, definita dall'equazione:
+    \[
+        r^2 = \pt{x - \mu}^t\Si[-1]\pt{x - \mu}
+    \]
+    definisce i bordi a densità costante in una distribuzione multinormale.
+\end{definition}
+Tale distanza viene spesso utilizzata in sostituzione della distanza euclidea, essendo in grado di ``pesare'' le diverse componenti tenendo conto dei relativi \textbf{spazi di variazione} e della loro \textbf{correlazione}.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/dist-mahalanobis-visual.png}
+    \caption{}\label{fig:dist-mahalanobis-visual}
+\end{cimage}
+\\
+Un semplice approccio di <<anomaly detection>> consiste nel fitting gaussiano (calcolo di $\mu$ e $\Si$) dai soli pattern di funzionamento normale del sistema.
+I nuovi pattern, la cui distanza di Mahalanobis eccede una soglia data, sono considerati anomalie.
+\begin{warning}
+    È efficace solo quando la distribuzione dei dati è gaussiana
+\end{warning}
+% paragraph Distanza Mahalanobis (end)
+\newpage
+\paragraph{Esempio stima di $\mu$ e $\si$ con $d = 2$}\label{par:esempio_stima_di_mu_e_si_con_d_} % (fold)
+Dato un training set di pattern bi-dimensionali composto da $n = 5$ elementi:
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/es-stima-mu-si-distr-multi.png}
+\end{cimage}
+La stima dei parametri per massima verosimiglianza, \textit{maximum likelihood}, è:
+\[
+    \mu = \begin{bmatrix}
+        \mu^1 \\
+        \mu^2 \\
+        \dots \\
+        \mu^d \\
+    \end{bmatrix},
+    \qquad
+    \mu^i = \dfrac{1}{n}\sum_{k = 1,\dots,n}{x+i_k},
+    \qquad
+    \mu = \begin{bmatrix}
+        \frac{3 + 4.5 + 13 + 1 + 23}{5} \\
+        \frac{7 + 12 + 7.2 + 4 + 15.8}{5} \\
+    \end{bmatrix}
+    = \begin{bmatrix}
+        8.9 \\ 9.2
+    \end{bmatrix}
+\]
+o in notazione vettoriale:
+\[
+    \mu = \frac{1}{n}\sum_{i = 1, \dots, n}{x_i}
+\]
+Successivamente:
+\[
+    \Si = \begin{bmatrix}
+        \si[11] & \si[12] & \cdots & \si[1d] \\
+        \si[21] & \si[22] & \cdots & \si[2d] \\
+        \cdots & \cdots & \cdots & \dots \\
+        \si[d1] & \si[d2] & \cdots & \si[dd] \\
+    \end{bmatrix},
+    \qquad
+    \si[ij] = \frac{1}{n}\sum_{k = 1, \dots, n}{\pt{x_k^i - \mu^i} \cdot \pt{x^j_k - \mu^j}}
+\]
+o in notazione vettoriale, sia calcolata come somma di matrici ognuna ottenuta come vettore colonna per riga:
+\[
+    \Si = \dfrac{1}{n}\sum_{i = 1, \dots, n}{\pt{x_i - \mu}\pt{x_i - \mu}^t}
+\]
+sia come moltiplicazioni tra due matrici dove $X$ è la matrice contenente i pattern nelle colonne, a cui è stata già tolta la media:
+\[
+    \Si = \dfrac{1}{n}X\T X
+\]
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/res-es-mu-si-distr-multi.png}
+    \caption{Procedimenti conclusivi per ottenere $\Si$}\label{fig:res-es-mu-si-distr-multi}
+\end{cimage}
+\begin{note}[In forma grafica]{}
+    \begin{center}
+        \includegraphics[width=.4\textwidth]{assets/es-mu-si-visual-top.png}
+        \captionof{figure}{Vista dall'alto}\label{fig:es-mu-si-visual-top}
+    \end{center}
+    \begin{center}
+        \includegraphics[width=.4\textwidth]{assets/es-mu-si-visual-side.png}
+        \captionof{figure}{Vista laterale}\label{fig:es-mu-si-visual-side}
+    \end{center}
+\end{note}
+% paragraph Esempio stima di $\mu$ e $\si$ con $d = 2$ (end)
 % subsubsection Distribuzione Normale Multivariata (end)
+%
+\subsubsection{Classificatore di Bayes con distribuzioni Multinormali}\label{sec:classificatore_di_bayes_con_distribuzioni_multinormali} % (fold)
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/bayes-distri-multi-visual.png}
+    \caption{}\label{fig:bayes-distri-multi-visual}
+\end{cimage}
+In \cref{fig:bayes-distri-multi-visual} sono visualizzate le densità condizionali di $2$ classi di pattern, distribuiti con distribuzione normale $2$-dimensionale, corrette sulla base delle rispettive \textbf{probabilità a priori}.
+\\
+La classificazione è eseguita utilizzando la regola \textit{Bayesiana}: lo spazio è suddiviso in regioni non connesse, nel caso specifico $\fr_2$ è costituita da due componenti disgiunte.
+\begin{definition}{Decision Boundary}{}
+    Un \textbf{decision boundary} o \textbf{decision surface} (superficie decisionale) è una zona di confine tra regioni che il classificatore associa a classi diverse; sul boundary la classificazione è ambigua.
+    \\
+    Le superfici decisionali possono assumere forme diverse, in \cref{fig:bayes-distri-multi-visual} si tratta di due iperboli.
+    In generale:
+    \begin{itemize}
+        \item se le $2$ matrici di covarianza sono \textbf{uguali tra loro}: la superficie decisionale è un \textbf{iper-piano};
+        \item se le $2$ matrici di covarianza sono \textbf{arbitrarie}: la superficie decisionale è un \textbf{iper-quadratica};
+    \end{itemize}
+\end{definition}
+% subsubsection Classificatore di Bayes con distribuzioni Multinormali (end)
+%
+\subsubsection{Bayes e confidenza di classificazione}\label{sec:bayes_e_confidenza_di_classificazione} % (fold)
+Un grande \textbf{vantaggio} del classificatore di Bayes, rispetto ad altri classificatori, è legato al fatto che esso produce un valore di output probabilistico, scalare compreso fra $0$ e $1$ e con somma pari a $1$ su tutte le classi, che può essere utilizzato come confidenza.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/bayes-conf-class.png}
+    \caption{Confidenza del classificatore in base al colore}\label{fig:bayes-conf-class}
+\end{cimage}
+Infatti, un classificatore può assegnare un pattern $x$ a una classe $w_i$ con diversi livelli di certezza (o confidenza) che possono essere impiegati per:
+\begin{itemize}
+    \item scartare pattern in applicazioni open-set \textbf{con soglia};
+    \item costruire un \textbf{multi-classificatore};
+\end{itemize}
+Se non si è interessati alla confidenza, nella \hyperref[eq:theor-bayes]{formula di Bayes} non è necessario dividere per $\dpb x$ il numeratore, e la regola di Bayes è semplicemente:
+\[
+    b = \argmax_{i = 1, \dots, s}{\pg{\dba{x}{w_i} \cdot \p{w_i}}}
+\]
+% subsubsection Bayes e confidenza di classificazione (end)
+\subsubsection{Bayes parametrico in pratica}\label{sec:bayes_parametrico_in_pratica} % (fold)
+Molto spesso si fanno ipotesi azzardate sulla normalità delle densità di probabilità delle classi del problema senza aver sperimentalmente eseguito nessuna verifica; ciò porta ad ottenere \textbf{cattivi risultati} di classificazione.
+\\
+Pertanto, dato un problema con $s$ classi e dato un training set (significativo), deve essere innanzitutto \textbf{valutata la rispondenza alla ``normalità'' delle $s$ distribuzioni}; questo può essere fatto in due modi:
+\begin{itemize}
+    \item modo \textbf{formale};
+    \item modo \textbf{empirico}, visualizzando in vari modi le \textbf{nuvole dei dati} o gli \textbf{istogrammi sulle diverse componenti} e confrontandoli con delle curve teoriche;
+\end{itemize}
+Una volta provata una normalità delle distribuzioni, si stimano a partire dai dati, vettore medio $\mu$ e matrice di covarianza $\Si$ (maximum likelihood).
+\\
+Per quanto riguarda le \textbf{probabilità a priori} queste possono essere estratte dalle percentuali di campioni che nel training set appartengono alle diverse classi, o in caso di assenza di informazioni possono essere poste tutte uguali tra loro.
+\\
+Ogni \textit{nuovo pattern da classificare}, è assegnato a una delle possibili classi in accordo con la regola di Bayes nella quale media e covarianza sono ora note.
+\paragraph{Approcci non parametrici e stima delle Densità}\label{par:approcci_non_parametrici_e_stima_delle_densita} % (fold)
+Non vengono fatte ipotesi sulle distribuzioni dei pattern e le densità di probabilità sono \textbf{stimate direttamente} dal training set.
+\\
+Il problema della stima accurata della densità è ritenuto da molti un problema più complesso della classificazione.
+\begin{quote}
+    In generale la stima delle densità è affrontabile in \textbf{spazi a dimensionalità ridotta} e diventa \textit{critica} al crescere della dimensionalità (\textit{curse of dimensionality}): il volume dello spazio aumenta così tanto che i pattern diventano troppo sparsi.
+\end{quote}
+\begin{critical}
+    In uno spazio dove i pattern sono molto sparsi occorrono molti più esempi per fare stime di dimensionalità affidabili.
+    \\
+    La \textbf{riduzione di dimensionalità} è una delle tecniche possibili per contrastare la \textbf{curse of dimensionality}.
+\end{critical}
+% paragraph Approcci non parametrici e stima delle Densita (end)
+% subsubsection Bayes parametrico in pratica (end)
+\subsubsection{Stima della Densità}\label{sec:stima_della_densita} % (fold)
+
+% subsubsection Stima della Densita (end)
 %
 % subsection Classificatore di Bayes (end)
 %

@@ -3,14 +3,17 @@
 
 \usepackage[margin=1in]{geometry}
 
-\usepackage{hyperref} 
+\usepackage[colorlinks=true, 
+            linkcolor=blue, 
+            citecolor=blue, 
+            urlcolor=blue]{hyperref} 
 
 \usepackage{graphicx}
 \usepackage{geometry}
 
 \usepackage{amsmath, amsfonts, amssymb, amsthm}
 
-\usepackage[noabbrev, capitalize]{cleveref}
+\usepackage[noabbrev, capitalize, nameinlink]{cleveref}
 \usepackage{titling}
 \usepackage[inline]{enumitem}
 
@@ -22,6 +25,8 @@
 
 \crefname{section}{sezione}{sezioni}
 \Crefname{section}{Sezione}{Sezioni}
+\crefname{equation}{equazione}{equazioni}
+\Crefname{equation}{Equazione}{Equazioni}
 
 \newcommand{\school}[1]{\def\theschool{#1}}
 \newcommand{\programme}[1]{\def\theprogramme{#1}}
