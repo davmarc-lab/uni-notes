@@ -2,7 +2,20 @@
 
 \newcommand{\emptyln}{\newline{}\newline{}}
 
+% Text color
+\newcommand{\red}[1]{{\color{red}{#1}}}
+
 % Math shortcuts
+
+% --- fracs and notations ---
+\newcommand{\half}{\frac{1}{2}}
+\newcommand{\dhalf}{\dfrac{1}{2}}
+
+\newcommand{\dist}[2]{dist\pt{{#1},\,{#2}}}
+
+\newcommand{\cssm}[2]{CosSimilarity\pt{{#1},\,{#2}}}
+\newcommand{\csds}[2]{CosDistance\pt{{#1},\,{#2}}}
+\newcommand{\ands}[2]{AngularDistance\pt{{#1},\,{#2}}}
 
 % --- inc/dec ---
 \NewDocumentCommand{\dec}{m O{1}}{
@@ -91,7 +104,12 @@
 \newcommand{\om}[1][]{\power{\omega}{#1}}
 \newcommand{\Om}[1][]{\power{\Omega}{#1}}
 
+\newcommand{\vphi}[1][]{\power{\varphi}{#1}}
+
 \newcommand{\hdt}[1][]{\hat{\power{\delta}{#1}}}
+
+\newcommand{\fphi}[1]{\phi\pt{#1}}
+\newcommand{\fvphi}[1]{\vphi[]\pt{#1}}
 
 % --- Operators ---
 \DeclareMathOperator*{\argmax}{arg\,max}
