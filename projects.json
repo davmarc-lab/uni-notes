@@ -5,5 +5,12 @@
         "xelatex": false,
         "shell_escape": false,
         "extra_packages": ""
+    },
+    {
+        "name": "ds_2026",
+        "path": "Magistrale/PrimoAnno/DS/",
+        "xelatex": false,
+        "shell_escape": false,
+        "extra_packages": ""
     }
 ]
