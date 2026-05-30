@@ -1,0 +1,322 @@
+name: Compile LaTeX Projects
+
+on:
+  push:
+    paths:
+      - '**.tex'
+      - '**.sty'
+      - '**.bib'
+      - '**.cls'
+      - 'projects.json'
+      - '.github/workflows/compile-latek.yml'
+  pull_request:
+    paths:
+      - '**.tex'
+      - '**.sty'
+      - '**.bib'
+      - '**.cls'
+      - 'projects.json'
+      - '.github/workflows/compile-latek.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  discover:
+    name: Load Project Config
+    runs-on: ubuntu-latest
+    outputs:
+      projects: ${{ steps.load.outputs.projects }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Load and validate projects.json
+        id: load
+        run: |
+          config="projects.json"
+
+          # ── existence check ───────────────────────────────────────────
+          if [ ! -f "$config" ]; then
+            echo "::error file=projects.json::projects.json not found at repo root"
+            exit 1
+          fi
+
+          # ── JSON syntax check ─────────────────────────────────────────
+          if ! jq empty "$config" 2>/dev/null; then
+            echo "::error file=projects.json::projects.json is not valid JSON"
+            exit 1
+          fi
+
+          # ── schema check: required fields per entry ───────────────────
+          errors=0
+          while IFS= read -r entry; do
+            name=$(echo "$entry" | jq -r '.name // empty')
+            path=$(echo "$entry" | jq -r '.path // empty')
+
+            if [ -z "$name" ]; then
+              echo "::error file=projects.json::An entry is missing the required 'name' field"
+              errors=$((errors + 1))
+            fi
+            if [ -z "$path" ]; then
+              echo "::error file=projects.json::Entry '$name' is missing the required 'path' field"
+              errors=$((errors + 1))
+            fi
+
+            # ── path existence check ──────────────────────────────────
+            if [ -n "$path" ] && [ ! -d "$path" ]; then
+              echo "::error file=projects.json::Entry '$name': path '$path' does not exist in the repo"
+              errors=$((errors + 1))
+            fi
+          done < <(jq -c '.[]' "$config")
+
+          if [ "$errors" -gt 0 ]; then
+            echo "$errors validation error(s) in projects.json. Aborting."
+            exit 1
+          fi
+
+          # ── pass the full array to the matrix ─────────────────────────
+          projects=$(jq -c '.' "$config")
+          echo "projects=$projects" >> "$GITHUB_OUTPUT"
+          echo "Loaded $(jq length "$config") project(s)"
+          jq -r '.[] | "  • \(.name) → \(.path)"' "$config"
+
+  compile:
+    name: Compile — ${{ matrix.project.name }}
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ${{ fromJson(needs.discover.outputs.projects) }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Restore TeX Live cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            /usr/local/texlive
+            ~/.texlive
+          key: texlive-${{ runner.os }}-v1
+          restore-keys: texlive-${{ runner.os }}-
+
+      - name: Determine entry point & validate links
+        id: entry
+        run: |
+          project_path="${{ matrix.project.path }}"
+          project_name="${{ matrix.project.name }}"
+
+          # ── entry point ───────────────────────────────────────────────
+          if [ -f "$project_path/main.tex" ]; then
+            texfile="main.tex"
+          else
+            texfile=$(find "$project_path" -maxdepth 1 -name "*.tex" | head -n 1 | xargs basename)
+          fi
+
+          # slugify the project name for use as filename: spaces → underscores
+          slug=$(echo "$project_name" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/_/g')
+
+          echo "texfile=$texfile"       >> "$GITHUB_OUTPUT"
+          echo "slug=$slug"             >> "$GITHUB_OUTPUT"
+
+          # ── link checker ──────────────────────────────────────────────
+          errors=0
+          echo "::group::Link check — $project_name"
+
+          # \input / \include — hard errors
+          while IFS= read -r texf; do
+            grep -oP '\\(?:input|include)\{\K[^}]+' "$texf" \
+            | while read -r ref; do
+                [[ "$ref" != *.* ]] && ref="$ref.tex"
+                if [ ! -f "$project_path/$ref" ] && [ ! -f "$(dirname "$texf")/$ref" ]; then
+                  echo "::error file=$texf::Broken \\input/\\include: '$ref' not found"
+                  errors=$((errors + 1))
+                fi
+              done
+          done < <(find "$project_path" -name "*.tex")
+
+          # \usepackage / \RequirePackage — warnings only
+          while IFS= read -r texf; do
+            grep -oP '\\(?:usepackage|RequirePackage)(?:\[.*?\])?\{\K[^}]+' "$texf" \
+            | tr ',' '\n' | sed 's/[[:space:]]//g' \
+            | while read -r pkg; do
+                [ -z "$pkg" ] && continue
+                if [ ! -f "$project_path/$pkg.sty" ] && ! kpsewhich "$pkg.sty" &>/dev/null; then
+                  echo "::warning file=$texf::Package not found locally: '$pkg.sty' (may still be in TeX Live)"
+                fi
+              done
+          done < <(find "$project_path" -name "*.tex")
+
+          # \bibliography / \addbibresource — hard errors
+          while IFS= read -r texf; do
+            grep -oP '\\(?:bibliography|addbibresource)\{\K[^}]+' "$texf" \
+            | while read -r bib; do
+                [[ "$bib" != *.* ]] && bib="$bib.bib"
+                if [ ! -f "$project_path/$bib" ] && [ ! -f "$(dirname "$texf")/$bib" ]; then
+                  echo "::error file=$texf::Broken \\bibliography: '$bib' not found"
+                  errors=$((errors + 1))
+                fi
+              done
+          done < <(find "$project_path" -name "*.tex")
+
+          echo "::endgroup::"
+
+          if [ "$errors" -gt 0 ]; then
+            echo "Link check failed with $errors error(s). Aborting compile."
+            exit 1
+          fi
+
+      - name: Cache Docker image
+        id: cache-docker
+        uses: actions/cache@v4
+        with:
+          path: /tmp/texlive-image.tar
+          key: texlive-docker-${{ runner.os }}-${{ hashFiles('.github/workflows/compile-latex.yml') }}
+          restore-keys: texlive-docker-${{ runner.os }}-
+
+      - name: Load cached image or pull fresh
+        run: |
+          if [ -f /tmp/texlive-image.tar ]; then
+            echo "Cache hit — loading image from tar"
+            docker load -i /tmp/texlive-image.tar
+          else
+            echo "Cache miss — pulling image"
+            docker pull ghcr.io/xu-cheng/texlive-full:latest
+            docker save ghcr.io/xu-cheng/texlive-full:latest -o /tmp/texlive-image.tar
+          fi
+
+      - name: Compile LaTeX
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: ${{ steps.entry.outputs.texfile }}
+          working_directory: ${{ matrix.project.path }}
+          latexmk_use_xelatex: ${{ matrix.project.xelatex || false }}
+          latexmk_shell_escape: ${{ matrix.project.shell_escape || false }}
+          extra_system_packages: ${{ matrix.project.extra_packages || '' }}
+          args: >-
+            -pdf
+            -interaction=nonstopmode
+            -halt-on-error
+            -file-line-error
+
+      - name: Parse LaTeX log for warnings
+        if: always()
+        run: |
+          logfile="${{ matrix.project.path }}/${{ steps.entry.outputs.texfile }}"
+          logfile="${logfile%.tex}.log"
+
+          [ ! -f "$logfile" ] && exit 0
+
+          echo "::group::Warnings — ${{ matrix.project.name }}"
+          grep -n "LaTeX Warning: Reference\|LaTeX Warning: Citation\|Overfull\|Underfull" "$logfile" \
+            | while read -r line; do
+                echo "::warning file=$logfile::$line"
+              done
+          echo "::endgroup::"
+
+      - name: Rename and stage PDF
+        run: |
+          texfile="${{ steps.entry.outputs.texfile }}"
+          slug="${{ steps.entry.outputs.slug }}"
+          mv "${{ matrix.project.path }}/${texfile%.tex}.pdf" "/tmp/${slug}.pdf"
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdf-${{ steps.entry.outputs.slug }}
+          path: /tmp/${{ steps.entry.outputs.slug }}.pdf
+          retention-days: 7
+          compression-level: 0
+
+  lint:
+    name: Lint — ${{ matrix.project.name }}
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ${{ fromJson(needs.discover.outputs.projects) }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install ChkTeX
+        run: sudo apt-get install -y --no-install-recommends chktex
+
+      - name: Run ChkTeX
+        run: |
+          echo "::group::ChkTeX — ${{ matrix.project.name }}"
+          find "${{ matrix.project.path }}" -name "*.tex" | while read -r f; do
+            chktex -q "$f" 2>&1 | sed "s|^|::warning file=$f::|" || true
+          done
+          echo "::endgroup::"
+
+  release:
+    name: Create Release
+    needs: [compile, lint]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download all PDF artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: pdf-*
+          merge-multiple: true
+          path: pdfs/
+
+      - name: Generate release notes
+        id: notes
+        run: |
+          {
+            echo "body<<EOF"
+            echo "## LaTeX Build"
+            echo ""
+            echo "| Project | File | Size |"
+            echo "|---------|------|------|"
+            while IFS= read -r entry; do
+              name=$(echo "$entry" | jq -r '.name')
+              slug=$(echo "$name" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/_/g')
+              file="pdfs/${slug}.pdf"
+              if [ -f "$file" ]; then
+                size=$(du -sh "$file" | cut -f1)
+                echo "| $name | \`${slug}.pdf\` | $size |"
+              fi
+            done < <(jq -c '.[]' projects.json)
+            echo ""
+            echo "**Triggered by:** @${{ github.actor }}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Delete old releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release list --limit 100 --json tagName \
+            | jq -r '.[].tagName' \
+            | grep "^build-" \
+            | while read -r old_tag; do
+                echo "Deleting: $old_tag"
+                gh release delete "$old_tag" --yes --cleanup-tag
+              done
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: "LaTex Build"
+          body: ${{ steps.notes.outputs.body }}
+          files: pdfs/*.pdf
+          fail_on_unmatched_files: true
+          make_latest: true

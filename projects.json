@@ -1,0 +1,9 @@
+[
+    {
+        "name": "ml_2026",
+        "path": "Magistrale/PrimoAnno/ML/",
+        "xelatex": false,
+        "shell_escape": false,
+        "extra_packages": ""
+    }
+]
