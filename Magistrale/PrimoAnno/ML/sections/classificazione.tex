@@ -6,7 +6,7 @@ Il problema è posto in  termini probabilistici.
 Se tutte le distribuzioni in gioco sono note l'approccio Bayesiano costituisce la migliore regola di classificazione possibile: soluzione \textbf{ottima}.
 \\
 \\
-Sia $V$ uno spazio di pattern $d$-dimensionali e $W = \pg{w_1, w_2, \dots, w_s}$ un insieme di $s$ classi disgiunte costituite da elementi di $V$.
+Sia $V$ uno spazio di pattern $d$-dimensionali e $W = \pg{w_1,\, w_2,\, \dots,\, w_s}$ un insieme di $s$ classi disgiunte costituite da elementi di $V$.
 \\\\
 Per ogni $x \in V$ e per ogni $\wi \in W$, indichiamo con $p\pt{x|\wi}$ la densità di probabilità condizionale (o condizionata) di $x$ data $\wi$, ovvero la densità di probabilità che il prossimo pattern sia $x$ sotto l'ipotesi che la sua classe di appartenenza sia $\wi$.
 \\\\
@@ -441,7 +441,7 @@ La regola di classificazione nearest neighbor è piuttosto radicale; infatti bas
 \begin{warning}
     Nel caso di $2$ classi è bene scegliere $k$ dispari per evitare pareggi indesiderati.
 \end{warning}
-Per $TS$ infiniti la regola di classificazione $k$-NN si dimostra migliore di $1$-NN (\hyperref[sub:nn]{NN}), e all'aumentare di $k$, l'errore $P$ converge all'errore Bayesiano.
+Per $TS$ infiniti la regola di classificazione $k$-NN si dimostra migliore di $1$-NN (\hyperref[sec:nn]{NN}), e all'aumentare di $k$, l'errore $P$ converge all'errore Bayesiano.
 \begin{cimage}
     \includegraphics[width=.4\textwidth]{assets/err-knn-bayes-visual.png}
     % \caption{}\label{fig:err-knn-bayes-visual}
@@ -691,7 +691,7 @@ Date due classi di pattern (\textbf{linearmente separabili}), e un training set 
         y_i\ps{w \cdot x_i + b} \ge 1 \qquad \text{per } i = 1,\,\dots,\,n
     \]
 \end{definition}
-\begin{definition}{SVM Margine}{}
+\begin{definition}{SVM Margine}{svm-margine}
     La \red{minima distanza} tra l'iperpiano di separazione e un pattern del training set è detta \textbf{margine} ($\tau$).
     \begin{center}
         \includegraphics[width=.4\textwidth]{assets/margine-def-es.png}
@@ -702,28 +702,172 @@ Date due classi di pattern (\textbf{linearmente separabili}), e un training set 
     Pertanto il \red{margine} è $\tau = \dfrac{2}{\nm w}$.
 \end{definition}
 L'iperpiano \textbf{ottimo} secondo \ac{svm} è quello che soddisfa i vincoli di separazione dei pattern e \textbf{massimizza il margine $\tau$}.
-\[
+\begin{equation}\label{eq:vinc-svm-lin-sep}
     \begin{aligned}
         \text{Minimizza:}&\qquad \nm w ^2 / 2 \\
         \text{Vincoli:}&\qquad y_i\ps{w \cdot x_i + b} \ge 1 \qquad \text{per } i = 1,\,\dots,\,n
     \end{aligned}
+\end{equation}
+\begin{definition}{Support Vector}{sup-vec}
+    I pattern del training set che giacciono sul margine (cerchi pieni in \cref{fig:margine-def-es}) sono detti \textbf{support vector}.
+    \\
+    Tali pattern, che costituiscono i casi più complessi, definiscono completamente la soluzione del problema, che può essere espressa come \red{funzione di solo tali pattern}, indipendentemente dalla dimensionalità dello spazio $d$ e dal numero $n$ di elementi in $TS$.
+\end{definition}
+\\
+Il problema di ottimizzazione precedente, può essere risolto passando innanzitutto a una \textbf{formula Lagrangiana} e successivamente a una \textbf{formula duale}.
+\\
+La formulazione Lagrangiana prevede di introdurre un \red{moltiplicatore} $\al_i\ \pt{\al_i \ge 0}$ per ogni vincolo nella forma \textit{equazione} $ \ge 0$ e di sottrarre il vincolo moltiplicato per $\al_i$ della \hyperref[sec:parametri_e_funzione_obiettivo]{funzione obiettivo}:
+\[
+    Q\pt{w,\,b,\,\al} = \half w\cdot w - \sum_{i = 1}^n{\al_i\pt{y_i\ps{w \cdot x_i + b} - 1}}
 \]
-I pattern del training set che giacciono sul margine (cerchi pieni in \cref{fig:margine-def-es}) sono detti \textbf{support vector}.
-Tali pattern, che costituiscono i casi più complessi, definiscono completamente la soluzione del problema, che può essere espressa come \red{funzione di solo tali pattern}, indipendentemente dalla dimensionalità dello spazio $d$ e dal numero $n$ di elementi in $TS$.
+da \red{minimizzare} rispetto a $\mathbf{w}$ e $\mathbf{b}$ e \red{massimizzare} rispetto a $\boldsymbol{\al_i} \ge 0$.
+\emptyln{}
+Utilizzando le condizioni di \ac{kkt}, il problema può essere posto in \red{forma duale} esprimendo i parametri $w$ e $b$ in funzione dei moltiplicatori $\al_i$.
+Si elimina così la dipendenza diretta da $w$ e $b$ e il problema può essere risolto massimizzando la nuova funzione obiettivo rispetto ai soli $\al_i$:
+\begin{equation}\label{eq:kkt-cond-sep}
+    \begin{aligned}
+        Q\pt \al = &\sum_{i = 1,\,\dots,\,n}{\al_i}\, - \half \sum_{i,j = 1,\,\dots,\,n}{\al_i\al_j y_i y_j \pt{x_i\cdot x_j}} \\
+        \text{con vincoli:}\quad &\sum_{i = 1,\,\dots,\,n}y_i\al_i = 0 \qquad \text{e} \qquad \al_i \ge 0 \quad \text{per } i = 1,\,\dots,\,n
+    \end{aligned}
+\end{equation}
+\begin{note}
+    I \textbf{pattern} ora compaiono solo come \red{prodotti scalari}
+\end{note}
+\emptyln{}
+Ora è possibile utilizzare algoritmi di \textbf{programmazione quadratica} la cui soluzione consiste nel trovare i valori ottimi $\al[*]_1,\,\al[*]_2,\,\dots,\,\al[*]_n$.
+Le condizioni \ac{kkt}, in \cref{eq:kkt-cond-sep}, assicurano che $\al[*]_i = 0$ per tutti i vettori che non sono support vector.
+\\
+L'iperpiano ottimo è dunque parametrizzato da:
+\[
+    \begin{aligned}
+        w^* = &\sum_{i = 1,\,\dots,\,n}{\al[*]_iy_ix_i} \\
+        b^* = y_s - &\sum_{i = 1,\,\dots,\,n}{\al[*]_iy_i\pt{x_i\cdot x_s}}
+    \end{aligned}
+\]
+dove $\pt{x_s,\,y_s)}$ è uno dei \red{support vector}.
+\\
+La funzione distanza dall'iperpiano è:
+\[
+    D\pt x = w^* \cdot x + b^* = \sum_{i = 1,\,\dots,\,n}{\al[*]iy_i\pt{x\cdot x_i} + b^*}
+\]
+\begin{note}
+    \begin{itemize}
+        \item il \textbf{segno} della funzione $D\pt x$ consente di classificare un generico pattern $x$;
+        \item le sommatorie sono riducibili ai soli support vector;
+        \item nel caso lineare non è necessario, dopo aver calcolato $w^*$ e $b^*$, conservare o memorizzare i support vectors;
+    \end{itemize}
+\end{note}
+\begin{quote}[Vantaggi]{}
+    \begin{itemize}
+        \item definizione della soluzione sulla base di un numero ridotto di \red{support vector};
+        \item il numero di support vector $n_{sv}$ indica la complessità del problema e può essere dimostrato che l'errore medio, sui possibili $TS$, è limitato da $n_{sv}/n$;
+        \item \ac{svm} <<scala>> molto bene rispetto alla dimensionalità $d$ dello spazio delle feature.
+            La complessità computazionale del training è quadratica rispetto al numero $n$ di pattern in $TS$.
+            In pratica il problema può essere risolto per $d = 10^7$ e per $n$ fino a $10^4$;
+    \end{itemize}
+\end{quote}
 % subsubsection Pattern Separabili (end)
+%
+\subsubsection{Pattern non Separabili}\label{sec:pattern_non_separabili} % (fold)
+In questo caso \red{non tutti} i pattern possono essere separati da un iperpiano, ed è necessario \textbf{rilassare i vincoli di separazione}, per far sì che alcuni pattern possano valicare il confine della classe.
+A tal fine si introducono $n$ variabili di \textbf{slack} positive $\xi_i$, $i = 1,\,\dots,\,n$ e si modificano i vincoli di separazione:
+\[
+    y_i\ps{w\cdot x_i + b}\ge 1 - \xi_i \qquad \text{per } i = 1,\,\dots,\,n
+\]
+Per ogni pattern $x_i$ del $TS$, la variabile $\xi_i$ codifica la deviazione dal margine.
+Per i pattern \red{separabili} del $TS$ le corrispondenti variabili di slack assumeranno valore $0$.
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/svm-lin-non-sep-visual.png}
+\end{cimage}
+L'iperpiano ottimo deve in questo caso ancora \textbf{massimizzare il \hyperref[def:svm-margine]{margine}}, ma allo stesso tempo \textbf{minimizzare il numero} di elementi \textbf{non correttamente classificati}.
+La \hyperref[eq:vinc-svm-lin-sep]{funzione obiettivo}, e di conseguenza il problema di ottimizzazione vengono così \red{modificati}:
+\begin{equation}
+    \begin{aligned}
+        \text{Minimizza:}& \quad\dfrac{\nm w ^2}{2} + C\sum_{i = i,\,\dots,\,n}{\xi_i} \\
+        \text{Vincoli:}& \quad y_i\ps{w\cdot x_i + b} \ge 1 - \xi_i \quad \text{per }i = 1,\,\dots,\,n
+    \end{aligned}
+\end{equation}
+\\
+Il coefficiente $C$ nel problema di ottimizzazione precedente, indica l'\red{importanza relativa} degli errori di classificazione rispetto all'ampiezza del margine.
+Si tratta di \textbf{uno dei pochi iperparametri} che l'utente deve scegliere per il tuning di \textbf{\ac{svm}}.
+\emptyln{}
+Passando attraverso forma lagrangiana/duale otteniamo un risultato uguale al caso linearmente separabile, \cref{eq:kkt-cond-sep}, \red{tranne} che per l'introduzione del \textbf{limite superiore} $C$ per io valori dei moltiplicatori $\al_i$:
+\begin{equation}\label{eq:kkt-cond-non-sep}
+    \begin{aligned}
+        Q\pt \al = &\sum_{i = 1,\,\dots,\,n}{\al_i}\, - \half \sum_{i,j = 1,\,\dots,\,n}{\al_i\al_j y_i y_j \pt{x_i\cdot x_j}} \\
+        \text{con vincoli:}\quad &\sum_{i = 1,\,\dots,\,n}y_i\al_i = 0 \qquad \text{e} \qquad 0 \le \al_i \le C \quad \text{per } i = 1,\,\dots,\,n
+    \end{aligned}
+\end{equation}
+Il metodo di soluzione e il modo di derivare l'iperpiano dagli $\al_i$ sono gli stessi del caso linearmente separabile.
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/lin-svm-non-sep-es.png}
+    \caption{Esempio al variare di $C$}\label{fig:lin-svm-non-sep-es}
+\end{cimage}
+% subsubsection Pattern non Separabili (end)
 % subsection SVM Lineari (end)
 %
-\subsection{Lineari: pattern linearmente separabili e non}\label{sec:lineari_pattern_linearmente_separabili_e_non} % (fold)
-
-% subsection Lineari: pattern linearmente separabili e non (end)
+\subsection{SVM Non Lineari}\label{sec:svm_non_lineari} % (fold)
+\ac{svm} prevede un'importante estensione della teoria inizialmente sviluppata per iperpiani, al caso di \textbf{separazione dei pattern} con superfici anche molto complesse (\red{non lineari}).
+Tutto ciò avviene in questo modo:
+\begin{itemize}
+    \item viene definito un \red{mapping} $\Phi$ non lineare dei pattern dallo spazio di partenza $\Re^d$ verso uno spazio $\Re^m$ a più alta dimensionalità ($m > d$):
+        \[
+            \Phi:\Re^d \to\Re^m,\, \fPhi x = \ps{\gix,\,\gix[2],\,\dots,\,\gix[m]}
+        \]
+    \item nello spazio $\Re^m$, dove \textbf{maggiori sono i gradi di libertà}, i pattern $\fPhi{x_1},\,\fPhi{x_2},\,\dots,\,\fPhi{x_n}$ possono essere più facilmente \textbf{separati} da un \textbf{iperpiano} utilizzando la teoria nota.
+        Ciò equivale a separare i pattern $x_1,\,x_2,\,\dots,\,x_n$ in $\Re^d$ con \red{superfici} arbitrariamente \red{complesse}.
+\end{itemize}
+Analizzando la formulazione del problema lagrangiano-duale, si nota che i vettori del $TS$ appaiono solo in forma di \textbf{prodotti scalari} tra coppie di vettori.
+Questa proprietà permette di \textbf{evitare la manipolazione} di vettori nello spazio $\Re^m$.
+\emptyln{}
+Infatti, per opportuni mapping $\Phi$ è possibile ricondurre il prodotto scalare di due pattern mappati nello spazio $\Re^m$ a una funzione $K$, detta \red{Kernel}, dei due pattern originali nello spazio $\Re^d$:
+\[
+    \fPhi{x} \cdot \fPhi{x'} = K\pt{x,\,x'}
+\]
+\begin{note}
+    Per il \red{teorema di Mercer} se la funzione Kernel $K$ soddisfa alcuni requisiti (es. è continua e simmetrica rispetto agli argomenti), allora esiste un mapping $\Phi$ verso uno spazio di dimensionalità maggiore che gode della suddetta proprietà.
+    È dunque possibile utilizzare $K$ senza nemmeno conoscere il corrispondente $\Phi$.
+\end{note}
 %
-\subsection{Non lineari}\label{sec:non_lineari} % (fold)
-
-% subsection Non lineari (end)
+\subsubsection{Kernel Functions}\label{sec:kernel_functions} % (fold)
+\paragraph{Polinomio di grado $q$ (iperparametro)}\label{par:polinomio_di_grado_q_iperparametro_} % (fold)
+Le componenti $\gix[i]$, $i = 1,\,\dots,\,m$ sono ottenute come tutte le possibili combinazioni di elevamento a potenze $\le q$ delle componenti di $x$.
+\\
+Ad esempio per $d = 2$, $q = 2$:
+\[
+    \fPhi{x} = \fPhi{\ps{x_1, x_2}} \break = \ps{1,\, x_1,\, x_2,\, x_1x_2,\, x_1^2,\, x_2^2,\, x_1^2x_2,\, x_1x_2^2,\, x_1^2x_2^2}
+\]
+e quindi $m = 9$.
+Si dimostra che:
+\[
+    K\pt{x,\,x'} = \ps{\pt{x\cdot x'} + 1}^q
+\]
+% paragraph Polinomio di grado q (iperparametro) (end)
+\paragraph{Radial Basis Function (RBF)}\label{par:radial_basis_function} % (fold)
+di ampiezza $\si$ (iperparametro)
+\[
+     K\pt{x,\,x'} = e^{\pt{-\dfrac{\nm{x-x'}^2}{2\si[2]}}}
+\]
+% paragraph Radial Basis Function (RBF) (end)
+\paragraph{Sigmoid}\label{par:sigmoid} % (fold)
+Meno utilizzato:
+\[
+    K\pt{x,\,x'} = \tanh{\pt{v\pt{x\cdot x'}+a}}
+\]
+$v$ e $a$ (iperparametri) devono essere scelti opportunamente: una possibile scelta è $v = 1$, $a = 1$.
+% paragraph Sigmoid (end)
+\emptyln{}
+Utilizzando il \red{kernel trick} si può risolvere il problema di ottimizzazione senza particolari complicazioni rispetto al caso lineare.
+Una volta determinati gli $\al[*]_i$, la \red{superficie di separazione}, regola di classificazione, è esprimibile come:
+\[
+    D\pt x = \sum_{i = 1,\,\dots,\,n}{\al[*]_i y_i\red{K\pt{x,\,x_i}} + b^*}
+\]
+% subsubsection Kernel Functions (end)
+% subsection SVM Non lineari (end)
 %
-\subsection{Caso multiclasse}\label{sec:caso_multiclasse} % (fold)
+\subsection{SVM Multiclasse}\label{sec:svm_multiclasse} % (fold)
 
-% subsection Caso multiclasse (end)
+% subsection SVM multiclasse (end)
 % section SVM (end)
 %
 \section{Multi classificatori}\label{sub:multi_classificatori} % (fold)
