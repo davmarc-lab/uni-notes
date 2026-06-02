@@ -1,8 +1,8 @@
 \NeedsTeXFormat{LaTeX2e}
 
-\ProvidesPackage{preamble}[Basic]
+\ProvidesPackage{lecture}[Basic LaTex package to take notes]
 
-\RequirePackage{pkg/lecture}
+\RequirePackage{pkg/preamble}
 
 \RequirePackage{pkg/code}
 
@@ -16,9 +16,19 @@
 
 \RequirePackage{pkg/ref-names}
 
-\newcommand{\thelecture}{Machine Learning}
-\newcommand{\thecode}{81610}
-\newcommand{\theyear}{2025}
+% Custom cref names per project
+\crefname{figure}{figura}{figure}
+\Crefname{figure}{Figura}{Figure}
+
+\crefname{section}{sezione}{sezioni}
+\Crefname{section}{Sezione}{Sezioni}
+
+\crefname{equation}{equazione}{equazioni}
+\Crefname{equation}{Equazione}{Equazioni}
+
+\newcommand{\thelecture}{}
+\newcommand{\thecode}{}
+\newcommand{\theyear}{}
 
 % --- Document Info ---
 \newcommand{\makefront}{
@@ -46,7 +56,7 @@
                 \textit{Professore} 
                 \vspace{0.2cm}
                 \\ 
-                \textbf{Prof. Davide Maltoni}
+                \textbf{}
             \end{flushleft}
         \end{minipage}
         \begin{minipage}[t]{0.6\textwidth}
@@ -54,9 +64,9 @@
                 \textit{Tutor} 
                 \vspace{0.2cm}
                 \\ 
-                \textbf{Nicolò Di Domenico}
+                \textbf{}
                 \\ 
-                \textbf{Lorenzo Pellegrini}
+                \textbf{}
             \end{flushright}
         \end{minipage}
     \end{titlepage}
