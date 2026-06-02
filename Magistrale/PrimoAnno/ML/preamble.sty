@@ -1,0 +1,64 @@
+\NeedsTeXFormat{LaTeX2e}
+
+\ProvidesPackage{preamble}[Basic]
+
+\RequirePackage{pkg/lecture}
+
+\RequirePackage{pkg/code}
+
+\RequirePackage{pkg/notes}
+\RequirePackage{pkg/quotes}
+
+\RequirePackage{pkg/images}
+\RequirePackage{pkg/tables}
+
+\RequirePackage{pkg/shortcuts}
+
+\RequirePackage{pkg/ref-names}
+
+\newcommand{\thelecture}{Machine Learning}
+\newcommand{\thecode}{81610}
+\newcommand{\theyear}{2025}
+
+% --- Document Info ---
+\newcommand{\makefront}{
+    \begin{titlepage}
+        \centering
+        \large \textbf \theschool{}
+        \\
+        \noindent\hrulefill{}
+
+        \vspace{0.4cm}
+        \Large \theprogramme{}
+
+        \vspace{4cm}
+        \Huge \textbf \thelecture{}
+
+        \large \vspace{0.6cm} \textit{Codice Corso: \thecode}
+
+        \large \vspace{0.2cm} \textit{Anno: \theyear}
+
+        \vspace{4cm}
+        \thispagestyle{empty}
+        \vspace{2cm}
+        \begin{minipage}[t]{0.3\textwidth}
+            \begin{flushleft}
+                \textit{Professore} 
+                \vspace{0.2cm}
+                \\ 
+                \textbf{Prof. Davide Maltoni}
+            \end{flushleft}
+        \end{minipage}
+        \begin{minipage}[t]{0.6\textwidth}
+            \begin{flushright}
+                \textit{Tutor} 
+                \vspace{0.2cm}
+                \\ 
+                \textbf{Nicolò Di Domenico}
+                \\ 
+                \textbf{Lorenzo Pellegrini}
+            \end{flushright}
+        \end{minipage}
+    \end{titlepage}
+}
+
