@@ -12,7 +12,6 @@
     colback=#2,
     fonttitle=\bfseries,
     coltitle=#1,
-    % Title logic: Bold Main Title + Italic Sub-title in parentheses
     title={#3:\enspace\ifstrempty{#4}{}\textnormal{\textbf{#4}}}, 
     attach title to upper,
     after title={\ifstrempty{#4}{}{\newline}},
@@ -20,6 +19,7 @@
     right=10pt,
     top=5pt,
     bottom=5pt,
+    after=\noindent
 }
 
 \newenvironment{note}[1][]{\begin{callout}{gh-blue}{gh-blue-bg}{Note}{#1}}{\end{callout}}
@@ -44,6 +44,7 @@
     right=10pt,
     top=5pt,
     bottom=5pt,
+    after=\noindent
 }
 
 \renewenvironment{quote}[1][]{\begin{stdquote}{#1}}{\end{stdquote}}

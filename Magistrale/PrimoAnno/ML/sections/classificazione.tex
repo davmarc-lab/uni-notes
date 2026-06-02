@@ -1,5 +1,5 @@
 % ltex: language=it
-\section{Classificazione}\label{sec:classificazione} % (fold)
+\chapter{Classificazione}\label{chap:classificazione} % (fold)
 \paragraph{Approccio Bayesiano}\label{par:approccio_bayesiano} % (fold)
 Il problema è posto in  termini probabilistici.
 \\
@@ -24,7 +24,7 @@ Per il \textbf{teorema di Bayes}:
 \end{equation}
 % paragraph Approccio Bayesiano (end)
 %
-\subsection{Classificatore di Bayes}\label{sub:classificatore_di_bayes} % (fold)
+\section{Classificatore di Bayes}\label{sub:classificatore_di_bayes} % (fold)
 Dato un pattern $x$ da classificare in una delle $s$ classi $\wli, \wlii, \dots, w_s$ di cui sono note:
 \begin{itemize}
     \item le \textbf{probabilità a priori}, $\p\wli, \p\wlii, \dots, \p{w_s}$;
@@ -40,7 +40,7 @@ la regola di classificazione di Bayes assegna $x$ alla classe $b$ per cui è mas
 La regola si dimostra \textit{ottima} in quanto minimizza l'\textbf{errore di classificazione}.
 Ad esempio nel caso di $2$ classi e $d = 1$:
 \[
-    \p{\text{error}} = \int_{\fr_1}{\dba{x}{w_2}\p\wlii\id} + \int_{\fr_2}{\dba{x}{w_1}\p\wli\,\id}
+    \p{\text{error}} = \int_{\Re_1}{\dba{x}{w_2}\p\wlii\id} + \int_{\Re_2}{\dba{x}{w_1}\p\wli\,\id}
 \]
 \begin{cimage}
     \includegraphics[width=.6\textwidth]{assets/bayes-class-graph.png}
@@ -81,18 +81,18 @@ Mentre la stima delle probabilità a priori è abbastanza semplice, se non si ha
     \item \textbf{Approccio non parametrico};
 \end{itemize}
 %
-\subsubsection{Approccio parametrico}\label{sec:approccio_parametrico} % (fold)
+\subsection{Approccio parametrico}\label{sec:approccio_parametrico} % (fold)
 Si fanno ipotesi sulla forma delle distribuzioni, es. \textit{distribuzione multinormale}, e si apprendono i parametri fondamentali (vettore medio, matrice di covarianza) dal training set.
 \\
 Generalmente utilizzato quando, oltre ad avere una ragionevole certezza (o \textit{speranza}) che la forma della distribuzione sia adeguata, la dimensione del training set non è sufficiente per una buona stima delle densità.
 Infatti è generalmente caratterizzato da un minor numero di gradi di libertà e il rischio di overfittintg dei dati, quando il training set è piccolo, è minore.
-% subsubsection Approccio parametrico (end)
+% subsection Approccio parametrico (end)
 %
-\subsubsection{Approccio non parametrico}\label{sec:approccio_non_parametrico} % (fold)
+\subsection{Approccio non parametrico}\label{sec:approccio_non_parametrico} % (fold)
 Si apprendono le distribuzioni dal training set, es. attraverso il metodo \textbf{Parzen Window}.
-% subsubsection Approccio non parametrico (end)
+% subsection Approccio non parametrico (end)
 %
-\subsubsection{Distribuzione Normale $d=1$}\label{sec:distribuzione_normale_d_} % (fold)
+\subsection{Distribuzione Normale $d=1$}\label{sec:distribuzione_normale_d_} % (fold)
 La densità di probabilità della distribuzione normale, $d = 1$, è:
 \[
     \dpb x = \dfrac{1}{\si\sqrt{2\pi}}e^{-\dfrac{\pt{x-\mu}^2}{2\si[2]}}
@@ -102,7 +102,6 @@ dove $\mu$ è il \textbf{valore medio} e $\si$ è la \textbf{deviazione standard
     \includegraphics[width=.4\textwidth]{assets/distr-norm-graph.png}
     \caption{Grafico della distribuzione normale}\label{fig:distr-norm-graph}
 \end{cimage}
-\\
 Solo il $5\%$ circa del ``volume'' è esterno all'intervallo $\itc{\mu - 2\si, \mu + 2\si}$.
 Solitamente si assume che la distribuzione valga $0$ a distanze maggiori di $3\si$ dal valore medio.
 \begin{example}{Stima di $\mu$ e $\si$ per $d = 1$}{}
@@ -131,9 +130,9 @@ Solitamente si assume che la distribuzione valga $0$ a distanze maggiori di $3\s
         In altre parole l'intervallo $\itc{x, x + \id}$ ha probabilità: $\dpb x\id$.
     \end{warning}
 \end{example}
-% subsubsection Distribuzione Normale $d=1$ (end)
+% subsection Distribuzione Normale $d=1$ (end)
 %
-\subsubsection{Distribuzione Normale Multivariata}\label{sec:distribuzione_normale_multivariata} % (fold)
+\subsection{Distribuzione Normale Multivariata}\label{sec:distribuzione_normale_multivariata} % (fold)
 \begin{note}[Notazione]{}
     Per evitare confusione utilizziamo a pedice l'indice del pattern e (ove necessario) ad apice la componente (scalare):
     \begin{itemize}
@@ -193,14 +192,12 @@ Tale distanza viene spesso utilizzata in sostituzione della distanza euclidea, e
     \includegraphics[width=.6\textwidth]{assets/dist-mahalanobis-visual.png}
     \caption{}\label{fig:dist-mahalanobis-visual}
 \end{cimage}
-\\
 Un semplice approccio di <<anomaly detection>> consiste nel fitting gaussiano (calcolo di $\mu$ e $\Si$) dai soli pattern di funzionamento normale del sistema.
 I nuovi pattern, la cui distanza di Mahalanobis eccede una soglia data, sono considerati anomalie.
 \begin{warning}
     È efficace solo quando la distribuzione dei dati è gaussiana
 \end{warning}
 % paragraph Distanza Mahalanobis (end)
-\newpage
 \paragraph{Esempio stima di $\mu$ e $\si$ con $d = 2$}\label{par:esempio_stima_di_mu_e_si_con_d_} % (fold)
 Dato un training set di pattern bi-dimensionali composto da $n = 5$ elementi:
 \begin{cimage}
@@ -263,16 +260,16 @@ sia come moltiplicazioni tra due matrici dove $X$ è la matrice contenente i pat
     \end{center}
 \end{note}
 % paragraph Esempio stima di $\mu$ e $\si$ con $d = 2$ (end)
-% subsubsection Distribuzione Normale Multivariata (end)
+% subsection Distribuzione Normale Multivariata (end)
 %
-\subsubsection{Classificatore di Bayes con distribuzioni Multinormali}\label{sec:classificatore_di_bayes_con_distribuzioni_multinormali} % (fold)
+\subsection{Classificatore di Bayes con distribuzioni Multinormali}\label{sec:classificatore_di_bayes_con_distribuzioni_multinormali} % (fold)
 \begin{cimage}
     \includegraphics[width=.6\textwidth]{assets/bayes-distri-multi-visual.png}
     \caption{}\label{fig:bayes-distri-multi-visual}
 \end{cimage}
 In \cref{fig:bayes-distri-multi-visual} sono visualizzate le densità condizionali di $2$ classi di pattern, distribuiti con distribuzione normale $2$-dimensionale, corrette sulla base delle rispettive \textbf{probabilità a priori}.
 \\
-La classificazione è eseguita utilizzando la regola \textit{Bayesiana}: lo spazio è suddiviso in regioni non connesse, nel caso specifico $\fr_2$ è costituita da due componenti disgiunte.
+La classificazione è eseguita utilizzando la regola \textit{Bayesiana}: lo spazio è suddiviso in regioni non connesse, nel caso specifico $\Re_2$ è costituita da due componenti disgiunte.
 \begin{definition}{Decision Boundary}{}
     Un \textbf{decision boundary} o \textbf{decision surface} (superficie decisionale) è una zona di confine tra regioni che il classificatore associa a classi diverse; sul boundary la classificazione è ambigua.
     \\
@@ -283,9 +280,9 @@ La classificazione è eseguita utilizzando la regola \textit{Bayesiana}: lo spaz
         \item se le $2$ matrici di covarianza sono \textbf{arbitrarie}: la superficie decisionale è un \textbf{iper-quadratica};
     \end{itemize}
 \end{definition}
-% subsubsection Classificatore di Bayes con distribuzioni Multinormali (end)
+% subsection Classificatore di Bayes con distribuzioni Multinormali (end)
 %
-\subsubsection{Bayes e confidenza di classificazione}\label{sec:bayes_e_confidenza_di_classificazione} % (fold)
+\subsection{Bayes e confidenza di classificazione}\label{sec:bayes_e_confidenza_di_classificazione} % (fold)
 Un grande \textbf{vantaggio} del classificatore di Bayes, rispetto ad altri classificatori, è legato al fatto che esso produce un valore di output probabilistico, scalare compreso fra $0$ e $1$ e con somma pari a $1$ su tutte le classi, che può essere utilizzato come confidenza.
 \begin{cimage}
     \includegraphics[width=.6\textwidth]{assets/bayes-conf-class.png}
@@ -300,8 +297,8 @@ Se non si è interessati alla confidenza, nella \hyperref[eq:theor-bayes]{formul
 \[
     b = \argmax_{i = 1, \dots, s}{\pg{\dba{x}{w_i} \cdot \p{w_i}}}
 \]
-% subsubsection Bayes e confidenza di classificazione (end)
-\subsubsection{Bayes parametrico in pratica}\label{sec:bayes_parametrico_in_pratica} % (fold)
+% subsection Bayes e confidenza di classificazione (end)
+\subsection{Bayes parametrico in pratica}\label{sec:bayes_parametrico_in_pratica} % (fold)
 Molto spesso si fanno ipotesi azzardate sulla normalità delle densità di probabilità delle classi del problema senza aver sperimentalmente eseguito nessuna verifica; ciò porta a ottenere \textbf{cattivi risultati} di classificazione.
 \\
 Pertanto, dato un problema con $s$ classi e dato un training set (significativo), deve essere innanzitutto \textbf{valutata la rispondenza alla ``normalità'' delle $s$ distribuzioni}; questo può essere fatto in due modi:
@@ -327,31 +324,31 @@ Il problema della stima accurata della densità è ritenuto da molti un problema
     La \textbf{riduzione di dimensionalità} è una delle tecniche possibili per contrastare la \textbf{curse of dimensionality}.
 \end{critical}
 % paragraph Approcci non parametrici e stima delle Densita (end)
-% subsubsection Bayes parametrico in pratica (end)
+% subsection Bayes parametrico in pratica (end)
 %
-\subsubsection{Stima della Densità}\label{sec:stima_della_densita} % (fold)
-La probabilità che un pattern $x$ cada all'interno di $\fr$ è:
+\subsection{Stima della Densità}\label{sec:stima_della_densita} % (fold)
+La probabilità che un pattern $x$ cada all'interno di $\Re$ è:
 \[
-    P_1 = \int_{\fr}{\dpb{x'}\,\id[x']}
+    P_1 = \int_{\Re}{\dpb{x'}\,\id[x']}
 \]
-Dati $n$ pattern indipendenti, la probabilità che $k$ di questi cadano nella regione $\fr$ è calcolabile attraverso la \textbf{distribuzione binomiale}:
+Dati $n$ pattern indipendenti, la probabilità che $k$ di questi cadano nella regione $\Re$ è calcolabile attraverso la \textbf{distribuzione binomiale}:
 \[
     P_k = \binom{n}{k}P_1^k\pt{1 - P_1}^{n-k}
 \]
 il cui valore medio è $k = n \cdot P_1$, e quindi $P_1 = k / n$.
 \emptyln{}
-Assumendo che la regione $\fr$, di volume $V$, sia piccola e che quindi $\dpb{\cdot}$ non vari significativamente all'interno di essa:
+Assumendo che la regione $\Re$, di volume $V$, sia piccola e che quindi $\dpb{\cdot}$ non vari significativamente all'interno di essa:
 \[
-    P_k = \int_{\fr}\dpb{x'}\,\id[x'] \approx \dpb x \cdot V
+    P_k = \int_{\Re}\dpb{x'}\,\id[x'] \approx \dpb x \cdot V
 \]
 \begin{equation}\label{eq:stima-dens}
     \dpb{x} = \dfrac{P_1}{V} = \dfrac{k}{n \cdot V}
 \end{equation}
 %
-% subsubsection Stima della Densita (end)
+% subsection Stima della Densita (end)
 %
-\subsubsection{Parzen Window}\label{sec:parzen_window} % (fold)
-La regione $\fr$, denominata finestra (\textbf{Window}), è costituita da un ipercubo $d$-dimensionale, definito dalla funzione $\vphi$:
+\subsection{Parzen Window}\label{sec:parzen_window} % (fold)
+La regione $\Re$, denominata finestra (\textbf{Window}), è costituita da un ipercubo $d$-dimensionale, definito dalla funzione $\vphi$:
 \[
     \fvphi{u} = \begin{cases}
         1 & \ab{u_j} \le \dhalf,\, j = 1, \dots, d \\
@@ -394,10 +391,10 @@ In questo modo le \red{superfici decisionali} risultano molto più regolari (\re
     \includegraphics[width=.8\textwidth]{assets/parzen-soft-kern.png}
 \end{cimage}
 % paragraph Parzen Window con Soft Kernel (end)
-% subsubsection Parzen Window (end)
-% subsection Classificatore di Bayes (end)
+% subsection Parzen Window (end)
+% section Classificatore di Bayes (end)
 %
-\subsection{Nearest Neighbor}\label{sub:nn} % (fold)
+\section{Nearest Neighbor}\label{sec:nn} % (fold)
 Data una metrica $dist\pt\cdot$ nello spazio multidimensionale, il classificatore \textbf{nearest neighbor}, classifica un pattern $x$ con la stessa classe dell'elemento $x'$ a esso più vicino nel training set \red{TS}:
 \[
     \dist{x}{x'} = \min_{x_i \in TS}{\pg{\dist{x}{x_i}}}
@@ -422,7 +419,7 @@ Data una metrica $dist\pt\cdot$ nello spazio multidimensionale, il classificator
     \end{center}
 \end{example}
     %
-\subsubsection{k-NN}\label{sec:k_nn} % (fold)
+\subsection{k-NN}\label{sec:k_nn} % (fold)
 La regola \hyperref[sec:nn]{nearest neighbor} produce un partizionamento dello spazio, noto come \red{tassellazione di Voronoi}:
 \begin{cimage}
     \includegraphics[width=.6\textwidth]{assets/tass-voronoi-visual.png}
@@ -455,7 +452,7 @@ Nella pratica ($TS$ limitati), \textbf{aumentare $k$} significa estendere l'iper
         \includegraphics[width=.4\textwidth]{assets/es-mf-knn-visual.png}
     \end{center}
     Nell'esempio visto in precedenza, \cref{ex:maschi-femmine-bayes}, la regola \textit{$k$-NN} assegna il pattern $x$ alla classe $w_2$ (femmine --- rossi).
-    \\\\
+    \emptyln{}
     L'animazione successiva mostra il partizionamento dello spazio operato dalla regola $k$-NN sul training set con $5$ classi visto in precedenza al variare di $k$.
     \begin{center}
         \includegraphics[width=.7\textwidth]{assets/anim-knn-visual.png}
@@ -479,7 +476,6 @@ i voti ottenuti dal pattern $x$, allora le \red{confidenze} (sfumature in \cref{
 \end{cimage}
 % paragraph Confidenza di Classificazione (end)
 %
-\newpage
 \paragraph{Complessità Computazionale}\label{par:complessita_computazionale} % (fold)
 L'utilizzo di un classificatore NN o $k$-NN nel caso di training set di elevate dimensioni può diventare problematico:
 \begin{itemize}
@@ -510,9 +506,9 @@ Ciò comporta i seguenti \textbf{vantaggi}:
 Un singolo prototipo di classe può essere \red{derivato} come vettore medio dei vettori di quella classe nel $TS$.
 Processi di \textit{vector quantization} o clustering consentono di ottenere più prototipi per ogni classe.
 % paragraph Prototipi di Classi (end)
-% subsubsection k-NN (end)
+% subsection k-NN (end)
 %
-\subsubsection{NN e Metriche}\label{sec:metriche} % (fold)
+\subsection{NN e Metriche}\label{sec:metriche} % (fold)
 Il comportamento della regola $k$-NN è strettamente legato alla metrica (funzione distanza) adottata.
 La \red{distanza euclidea}, che rappresenta il caso $L_2$ nella definizione di metriche di Minkowsky, è sicuramente la metrica più utilizzata.
 \begin{equation}\label{eq:dis_euclidea}
@@ -628,45 +624,129 @@ Una similarità/distanza piuttosto utilizzata in applicazioni di \textit{informa
     \]
 \end{definition}
 % paragraph Similarita e Distanza Coseno (end)
-% subsubsection Metriche (end)
-% subsection Nearest Neighbor (end)
+% subsection Metriche (end)
+% section Nearest Neighbor (end)
 %
-\subsection{SVM}\label{sub:svm} % (fold)
+\section{SVM}\label{sub:svm} % (fold)
+La \red{teoria} che governa i meccanismi di funzionamento di \ac{svm} è stato introdotta da \textbf{Vapnik} a partire dal 1965 e perfezionata recentemente.
+\ac{svm} è uno degli strumenti più utilizzati per la classificazione dei pattern.
+\\
+Invece di stimare la densità di probabilità delle classi, Vapnik suggerisce di risolvere direttamente il problema di interesse, ovvero \textbf{determinare le superfici decisionali tra le classi} \red{classification boundaries}.
+\begin{itemize}
+    \item \ac{svm} \textbf{lineare} (la superficie di separazione è un \red{iperpiano}) e pattern del training set \textbf{linearmente separabili};
+    \item \ac{svm} \textbf{lineare} e pattern \textbf{non linearmente separabili}. Ci saranno inevitabilmente errori di classificazione nel training set non esistendo alcun iperpiano in grado di separare i pattern;
+    \item \ac{svm} \textbf{non lineare} senza ipotesi sulla separabilità;
+    \item estensione \textbf{multiclasse};
+\end{itemize}
+\subsection{Idea alla Base}\label{sub:idea_alla_base} % (fold)
+Date due classi di pattern multidimensionali linearmente separabili, tra tutti i possibili iperpiani di separazione, \ac{svm} determina quello in grado di \red{separare le classi} con maggiore \textbf{margine} possibile.
+\begin{quote}
+    Il \textbf{margine} è la distanza minima di punti delle due classi nel training set dall'iperpiano idividuato.
+\end{quote}
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/svm-idea-visual.png}
+\end{cimage}
+La massimizzazione del margine è legata alla \textbf{generalizzazione}.
+Se i pattern del training set sono classificati con ampio margine si può <<sperare>> che anche i pattern del test set vicini al confine tra le classi siano gestiti correttamente.
+% subsection Idea alla Base (end)
 %
-\subsubsection{Lineari: pattern linearmente separabili e non}\label{sec:lineari_pattern_linearmente_separabili_e_non} % (fold)
+\subsection{SVM Lineari}\label{sub:svm_lineari} % (fold)
+\subsubsection{Pattern Separabili}\label{sec:pattern_separabili} % (fold)
+Date due classi di pattern (\textbf{linearmente separabili}), e un training set $TS$ contenente $n$ campioni $\pt{x_1, y_1},\, \dots, \pt{x_n, y_n}$, dove $x_i \in \Re^d$ sono i \red{pattern multidimensionali} e $y_i \in \pg{+1,\, -1}$ le \red{etichette} delle due classi, esistono diversi iperpiani in grado di eseguire la separazione voluta.
+\begin{definition}{Iperpiano}{}
+    Un generico iperpiano è definito dai parametri $\pt{w,\,b}$:
+    \[
+        D\pt x = w \cdot x + b
+    \]
+    dove:
+    \begin{itemize}
+        \item $w$ è il vettore normale all'iperpiano;
+        \item $b / \nm w$ è la distanza dall'origine;
+        \item $D\pt x = 0$ è il luogo dei vettori sul piano;
+        \item \[
+                x = x_p + r\dfrac{w}{\nm w},
+                \qquad
+                D\pt x_p = 0
+            \]
+    \end{itemize}
+    \begin{center}
+        \includegraphics[width=.4\textwidth]{assets/linear-iperpiano-def.png}
+    \end{center}
+    \[
+        D\pt x = w \cdot x + b = r \cdot \nm w
+    \]
+    La \textbf{distanza} di un vettore $x$ dall'iperpiano vale pertanto:
+    \[
+        r = \dfrac{D \pt x}{\nm w}
+    \]
+    Gli iperpiani $\pt{w,\,b}$ che separano i pattern del $TS$, con distanza minima $1 / \nm w$ su ogni lato, soddisfano, per $i = 1,\,\dots,\,n$, le equazioni:
+    \[
+        \begin{matrix}
+            w \cdot x_i + b \ge +1 \qquad \text{se } y_i = +1 \\
+            w \cdot x_i + b \le -1 \qquad \text{se } y_i = -1
+        \end{matrix}
+    \]
+    o in modo più compatto:
+    \[
+        y_i\ps{w \cdot x_i + b} \ge 1 \qquad \text{per } i = 1,\,\dots,\,n
+    \]
+\end{definition}
+\begin{definition}{SVM Margine}{}
+    La \red{minima distanza} tra l'iperpiano di separazione e un pattern del training set è detta \textbf{margine} ($\tau$).
+    \begin{center}
+        \includegraphics[width=.4\textwidth]{assets/margine-def-es.png}
+        \captionof{figure}{Margine tra l'iperpiano e un pattern del $TS$}\label{fig:margine-def-es}
+    \end{center}
+    La distanza dei punti che giacciono sull'iperpiano $D\pt x = +1$ dall'iperpiano di separazione è $1 / \nm w$; lo stesso vale per i punti sull'iperpiano $D\pt x = -1$.
+    \\
+    Pertanto il \red{margine} è $\tau = \dfrac{2}{\nm w}$.
+\end{definition}
+L'iperpiano \textbf{ottimo} secondo \ac{svm} è quello che soddisfa i vincoli di separazione dei pattern e \textbf{massimizza il margine $\tau$}.
+\[
+    \begin{aligned}
+        \text{Minimizza:}&\qquad \nm w ^2 / 2 \\
+        \text{Vincoli:}&\qquad y_i\ps{w \cdot x_i + b} \ge 1 \qquad \text{per } i = 1,\,\dots,\,n
+    \end{aligned}
+\]
+I pattern del training set che giacciono sul margine (cerchi pieni in \cref{fig:margine-def-es}) sono detti \textbf{support vector}.
+Tali pattern, che costituiscono i casi più complessi, definiscono completamente la soluzione del problema, che può essere espressa come \red{funzione di solo tali pattern}, indipendentemente dalla dimensionalità dello spazio $d$ e dal numero $n$ di elementi in $TS$.
+% subsubsection Pattern Separabili (end)
+% subsection SVM Lineari (end)
+%
+\subsection{Lineari: pattern linearmente separabili e non}\label{sec:lineari_pattern_linearmente_separabili_e_non} % (fold)
 
-% subsubsection Lineari: pattern linearmente separabili e non (end)
+% subsection Lineari: pattern linearmente separabili e non (end)
 %
-\subsubsection{Non lineari}\label{sec:non_lineari} % (fold)
+\subsection{Non lineari}\label{sec:non_lineari} % (fold)
 
-% subsubsection Non lineari (end)
+% subsection Non lineari (end)
 %
-\subsubsection{Caso multiclasse}\label{sec:caso_multiclasse} % (fold)
+\subsection{Caso multiclasse}\label{sec:caso_multiclasse} % (fold)
 
-% subsubsection Caso multiclasse (end)
-% subsection SVM (end)
+% subsection Caso multiclasse (end)
+% section SVM (end)
 %
-\subsection{Multi classificatori}\label{sub:multi_classificatori} % (fold)
+\section{Multi classificatori}\label{sub:multi_classificatori} % (fold)
 %
-\subsubsection{Fusione a livello di decisione}\label{sec:fusione_a_livello_di_decisione} % (fold)
+\subsection{Fusione a livello di decisione}\label{sec:fusione_a_livello_di_decisione} % (fold)
 
-% subsubsection Fusione a livello di decisione (end)
+% subsection Fusione a livello di decisione (end)
 %
-\subsubsection{Fusione a livello di confidenza}\label{sec:fusione_a_livello_di_confidenza} % (fold)
+\subsection{Fusione a livello di confidenza}\label{sec:fusione_a_livello_di_confidenza} % (fold)
 
-% subsubsection Fusione a livello di confidenza (end)
+% subsection Fusione a livello di confidenza (end)
 %
-\subsubsection{Random Forest (Bagging)}\label{sec:random_forest_bagging_} % (fold)
+\subsection{Random Forest (Bagging)}\label{sec:random_forest_bagging_} % (fold)
 
-% subsubsection Random Forest (Bagging) (end)
+% subsection Random Forest (Bagging) (end)
 %
-\subsubsection{AdaBoost (Boosting)}\label{sec:adaboost_boosting_} % (fold)
+\subsection{AdaBoost (Boosting)}\label{sec:adaboost_boosting_} % (fold)
 
-% subsubsection AdaBoost (Boosting) (end)
+% subsection AdaBoost (Boosting) (end)
 %
-\subsubsection{Gradient Boosting}\label{sec:gradient_boosting} % (fold)
+\subsection{Gradient Boosting}\label{sec:gradient_boosting} % (fold)
 
-% subsubsection Gradient Boosting (end)
-% subsection Multi classificatori (end)
-% section Classificazione (end)
+% subsection Gradient Boosting (end)
+% section Multi classificatori (end)
+% chapter Classificazione (end)
 

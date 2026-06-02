@@ -1,14 +1,14 @@
 % ltex: language=it
-\section{Fondamenti}\label{sec:fondamenti} % (fold)
+\chapter{Fondamenti}\label{chap:fondamenti} % (fold)
 %
-\subsection{Dati e Pattern}\label{sub:dati_e_pattern} % (fold)
+\section{Dati e Pattern}\label{sub:dati_e_pattern} % (fold)
 I dati sono un ingrediente fondamentale del machine learning dove il comportamento dei modelli non è pre-programmato ma appreso dai dati stessi; termini come Data Science, Data Mining, Big Data enfatizzano il ruolo dei dati.
 Generalmente un campione (multidimensionale) nel dominio di interesse è definito \textbf{Data-point}.
 Si utilizza \textbf{Pattern} come sinonimo di data-point.
 \\
 Il \textbf{Pattern Recognition} è la disciplina che studia il riconoscimento dei pattern (non solo con tecniche di learning ma anche con algoritmi pre-programmati).
 L'intersezione con il Machine Learning è molto ampia.
-\subsubsection{Tipi di Pattern}\label{sec:tipi_di_pattern} % (fold)
+\subsection{Tipi di Pattern}\label{sec:tipi_di_pattern} % (fold)
 \paragraph{Numerici}\label{par:numerici} % (fold)
 Sono valori associati a caratteristiche misurabili o conteggi.
 Tipicamente continui in ogni caso soggetti a ordinamento.
@@ -21,7 +21,7 @@ Naturalmente gestiti da sistemi a regole e alberi di classificazione.
 Attraverso tecniche di \textit{encoding}, o \textit{embedding}, è possibile mapparli su numeri, e quindi utilizzare modelli che operano solo su dati numerici.
 Attenzione a \textit{ordinal encoding} arbitrari che non preservano semantica.
 % paragraph Categorici (end)
-% subsubsection Tipi di Pattern (end)
+% subsection Tipi di Pattern (end)
 \paragraph{Sequenze}\label{par:sequenze} % (fold)
 Pattern sequenziali con relazioni spaziali o temporali, spesso di lunghezza variabile.
 La posizione nella sequenza e le relazioni con i predecessori e successori sono molto importanti.
@@ -58,7 +58,7 @@ Dato un campo materiale con i seguenti $5$ valori possibili: $\{$Acciaio, Cement
 Fortunatamente i multi-classificatori basati su alberi tollerano bene l'ordinal encoding e spesso non è necessario ricorrere a one-hot encoding o altri embedding più complessi.
 % paragraph Encoding (end)
 %
-\subsubsection{Classificazione}\label{sub:classificazione} % (fold)
+\subsection{Classificazione}\label{sub:classificazione} % (fold)
 \begin{definition}{Classificazione}{clsf}
     Operazione di assegnazione di una \textbf{classe} a un pattern, si usa spesso anche il termine riconoscimento.
     È necessario apprendere una funzione capace di eseguire il mapping dallo spazio dei pattern allo spazio delle classi.
@@ -78,9 +78,9 @@ Fortunatamente i multi-classificatori basati su alberi tollerano bene l'ordinal 
     \end{itemize}
 \end{example}
 %
-% subsubsection Classificazione (end)
+% subsection Classificazione (end)
 %
-\subsubsection{Regressione}\label{sec:regressione} % (fold)
+\subsection{Regressione}\label{sec:regressione} % (fold)
 \begin{definition}{Regressione}{}
     Assegnazione di un valore continuo a un pattern, utile per la predizione di valori continui.
     \\
@@ -99,9 +99,9 @@ Fortunatamente i multi-classificatori basati su alberi tollerano bene l'ordinal 
         \item Object detection;
     \end{itemize}
 \end{example}
-% subsubsection Regressione (end)
+% subsection Regressione (end)
 %
-\subsubsection{Clustering}\label{sec:clustering} % (fold)
+\subsection{Clustering}\label{sec:clustering} % (fold)
 \begin{definition}{Clustering}{}
     Individuare gruppi (cluster) di pattern con caratteristiche simili.
     Le classi del problema non sono note e i pattern non etichettati: la natura non supervisionata del problema lo rende più complesso della classificazione.
@@ -118,9 +118,9 @@ Fortunatamente i multi-classificatori basati su alberi tollerano bene l'ordinal 
         \item Visione: segmentazione non supervisionata.
     \end{itemize}
 \end{example}
-% subsubsection Clustering (end)
+% subsection Clustering (end)
 %
-\subsubsection{Riduzione Dimensionalità}\label{sec:riduzione_dimensionalita} % (fold)
+\subsection{Riduzione Dimensionalità}\label{sec:riduzione_dimensionalita} % (fold)
 \begin{definition}{Riduzione di dimensionalità}{}
     Ridurre il numero di dimensioni dei pattern di input.
     Consiste nell'apprendimento di un mapping da $\R^d$ a $\R^k$, con $k < d$.
@@ -129,12 +129,12 @@ Fortunatamente i multi-classificatori basati su alberi tollerano bene l'ordinal 
 \end{definition}
 Molto utile per rendere trattabili problemi con dimensionalità molto elevata, per scartare informazioni ridondanti e/o instabili, e per visualizzare in 2D o 3D pattern con $d > 3$.
 \begin{cimage}
-    \includegraphics[width=.6\textwidth]{assets/rid-dim-es.png}
+    \includegraphics[width=.5\textwidth]{assets/rid-dim-es.png}
 \end{cimage}
-% subsubsection Riduzione Dimensionalita (end)
-% subsection Dati e Pattern (end)
+% subsection Riduzione Dimensionalita (end)
+% section Dati e Pattern (end)
 %
-\subsection{Representation Learning}\label{sec:representation_learning} % (fold)
+\section{Representation Learning}\label{sec:representation_learning} % (fold)
 Il successo di molte applicazioni di machine learning dipende dall'efficacia di rappresentazione dei pattern in termini di features.
 La definizione di features ad-hoc (\textbf{hand-crafted}) per le diverse applicazioni prende il nome di \textit{feature engineering}.
 \\
@@ -150,16 +150,15 @@ Utilizzano come input i raw data ed estraendo automaticamente da essi le feature
 \end{itemize}
 % paragraph Problemi nel dominio Visione (end)
 %
-% subsection Representation Learning (end)
+% section Representation Learning (end)
 %
-\subsection{Modelli Discriminativi vs Generativi}\label{sec:modelli_discriminativi_vs_generativi} % (fold)
+\section{Modelli Discriminativi vs Generativi}\label{sec:modelli_discriminativi_vs_generativi} % (fold)
 I modelli \textbf{discriminativi} (classificatori), hanno l'obiettivo di assegnare un nuovo datapoint a una classe.
 La cosa importante è apprendere il decision boundary che separa le classi.
 \begin{cimage}
     \includegraphics[width=.6\textwidth]{assets/mod-discri.png}
     \caption{Classificazione $\equiv$ su quale lato del decision boundary cade il nuovo dato?}
 \end{cimage}
-\newpage
 I modelli \textbf{generativi} apprendono (esplicitamente/implicitamente) la distribuzione probabilistica degli esempi usati per il loro addestramento.
 Dopo l'addestramento possono:
 \begin{itemize}
@@ -170,8 +169,8 @@ Dopo l'addestramento possono:
 \begin{cimage}
     \includegraphics[width=.6\textwidth]{assets/mod-gen.png}
 \end{cimage}
-% subsection Modelli Discriminativi vs Generativi (end)
-\subsection{Generative AI}\label{sec:generative_ai} % (fold)
+% section Modelli Discriminativi vs Generativi (end)
+\section{Generative AI}\label{sec:generative_ai} % (fold)
 La moderna \ac{genai} fa largo uso di modelli generativi basati su reti neurali profonde (GAN, VAE, LLM).
 \begin{warning}
     Il termine generative può essere ambiguo in quanto le tecniche di \ac{genai} possono anche risolvere problemi che non richiedono la produzione creativa di contenuti.
@@ -180,9 +179,9 @@ La moderna \ac{genai} fa largo uso di modelli generativi basati su reti neurali 
 \begin{cimage}
     \includegraphics[width=.6\textwidth]{assets/gen-es.png}
 \end{cimage}
-% subsection Generative AI (end)
+% section Generative AI (end)
 %
-\subsection{Apprendimento}\label{sec:apprendimento} % (fold)
+\section{Apprendimento}\label{sec:apprendimento} % (fold)
 \begin{definition}{Addestramento Supervisionato}{}
     Sono note le classi dei pattern utilizzati per l'addestramento:
     \begin{itemize}
@@ -220,9 +219,9 @@ La moderna \ac{genai} fa largo uso di modelli generativi basati su reti neurali 
     Addestramento continuo (per tutta la vita): attivo in working mode, coesistenza di approccio supervisionato e non.
 \end{definition}
 %
-% subsection Apprendimento (end)
+% section Apprendimento (end)
 %
-\subsection{Reinforcement Learning (RL)}\label{sec:reinforcement_learning_rl_} % (fold)
+\section{Reinforcement Learning (RL)}\label{sec:reinforcement_learning_rl_} % (fold)
 L'obiettivo è apprendere un comportamento ottimale a partire dalle esperienze passate.
 Un agente esegue azioni che modificano l'ambiente, provocando messaggi da uno stato all'altro.
 Quando l'agente ottiene risultati positivi riceve una ricompensa (\textit{reward}) che però può essere temporalmente ritardata rispetto all'azione, o alla sequenza di azioni, che l'hanno determinata.
@@ -230,34 +229,31 @@ L'obiettivo è quello di apprendere l'azione ottimale in ciascun stato, in modo 
 \begin{cimage}
     \includegraphics[width=.6\textwidth]{assets/rl.png}
 \end{cimage}
-\\
 Nella pratica è molto difficile ottenere esempi che siano allo stesso tempo corretti e rappresentativi di tutte le situazioni in cui l'agente deve agire.
 Pertanto il classico approccio supervisionato non è facilmente applicabile.
 Numerose sono le applicazioni in robotica, e uno degli approcci più noti è il \textbf{Q Learning}.
 \\
 Una sua estensione (deep) denominata \ac{deeprl} è alla base dei successi ottenuti da Google DeepMind.
-% subsection Reinforcement Learning (RL) (end)
+% section Reinforcement Learning (RL) (end)
 %
-\subsection{Parametri e Funzione Obiettivo}\label{sec:parametri_e_funzione_obiettivo} % (fold)
+\section{Parametri e Funzione Obiettivo}\label{sec:parametri_e_funzione_obiettivo} % (fold)
 In generale, il comportamento di un modello $M$ di machine learning è regolato da un set di parametri $\te$.
 Per rendere esplicita questa dipendenza indichiamo il modello come $M\pt \te$.
 L'apprendimento consiste nel determinare il valore ottimo $\te[*]$ di questi parametri.
 \\
 Dato un training set $Train$ e un insieme di parametri, la \textbf{funzione obiettivo} $f\pt{Train, M\pt \te}$ può indicare:
 \begin{itemize}
-    \item l'ottimalità della soluzione (da massimizzare)
-        \[\te[*] = \argmax_{\te}{f\pt{Train, M\pt \te}}\]
-    \item oppure l'errore o perdita (\textbf{loss-function}) da minimizzare
-        \[\te[*] = \argmin_{\te}{f\pt{Train, M\pt \te}}\]
+    \item l'ottimalità della soluzione (da massimizzare) \[ \te[*] = \argmax_{\te}{f\pt{Train, M\pt \te}} \]
+    \item oppure l'errore o perdita (\textbf{loss-function}) da minimizzare \[ \te[*] = \argmin_{\te}{f\pt{Train, M\pt \te}} \]
 \end{itemize}
 $f\pt{Train, M\pt \te}$ può essere ottimizzata:
 \begin{itemize}
     \item \textbf{esplicitamente}, con metodi che operano a partire dalla sua definizione matematica;
     \item \textbf{implicitamente}, utilizzando euristici che modificano i parametri in modo coerente con $f$;
 \end{itemize}
-% subsection Parametri e Funzione Obiettivo (end)
+% section Parametri e Funzione Obiettivo (end)
 %
-\subsubsection{Iperparametri}\label{sec:iperparametri} % (fold)
+\subsection{Iperparametri}\label{sec:iperparametri} % (fold)
 Stabilito il modello da utilizzare, prima dell'apprendimento vero e proprio, deve essere definito il valore dei cosiddetti \textbf{iperparametri}.
 \begin{definition}{Iperparametri}{iperparam}
     Gli iperparametri $H$ definiscono i dettagli architetturali del modello e della corrispondente procedura di training.
@@ -276,8 +272,8 @@ Al termine della procedura si scelgono gli iperparametri $H^*$ che hanno fornito
 \begin{cimage}
     \includegraphics[width=.4\textwidth]{assets/sel-iperpar.png}
 \end{cimage}
-% subsubsection Iperparametri (end)
-\subsubsection{Training, Validation, Test}\label{sec:training_validation_test} % (fold)
+% subsection Iperparametri (end)
+\subsection{Training, Validation, Test}\label{sec:training_validation_test} % (fold)
 \begin{definition}{Training Set}{ts}
     Il Training Set è l'insieme di pattern su cui addestrare il modello, trovando il valore ottimo per i parametri $\te$.
 \end{definition}
@@ -343,17 +339,17 @@ In questo modo si ha \textit{overfitting} del test set.
     Non usare il test set per orientare le scelte durante lo sviluppo di un sistema, specialmente quando le dimensioni del test set sono limitate ed è forte il rischio di overfitting.
 \end{warning}
 % paragraph Cherry Picking (end)
-% subsubsection Training, Validation, Test (end)
+% subsection Training, Validation, Test (end)
 %
-\subsubsection{Partizionare i Dati}\label{sec:partizionare_i_dati} % (fold)
+\subsection{Partizionare i Dati}\label{sec:partizionare_i_dati} % (fold)
 Partizionare i dati in dati in Training, Validation e Test, richiede in genere di generare gli indici degli elementi da assegnare ai diversi insieme per poi procedere alla suddivisione facendo attenzione a dividere nello stesso modo anche le etichette o valori target.
 \\
 La funzione \texttt{train\_test\_split} di Scikit Learn automatizza questa fase, a partire dalle proporzioni specifiche in input, fornendo anche supporto per shuffling (ordinamento casuale dei pattern) e stratification.
 \\
 Relativamente a Cross Validation Scikit Learn mette a disposizione la funzione \texttt{cross\_val\_score} che a partire da un unico training set e il numero $K$ di fold, valuta $K$ volte il sistema e ritorna un array di $K$ score.
-% subsubsection Partizionare i Dati (end)
+% subsection Partizionare i Dati (end)
 %
-\subsubsection{Selezione Automatica Iperparametri}\label{sec:selezione_automatica_iperparametri} % (fold)
+\subsection{Selezione Automatica Iperparametri}\label{sec:selezione_automatica_iperparametri} % (fold)
 La ricerca di valori ottimali per gli iperparametri può essere lunga e noiosa.
 \paragraph{Grid Search}\label{par:grid_search} % (fold)
 Per ogni iperparametro si definisce un insieme di valori da provare.
@@ -377,9 +373,9 @@ Prestare particolare attenzione se vengono selezionato valori di bordo per uno o
 Sorteggia casualmente valori di iperparametri dai range/distribuzioni specificati/e, eseguendo un numero prefissato di iterazioni.
 Funzione \texttt{RandomizedSearchCV}.
 % paragraph Random Search (end)
-% subsubsection Selezione Automatica Iperparametri (end)
+% subsection Selezione Automatica Iperparametri (end)
 %
-\subsubsection{Auto-ML}\label{sec:auto_ml} % (fold)
+\subsection{Auto-ML}\label{sec:auto_ml} % (fold)
 I sistemi Auto-ML effettuano la scelta automatica del modello migliore (es. SVM, Random Forest, Rete Neurale MLP), per la risoluzione di un problema.
 Oltre al modello possono essere scelte automaticamente tecniche di data/feature processing.
 L'approccio naive prevede un ulteriore <<ciclo esterno>> è sul tipo di modello.
@@ -390,9 +386,9 @@ Auto-ML è solitamente eseguito su risorse remote in Cloud (dimensionate opportu
 \begin{cimage}
     \includegraphics[width=.8\textwidth]{assets/automl.png}
 \end{cimage}
-% subsubsection Auto-ML (end)
+% subsection Auto-ML (end)
 %
-\subsection{Metriche per la misura di prestazioni}\label{sub:metriche_per_la_misura_di_prestazioni} % (fold)
+\section{Metriche per la misura di prestazioni}\label{sub:metriche_per_la_misura_di_prestazioni} % (fold)
 Una possibilità consiste nell'utilizzare direttamente la funzione obiettivo per quantificare le prestazioni.
 In genere però si preferisce una misura legata direttamente alla semantica del problema.
 In un problema di Classificazione \cref{sub:classificazione}, l'accuratezza di classificazione $\ps{0\dots100\%}$ è la percentuale di pattern correttamente classificati.
@@ -413,7 +409,7 @@ Nei problemi di Regressione \cref{sec:regressione}, si valuta in genere l'\ac{rm
     RMSE = \sqrt{\dfrac{1}{N}\sum_{i = 1\dots N}{\pt{pred_i - true_i}^2}}
 \]
 %
-\subsubsection{Matrice di Confusione}\label{sec:matrice_di_confusione} % (fold)
+\subsection{Matrice di Confusione}\label{sec:matrice_di_confusione} % (fold)
 La matrice di confusione (confusion matrix) è molto utile nei problemi di classificazione \cref{sub:classificazione}, per capire come sono distribuiti gli errori.
 Nell'esempio di un problema di classificazione digit ($10$ classi):
 \begin{itemize}
@@ -427,7 +423,6 @@ Nell'esempio di un problema di classificazione digit ($10$ classi):
 \end{cimage}
 La matrice può essere normalizzata per righe (classi \textit{True}) per passare da numero di errori a percentuali di errore.
 Dopo la normalizzazione i valori sulle righe hanno somma $1$.
-\newpage
 \begin{quote}{}{}
     Funzione \texttt{plot\_confusion\_matrix} disponibile in scikit-learn
 \end{quote}
@@ -435,9 +430,9 @@ Dopo la normalizzazione i valori sulle righe hanno somma $1$.
     \includegraphics[width=.6\textwidth]{assets/norm-conf-matrix.png}
     \caption{Matrice di confusione normalizzata}\label{fig:norm-conf-matrix}
 \end{cimage}
-% subsubsection Matrice di Confusione (end)
+% subsection Matrice di Confusione (end)
 %
-\subsubsection{Classificazione Binaria}\label{sec:classificazione_binaria} % (fold)
+\subsection{Classificazione Binaria}\label{sec:classificazione_binaria} % (fold)
 Dato un \textbf{classificatore binario}, e $T = P + N$ pattern da classificare ($P$ positivi e $N$ negativi), il risultato di ciascuno dei tentativi di classificazione può essere:
 \begin{itemize}
     \item \textbf{\ac{tp}}: un pattern positivo è stato correttamente assegnato ai positivi;
@@ -466,9 +461,9 @@ Le relative frequenze (\ac{tnr}, \ac{fpr}, \ac{fnr}, \ac{tpr}) occupano le stess
     \caption{Errori sulla matrice di confusione normalizzata e non}\label{fig:conf-mat-err}
 \end{cimage}
 %
-% subsubsection Classificazione Binaria (end)
+% subsection Classificazione Binaria (end)
 %
-\subsubsection{\ac{det} e \ac{roc}}\label{sec:det_e_roc} % (fold)
+\subsection{\ac{det} e \ac{roc}}\label{sec:det_e_roc} % (fold)
 L'output di un classificatore è spesso \textbf{probabilistico} (valore continuo in $0\dots1$).
 In un problema di classificazione binaria i pattern possono essere predetti come positivi (o negativi) confrontando l'output (della classe positiva) con una soglia $t$.
 Soglie restrittive (elevate) riducono i false positive a discapito dei false negative; viceversa soglie tolleranti (basse) riducono i false negative a discapito dei false positive.
@@ -477,7 +472,6 @@ Soglie restrittive (elevate) riducono i false positive a discapito dei false neg
     \includegraphics[width=.6\textwidth]{assets/fpr-fnr-error-t.png}
     \caption{False Positive e Negative Rate al variare della tolleranza}\label{fig:fpr-fnr-error-t}
 \end{cimage}
-\\
 Le due curve in \cref{fig:fpr-fnr-error-t}, possono essere <<condensate>> in una curva \ac{det} che nasconde la soglia.
 \begin{cimage}
     \includegraphics[width=.4\textwidth]{assets/det-curve.png}
@@ -486,7 +480,6 @@ Piuttosto usata è anche la rappresentazione \ac{roc} che in ordinata riporta Tr
 \begin{cimage}
     \includegraphics[width=.4\textwidth]{assets/roc-curve.png}
 \end{cimage}
-\newpage
 \paragraph{Area Under Curve (AUC)}\label{par:area_under_curve_auc_} % (fold)
 Area Under Curve (AUC)Quale dei due sistemi (rosso, blu) è migliore dell'altro?
 \begin{cimage}
@@ -503,9 +496,9 @@ Può essere calcolata come integrale numerico attraverso il metodo dei trapezi.
 \end{cimage}
 %
 % paragraph Area Under Curve (AUC) (end)
-% subsubsection det e roc (end)
+% subsection det e roc (end)
 %
-\subsubsection{Precision e Recall}\label{sec:precision_e_recall} % (fold)
+\subsection{Precision e Recall}\label{sec:precision_e_recall} % (fold)
 Notazione molto usata in Information Retrieval e in generale nelle applicazioni di detection o di classificazione, con classi sbilanciate.
 Precision/Recall sono definiti a partire da \ac{tn}, \ac{fp}, \ac{fn}, \ac{tp} (\hyperref[sec:classificazione_binaria]{classificazione binaria}).
 \begin{itemize}
@@ -529,9 +522,9 @@ La rappresentazione grafica più utile per comprendere Precision e Recall è la 
 \end{cimage}
 Nella classificazione multi-classe, precision e recall si possono calcolare per ciascuna classe (considerando la classe come Positive e gli esempi di tutte le altre come Negative), come nell'esempio sopra.
 % paragraph Precision e Recall su matrice $2\times2$ (end)
-% subsubsection Precision e Recall (end)
+% subsection Precision e Recall (end)
 %
-\subsubsection{Indicatori compatti}\label{sec:indicatori_compatti} % (fold)
+\subsection{Indicatori compatti}\label{sec:indicatori_compatti} % (fold)
 Gli indicatori compatti (a singolo valore) sono utili per comparare l'accuratezza di diversi modelli.
 \paragraph{F1-score}\label{par:f_score} % (fold)
 Comprende valori continui in $0\dots1$, viene calcolato come \textit{media armonica} di Precision e Recall:
@@ -560,26 +553,25 @@ Nelle applicazioni dove è importante operare a Precision (o Recall) definiti me
     \end{matrix}
 \]
 % paragraph \acf{ap} (end)
-% subsubsection Indicatori compatti (end)
+% subsection Indicatori compatti (end)
 %
-\subsubsection{Sensitivity e Specificity}\label{sec:sensitivity_e_specificity} % (fold)
+\subsection{Sensitivity e Specificity}\label{sec:sensitivity_e_specificity} % (fold)
 In diagnostica medica si usano i termini Sensitivity e Specificity per caratterizzare la bontà di un test.
 La classe negative corrisponde ai soggetti <<sani/non-infetti>>, la classe positive ai soggetti <<malati/infetti>>.
 Partendo dalla \cref{fig:prec-recall-cake} si può ricavare:
 \begin{cimage}
     \includegraphics[width=.4\textwidth]{assets/sens-spec-form.png}
 \end{cimage}
-\\
 Si può dire sia che $Sensitivity \equiv Recall \equiv TPR$, sia $Specificity \equiv TNR$.
 Mentre la Specificity indica quanto è accurato il sistema: corrisponde alla Recall della \textbf{classe negativa}.
 \begin{quote}
     Entrambe le misurazioni sono disponibili sulla diagonale della matrice di confusione normalizzata.
 \end{quote}
-% subsubsection Sensitivity e Specificity (end)
+% subsection Sensitivity e Specificity (end)
 %
-% subsection Metriche per la misura di prestazioni (end)
+% section Metriche per la misura di prestazioni (end)
 %
-\subsection{Object Detection: AP e mAP}\label{sub:object_detection_ap_e_map} % (fold)
+\section{Object Detection: AP e mAP}\label{sub:object_detection_ap_e_map} % (fold)
 \begin{definition}{Detection}{}
     Per ogni oggetto presente in un'immagine o frame di un video, determina la probabilità di appartenenza alla classe più probabile e la corrispondente bounding box.
 \end{definition}
@@ -596,7 +588,7 @@ Come si può quantificare il tutto con uno scalare per rendere i sistemi confron
 \end{itemize}
 Per calcolare \ac{tp} e \ac{fp} si considera una prediction corretta quando la classe è giusta e la \ac{iou} delle due bounding box (rilevata e vera) è maggiore di un valore scalare dato.
 %
-\subsubsection{Problemi Closed e Open set}\label{sec:problemi_closed_e_open_set} % (fold)
+\subsection{Problemi Closed e Open set}\label{sec:problemi_closed_e_open_set} % (fold)
 Nel caso più semplice, e più comune nei benchmark di machine learning, si assume che il pattern da classificare appartenga a una delle classi note (\textbf{closed set}).
 In molti casi reali invece i pattern da classificare possono appartenere a una delle classi note o a nessuna di queste (\textbf{open set}).
 \\
@@ -613,7 +605,7 @@ Due soluzioni:
     Analogamente possiamo considerare solo la classe \textbf{positivi} e un sistema (con soglia) in grado di calcolare la probabilità $p$ di appartenenza di un pattern alla classe.
     Sia $t$ il valore di soglia, allora il pattern vioene classificato come positivo se $p > t$, come negativo in caso contrario.
 \end{example}
-% subsubsection Problemi Closed e Open set (end)
+% subsection Problemi Closed e Open set (end)
 %
 \paragraph{Sistemi Biometrici}\label{par:sistemi_biometrici} % (fold)
 Un sistema biometrico esegue la \textbf{verifica d'identità} ($1:1$) o \textbf{identificazione} ($1:N$) di un soggetto sulla base di una sua caratteristica fisica o comportamentale.
@@ -627,9 +619,9 @@ L'identificazione è un problema open set multi'classe.
     Gli errori sono \textbf{\ac{fpir}} e \textbf{\ac{fnir}}
 \end{quote}
 % paragraph Sistemi Biometrici (end)
-% subsection Object Detection: AP e mAP (end)
+% section Object Detection: AP e mAP (end)
 %
-\subsection{Convergenza}\label{sub:convergenza} % (fold)
+\section{Convergenza}\label{sub:convergenza} % (fold)
 Il primo obiettivo da perseguire durante l'addestramento è la \textbf{convergenza} sul Train set.
 \\
 Consideriamo un classificatore il cui addestramento prevede un processo \textit{iterativo}.
@@ -656,7 +648,7 @@ Si ha convergenza quando:
     \end{itemize}
 \end{critical}
 %
-\subsubsection{Generalizzazione e Overfitting}\label{sec:generalizzazione_e_overfitting} % (fold)
+\subsection{Generalizzazione e Overfitting}\label{sec:generalizzazione_e_overfitting} % (fold)
 Ricordando che l'obiettivo è massimizzare l'accuratezza sul Test.
 Nell'ipotesi che Valid sia rappresentativo di Test, si pone l'obiettivo di massimizzare l'accuratezza su Valid.
 \\
@@ -678,9 +670,9 @@ Buona norma partire con pochi gradi di libertà (controllabili attraverso iperpa
 Inoltre influenzano la regolarità della soluzione appresa, come ad esempio la regolarità del decision boundary nella classificazione o regolarità di una funzione approssimante nella regressione.
 La regolarità della soluzione può essere talvolta controllata aggiungendo un fattore regolarizzante alla loss-function che penalizza le soluzioni irregolari.
 % paragraph Controllare l'Overfitting (end)
-% subsubsection Generalizzazione e Overfitting (end)
+% subsection Generalizzazione e Overfitting (end)
 \begin{cimage}
     \includegraphics[width=.6\textwidth]{assets/main-recipe.png}
 \end{cimage}
-% subsection Convergenza (end)
-% section Fondamenti (end)
+% section Convergenza (end)
+% chapter Fondamenti (end)

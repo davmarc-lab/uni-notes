@@ -22,36 +22,40 @@
 
 \newtcbtheorem[number within=section, list inside=def]{definition}{Definizione}{
     enhanced, breakable,
+    halign=left,
     colback=gh-purple-bg,
     colframe=gh-purple,
     fonttitle=\bfseries,
     coltitle=gh-purple,
     attach title to upper,
-    after title={\enspace--\enspace},
+    after title={\enspace---\enspace},
     boxrule=0.5pt,
     arc=2pt,
     description font=\itshape,
     label type=definition,
+    after=\noindent\ignorespacesafterend
 }{def}
 
 \newtcbtheorem[number within=section, list inside=th]{theorem}{Teorema}{
     enhanced, breakable,
+    halign=left,
     colback=gh-red-bg,
     colframe=gh-red,
     fonttitle=\bfseries,
     coltitle=white,
     colbacktitle=gh-red,
-    % attach boxed title to top left={xshift=3mm, yshift=-3mm},
     boxed title style={sharp corners, size=small},
     arc=2pt,
     separator sign={:},
-    label type=theorem
+    label type=theorem,
+    after=\noindent\ignorespacesafterend
 }{th}
 
 \renewcommand{\qedsymbol}{\textcolor{gh-red}{\ensuremath{\blacksquare}}}
 \newtcolorbox{proofbox}[1][Proof]{
     enhanced,
     breakable,
+    halign=left,
     colback=gh-red-bg!95!gh-red,
     colframe=gh-red,
     attach title to upper,
@@ -70,13 +74,15 @@
     underlay={
         \node[anchor=south east, outer sep=5pt] at (frame.south east) {\qedsymbol};
     },
-    label type=proof
+    label type=proof,
+    after=\noindent\ignorespacesafterend
 }
 \renewenvironment{proof}[1][Dimostrazione]{\begin{proofbox}[#1]}{\end{proofbox}}
 
 \newtcbtheorem[number within=section]{outerproof}{Dimostrazione}{
     enhanced,
     breakable,
+    halign=left,
     colback=gh-red-bg,
     colframe=gh-red,
     fonttitle=\bfseries\itshape,
@@ -91,11 +97,13 @@
         \node[anchor=south east, outer sep=6pt] at (frame.south east) {\qedsymbol};
     },
     label type=proof,
+    after=\noindent\ignorespacesafterend
 }{prf}
 \newenvironment{proofblock}[1]{\begin{outerproof}{}{#1}}{\end{outerproof}}
 
 \newtcbtheorem[number within=section, list inside=prop]{proposition}{Proposizione}{
     enhanced, breakable,
+    halign=left,
     colback=gray!2,
     colframe=gh-gray-border,
     fonttitle=\bfseries,
@@ -105,11 +113,13 @@
     boxrule=0.5pt,
     arc=2pt,
     description font=\itshape,
-    label type=proposition
+    label type=proposition,
+    after=\noindent\ignorespacesafterend
 }{prop}
 
 \newtcbtheorem[number within=section, list inside=lem]{lemma}{Lemma}{
     enhanced, breakable,
+    halign=left,
     colback=gh-blue-bg,
     colframe=gh-blue!50!gh-gray-border,
     fonttitle=\bfseries,
@@ -119,11 +129,13 @@
     boxrule=0.5pt,
     arc=2pt,
     description font=\itshape,
-    label type=lemma
+    label type=lemma,
+    after=\noindent\ignorespacesafterend
 }{lem}
 
 \newtcbtheorem[number within=section, list inside=cor]{corollary}{Corollario}{
     enhanced, breakable,
+    halign=left,
     colback=white,
     colframe=gh-gray-border,
     fonttitle=\bfseries,
@@ -133,11 +145,13 @@
     boxrule=0.8pt,
     arc=2pt,
     description font=\itshape,
-    label type=corollary
+    label type=corollary,
+    after=\noindent\ignorespacesafterend
 }{cor}
 
 \newtcbtheorem[number within=section]{example}{Esempio}{
     enhanced, breakable,
+    halign=left,
     colback=gh-green-bg,
     colframe=gh-green,
     fonttitle=\bfseries,
@@ -147,11 +161,13 @@
     boxrule=0.5pt,
     arc=2pt,
     description font=\itshape,
-    label type=example
+    label type=example,
+    after=\noindent\ignorespacesafterend
 }{ex}
 
 \newtcbtheorem[number within=section]{remark}{Osservazione}{
     enhanced, breakable,
+    halign=left,
     colback=gh-orange-bg,
     colframe=gh-orange,
     fonttitle=\bfseries,
@@ -161,10 +177,12 @@
     boxrule=0.5pt,
     arc=2pt,
     description font=\itshape,
+    after=\noindent\ignorespacesafterend
 }{rem}
 
 \newtcbtheorem[number within=section, list inside=ax]{axiom}{Assioma}{
     enhanced, breakable,
+    halign=left,
     colback=gh-red-bg,
     colframe=gh-red,
     fonttitle=\bfseries,
@@ -175,4 +193,5 @@
     arc=2pt,
     description font=\itshape,
     label type=axiom,
+    after=\noindent\ignorespacesafterend
 }{ax}
