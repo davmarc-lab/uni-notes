@@ -306,7 +306,7 @@ Lo split può essere random (shuffling) oppure mirato, es. per mantenere separat
 Nel caso di \textit{serie temporali}, dove il sistema è addestrato su un periodo storico e produrre previsioni per un periodo successivo, uno split random non è corretto (porta a una sovrastima delle prestazioni) in quanto il training set include data point temporalmente vicini a quelli di test.
 % paragraph Set Disgiunti (end)
 %
-\paragraph{K-fold Cross-Validation}\label{par:paragraph_name} % (fold)
+\paragraph{K-fold Cross-Validation}\label{par:k-fold-cross-val} % (fold)
 Una scelta più robusta degli iperparametri si ottiene con la procedura di K-fold Cross-Validation.
 Nell'ipotesi di $15000$ pattern totali e $k = 5$:
 \begin{itemize}
@@ -323,7 +323,7 @@ Per ogni combinazione di iperparametri $H_i$ che si vuole valutare:
 \end{itemize}
 Si sceglie la combinazione di iperparametri con migliore $avg\_acc$.
 Scelti gli iperparametri ottimali si riaddestra il modello su tutto il training set ($5$ fold) e, solo a questo punto, si verificano le prestazioni sul \textit{test set}.
-\begin{note}[Leave-one-out]{}
+\begin{note}[Leave-one-out]
     Caso estremo di cross-validation dove i fold hanno dimensione $1$.
     Visto il costo computazionale, si utilizza quando i pattern sono pochi.
 \end{note}

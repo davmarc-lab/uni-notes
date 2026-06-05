@@ -133,7 +133,7 @@ Solitamente si assume che la distribuzione valga $0$ a distanze maggiori di $3\s
 % subsection Distribuzione Normale $d=1$ (end)
 %
 \subsection{Distribuzione Normale Multivariata}\label{sec:distribuzione_normale_multivariata} % (fold)
-\begin{note}[Notazione]{}
+\begin{note}[Notazione]
     Per evitare confusione utilizziamo a pedice l'indice del pattern e (ove necessario) ad apice la componente (scalare):
     \begin{itemize}
         \item $x_i$ pattern i-esimo (vettore);
@@ -249,7 +249,7 @@ sia come moltiplicazioni tra due matrici dove $X$ è la matrice contenente i pat
     \includegraphics[width=.8\textwidth]{assets/res-es-mu-si-distr-multi.png}
     \caption{Procedimenti conclusivi per ottenere $\Si$}\label{fig:res-es-mu-si-distr-multi}
 \end{cimage}
-\begin{note}[In forma grafica]{}
+\begin{note}[In forma grafica]
     \begin{center}
         \includegraphics[width=.4\textwidth]{assets/es-mu-si-visual-top.png}
         \captionof{figure}{Vista dall'alto}\label{fig:es-mu-si-visual-top}
@@ -862,18 +862,121 @@ Una volta determinati gli $\al[*]_i$, la \red{superficie di separazione}, regola
 \[
     D\pt x = \sum_{i = 1,\,\dots,\,n}{\al[*]_i y_i\red{K\pt{x,\,x_i}} + b^*}
 \]
+\begin{cimage}
+    \includegraphics[width=.3\textwidth]{assets/svm-no-lin-es.png}
+    \caption{}\label{fig:svm-no-lin-es}
+\end{cimage}
 % subsubsection Kernel Functions (end)
 % subsection SVM Non lineari (end)
 %
 \subsection{SVM Multiclasse}\label{sec:svm_multiclasse} % (fold)
-
+\ac{svm} è in grado di determinare la \red{superficie di separazione} tra $2$ classi di pattern, nel caso in cui si voglia gestire problemi con più di due classi esistono diverse soluzioni.
+Le più comuni sono:
+\begin{itemize}
+    \item \textbf{One-Against-One};
+    \item \textbf{One-Against-All};
+\end{itemize}
+\begin{definition}{\ac{svm} One-Against-All}{svm-one-ag-all}
+    Date $s$ classi $w_1,\,w_2,\,\dots,\,w_s$.
+    \\
+    Per ogni classe $w_k$, si determina con \ac{svm} la superficie di separazione tra i pattern di $w_k$, etichettati $+1$, da una parte e i pattern di tutte le rimanenti classi $w_h$, $h \ne k$ etichettati $-1$, dall'altra.
+    \\
+    Si ottiene la funzione $D_x\pt x$ che indica quanto $x$ è distante dalla superficie decisionale in direzione di $w_k$; \textbf{maggiore} è $D_k\pt x$ più confidenti siamo dell'appartenenza di $x$ a $w_k$.
+    \emptyln{}
+    Al termine del training, si assegna il pattern $x$ alla classe $k^*$ per cui è massima la distanza dalla superficie decisionale:
+    \[
+        k^* = \argmax_k{\pg{D_k\pt x}}
+    \]
+    \begin{note}
+        È necessario eseguire $s$ training \ac{svm}.
+    \end{note}
+\end{definition}
 % subsection SVM multiclasse (end)
+\subsection{SVM Implementazione}\label{sec:svm_implementazione} % (fold)
+Il training di \ac{svm}, richiede \red{algoritmi numerici non banali} in grado di risolvere un problema di programmazione quadratica.
+Link ad alcune implementazioni online:
+\begin{itemize}
+    \item \href{https://www.csie.ntu.edu.tw/~cjlin/libsvm/}{LIBSVM} --- viene utilizzato il parametro $\gamma$ per regolare la complessità della superficie decisionale: aumentando $\gamma$ la superficie può assumere forme più complesse;
+    \item \href{https://www.csie.ntu.edu.tw/~cjlin/liblinear/}{LIBLINEAR} --- consigliata nel caso lineare per elevata dimensionalità ed elevato numero di pattern;
+    \item \href{http://svmlight.joachims.org}{SVM-light}
+\end{itemize}
+% subsection SVM Implementazione (end)
+\subsubsection{SVM In Pratica}\label{sec:svm_in_pratica} % (fold)
+\begin{note}[Quando usare \ac{svm}?]
+    \ac{svm} permette di ottenere buoni risultati su dati numerici \red{omogenei}, ma è meno performante di multi-classificatori basati su alberi decisionali su dati \red{tabulari eterogenei}.
+\end{note}
+\begin{note}[Lineare o Non Lineare?]
+    \begin{itemize}
+        \item Se la dimensionalità $d$ dello spazio è molto elevata (es. 5000 feature) si utilizza generalmente \red{\ac{svm} lineare}.
+            Infatti in uno spazio così grande i pattern sono tipicamente molto sparsi e anche <<semplici>> iperpiani sono in grado di separare le classi efficacemente.
+            \\
+            Il solo parametro da tarare è $C$.
+        \item Per \red{bassa dimensionalità} (es. 20 feature) la scelta primaria è \red{\ac{svm} non lineare} con \textbf{kernel RBF}.
+            \\
+            Gli iperparametri da tarare sono $C$ e $\si$ (o $\gm$ se si utilizza LIBSVM).
+        \item Per media dimensionalità (es. 200 feature) in genere si provano entrambe le tipologie.
+            \\
+            Come sempre gli iperparametri si tarano su un \textbf{validation set separato}, oppure attraverso \hyperref[par:k-fold-cross-val]{cross-validation} sul training set.
+    \end{itemize}
+\end{note}
+\begin{note}[Come gestire il caso multi-classe?]
+    Tipicamente ci si affida alla soluzione disponibile nella libreria utilizzata (\textbf{One-Against-One} per LIBSVM).
+    Se però il numero di classi è molto elevato, il costo può diventare inaccettabile per certe applicazioni.
+    \\
+    In questo caso \textbf{One-Against-All} diventa la scelta obbligatoria.
+\end{note}
+% subsubsection SVM In Pratica (end)
 % section SVM (end)
 %
 \section{Multi classificatori}\label{sub:multi_classificatori} % (fold)
+Un \textbf{multi-classificatore} è un approccio dove diversi classificatori sono utilizzati, normalmente in parallelo ma talvolta anche in cascata o in modo gerarchico, per eseguire la classificazione dei pattern.
+Le \red{decisioni} sei singoli classificatori sono \textbf{fuse} a un certo livello del processo di classificazione.
+\emptyln{}
+È stato dimostrato che l'utilizzo di combinazioni di classificatori può migliorare, anche molto, le prestazioni.
+\begin{warning}
+    La combinazione è efficace solo quando i singoli classificatori sono \textit{indipendenti tra loro}, ovvero non commettono gli stessi errori.
+\end{warning}
+L'\textbf{indipendenza} è normalmente ottenuta:
+\begin{itemize}
+    \item utilizzando feature diverse (non o poco correlate);
+    \item utilizzando algoritmi diversi per l'estrazione delle feature;
+    \item utilizzando diversi algoritmi di classificazione;
+    \item addestrando lo stesso algoritmo di classificazione su porzione diverse del training set (\textbf{bagging});
+    \item insistendo con l'addestramento sugli errori commessi dai predecessori (\textbf{boosting});
+\end{itemize}
+La combinazione può essere eseguita a \red{livello di decisione} o a \red{livello di confidenza}.
 %
 \subsection{Fusione a livello di decisione}\label{sec:fusione_a_livello_di_decisione} % (fold)
+Un singolo classificatore fornisce in output la propria \red{decisione} che consiste nella classe cui ha assegnato il pattern.
+Le decisioni possono essere tra loro \textbf{combinate} in diversi modi, tra cui:
+\begin{itemize}
+    \item \textbf{Majority vote rule}: è uno dei più noti e semplici metodi di fusione.
+        Ogni classificatore vota per una classe, il pattern viene assegnato alla classe maggiormente votata.
+        Più formalmente:
+        \begin{theorem}{Majority Vote Rule}{}
+            Se $\pg{C_1,\,C_2,\,\dots,\,C_{nc}}$ è un insieme di $nc$ classificatori, e
+            \[
+                \te_{ij} = \begin{cases}
+                    1 & \text{se $i$ è la classe votata da $C_j$} \\
+                    0 & \text{altrimenti}
+                \end{cases}
+                \qquad 1 \le i \le s,\, 1 \le j \le nc
+            \]
+            Allora il pattern è assegnato alla classe $t$ tale che:
+            \[
+                t = \argmax_{i=1,\,\dots,\,s}{\pg{\sum\nolimits_{j=1,\,\dots,\,nc}{\te_{ij}}}}
+            \]
+        \end{theorem}
+    \item \textbf{Borda count}: ogni classificatore invece di una \red{singola classe}, produce una \textbf{classifica} o \textbf{ranking} delle classi a seconda della probabilità che a ciascuna di esse appartenga il pattern da classificare.
+        \emptyln{}
+        I \red{ranking} sono convertiti in punteggi e poi \red{sommati}; la classe con il più elevato punteggio finale è quella scelta dal multi-classificatore.
+        \\
+        Rispetto a majority vote rule, considera anche i <<non primi>> di ogni classificatore.
+\end{itemize}
+%
+\subsubsection{Prestazioni Teoriche}\label{sec:prestazioni_teoriche} % (fold)
 
+% subsubsection Prestazioni Teoriche (end)
 % subsection Fusione a livello di decisione (end)
 %
 \subsection{Fusione a livello di confidenza}\label{sec:fusione_a_livello_di_confidenza} % (fold)
