@@ -4,14 +4,13 @@
 Il problema è posto in  termini probabilistici.
 \\
 Se tutte le distribuzioni in gioco sono note l'approccio Bayesiano costituisce la migliore regola di classificazione possibile: soluzione \textbf{ottima}.
-\\
-\\
+\emptyln{}
 Sia $V$ uno spazio di pattern $d$-dimensionali e $W = \pg{w_1,\, w_2,\, \dots,\, w_s}$ un insieme di $s$ classi disgiunte costituite da elementi di $V$.
-\\\\
+\emptyln{}
 Per ogni $x \in V$ e per ogni $\wi \in W$, indichiamo con $p\pt{x|\wi}$ la densità di probabilità condizionale (o condizionata) di $x$ data $\wi$, ovvero la densità di probabilità che il prossimo pattern sia $x$ sotto l'ipotesi che la sua classe di appartenenza sia $\wi$.
-\\\\
+\emptyln{}
 Per ogni $\wi \in W$, indichiamo con $P\pt\wi$ la \textbf{probabilità a priori} di $\wi$, ovvero la probabilità, indipendentemente dall'osservazione, che il prossimo pattern da classificare sia di classe $\wi$.
-\\\\
+\emptyln{}
 Per ogni $x \in V$ indichiamo con $p\pt x$ la densità di probabilità assoluta di $x$, ovvero la densità di probabilità che il prossimo pattern da classificare sia $x$:
 \[
     p\pt x = \sum_{i = 1}^{s}{p\pt{x|\wi} \cdot P\pt\wi} \qquad\qquad\qquad \text{dove }\ \sum_{i = 1}^{s}{P\pt\wi} = 1
@@ -75,6 +74,7 @@ Ad esempio nel caso di $2$ classi e $d = 1$:
     \]
     L'approccio Bayesiano assegna il pattern $x$ alla classe $w_2$ (femmine).
 \end{example}
+\\
 Mentre la stima delle probabilità a priori è abbastanza semplice, se non si hanno elementi si possono ipotizzare le classi equiprobabili, la \textbf{conoscenza} delle densità condizionali è possibile ``solo in teoria''; nella pratica esistono due soluzioni:
 \begin{itemize}
     \item \textbf{Approccio parametrico};
@@ -876,7 +876,7 @@ Le più comuni sono:
     \item \textbf{One-Against-One};
     \item \textbf{One-Against-All};
 \end{itemize}
-\begin{definition}{\ac{svm} One-Against-All}{svm-one-ag-all}
+\begin{definition}{SVM One-Against-All}{svm-one-ag-all}
     Date $s$ classi $w_1,\,w_2,\,\dots,\,w_s$.
     \\
     Per ogni classe $w_k$, si determina con \ac{svm} la superficie di separazione tra i pattern di $w_k$, etichettati $+1$, da una parte e i pattern di tutte le rimanenti classi $w_h$, $h \ne k$ etichettati $-1$, dall'altra.
@@ -953,7 +953,7 @@ Le decisioni possono essere tra loro \textbf{combinate} in diversi modi, tra cui
     \item \textbf{Majority vote rule}: è uno dei più noti e semplici metodi di fusione.
         Ogni classificatore vota per una classe, il pattern viene assegnato alla classe maggiormente votata.
         Più formalmente:
-        \begin{theorem}{Majority Vote Rule}{}
+        \begin{theorem}{Majority Vote Rule}{maj-vote-rule}
             Se $\pg{C_1,\,C_2,\,\dots,\,C_{nc}}$ è un insieme di $nc$ classificatori, e
             \[
                 \te_{ij} = \begin{cases}
@@ -975,24 +975,173 @@ Le decisioni possono essere tra loro \textbf{combinate} in diversi modi, tra cui
 \end{itemize}
 %
 \subsubsection{Prestazioni Teoriche}\label{sec:prestazioni_teoriche} % (fold)
-
+Dato un problema di classificazione binario e un \red{multi-classificatore} costituito da $nc$ classificatori ($nc$ dispari), la \link[th:maj-vote-rule]{majority vote rule} classifica il pattern come appartenente alla classe cha ha ottenuto almeno $k = \pt{nc + 1} / 2$ voti.
+\\
+Sia $P$ la probabilità che ogni singolo classificatore esegua la classificazione correttamente, la probabilità $P_{multi}\pt{nc}$ che la \red{decisione del multi-classificatore} sia corretta è esprimibile attraverso la \textbf{distribuzione binomiale}:
+\[
+    P_{multi}\pt{nc} = \sum_{m=k}^{nc}{\binom{nc}{m}}P^m\pt{1-P}^{nc-m}
+\]
+\begin{note}
+    La distribuzione binomiale permette di calcolare con quale probabilità estraiamo $m$ palline rosse da un'urna contenente $nc$ palline, se $P$ è la probabilità di estrarne una rossa in un singolo tentativo.
+\end{note}
+Nella formula di $P_{multi}\pt{nc}$ i casi favorevoli sono quelli in cui un numero di classificatori compreso tra $k$ e $nc$ hanno effettuato classificazione corretta.
+\begin{example}
+    Se $P = 0.8$ (ogni classificatore commette il $20\%$ di errore di classificazione) stando alla formula precedente per un multi-classificatore con $nc$ componenti:
+    \[
+        \begin{aligned}
+            &P_{multi}(3) = 0.896 \qquad &\pt{k = 2} \\
+            &P_{multi}(5) = 0.942 \qquad &\pt{k = 3} \\
+            &P_{multi}(7) = 0.966 \qquad &\pt{k = 4} \\
+            &P_{multi}(9) = 0.980 \qquad &\pt{k = 5} \\
+            &P_{multi}(15) = 0.995 \qquad &\pt{k = 8} \\
+            &P_{multi}(21) = 0.999 \qquad &\pt{k = 11} \\
+        \end{aligned}
+    \]
+    \begin{center}
+        \includegraphics[width=.8\textwidth]{assets/maj-vote-es-1.png}
+    \end{center}
+    \begin{center}
+        \includegraphics[width=.8\textwidth]{assets/maj-vote-es-1-visual.png}
+        \captionof{figure}{Il training set è diviso in $3$ parti e addestrato da $3$ classificatori}\label{fig:maj-vote-es-1-visual}
+    \end{center}
+\end{example}
+%
 % subsubsection Prestazioni Teoriche (end)
+\subsubsection{One-Against-One}\label{sec:one_against_one} % (fold)
+L'approccio \red{One-Against-One}, consente di risolvere un problema di classificazione multi-classe, attraverso classificatori binari.
+È l'approccio adottato dalla libreria LIBSVM.
+\\
+Se $s$ sono le classi del problema, si addestrano $s \times\pt{s-1}/2$ classificatori binari: \textbf{tutte le possibili coppie indipendentemente dall'ordine}.
+\emptyln{}
+Durante la classificazione, il pattern $x$ viene classificato da ogni classificatore binario, che assegna un voto alla classe, tra le due, più probabile.
+Al termine il pattern $x$ è assegnato alla classe che ha ricevuto più voti (\link[th:maj-vote-rule]{majority vote rule}).
+\emptyln{}
+È in genere più accurato di \link[def:svm-one-ag-all]{One-Against-All} anche se meno efficiente in quanto richiede l'addestramento di un numero maggiore di classificatori.
+% subsubsection One-Against-One (end)
 % subsection Fusione a livello di decisione (end)
 %
 \subsection{Fusione a livello di confidenza}\label{sec:fusione_a_livello_di_confidenza} % (fold)
-
+Ogni singolo classificatore $C_j,\,j= 1,\,\dots,\,nc$ fornisce in output la confidenza di classificazione del pattern rispetto a ciascuna delle classi, ovvero un vettore $conf_i = \ps{conf_{j1},\,conf_{j2},\,\dots,\,conf_{js}}$ in cui l'$i$-esimo elemento indica il grado di appartenenza del pattern alla classe $i$-esima.
+\\
+Diversi metodi di fusione sono possibili tra cui:
+\begin{itemize}
+    \item \textbf{somma}: $\sum_{j=1,\,\dots,\,nc}{conf_j}\qquad t = \argmax_{i=1,\,\dots,\,s}{\pg{sum_i}}$
+    \item \textbf{prodotto}: $\prod_{j=1,\,\dots,\,nc}{conf_j}\qquad t = \argmax_{i=1,\,\dots,\,s}{\pg{prod_i}}$
+    \item \textbf{massimo}: $\max_{j=1,\,\dots,\,nc}{\pg{conf_{ji}}}\qquad t = \argmax_{i=1,\,\dots,\,s}{\pg{max_i}}$
+    \item \textbf{minimo}: $\min_{j=1,\,\dots,\,nc}{\pg{conf_{ji}}}\qquad t = \argmax_{i=1,\,\dots,\,s}{\pg{min_i}}$
+\end{itemize}
+\begin{note}
+    Il criterio del minimo può sembrare illogico: \textbf{viene scelto il massimo dei minimi}; quindi una classe che non ha ricevuto confidenza troppo bassa da nessun classificatore.
+\end{note}
+Il prodotto è il metodo <<probabilisticamente>> più corretto ma solo nel caso di indipendenza statistica.
+\\
+Nella pratica la \textbf{somma è spesso preferibile al prodotto} in quanto più robusta.
+Infatti nel prodotto è sufficiente che un solo classificatore indichi confidenza zero per una classe per portare a zero la confidenza del multi-classificatore per quella classe.
+\emptyln{}
+Una \red{variante efficace}, è quella della \textbf{somma pesata}, dove la somma dei vettori di confidenza è eseguita pesando i diversi classificatori in base al loro grado di agilità $g_j$.
+\[
+    avgsum = \sum_{\for[j][][nc]}{g_j \cdot conf_j} \qquad t = \argmax_{\for[][][s]}{\pg{avgsum_i}}
+\]
+I gradi di libertà possono essere definiti in base alle singole prestazioni dei classificatori, ad esempio in maniera \textbf{inversamente proporzionale all'errore di classificazione}.
+\begin{warning}
+    Attenzione alla \textbf{normalizzazione} dei vettori di confidenza nel caso in cui essi non siano probabilità
+\end{warning}
 % subsection Fusione a livello di confidenza (end)
 %
 \subsection{Random Forest (Bagging)}\label{sec:random_forest_bagging_} % (fold)
-
+Ideato da Leo Breiman nel 2001, appartiene alla famiglia di metodi di \ac{bgg}:
+\begin{itemize}
+    \item estrazione con re-imbussolamento di un sottoinsieme $S_j$ di pattern dal training set (tipicamente i $2/3$ del totale);
+    \item addestramento del classificatore $C_j$ sul sottoinsieme $S_j$;
+    \item fusione dei classificatori;
+\end{itemize}
+In \red{Random Forest} i singoli classificatori sono \textbf{classification tree} (alberi di classificazione).
+\begin{definition}{Classification Tree}{}
+    I \red{classification tree} sono uno strumento molto utilizzato in applicazioni con pattern categorici o mixed (come Data Mining).
+    Per pattern numerici <<puri>> in genere non sono competitivi con \ac{SVM} se considerati singolarmente.
+    \\
+    Esistono diversi tipi di alberi, tra cui: ID3, C4.5, CART (default in Random Forest).
+\end{definition}
+\red{Cart} è un albero binario in cui ogni nodo divide i pattern del training set, assegnandoli ai due nodi figli.
+La suddivisione si bassa sul confronto di una singola feature con una soglia.
+\emptyln{}
+Per la <<crescita>> dell'albero a partire da un training set, si sceglie, in modo greedy, a ogni livello la coppia che meglio separa le classi.
+Per la \textbf{classificazione} di un nuovo pattern si visita l'albero e una volta giunti a una foglia, si classifica il pattern sulla base della classe più comune nel nodo: \link[th:maj-vote-rule]{majority vote rule}.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/class-tree-es.png}
+    \caption{In numero le probabilità di sopravvivenza (sinistra) e la percentuale di campioni nella foglia (destra)}\label{fig:class-tree-es}
+\end{cimage}
+In Random Forest, per rendere maggiormente indipendenti i classificatori: per ogni nodo la scelta della feature migliore su cui partizionare non è fatta sull'intero insieme delle $d$ feature (dimensionalità dei pattern), ma su un sottoinsieme random di $d'$ (si solito $d' = \sqrt d$).
+\\
+In assenza di questo accorgimento, noto anche come \red{feature bagging}, molti tree sceglierebbero con elevata probabilità le stesse variabili.
+Pertanto Random Forest opera simultaneamente due tipi di bagging: uno sui pattern del training set e uno sulle features.
+\emptyln{}
+Il numero di tree (iperparametro \texttt{n\_estimators}) in una forest varia generalmente da alcune centinaia ad alcune migliaia.
+Aumentare \texttt{n\_estimators} oltre al valore ottimale in genere non produce overfitting, ma rende il sistema meno efficace.
+\emptyln{}
+Gli alberi possono essere fatti crescere fino a quando lo split dei nodi termina naturalmente oppure imponendo una massima profondità (iperparametro \texttt{max\_depth}).
+Ridurre \texttt{max\_depth} ha effetto \red{regolarizzante} e riduce l'overfitting.
+\emptyln{}
+Grazie al bagging, le prestazioni possono essere stimate con tecnica \ac{oob} che non richiede validation set separato: per ogni pattern calcola la prediction media di tutti gli alberi che non includono tale pattern nel loro bagging set.
 % subsection Random Forest (Bagging) (end)
 %
 \subsection{AdaBoost (Boosting)}\label{sec:adaboost_boosting_} % (fold)
+Ideato da \textbf{Freund} e \textbf{Schapire}, appartiene alla famiglia dei metodi di \textbf{boosting}, dove: più classificatori sono, tipicamente \red{deboli}, sono combinati per realizzare un classificatore \red{forte}.
+\\
+A differenza del bagging, l'apprendimento è \textbf{incrementale} e prevede di aggiungere a ogni iterazione un classificatore efficace sui pattern specifici.
+A ogni iterazione si assegna un peso a ciascun pattern del training set.
+Pattern classificati erroneamente hanno peso maggiore e contribuiscono maggiormente nella selezione del prossimo classificatore.
+\emptyln{}
+Siano:
+\begin{itemize}
+    \item $\pt{x_1,\,y_1},\,\dots,\,\pt{x_n,\,y_n}$ i pattern del $TS$ e le rispettive etichette, con $y_i \in \pg{+1,\,-1}$;
+    \item $w_i^t$ il peso del pattern $x_i$ all'iterazione $t$;
+    \item $h^t\pt x \to \pg{+1,\,-1}$ il classificatore introdotto all'iterazione $t$ e scelto tra i classificatori $h_j^t\pt x$ disponibili all'iterazione $t$;
+    \item $\al[t]$ il peso del classificatore $h^t\pt x$ nell'a,bito del multi-classificatore;
+\end{itemize}
+\subsubsection{Pseudocodice}\label{sec:pseudocodice} % (fold)
 
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/adaboost-pseudo.png}
+    \caption{Pseudocodice dell'algoritmo AdaBoost}\label{fig:adaboost-pseudo}
+\end{cimage}
+Al termine dell'addestramento, il \red{classificatore finale} (strong) è la media pesata dei weak classifiers:
+\[
+    H\pt x = \sign{\pt{\sum_{\for[t][][T]}{\al[t]h^t\pt x}}}
+\]
+%
+% subsubsection Pseudocodice (end)
+\subsubsection{Scelta dei pesi}\label{sec:scelta_dei_pesi} % (fold)
+\[
+    \al[t] = \half ln\pt{\frac{1 - \eps[t]}{\eps[t]}}
+\]
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/adaboos-weights-visual.png}
+\end{cimage}
+Un classificatore binario con errore $0.5$ ha peso $0$ (neutro), il peso aumenta esponenzialmente quando l'errore si avvicina a $0$ e diventa negativo se l'errore è superiore a $0.5$.
+\\
+\[
+    w_i^{\inc t} = w_i^t \cdot e^z \qquad \text{dove } z = -\al[t]y_ih^t\pt{x_i}
+\]
+osservando che:
+\[
+y_ih^t\pt{x_i} = \begin{cases}
+    1 & \text{se il pattern è correttamente classificato} \\
+    -1 & \text{altrimenti}
+\end{cases}
+\]
+\begin{itemize}
+    \item $w_i^{\inc t}$ aumenta se $z < 0$: $\al[t]$ positivo e classificazione errata, oppure $\al[t]$ negativo e classificazione corretta;
+    \item $x_i^{\inc t}$ diminuisce se $z < 0$: nei 2 casi complementari;
+\end{itemize}
+%
+% subsubsection Scelta dei pesi (end)
 % subsection AdaBoost (Boosting) (end)
 %
 \subsection{Gradient Boosting}\label{sec:gradient_boosting} % (fold)
-
+È una tecnica di boosting che invece di assegnare peso maggiore agli hard examples, cerca di addestrare i nuovi weak models sui residuali di errore.
+\\
+L'implementazione più semplice si applica al caso di \red{regressione con loss MSE}, maggiori dettagli sono forniti nelle slide sulla di regressione.
 % subsection Gradient Boosting (end)
 % section Multi classificatori (end)
 % chapter Classificazione (end)
