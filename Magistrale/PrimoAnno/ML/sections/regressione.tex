@@ -1,7 +1,122 @@
 % ltex: language=it
 \chapter{Regressione}\label{chap:regressione} % (fold)
+Nei problemi di \red{classificazione} supervisionata a ogni pattern $x_i$ del training set è associata un'etichetta $y_i$.
+Obiettivo del training è l'apprendimento di un mapping dallo spazio dei pattern a quello delle etichette.
+\emptyln{}
+Nella \red{regressione} i valori $y_i$ sono numerici e continui in $\Re$, e l'obiettivo del training è l'apprendimento di una funzione $\fx{} \to y$.
+\\
+$f$ è controllata da un insieme di parametri.
 \section{Lineare}\label{sec:lineare} % (fold)
-
+Se la dipendenza dai parametri è lineare, la regressione si definisce \textbf{lineare}.
+\\
+Nella regressione $x$ è detta variabile \red{indipendente} e $y$ variabile \red{dipendente}.
+Si assume che la variabile indipendente sia esatta mentre la variabile dipendente sia \textbf{affetta da errore}.
+\begin{itemize}
+    \item se la variabile indipendente è uno \textbf{scalare} $x$ si parla di \textbf{simple linear} regression;
+    \item se la variabile indipendente è un \textbf{vettore} $x$ si parla di \textbf{multiple linear} regression;
+\end{itemize}
+\subsection{Simple Linear Regression}\label{sub:simple_linear_regression} % (fold)
+Simple Linear RegressionDato un training set $TS$ contenente $n$ pattern $\vc{\pr{x_1}{y_2}}{\pr{x_n}{y_n}}$, e la seguente dipendenza tra variabile indipendente e dipendente:
+\[
+    y_i = \al + \bt \cdot x + \veps_i
+\]
+dove:
+\begin{itemize}
+    \item $\veps_i$ è l'errore di misura (incognito) del pattern $x_i$;
+    \item $\al$, $\bt$ sono parametri da determinare;
+\end{itemize}
+la soluzione ai minimi quadrati (\textbf{Least Square}) del problema consiste nel determinare l'equazione della retta:
+\[
+    \fx = y = \al + \bt \cdot x
+\]
+che minimizza la somma dei quadrati residui:
+\[
+    \al[*],\,\bt[*] = \argmin_{\al,\,\bt}{\sum_{\for}{\pt{\fx{} - y_i}^2}} = \sum_{\for}{\veps[2]_i}
+\]
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/simple-lin-reg-visual.png}
+\end{cimage}
+Il precedente problema di minimizzazione può essere facilmente risolto uguagliando a zero le derivate parziali della funzione obiettivo rispetto ai parametri $\al,\,\bt$ ottenendo le cosiddette \textbf{equazioni normali}.
+\\
+Risolvendo il sistema si ottiene:
+\[
+    \bt[*] = \frac{\sum_{\for}{\pt{x_i - \bar x}\pt{y_i - \bar y}}}{\sum_{\for}{\pt{x_i-\bar x}^2}},\qquad \al[*] = \bar y - \bt[*]\bar x
+\]
+dove $\bar x$ e $\bar y$ sono la media degli $x_i$ e $y_i$ rispettivamente.
+\\
+necessari almeno due punti con $x_i$ diverse, altrimenti il denominatore si annulla.
+% subsection Simple Linear Regression (end)
+%
+\subsection{Multiple Linear Regression}\label{sub:multiple_linear_regression} % (fold)
+Generalizziamo ora a \textbf{iperpiani}: $x \in \Re^d$.
+\\
+Per semplicità di trattazione, sia $x$ la matrice rettangolare $\pt{n\times \pt{\inc d}}$ ottenuta inserendo sulle righe gli $n$ pattern del $TS$, e avendo cura di inserire a destra una colonna con tutti valori $1$:
+\[
+    X = \begin{bmatrix}
+        \red{x_{11}} & \red{\dots} & \red{x_{1d}} & 1 \\
+        x_{21} & \dots & x_{2d} & 1 \\
+        \vdots & \ddots & \vdots & 1 \\
+        x_{n1} & \dots & x_{nd} & 1
+    \end{bmatrix}
+\]
+Siano:
+\[
+    y = \begin{bmatrix}
+        y_i \\ y_2 \\ \vdots \\ y_n
+    \end{bmatrix}
+    \qquad
+    \bt = \begin{bmatrix}
+        \bt_1 \\ \bt_2 \\ \vdots \\ \bt_{\inc d}
+    \end{bmatrix}
+\]
+con $y$ che rappresenta uno scalare per ogni pattern e $\bt$ un vettore di termini noti, i vettori costruiti a partire dai valori della variabile indipendente e dai $\inc d$ parametri da determinare.
+\emptyln{}
+Le relazioni tra variabili indipendenti e dipendenti possono essere scritte attraverso le equazioni:
+\[
+    y_i = \sum_{\for[j][][\inc d]}{x_{ij} \cdot \bt_j} \qquad \text{per } \for
+\]
+o in forma matriciale come:
+\[
+    y = X \, \bt
+\]
+Per $n > \pt{\inc d}$, $X$ è rettangolare $\rightarrow$ sistema di equazioni sovradeterminato.
+\emptyln{}
+In formato matriciale la funzione obiettivo da minimizzare (\textbf{Least Square}) può essere scritta come:
+\[
+    \nm{y - X\,\bt}^2
+\]
+Ancora una volta le \red{equazioni normali} possono essere ottenute derivando rispetto ai parametri:
+\[
+    \pt{X^tX}\bt[*] = X^ty
+\]
+Infine, invertendo otteniamo i parametri del modello:
+\[
+    \bt[*] = \inv{\pt{X^tX}} X^t y
+\]
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/multi-lin-reg-es.png}
+    \caption{Con $d = 2$}\label{fig:multi-lin-reg-es}
+\end{cimage}
+\begin{note}
+    \begin{itemize}
+    \item se $n = \pt{\inc d}$, la matrice $X$ è quadrata e l'iperpiano di regressione tocca tutti i punti (\textbf{interpolazione});
+    \item se $n > \pt{\inc d}$, il numero di equazioni è superiore al numero di incognite e l'iperpiano \textbf{approssima} i punti;
+    \item Per essere invertibile la matrice $X^tX$ deve essere a rango massimo: problemi in caso di punti \textbf{collineari} (colonne di $X$ linearmente dipendenti);
+    \item La matrice $X^tX$ è spesso <<mal condizionata>> e il calcolo dell'inversa può risultare numericamente instabile.
+        Il problema può essere risolto in modo numericamente più stabile attraverso decomposizione \ac{svd} di $X$:
+        \[
+            X = U\Gm V^t
+        \]
+        Dove $U$ è la matrice ortogonale $n\times n$, $V$ è una matrice ortogonale $\pt{\inc d} \times \pt{\inc d}$ e $\Gm$ una matrice diagonale rettangolare $n \times \pt{\inc d}$.
+        \\
+        Si dimostra che:
+        \[
+            \bt[*] = V\Gm[+]U^ty
+        \]
+        dove $\Gm[*]$, denominata \red{pseudoinversa} di $\Gm$, vista la particolare forma di $\Gm$, si ottiene semplicemente invertendo gli elementi non nulli di $\Gm$ e calcolando la trasposta.
+    \end{itemize}
+\end{note}
+% subsection Multiple Linear Regression (end)
 % section Lineare (end)
 \section{Non Lineare}\label{sec:non_lineare} % (fold)
 
