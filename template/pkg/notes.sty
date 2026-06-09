@@ -14,7 +14,7 @@
     arc=2pt,
     description font=\itshape,
     label type=definition,
-    after=\noindent\ignorespacesafterend
+    after=\noindent
 }{def}
 
 \newtcbtheorem[number within=section, list inside=th]{theorem}{Teorema}{
@@ -29,7 +29,7 @@
     arc=2pt,
     separator sign={:},
     label type=theorem,
-    after=\noindent\ignorespacesafterend
+    after=\noindent
 }{th}
 
 \renewcommand{\qedsymbol}{\textcolor{gh-red}{\ensuremath{\blacksquare}}}
@@ -56,7 +56,7 @@
         \node[anchor=south east, outer sep=5pt] at (frame.south east) {\qedsymbol};
     },
     label type=proof,
-    after=\noindent\ignorespacesafterend
+    after=\noindent
 }
 \renewenvironment{proof}[1][Dimostrazione]{\begin{proofbox}[#1]}{\end{proofbox}}
 
@@ -78,7 +78,7 @@
         \node[anchor=south east, outer sep=6pt] at (frame.south east) {\qedsymbol};
     },
     label type=proof,
-    after=\noindent\ignorespacesafterend
+    after=\noindent
 }{prf}
 \newenvironment{proofblock}[1]{\begin{outerproof}{}{#1}}{\end{outerproof}}
 
@@ -111,7 +111,7 @@
     arc=2pt,
     description font=\itshape,
     label type=lemma,
-    after=\noindent\ignorespacesafterend
+    after=\noindent
 }{lem}
 
 \newtcbtheorem[number within=section, list inside=cor]{corollary}{Corollario}{
@@ -127,7 +127,7 @@
     arc=2pt,
     description font=\itshape,
     label type=corollary,
-    after=\noindent\ignorespacesafterend
+    after=\noindent
 }{cor}
 
 \newtcbtheorem[number within=section]{example}{Esempio}{
@@ -143,7 +143,7 @@
     arc=2pt,
     description font=\itshape,
     label type=example,
-    after=\noindent\ignorespacesafterend
+    after=\noindent
 }{ex}
 
 \newtcbtheorem[number within=section]{remark}{Osservazione}{
@@ -158,7 +158,7 @@
     boxrule=0.5pt,
     arc=2pt,
     description font=\itshape,
-    after=\noindent\ignorespacesafterend
+    after=\noindent
 }{rem}
 
 \newtcbtheorem[number within=section, list inside=ax]{axiom}{Assioma}{
@@ -174,5 +174,5 @@
     arc=2pt,
     description font=\itshape,
     label type=axiom,
-    after=\noindent\ignorespacesafterend
+    after=\noindent
 }{ax}

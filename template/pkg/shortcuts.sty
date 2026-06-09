@@ -7,9 +7,13 @@
 
 % Math shortcuts
 
+\newcommand{\link}[2][]{{\hyperref[#1]{#2}}}
+
 % --- fracs and notations ---
 \newcommand{\half}{\frac{1}{2}}
 \newcommand{\dhalf}{\dfrac{1}{2}}
+
+\newcommand{\pr}[2]{\pt{#1,\,#2}}
 
 \newcommand{\dist}[2]{dist\pt{{#1},\,{#2}}}
 
@@ -87,6 +91,8 @@
 
 \newcommand{\al}[1][]{\power{\alpha}{#1}}
 \newcommand{\Al}[1][]{\power{\Alpha}{#1}}
+\newcommand{\bt}[1][]{\power{\beta}{#1}}
+\newcommand{\Bt}[1][]{\power{\Beta}{#1}}
 \newcommand{\dt}[1][]{\power{\delta}{#1}}
 \newcommand{\Dt}[1][]{\power{\Delta}{#1}}
 \newcommand{\eps}[1][]{\power{\epsilon}{#1}}
@@ -103,6 +109,7 @@
 \newcommand{\Om}[1][]{\power{\Omega}{#1}}
 
 \newcommand{\vphi}[1][]{\power{\varphi}{#1}}
+\newcommand{\veps}[1][]{\power{\varepsilon}{#1}}
 
 \newcommand{\hdt}[1][]{\hat{\power{\delta}{#1}}}
 
@@ -114,6 +121,7 @@
 \newcommand{\fPhi}[1]{\Phi\pt{#1}}
 
 % --- Functions ---
+\newcommand{\fx}[1][x]{f\pt{{#1}}}
 \newcommand{\gx}[1][x]{g\pt{{#1}}}
 
 \NewDocumentCommand{\gix}{O{1} O{x}}{
@@ -127,3 +135,10 @@
 % --- Operators ---
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\sign}{sign}
+
+\NewDocumentCommand{\for}{O{i} O{1} O{n}}{
+    \ifstrempty{#1}{i}{#1} = \ifstrempty{#2}{1}{#2},\,\dots,\,\ifstrempty{#3}{n}{#3}
+}
+
+\newcommand{\vc}[2]{#1,\,\dots,\,#2}
