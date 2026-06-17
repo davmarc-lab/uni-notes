@@ -1,0 +1,6 @@
+...
+# tf = TensorFlow
+hidden1 = tf.layers.dense(X, 100, name="hidden1", activation=tf.nn.relu)
+hidden2 = tf.layers.dense(hidden1, 100, name="hidden2", activation=tf.nn.relu)
+y_pred = tf.layhers.dense(hidden2, 1, name="logits"
+...

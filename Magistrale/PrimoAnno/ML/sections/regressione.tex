@@ -116,9 +116,187 @@ Infine, invertendo otteniamo i parametri del modello:
         dove $\Gm[*]$, denominata \red{pseudoinversa} di $\Gm$, vista la particolare forma di $\Gm$, si ottiene semplicemente invertendo gli elementi non nulli di $\Gm$ e calcolando la trasposta.
     \end{itemize}
 \end{note}
+\begin{example}{Stima prezzo delle case}{}
+    Il dataset contiene $20640$ pattern, ciascuno riferito a un quartiere in California.
+    I pattern sono $9$ dimensionali, per ciascuno di essi:
+    \begin{itemize}
+        \item la variabile \textbf{indipendente} è costituita dal vettore $8$-dimensionale $[$MedInc, HouseAge, AveRooms, AveBedrms, Population, AveOccup, Latitude, Longitude$]$;
+        \item la variabile \textbf{dipendente} (valore target) dal costo medio delle case nel quartiere $[$Value$]$;
+    \end{itemize}
+    \begin{center}
+        \includegraphics[width=.6\textwidth]{assets/es-stima-prezzo-case.png}
+    \end{center}
+    \begin{itemize}
+        \item \textbf{Split dei dati in training e test (80 - 20\%)}
+\begin{codeblock}[py]{}
+xtrain, xtest, ytrain, ytest = train_test_split(housing.data, housing.target, test_size = 0.2)
+\end{codeblock}
+        \item \textbf{Con la funzione Scikit-Learn di regressione lineare}
+            \codefile[py]{}{code/mult-lin-reg-sci.py}
+        \item \textbf{Con implementazione esplicita $\mathbf{\bt[*] = \pt{X^tX}^{-1}X^ty}$}
+            \codefile[py]{}{code/mult-lin-reg-espl.py}
+    \end{itemize}
+    Train \ac{rmse}: $0.7233$\\
+    Test \ac{rmse}: $0.7274$ (72K \$ di scostamento medio)\\
+\end{example}
+%
 % subsection Multiple Linear Regression (end)
+\subsection{Accuratezza di Predizione}\label{sub:accuratezza_di_predizione} % (fold)
+Esistono diversi modi per valutare l'accuratezza di predizione.
+\begin{definition}{RMSE}{rmse}
+    \ac{rmse} è la radice quadrata del criterio \ac{mse}:
+    \[
+        MSE = \frac{1}{N}\sum_{i = 1\dots N}{\pt{pred_i - true_i}^2}
+    \]
+\end{definition}
+\begin{definition}{\acf{mae}}{mae}
+    \[
+        MAE = \frac{1}{N}\sum_{\for[][][N]}{\ab{pred_i - true_i}}
+    \]
+    È più robusta di \ac{mse} rispetto a outliers (dati non affidabili con ampi scostamenti); mantiene l'unità di misura.
+\end{definition}
+\begin{definition}{\acf{mape}}{mape}
+    \[
+        MAPE = \frac{1}{N}\sum_{\for[][][N]}{\ab{\frac{pred_i - true_i}{true_i}}}
+    \]
+    È una variante del \link[def:mae]{MAE} dove la penalizzazione dipende dallo scostamento percentuale rispetto alla grandezza dei pattern.
+\end{definition}
+\begin{definition}{R2, R Squared o coefficiente di determinazione}{r2}
+    È un indicatore statistico, con valori compresi tra $0$ e $1$, che indica quanto il modello lineare <<fitta>> i dati: ovvero spiega la varianza della variabile \red{dipendente}.
+    \begin{center}
+        \includegraphics[width=.6\textwidth]{assets/r2-wiki-visual.png}
+    \end{center}
+    \[
+        \begin{matrix}
+            R^2 = 1 - \dfrac{SS_{res}}{SS_{tot}} \\
+            \\
+            \text{con: } \bar y = \dfrac{1}{n}\displaystyle\sum_{i=1}^n{y_i}\\
+            \\ 
+            SS_{res} = \displaystyle\sum_{i}{\pt{y_i - f_i}^2} \qquad SS_{tot} = \displaystyle\sum_{i}{\pt{y_i - \bar{y}}^2}
+        \end{matrix}
+    \]
+\end{definition}
+% subsection Accuratezza di Predizione (end)
+\emptyln{}
+Con un semplice accorgimento è possibile continuare a utilizzare la \link[sec:lineare]{regressione lineare}: nella teoria introdotta infatti l'importante è che la funzione di regressione sia \textbf{lineare rispetto ai parametri} e non rispetto alla variabile indipendente, i cui elementi possono comparire elevati a potenza, combinati tra loro, come argomento di funzioni trascendenti, etc.
+\begin{example}{}{}
+    Per $d = 1$ e modello \red{quadratico} $y = \bt_1x^2 + \bt_2x + \bt_3$, scriviamo come:
+    \[
+        X = \begin{bmatrix}
+            x_1^2 & x_1 & 1 \\
+            x_2^2 & x_2 & 1 \\
+            \vdots & \vdots & \vdots \\
+            x_n^2 & x_n & 1 \\
+        \end{bmatrix}
+    \]
+    ottenendo
+    \begin{center}
+        \includegraphics[width=.4\textwidth]{assets/var-indi-no-lin-d1.png}
+    \end{center}
+\end{example}
 % section Lineare (end)
 \section{Non Lineare}\label{sec:non_lineare} % (fold)
-
+%
+Nel caso di \textbf{dipendenza non lineare} del modello dai parametri non esiste soluzione least square in <<forma-chiusa>>.
+\\
+Se la dipendenza è nota per la risoluzione si possono applicare tecniche iterative di \red{ottimizzazione numerica}:
+\begin{itemize}
+    \item è possibile utilizzare il classico algoritmo di \textbf{Gradient Descent}, metodo del primo ordine che esegue passi di in direzione contraria al gradiente;
+    \item l'algoritmo più noto e utilizzato è quello di \textbf{Gauss-Newton}, metodo del \red{secondo ordine} che richiede la stima Hessiana;
+\end{itemize}
+Quando la dipendenza tra la variabile indipendente e dipendente \textbf{non è nota}, il problema può essere approcciato provando e validando sia il modello lineare, \red{baseline}, sia modelli non lineari via via più complessi.
+\emptyln{}
+Per alcune tecniche di classificazione studiate, esiste una variante efficace per problemi di regressione.
+Casi notevoli sono:
+\begin{itemize}
+    \item \textbf{\ac{svr}};
+    \item \textbf{Random Forest Generator};
+    \item \textbf{Gradient Boosting Regressor Trees};
+\end{itemize}
+\begin{note}[Vantaggi di un modello \textbf{non} lineare]{}
+    \begin{itemize}
+        \item maggiore \red{flessibilità};
+        \item controllo della \red{complessità della soluzione};
+        \item possibilità di utilizzare \textbf{loss alternative} rispetto a \ac{mse}, come: \ac{mae}, \ac{mape}, etc.
+    \end{itemize}
+\end{note}
+%
+\subsection{Support Vector Regressor (SVR)}\label{sub:svr} % (fold)
+Rispetto alla classificazione, dove si volevano spingere i pattern delle due classi oltre al margine, qui si \red{inverte} la logica: vogliamo che nella fascia del margine ricada il maggior numero  di pattern del training set.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/svr-visual.png}
+    \caption{}\label{fig:svr-visual}
+\end{cimage}
+L'approssimazione può essere \textbf{lineare} o non lineare.
+\emptyln{}
+L'iperparametro $C$ e i regolarizzatori del kernel usato permettono il \red{controllo dell'overfitting}, e di mantenere il regressore sufficientemente smoothed.
+%
+% subsection Support Vector Regressor (end)
+\subsection{Random Forest Regressor}\label{sub:random_forest_regressor} % (fold)
+Stessa logica di creazione della foresta con \red{doppio bagging} su feature e pattern, ma con gli alberi \link[def:class-tree]{CART} usati come \textbf{regressori}.
+\emptyln{}
+In questo caso ogni \red{nodo}, foglie comprese, predice un valore pari alla media delle $y$ dei pattern ad esso appartenenti, e la regola di suddivisione indotta dalla coppia (feature, soglia) minimizza l'\ac{mse} delle $y$ nei due nodi figli.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/rfr-visual.png}
+    \caption{Esempio con $X = x_1$ (monodimensionale)}\label{fig:rfr-visual}
+\end{cimage}
+\begin{note}
+    Questo regressore produce dunque un'approssimazione costante a tratti, che può essere discontinua e con <<salti>> repentini.
+    \\
+    L'iperparametro \red{massima profondità} è il \textbf{principale regolarizzatore} per il controllo dell'overfitting.
+\end{note}
+%
+% subsection Random Forest Regressor (end)
+\subsection{Gradient Boosting Regressor Trees}\label{sub:gradient_boosting_regressor_trees} % (fold)
+È una tecnica di boosting che aggiunge iterativamente nuovi regression trees addestrati sui \textbf{residuali}, ovvero differenze tra le $y$ e le \red{predizioni prodotte dai predecessori}.
+Il multi-classificatore si ottiene sommando i contributi dei singoli regressori.
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/gbrt-visual.png}
+    \caption{Regressione con loss \ac{mse}}\label{fig:gbrt-visual}
+\end{cimage}
+La formula generale, che rende possibile utilizzare anche altre loss function oltre a \ac{mse}, è matematicamente complessa e mostra come i residuali corrispondano ai gradienti dei dati.
+\\
+Per l'applicazione di gradient boosting alla classificazione i modelli sono comunque dei regressori e solo alla fine si applica una funzione che mappa il valore continuo ottenuto in una classe.
+\begin{example}{Prezzi case: Random Forest Regressor}{}
+    \codefile[py]{}{code/rfr-no-lin.py}
+    Train \ac{rmse}: $0.1970$\\
+    Test \ac{rmse}: $0.5080$ (il modello lineare era troppo semplice)\\
+\end{example}
+\begin{example}{Prezzi case: Rete Neurale 4 livelli + Gradient Boosting}{}
+    \codefile[py]{}{code/rn-gd-no-lin.py}
+    Train \ac{rmse}: $0.4647$\\
+    Test \ac{rmse}: $0.5198$ (sembra non si possa fare molto meglio)\\
+\end{example}
+%
+% subsection Gradient Boosting Regressor Trees (end)
+\subsection{Quantile Regression}\label{sub:quantile_regression} % (fold)
+Il modello lineare risolto ai minimi quadrati è uno stimolatore della media condizionata.
+Significa che la \red{retta di regressione} è determinata per approssimare la media dei dati, e quindi l'entità degli \textbf{errori di previsione positivi} e \textbf{negativi} è la stessa.
+\emptyln{}
+Nel caso in cui si voglia dare un peso diverso ai positivi e negativi, come ad esempio per le conseguenze di una sottostima potrebbero essere più gravi di quelle di una sovrastima, si introduce la \textbf{regressione ai quantili} (o \textbf{percentili}).
+\begin{note}
+    Con percentile $p$, la retta è individuata in modo da avere il $p\%$ di punti sotto e $\pt{1-p}\%$ sopra.
+\end{note}
+Nella formulazione si utilizza una loss \ac{mae} con penalità diversa per predizioni in eccesso e difetto.
+\\
+L'implementazione con \red{modello lineare} richiede ottimizzazione numerica, esiste però un algoritmo iterativo che richiama la lineare <<pesata>>.
+% subsection Quantile Regression (end)
 % section Non Lineare (end)
+\section{Riepilogo}\label{sec:riepilogo} % (fold)
+Per i problemi di \textbf{regressione pi piccole-medie dimensioni}:
+\begin{itemize}
+    \item il modello \textbf{\link[sec:lineare]{lineare}}, rispetto ai parametri, risolto tramite least square, con fattorizzazione \ac{svd}, è l'approccio più semplice che costituisce una sorta di baseline;
+    \item un modello \textbf{\link[sec:non_lineare]{non-lineare} rispetto alla variabile indipendente}, ma lineare rispetto ai parametri, può essere un'ottima seconda scelta perché si coniuga semplicità e flessibilità;
+    \item quando sono necessari modelli più potenti, \link[sub:svr]{\ac{svr}}, \link[sub:random_forest_regressor]{Random Forest} e \link[sub:gradient_boosting_regressor_trees]{Gradient Boosting} sono valide alternative.
+        In particolare, i metodi basati su \red{alberi} sono la prima scelta per dati tabellari eterogenei, mentre \ac{svr} meglio modelli fenomeni fisici continui;
+    \item se la dipendenza tra variabile dipendente e indipendente è nota, ma non lineare rispetto ai parametri, l'ottimizzazione numerica con \red{Gausss-Newton} è la prima scelta.
+\end{itemize}
+Per i problemi di regressione di \textbf{grandi dimensioni}, specie su dati non strutturati, l'approccio iterativo \red{Gradient Descent} utilizzato in combinazione con \red{Reti Neurali} è spesso preferibile per motivi di trattabilità numerica e complessità computazionale.
+\emptyln{}
+Nell'ambito del \red{deep learning}, reti neurali addestrate con gradient descent sono state utilizzate con successo per risolvere problemi di regressione di \red{enormi dimensioni} come la stima della posizione di un oggetto in un'immagine a partire da milioni di esempi:
+\begin{itemize}
+    \item la variabile indipendente è un'immagine (pixel);
+    \item la variabile dipendente è la bounding box dell'oggetto, trattasi in questo caso di un vettore $\longrightarrow$ \textbf{multivariate multiple regression}
+\end{itemize}
+% section Riepilogo (end)
 % chapter Regressione (end)
