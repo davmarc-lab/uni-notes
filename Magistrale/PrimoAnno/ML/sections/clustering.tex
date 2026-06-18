@@ -59,16 +59,182 @@ Tra i diversi \red{criteri} possibili:
                 criterio simile alla minimizzazione delle distanze dai centroidi;
             \item \label{itm:dst_second} $f_s\pt{x,\,C_i} = \displaystyle\min_{\substack{x'\in C_i \\ x' \ne x}}{\nm{x-x'}^2}$\\
                 \red{non penalizza cluster allungati}, infatti affinché $f_s\pt{x,\,C_i}$ assuma valore ridotto, non è necessario che tutti i pattern di $C_i$ siano vicini a $x$, ma è sufficiente un vicino.
-                Nell'esempio sotto, per $s = 2$: \ref{itm:dst_first} favorirebbe l'aggregazione, mentre la \ref{itm:dst_first} come da colori.
+                Nell'esempio sotto, per $s = 2$: \ref{itm:dst_first} favorirebbe l'aggregazione, mentre la \ref{itm:dst_second} come da colori.
         \end{enumerate}
 \end{itemize}
+%
 % subsection Criteri di Clustering (end)
+\subsection{Algoritmi di Clustering}\label{sub:algoritmi_di_clustering} % (fold)
+Le principali famiglie di algoritmi sono:
+\begin{itemize}
+    \item \textbf{Clustering gerarchico}: attraverso operazioni tipicamente <<bottom-up>>, che aggregano pattern in base a una misura di distanza, si organizzano i dati in struttura ad albero (dendogramma);
+    \item \textbf{Clustering basato su centroidi}: attraverso euristici (iterativi) si individuano i cluster cercando di minimizzare la distanza dei pattern dai centroidi dei cluster cui appartengono:
+        \begin{itemize}
+            \item \red{K-means};
+            \item \red{Fuzzy K-means};
+            \item \red{Expectation -- Maximization (Gaussian Mixture)};
+        \end{itemize}
+    \item \textbf{Clustering basato sulla densità}: i cluster individuati sono regioni connesse in aree a elevata densità.
+        L'approccio più noto è \href{https://en.wikipedia.org/wiki/DBSCAN}{DBSCAN}
+\end{itemize}
+Si distinguono inoltre:
+\begin{itemize}
+    \item \textbf{Clustering hard (esclusivo)}: un pattern è assegnato (in modo esclusivo) a un solo cluster;
+    \item \textbf{Clustering soft (fuzzy)}: i pattern appartengono ai diversi cluster con un certo grado di appartenenza;
+\end{itemize}
+È più efficace nel gestire pattern vicino al bordo di due o più clusters e outliers.
+L'assegnazione può diventare esclusiva scegliendo, per ogni pattern, il cluster verso cui il grado di appartenenza è massimo.
+% subsection Algoritmi di Clustering (end)
 % section Introduzione (end)
 \section{Clustering Gerarchico}\label{sec:clustering_gerarchico} % (fold)
-
+Simile al modo di eseguire \link[def:clsf]{classificazione} in tassonomia biologica:
+\begin{itemize}
+    \item gli insetti sono \red{gerarchicamente} classificati specializzandone le specie a partire da famiglie molto ampie fino a famiglie più ridotte;
+\end{itemize}
+Gli algoritmi sono generalmente \textbf{bottom-up} (agglomerativi): si parte cercando di \red{aggregare} singoli elementi e a ogni passo (livello) si aggregano (pattern a pattern, pattern a cluster, o cluster a cluster) gli elementi tra loro più simili rispetto a una \textbf{soglia}.
+\emptyln{}
+Le principali differenze implementative dipendono dalla definizione utilizzata per calcolare le distanze tra cluster e cluster:
+\begin{itemize}
+    \item \textbf{single link}: distanza minima tra due pattern dei cluster;
+    \item \textbf{average link}: distanza media tra i pattern dei due cluster;
+    \item \textbf{complete link}: distanza massima tra due pattern dei cluster;
+\end{itemize}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/clust-gen-visual.png}
+\end{cimage}
 %
 % section Clustering Gerarchico (end)
 \section{Centroid-based Clustering}\label{sec:centroid_based_clustering} % (fold)
+\subsection{K-means}\label{sub:k_means} % (fold)
+K-means (o C-means) è un metodo \red{computazionalmente molto semplice} e altrettanto semplice da implementare: per questo motivo è spesso la prima scelta per risolvere problemi di clustering.
+\begin{itemize}
+    \item minimizza <<implicitamente>> le \red{distanze dai centroidi};
+    \item richiede in \textbf{input} il numero di cluster $s$ e una soluzione iniziale.
+        Produce \textbf{buoni risultati} a patto di fornire una ragionevole soluzione iniziale e un numero adeguato di classi;
+    \item il tipo di \textbf{ottimizzazione} è iterativa e locale; pertanto il metodo può convergere a massimi locali della soluzione.
+        La \link[sub:convergenza]{convergenza} si ottiene solitamente in pochi passi: $< 10$;
+    \item identifica cluster iper-sferici nel caso in cui venga utilizzata la \link[eq:dis_euclidea]{distanza euclidea} come misura di distanza tra i pattern o cluster iper-ellissoidali nel caso di \link[par:distanza_mahalanobis]{distanza di Mahalanobis}.
+\end{itemize}
+Nella sua versione base l'algoritmo può essere così descritto:
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/k-means-pseudo-base.png}
+    \caption{}\label{fig:k-means-pseudo-base}
+\end{cimage}
+I cluster sono modificati \red{iterativamente} a seguito del ricalcolo del loro centroide.
+L'algoritmo \textbf{converge} quando i centroidi sono stabili e quindi le partizioni non cambiano.
+\begin{example}{}{}
+    \begin{center}
+        \includegraphics[width=.8\textwidth]{assets/k-means-es-visual.png}
+        \captionof{figure}{$n = 86$, $s = 3$}\label{fig:k-means-es-visual}
+    \end{center}
+\end{example}
+%
+\subsubsection{Limitazioni}\label{sec:limitazioni} % (fold)
+\begin{center}
+    \includegraphics[width=.6\textwidth]{assets/es-clustering-1.png}
+    \captionof{figure}{3 classi --- 8 iterazioni}\label{fig:es-clustering-1}
+\end{center}
+Minimizzando le distanze dai centroidi, K-means non è in grado di identificare cluster dalla forma non sferica.
+\textbf{3 classi --- 8 iterazioni}
+\begin{center}
+    \includegraphics[width=.6\textwidth]{assets/es-clustering-2.png}
+    \captionof{figure}{11 classi --- 31 iterazioni}\label{fig:es-clustering-2}
+\end{center}
+Anche in questo caso non tutti i cluster hanno forma sferica.
+%
+% subsubsection Limitazioni (end)
+\subsubsection{Soluzione iniziale e Validazione}\label{sec:soluzione_iniziale_e_validazione} % (fold)
+Diverse \red{varianti} sono state proposte per generare buone soluzioni iniziali e di \textbf{determinare il numero di classi} (\textit{clustering validation}).
+\\
+Per minimizzare il \textbf{rischio di convergenza} verso \red{minimi locali}, l'algoritmo può essere eseguito più volte a partire da soluzioni iniziali diverse:
+\begin{itemize}
+    \item random;
+    \item prodotte da un (diverso) euristico;
+    \item metodo evoluzionistico (algoritmico genetico);
+\end{itemize}
+\begin{quote}
+    Quanti cluster?
+\end{quote}
+Le tecniche di \textbf{validazione} tendono a valutare a posteriori la bontà delle soluzioni prodotte per diversi valori di $s$, e a sceglierne una sulla base di un \red{criterio di validazione} che tenga conto sia della bontà della soluzione sia della sua complessità:
+\begin{itemize}
+    \item \textbf{Problema}: considerando il criterio di <<minimizzazione distanze dai centroidi>> e lanciando K-means con diversi valori di $s$, è molto più facile ottenere valori ridotti di $J_e$ per valori elevati di $s$.
+        Quanto vale $J_e$ per $s = n$?
+    \item \textbf{Possibile soluzione}: penalizzare le soluzioni con molti cluster; ad esempio:
+        \[
+            J_e^* = J_e + \textit{penalty} \cdot s
+        \]
+\end{itemize}
+\paragraph{Discontinuità nel grafico}\label{par:discontinuita_nel_grafico} % (fold)
+Un modo più efficace per determinare il numero ottimale di cluster è quello di cercare i \red{punti di inflessione}, anche detti \textit{elbow}, nel valore di $J_e$ al variare di $s$.
+Infatti se i pattern formano raggruppamenti evidenti e ben identificabili, scegliendo il corretto valore di $s$, dovremmo riscontrare una discontinuità nel grafico di $J_e$ al variare di $s$.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/k-means-val-visual.png}
+\end{cimage}
+% paragraph Discontinuita nel grafico (end)
+\paragraph{Silhouette score}\label{par:silhouette_score} % (fold)
+Un criterio più oggettivo, che funziona per cluster sferici come quelli prodotti da k-means, è quello di calcolare il \textbf{silhouette score} come media dei \textbf{silhouette coefficient} di ciascun pattern e scegliere $s$ che lo minimizza:
+\[
+    \textit{Silhouette coefficient} = \frac{\pt{b-a}}{\max{\pt{a, b}}}
+\]
+dove $a$ è la distanza media intra cluster del pattern e $b$ la distanza tra il pattern e i pattern del cluster a esso più vicino (escluso quello di appartenenza).
+\\
+Il \textit{silhouette diagram} è una rappresentazione grafica degli score utili per la validation.add
+\begin{note}
+    È presente in scikit-learn la funzione \texttt{silhouette\_score()} che calcola questa metrica.
+\end{note}
+\begin{warning}
+    Questo metodo risulta computazionalmente pesante per grandi dataset.
+\end{warning}
+% paragraph Silhouette score (end)
+%
+% subsubsection Soluzione iniziale e Validazione (end)
+% subsection K-means (end)
+\subsection{Fuzzy K-means}\label{sub:fuzzy_k_means} % (fold)
+La variante \textbf{Fuzzy} del \link[sub:k_means]{K-means} consente a un pattern di appartenere con un certo \textbf{grado di probabilità} a diverse classi.
+Il criterio di ottimizzazione in questo caso è:
+\[
+    J_{fuz} = \sum_{\for[][][s]}\sum_{\for[j][][]}{\ps{\ba{C_i}{x_j, \Te}}^m \cdot \nm{x_j - \te_i}^2}
+\]
+dove $\ba{C_i}{x_j, \Te}$ è la \red{probabilità} che dato il pattern $x_j$ e l'insieme $\Te = \pg{\te_1,\,\dots,\,\te_s}$ di centroidi che definiscono la \textbf{soluzione attuale}, il cluster di \red{appartenenza} sia $C_i$.
+\emptyln{}
+I \red{centroidi} invece che come semplice media dei pattern si calcolano come \textbf{media pesata} riuspetto alle probabilità di appartenenza:
+\[
+\te_i = \frac{\sum_{\for[j][][]}{\ba{C_i}{x_j, \Te}} \cdot x_j}{\sum_{\for[j][][]}{\ba{C_i}{x_j, \Te}}}
+\]
+Le \textbf{probabilità di appartenenza} si calcolano come:
+\[
+    \ba{C_i}{x_j, \Te} = \frac{1}{\sum_{\for[k][][s]}{\pt{\frac{\nm{x_j - \te_i}}{\nm{x_j - \te_k}}}^{\frac{2}{m-1}}}}
+\]
+\begin{note}
+    $m > 1$ è un parametro che definisce quanto l'appartenenza ai diversi cluster debba essere sfumata (solitamente $m = 2$)
+\end{note}
+\emptyln{}
+Lo pseudocodice dell'algoritmo è molto simile al \link[fig:k-means-pseudo-base]{K-means}:
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/fuzzy-k-means-pseudo-base.png}
+\end{cimage}
+Rispetto al \link[fig:k-means-pseudo-base]{K-means}, questa variante \textbf{fornisce a volte} una convergenza più robusta verso la soluzione finale.
+\\
+D'altro canto uno \textbf{svantaggio} è legato al fatto che l'appartenenza di un pattern a un cluster dipende implicitamente dal numero di cluster, e se questo è specificato in modo incorretto si possono ottenere cattive soluzioni.
+%
+% subsection Fuzzy K-means (end)
+\subsection{Expectation Maximization}\label{sub:expectation_maximization} % (fold)
+Si ipotizza che i pattern siano stati generati da un \textbf{mix di distribuzioni}: ogni classe ha generato dai in accordo con una \red{specifica distribuzione}, ma al termine della generazione i pattern appaiono come prodotti da un'unica distribuzione multi-modale.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/clustering-em-visual.png}
+\end{cimage}
+L'\textbf{obiettivo} del clustering con \ac{em} è \red{risalire}, a partire dai pattern del training set, ai \textbf{parametri delle singole distribuzioni} che li hanno generati.
+A tal fine si ipotizza nota la forma delle distribuzioni e si assume, per semplicità, che esse siano \textbf{tutte dello stesso tipo}.
+\\
+Il caso più frequente è quello di \textbf{mix} di $s$ distribuzioni multinormali, di cui si vogliono stimare i parametri di definizione ($s$ vettori medi, $s$ matrici di covarianza e $s$ coefficienti $\al$):
+\[
+    p\pt{x | \Te} = \sum_{\for[][][s]}{\al_i \cdot p_i\pt{x|\te_i}}
+\]
+dove $\Te = \pg{\al_1,\,\al_2,\,\dots,\,\al_s,\,\te_1,\,\te_2,\,\dots,\,\te_s}$ è il vettore di parametri che definisce il mix di distribuzioni $p_i\pg{\cdot | \te_i}$ è una multinormale con parametri $\te_i$.
+%
+\subsubsection{Idea}\label{sec:idea} % (fold)
 
+% subsubsection Idea (end)
+% subsection Expectation Maximization (end)
 % section Centroid-based Clustering (end)
 % chapter Clustering (end)
