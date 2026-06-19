@@ -15,7 +15,7 @@
     \emptyln{}
     Se $s$ non è noto, il numero di soluzioni è dato dal numero di \textbf{Bell}, ottenibile sommando i casi precedenti per tutti i valori di $s$ da $1$ a $n$.
 \end{lemma}
-\begin{example}
+\begin{example}{}{}
     Nel caso $s = 2$ è molto semplice dimostrare che il numero di soluzioni è $2^{\dec n} - 1$: dati i $4$ pattern $\pg{A,\, B,\,C,\,D}$ e $s = 2$, le soluzioni di clustering sono $7$:
     \[
         \begin{matrix}
@@ -233,8 +233,121 @@ Il caso più frequente è quello di \textbf{mix} di $s$ distribuzioni multinorma
 dove $\Te = \pg{\al_1,\,\al_2,\,\dots,\,\al_s,\,\te_1,\,\te_2,\,\dots,\,\te_s}$ è il vettore di parametri che definisce il mix di distribuzioni $p_i\pg{\cdot | \te_i}$ è una multinormale con parametri $\te_i$.
 %
 \subsubsection{Idea}\label{sec:idea} % (fold)
-
+La stima dei parametri avviene secondo il criterio generale del \textbf{maximum likelihood}.
+\begin{definition}{Likelihood}{likelihood}
+    In generale il \red{likelihood} $\mathcal{L}$ dei parametri $\Te$ dati i pattern $\mathcal{X}$ corrisponde alla probabilità (densità di probabilità nel continuo) di aver ottenuto i pattern dati i parametri (inversione):
+    \[
+        \mathcal{L} = \dba{\mathcal X}{\Te}
+    \]
+\end{definition}
+Per semplicità, al posto del likelihood, si massimizza il suo logaritmo.
+Considerando i pattern indipendenti la probabilità di aver ottenuto i pattern del training set è il prodotto delle probabilità delle singole generazioni:
+\[
+    \log{\dba{\mathcal X}{\Te}} = \log{\prod_{\for[j]}{\dba{x_j}{\Te}}} = \sum_{\for[j]}{\log{\pt{\sum_{\for[][][s]}{\al_i \cdot p_i\pt{x_j|\te_i}}}}}
+\]
+Purtroppo questa massimizzazione è \red{molto difficile} a causa della sommatoria nel logaritmo.
+Per eliminare la sommatoria, ci servirebbe sapere ogni pattern $x_j$ del training set da quale componente $p_i\pt{\cdot}$ della mixture è stato generato.
+\emptyln{}
+A tal fine si utilizza \red{\ac{em}}, che è un approccio iterativo nato per il calcolo del \textbf{maximum likelihood} nel caso in cui i dati a disposizione $\mathcal X = \pg{\vc{x_1}{x_n}}$ siano \red{incompleti} per la mancanza di alcuni valori $y = \pg{\vc{y_1}{y_n}}$.
+Ogni \textbf{pattern completo} $z_j = \ps{x_j,\,y_j}$, $\for[j]$ è costituito da due parti di cui solo la prima è nota.
+\begin{note}
+    Nel \textbf{caso di interesse} (derivare i parametri di una gaussian mixture) i dati sono \red{completi} ma le \textbf{potenzialità} di \ac{em} sono utilizzate per \textbf{rendere trattabile} la massimizzazione: sfruttiamo i valori $\mathcal y$ come \red{indicatori delle componenti ignote} che hanno generato i singoli pattern.
+\end{note}
+%
 % subsubsection Idea (end)
+\subsubsection{Caso Generale}\label{sec:caso_generale} % (fold)
+L'obiettivo di \ac{em} è dunque la massimizzazione del \red{log-likelihood} dei dati completi o \red{log-likelihood-completo}:
+\[
+    \lkho{\Te}{Z} = \log{\lkho{\Te}{\mathcal X, y}} = \dba{\mathcal X, y}{\Te}
+\]
+A tal fine vengono eseguiti \red{iterativamente}, fino a convergenza, due passi:
+\begin{itemize}
+    \item \textbf{Expectation}: viene calcolato il valore atteso $\ev{\cdot}$ del log-likelihood-completo; dato il training set $\mathcal X$ e una stima dei parametri $\Te[g]$ ottenuti all'iterazione precedente:
+        \[
+            Q\pt{\Te|\Te[g]} = \ev{\log{\dba{\mathcal X, y}{\Te}}\ |\mathcal X, \Te[g]}
+        \]
+        Il valore atteso, \red{media}, è calcolato rispetto alla variabile aleatoria $y$, governata dalla distribuzione normale $\fx[{y|\mathcal X, \Te[g]}]$:
+        \[
+            \ev{\log{\dba{\mathcal X, y}{\Te}\ |\mathcal X, \Te[g]}} = \int_{y \in \Psi}{\log{\dba{\mathcal X, y}{\Te}} \cdot \fx[{y|\mathcal X, \Te[g]}]\,\id[y]}
+        \]
+    \item \textbf{Maximization}: determina il valore dei \red{parametri} che massimizzano il valore atteso calcolato al passo \textbf{Expectation}:
+        \[
+            \Te[\inc g] = \argmax_{\Te}{Q\pt{\Te | \Te[g]}}
+        \]
+\end{itemize}
+%
+% subsubsection Caso Generale (end)
+\subsubsection{Caso Specifico}\label{sec:caso_specifico} % (fold)
+Sfruttando le peculiarità di \ac{em}, si assume l'esistenza di una \textbf{componente nascosta} $y_y$ per ogni pattern, che indica quale delle $s$ distribuzioni gaussiane ha generato il pattern $x_j$.
+\\
+Il \link[def:likelihood]{log-likelihood-completo} assume ora la forma:
+\[
+    \log{\lkho{\Te}{\mathcal X,y}} = \sum_{\for[j]}\log{\pt{\al_{yj} \cdot p_{yj}\pt{x_j|\te_{yj}}}}
+\]
+sebbene gli $y_j$ non siano noti, \textbf{una loro stima}, o meglio una stima della loro distribuzione, può essere derivata (\link[eq:theor-bayes]{teorema di Bayes}) dai parametri $\Te[g]$ disponibili all'iterazione $g$ corrente.
+Per un singolo $y_j$ e corrispondente $x_j$:
+\[
+    \ba{y_j = k}{x_j,\Te[g]} = \ba{k}{x_j,\Te[g]} = \dfrac{\al[g]_k \cdot p_k\pt{x_j|\te[g]_k}}{\displaystyle\sum_{\for[][][s]}\al[g]_i \cdot p_i\pt{x_j|\te[g]_i}}
+\]
+Per un generico vettore $y$ di osservazioni:
+\[
+    \ba{y}{\mathcal X,\Te[g]} = \prod_{\for[j]}\ba{y_j}{x_j,\Te[g]}
+\]
+Il valore atteso $Q$ \link[sec:caso_generale]{precedente} può essere scritto come:
+\[
+    \begin{aligned}
+        Q\pt{\Te|\Te[g]} &= \sum_{y \in \Psi}{\log{\lkho{\Te}{\mathcal X, y}} \cdot \ba{y}{\mathcal X, \Te[g]}} = \\
+                         &= \sum_{y \in \Psi}\pt{\sum_{\for[j]}\log{\pt{\al_{yj}\cdot p_{yj}\pt{x_j|\te_{yj}}} \cdot \prod_{\for[j]}{\ba{y_j}{x_j, \Te[g]}}}}
+    \end{aligned}
+\]
+%
+% subsubsection Caso Specifico (end)
+\subsubsection{Formule Incrementali}\label{sec:formule_incrementali} % (fold)
+A seguito di alcuni passaggi (non banali) durante i quali l'ottimizzazione è eseguita \textbf{eguagliando} a $0$ le \red{derivate parziali} rispetto ai parametri incogniti si ottengono le seguenti formule per l'aggiornamento incrementale dei parametri:
+\begin{enumerate}[ref=\textbf{(\arabic*)}]
+    \item \label{en:eq-st} \[
+            \ba{C_k}{x_j,\Te[g]} = \frac{\al[g]_k \cdot \dba{x_j}{\te[g]_k}}{\sum_{\for[][][s]}\al[g]_i\cdot \dba{x_j}{\Te[g]_i}}
+        \]
+    \item \label{en:eq-nd} \[
+            \al[\inc g]_k = \frac{1}{n} \sum_{\for[n]}\ba{C_k}{x_j,\te[g]_k}
+        \]
+    \item \label{en:eq-th} \[
+            \m[\inc g]_k = \frac{\sum_{\for[j]}\ba{C_k}{x_j,\te[g]_k} \cdot x_j}{\sum_{\for[j]}\ba{C_k}{x_j,\te[g]_k}}
+        \]
+    \item \label{en:eq-ft} \[
+            \Si[\inc g]_k = \frac{\sum_{\for[j]}\ba{C_k}{x_j,\te[g]_k} \pt{x_j-\m[\inc g]_k} \pt{x_j-\m[\inc g]_k}^t}{\sum_{\for[j]}\ba{C_k}{x_j,\te[g]_k}}
+        \]
+\end{enumerate}
+\red{Intuitivamente}, trattando le componenti della mixture come cluster:
+\begin{itemize}
+    \item \ref{en:eq-st} indica la probabilità di appartenenza di $x_j$ al cluster $C_k$.
+        Calcolata sfruttando inversione di Bayes.
+        \begin{note}
+            $\dba{\cdot}{\te_k}$ è una multinormale con parametri $\te_k$
+        \end{note}
+    \item \ref{en:eq-nd} calcola il <<peso>> del cluster $C_k$ in base alla somma delle appartenenze a $C_k$ di tutti i pattern del training set;
+    \item \ref{en:eq-th} e \ref{en:eq-ft} calcolano la media e matrice di covarianza del cluster $C-k$ pesando i pattern rispetto al loro grado di appartenenza a $C_k$;
+\end{itemize}
+%
+% subsubsection Formule Incrementali (end)
+\subsubsection{Algoritmo}\label{sec:algoritmo} % (fold)
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/em-pseudo.png}
+    \caption{}\label{fig:em-pseudo}
+\end{cimage}
+L'algoritmo è simile a \link[sub:fuzzy_k_means]{fuzzy k-means}, ma in questo caso, oltre ai centroidi (qui i vettori medi $\m[\inc g]_k$), abbiamo maggiori gradi di libertà nella forma dei cluster che possono essere \red{ellissoidali}.
+\begin{warning}[Attenzione all'implementazione]
+    Le matrici di covarianza non possono essere generate completamente random, ma è necessario che siano simmetriche e definite positive (si utilizzano matrici diagonali).
+    \emptyln{}
+    Inoltre, le probabilità di appartenenza possono assumere valori molto piccoli e causare problemi numerici, perciò vengono spesso utilizzate costanti moltiplicative se necessario e si normalizza alla fine.
+\end{warning}
+\begin{example}{}{}
+    \begin{center}
+        \includegraphics[width=.4\textwidth]{assets/em-visual.png}
+    \end{center}
+    A differenza di \link[sub:k_means]{K-means} e \link[sub:fuzzy_k_means]{Fuzzy K-means}, \ac{em} è in grado di identificare nuvole di punti con forme ellissoidali.
+\end{example}
+% subsubsection Algoritmo (end)
 % subsection Expectation Maximization (end)
 % section Centroid-based Clustering (end)
 % chapter Clustering (end)

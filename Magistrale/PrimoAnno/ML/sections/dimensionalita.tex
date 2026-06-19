@@ -1,0 +1,50 @@
+% ltex: language=it
+\chapter{Riduzione Dimensionalità}\label{chap:riduzione_dimensionalita} % (fold)
+\section{Introduzione}\label{sec:dime_introduzione} % (fold)
+\subsection{Definizioni}\label{sub:dime_definizioni} % (fold)
+L'obiettivo dei metodi per ridurre la dimensionalità, \textbf{dimnesionality reduction}, è quello di eseguire un \red{mapping} dallo spazio iniziale $\Re^d$ a uno spazio di dimensione inferiore $\Re^k$, $k < d$.
+\emptyln{}
+Può essere vista come una forma di compressione con perdita di informazioni.
+Vengono \textbf{scartate le informazioni non rilevanti} o \red{meno rilevanti} per il problema di interesse:
+\begin{itemize}
+    \item si alleviano i problemi collegati alla \textbf{curse of dimensionality}: opera in spazi a elevata dimensionalità; siccome i pattern sono molto sparsi, richiede ingenti moli di dati per l'addestramento;
+    \item operare in spazi a dimensionalità inferiore rende più semplice addestrare algoritmi di machine learning. Scartando i dati \red{ridondanti} e \red{rumorosi} talvolta si migliorano le prestazioni;
+\end{itemize}
+\begin{warning}
+    Ridurre la dimensionalità non significa mantenere <<alcune>> dimensioni e cancellarne altre, ma <<\red{combinare}>> le dimensioni in modo opportuno.
+\end{warning}
+%
+% subsection Definizioni (end)
+\subsection{Principali Tecniche}\label{sub:dime_principali_tecniche} % (fold)
+Le più note tecniche di riduzione di dimensionalità sono:
+\begin{itemize}
+    \item \textbf{\acf{pca}}: trasformazione \red{non-supervisionata} nota anche come \ac{kl} transform.
+        Esegue un mapping \red{lineare} con l'obiettivo di \textbf{preservare} al massimo \textbf{l'informazione dei pattern};
+    \item \textbf{\acf{lda}}: il mapping è ancora \red{lineare}, ma in questo caso è \red{supervisionato}.
+        Mentre \ac{pca} privilegia le dimensioni che \textbf{rappresentano al meglio} i pattern, \ac{lda} privilegia le dimensioni che \textbf{discriminano al meglio} i pattern del $TS$;
+    \item \textbf{\acf{tsne}}: trasformazione \red{non lineare} e \red{non supervisionata}, specificatamente ideata per ridurre le dimensionalità a $2$ o $3$ dimensioni onde poter \textbf{visualizzare} dati multidimensionali.
+\end{itemize}
+Altre tecniche di interesse:
+\begin{itemize}
+    \item \acf{ica}: trasformazione lineare orientata a proiettare i pattern su componenti statisticamente \red{indipendenti} anche se non ortogonali (come in \ac{pca} e \ac{lda}).
+        Considera statistiche oltre al secondo ordine, invece \ac{pca} si limita al secondo ordine;
+    \item Kernel \ac{pca}: simile a \ac{pca} ma più potente perché il mapping è \red{non lineare}.
+        Utilizza un <<trucco>> simile a quello che permette di passare da \link[sub:svm_lineari]{\ac{svm} lineare} a \link[sec:svm_non_lineari]{\ac{svm} non lineare};
+    \item \ac{lle}: trasformazione \red{non lineare} che invece di calcolare un mapping <<globale>>, considera le relazioni tra gruppi di pattern vicini.
+\end{itemize}
+%
+% subsection Principali Tecniche (end)
+% section Introduzione (end)
+\section{\acf{pca}}\label{sec:principal_component_analysis} % (fold)
+
+%
+% section Principal Component Analysis (end)
+\section{\acf{lda}}\label{sec:linear_discriminant_analysis} % (fold)
+
+%
+% section Linear Discriminant Analysis (end)
+\section{Riduzione per Visualizzazione}\label{sec:riduzione_per_visualizzazione} % (fold)
+
+%
+% section Riduzione per Visualizzazione (end)
+% chapter Riduzione Dimensionalita (end)
