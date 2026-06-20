@@ -36,15 +36,177 @@ Altre tecniche di interesse:
 % subsection Principali Tecniche (end)
 % section Introduzione (end)
 \section{\acf{pca}}\label{sec:principal_component_analysis} % (fold)
-
+Dato un training set $TS = \pg{x_i \in \Re^d,\,\for}$, siano:
+\[
+    \begin{aligned}
+        &\bar x = \frac{1}{n}\sum_{\for}x_i \\
+        &\Si = \frac{1}{\dec n}\sum_{\for}\pt{x_i - \bar x}\pt{x_i - \bar x}^t
+    \end{aligned}
+\]
+il \red{vettore medio} $\bar x \in \Re^d$ e la \red{matrice di covarianza} $\Si \in \Re^{d\times d}$.
+\begin{note}
+    La divisione per $\dec n$ invece di $n$ è dovuta a causa della \red{correzione di Bessel} per il caso \textbf{unbiased}
+\end{note}
+Allora per un dato $k$ $\pt{k < d,\, k < n,\,k > 0}$, lo spazio $k$ dimensionale $S_{\bar x,\,\Phi_k}$ è \textbf{univocamente} definito dal vettore medio e dalla matrice di proiezione $\Phi_k \in \Re^{d \times k}$ le cui \red{colonne} sono costituite dagli \textbf{autovettori} di $\Si$ corrispondenti ai $k$ più grandi \textbf{autovalori}:
+\[
+    \Phi_k = \ps{\vc{\vphi_{i1}}{\vphi_{ik}}} \qquad \text{con: } \lb_{i1} \ge \lb_{i2} \ge \cdots \ge \lb_{ik} \ge \cdots \ge \lb_{id}
+\]
+dove $\vphi_{ir}$ è \red{autovettore} di $\Si$ corrispondente all'\red{autovalore} $\lb_{ir}$, $\for[r][][d]$
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/pca-visual.png}
+\end{cimage}
+$\vphi_{i1}$ indica la direzione di maggior \red{varianza} nel training set $TS$.
+I primi $k$ autovettori sono detti \textbf{componenti principali}.
+\subsection{Proiezione e Retroproiezione}\label{sub:pca_proiezione_retroproiezione} % (fold)
+\begin{definition}{Proiezione $\pt{\rightarrow}$}{}
+    Una volta determinato lo spazio \link[sec:principal_component_analysis]{\ac{pca}}, la proiezione di un pattern su tale spazio è semplicemente la \red{proiezione geometrica} di un vettore sull'iperpiano che definisce lo spazio.
+    \\
+    \textbf{In realtà} la vera proiezione geometrica è un vettore che ha la stessa dimensionalità del vettore originale mentre in questo contesto indichiamo con \textbf{proiezione} il vettore (ridotto) nello \red{spazio \ac{pca}}.
+    \\
+    Matematicamente questa operazione è eseguita come prodotto della \textbf{matrice di proiezione trasposta} per il \textbf{pattern} al quale è preventivamente \textbf{sottratta la media}.
+    \begin{center}
+        \includegraphics[width=.8\textwidth]{assets/pca-proiezione-es.png}
+    \end{center}
+\end{definition}
+\begin{definition}{Retro-proiezione $\pt{\leftarrow}$}{}
+    Dato un vettore nello spazio \link[sec:principal_component_analysis]{\ac{pca}}, la sua retro-proiezione verso lo spazio originale si ottiene moltiplicando il vettore per la \textbf{matrice di proiezione} e sommando il \textbf{vettore medio}.
+    \\
+    Questa trasformazione \red{non sposta} spazialmente il vettore, che \textbf{giace sullo spazio \ac{pca}}, ma opera un cambiamento di coordinate che ne permette la codifica in termini delle $d$ componenti dello spazio originale.
+    \[
+        \begin{aligned}
+            &\overleftarrow{PCA}: \Re^k \to \Re^d \\
+            &\overleftarrow{PCA}\pr{y}{S_{\bar x, \Phi_k}} = \Phi_k y + \bar x
+        \end{aligned}
+    \]
+\end{definition}
+\begin{example}{Riduzione $2 \to 1$}{}
+    \begin{center}
+        \includegraphics[width=.8\textwidth]{assets/pca-retro-es-visual.png}
+    \end{center}
+    \begin{itemize}
+        \item l'\red{ellisse} rappresenta la \textbf{distribuzione dei pattern} nel training set;
+        \item $\vphi_1$ e $\vphi_2$ sono gli \textbf{autovettori} della matrice di covarianza;
+        \item gli \textbf{autovalori} $\lambda_1$ e $\lambda_2$ sono le varianze della distribuzione lungo gli assi $\vphi_1$ e $\vphi_2$;
+        \item $y_1$ e $y_2$ sono le proiezioni di $x$ sugli assi $\vphi_1$ e $\vphi_2$;
+        \item se $\lambda_2$ è piccolo, $x$ può essere approssimato con $x'$ (\red{retroproiezione di $y$}) senza perdite significative di informazioni;
+        \item si può dimostrare che tra tutte le riduzioni di dimensionalità lineari \link[sec:principal_component_analysis]{\ac{pca}} è quella che \textbf{preserva al massimo l'informazione} dei vettori originali;
+    \end{itemize}
+\end{example}
 %
+% subsection Proiezione e Retroproiezione (end)
+\subsection{Scelta di $k$}\label{sub:pca_scelta_di_k} % (fold)
+Talvolta la scelta di $k$ è obbligata: ad esempio per la visualizzazione 2D o 3D dei dati.
+\\
+Quando invece l'obiettivo è quello di scartare informazioni inutili e dati correlati, \red{mantenendo gran parte del contenuto informativo} si può scegliere $k$ nel modo seguente:
+\begin{itemize}
+    \item fissata una percentuale $t$ del contenuto informativo che si vuole preservare (es. $t = 95\%$), si sceglie il \textbf{minimo valore di $k$} per cui la \textbf{somma dei più grandi $k$ \red{autovalori}}, rispetto alla somma di tutti gli autovalori, è maggiore o uguale a $t$.
+\end{itemize}
+Considerando gli autovalori ordinati in ordine decrescente:
+\[
+    k = \argmin_z{\pg{\frac{\sum_{\for[][][z]}\lb_i}{\sum_{\for[][][d]}\lb_i}} \ge t}
+\]
+Infatti, ricordando che gli autovalori denotano la varianza lungo i diversi assi, il rapporto nella formula indica la varianza <<conservata>> rispetto alla varianza totale.
+%
+% subsection Scelta di $k$ (end)
+\subsection{Calcolo PCA in pratica}\label{sub:calcolo_pca_in_pratica} % (fold)
+Per $d$ elevato, tipico nel caso di immagini o audio, la matrice di covarianza può essere molto grande:
+\begin{itemize}
+    \item se $n << d$ è conveniente calcolare la matrice di proiezione (primi $k$ autovettori) attraverso la \red{decomposizione \ac{svd}} della matrice rettangolare dei pattern centralizzati $X \in \Re^{d\times n}$ senza passare per la matrice di covarianza.
+\end{itemize}
+\[
+    X = \begin{bmatrix}
+        x_1- \bar x & x_2- \bar x & \cdots & x_n - \bar x \\
+    \end{bmatrix}
+\]
+\begin{quote}[Decomposizione \ac{svd}]
+    Per $d > n$: $X = U\Gm V^t$, con $U \in \Re^{d\times n}$ ortonormale, con $V \in \Re^{n\times n}$ ortonormale, $\Gm \in \Re^{n\times n}$ diagonale:
+\end{quote}
+\[
+    \Si = \frac{1}{n}XX^t = \frac{1}{n}U\Gm V^t V \Gm U^t = \frac{1}{n}U \Gm[2]U^t
+\]
+\begin{note}
+    \textbf{Autovettori} e \textbf{autovalori} di $\Si$ possono dunque essere ottenuti dalle colonne di $U$, \red{vettori singolari sinistri di $X$}, e corrispondenti elementi diagonali di $\Gm$ al quadrato, \red{valori singolari al quadrato di $X$}.
+\end{note}
+% subsection Calcolo PCA in pratica (end)
+\subsection{Whitening}\label{sub:pca_whitening} % (fold)
+Il \textbf{whitening} è una tecnica di \textbf{pre-normalizzazione} dei dati che:
+\begin{itemize}
+    \item \textbf{rimuove} le correlazioni tra le dimensioni, ruotando la nuvola di punti per allineare gli assi di variazione principale dei dati (autovettori) agli assi cartesiani
+        \begin{cimage}
+            \includegraphics[width=.8\textwidth]{assets/pca-whitening-1.png}
+        \end{cimage}
+    \item \textbf{sfericizza} l'ellissoide, uniformando le varianze (denotate dagli autovalori) a $1$ lungo tutti gli assi
+        \begin{cimage}
+            \includegraphics[width=.8\textwidth]{assets/pca-whitening-2.png}
+        \end{cimage}
+\end{itemize}
+Dopo aver proiettato i pattern sullo spazio \ac{pca}, definito dai primi $k$ autovettori, è sufficiente \red{dividere ogni dimensione} per la \red{radice quadrata dell'autovalore} corrispondente (\textbf{deviazione standard}).
+\begin{note}
+    La matrice di covarianza dei dati normalizzati è l'identità
+\end{note}
+% subsection Whitening (end)
 % section Principal Component Analysis (end)
 \section{\acf{lda}}\label{sec:linear_discriminant_analysis} % (fold)
-
+Riduce la dimensionalità in maniera lineare e \red{supervisionata} il cui obiettivo è \textbf{massimizzare} la separazione tra le classi (che nel $TS$ sono etichettate).
+\\
+L'esempio seguente mostra che al fine della \textbf{discriminazione} la soluzione ottimale può essere anche \red{molto diversa} dalla soluzione \ac{pca}.
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/lda-visual.png}
+\end{cimage}
+Per formulare il \textbf{criterio di ottimizzazione} di massima separazione tra le classi sono definite le seguenti \red{matrici di scattering} (``sparpagliamento''):
+\begin{itemize}
+    \item \textbf{within-class} $S_w$: indica come i vettori sono \red{scattered} rispetto al centro delle classi, ciascuno rispetto alla propria classe;
+    \item \textbf{between-class} $S_b$: indica come i centri delle classi sono scattered \textbf{rispetto al centro generale} della distribuzione, ovvero quanto le classi sono scattered;
+\end{itemize}
+Una matrice di scatter si calcola come una matrice di covarianza senza normalizzare per il numero di pattern.
+\subsection{Calcolo LDA}\label{sub:calcolo_lda} % (fold)
+Dato un training set $TS$ contenente $n$ pattern $\pr{x_1}{y_1},\,\dots,\,\pr{x_n}{y_n}$, dove $x_i \in \Re^d$ sono i \red{pattern multidimensionali} e $y_i \in \ps{1,\,\dots,\,s}$ le \textbf{etichette} delle $s$ classi.
+\\
+Siano $n_i$ e $\bar{x_i}$ il numero di pattern e il vettore medio della classe i-esima.
+Allora le \textbf{matrici di scattering} sono definite come:
+\begin{itemize}
+    \item \textbf{within-class}:
+        \[
+            S_w = \sum_{\for[][][s]}{S_i},\qquad S_i = \sum_{x_j | y_j = i}{\pt{x_j - \bar{x_i}}\pt{x_j-\bar{x_i}}^t}
+        \]
+    \item \textbf{between-class}:
+        \[
+            S_b = \sum_{\for[][][s]}{n_i \cdot \pt{\bar{x_i} - \bar{x_0}}\pt{\bar{x_i} - \bar{x_0}}^t},\qquad \bar{x_0} = \frac{1}{n}\sum_{\for[][][s]}{n_i \cdot \bar{x_i}}
+        \]
+\end{itemize}
+Tra i diversi \red{criteri di ottimizzazione} possibili quello più frequentemente utilizzato è la \textbf{massimizzazione} della quantità:
+\[
+    J_1 = tr\pt{\inv{S_w} S_b} = \sum_{\for[][][d]}\lb_i
+\]
+dove $tr$ è la \red{traccia} (somma degli autovalori) della matrice.
+\\
+Il criterio è \textbf{intuitivo} in quanto cerca di \red{massimizzare} lo scattering tra le classi ($S_b$) minimizzando al contempo (matrice inversa $\inv{S_w}$) quello all'interno di ogni classe.
+\emptyln{}
+Si dimostra che per la \textbf{massimizzazione} di $J_1$ lo spazio \ac{lda} è definito (analoga a \ac{pca}) dagli \textbf{autovalori} relativi ai primi $k$ ($k < n,\, k < s,\, k < d$) autovalori della matrice $\inv{S_w} S_b$
+% subsection Calcolo LDA (end)
 %
 % section Linear Discriminant Analysis (end)
-\section{Riduzione per Visualizzazione}\label{sec:riduzione_per_visualizzazione} % (fold)
-
+\section{t-distributed Stochastic Neighbor Embedding (t-SNE)}\label{sec:t_distributed_stochastic_neighbor_embedding_t_sne} % (fold)
+È una tecnica \red{non lineare} (non supervisionata) per la riduzione di dimensionalità introdotta nel 2008 da Van der Maaten e Hinton.
+Rappresenta (insieme a UMAP) lo stato dell'arte per la visualizzazione 2D o 3D di dati multidimensionali.
+\emptyln{}
+Anche \link[sec:principal_component_analysis]{\ac{pca}} (con $k = 2$ o $k = 3$) può essere utilizzata a tale scopo, ma dati con distribuzioni spiccatamente \red{non multinormali} non possono essere efficacemente <<ridotti>> attraverso un mapping lineare.
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/t-distr-sne-es.png}
+    \caption{Visualizzazione 2D di MNIST}\label{fig:t-distr-sne-es}
+\end{cimage}
 %
-% section Riduzione per Visualizzazione (end)
+% section t-distributed Stochastic Neighbor Embedding (t-SNE) (end)
+\section{UMAP}\label{sec:umap} % (fold)
+\acf{umap} è una tecnica di riduzione di dimensionalità (non lineare e non supervisionata) simile a \link[sec:t_distributed_stochastic_neighbor_embedding_t_sne]{\ac{tsne}}, utile per la visualizzazione 2D o 3D di dati multidimensionali.
+\\
+Come per \link[sec:t_distributed_stochastic_neighbor_embedding_t_sne]{\ac{tsne}} anche \ac{umap} preserva le distanze locali ed è in grado di individuare cluster di dati localmente connessi.
+\emptyln{}
+\ac{umap} ha maggiore capacità di preservare, anche, la struttura globale dei cluster.
+In altre parole, \ac{tsne} può visualizzare cluster vicini o lontani indipendentemente dalla loro similarità nello spazio originale, mentre \ac{umap} \textbf{preserva meglio} anche le \textbf{distanze inter-cluster}.
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/umap-tsne-diff-visual.png}
+    \caption{Differenza tra \ac{umap} e \ac{tsne}}\label{fig:umap-tsne-diff-visual}
+\end{cimage}
+% section UMAP (end)
 % chapter Riduzione Dimensionalita (end)
