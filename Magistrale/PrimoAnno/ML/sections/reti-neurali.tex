@@ -1,0 +1,132 @@
+% ltex: language=it
+\chapter{Reti Neurali}\label{chap:reti_neurali} % (fold)
+\section{Neuroni Biologici}\label{sec:neuroni_biologici} % (fold)
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/bio-neuro.png}
+\end{cimage}
+I neuroni sono le più importanti \red{cellule} del sistema nervoso.
+Le connessioni \textbf{sinaptiche}, o \textbf{sinapsi}, agiscono come porte di collegamento per il passaggio delle informazioni tra neuroni.
+\\
+I \textbf{dendriti} sono fibre minori che si ramificano a partire dal corpo cellulare del neurone, detto \textbf{soma}.
+Attraverso le sinapsi i dendriti raccolgono \textbf{input} da neuroni afferenti e li propagano verso il soma.
+\\
+L'\textbf{assone} è la fibra principale che parte dal soma e si allontana da esso per portare ad altri neuroni l'\textbf{output}.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/pre-neu-post-visual.png}
+\end{cimage}
+Il passaggio delle informazioni avviene attraverso le sinapsi, avviene con processi \red{elettro-chimici}.
+Il neurone presinaptico libera le sostanza (neurotrasmettitori) che attraverso il breve gap sinaptico e sono captati da appositi recettori, canali ionici, posizionati sulla membrana del neurone postsinaptico.
+\\
+L'ingresso di \textbf{ioni} attraverso i canali ionici determina la formazione di una differenza di potenziale tra il corpo del neurone postsinaptico e l'esterno.
+Quando questo potenziale supera una certa soglia si produce un impulso, chiamato \textbf{spike}: il neurone propaga un breve segnale elettrico detto \textbf{potenziale d'azione} lungo il proprio assone; questo potenziale determina il rilascio di neurotrasmettitori dalle sinapsi dell'assone.
+\emptyln{}
+Il \textbf{reweighting} delle sinapsi, ovvero la modifica della loro efficacia di trasmissione, è direttamente collegato ai processi di apprendimento e memoria in accordo con la regola di Hebb.
+\begin{note}[Hebbian Rule]
+    Se due neuroni, tra loro connessi da una o più sinapsi, sono ripetutamente attivati simultaneamente allora le sinapsi che li connettono sono rinforzate
+\end{note}
+%
+% section Neuroni Biologici (end)
+\section{Neurone Artificiale}\label{sec:neurone_artificiale} % (fold)
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/art-neuro-visual.png}
+\end{cimage}
+\[
+    \begin{aligned}
+        net_i = &\sum_{\for[j][][d]}w_{ji}\cdot in_j + w_{0i} \\
+        &out_i = f\pt{net_i}
+    \end{aligned}
+\]
+\begin{itemize}
+    \item $\vc{in_1}{in_d}$ sono i $d$ ingressi che il neurone $i$ riceve da assoni di neuroni afferenti;
+    \item $\vc{w_{1i}}{w_{di}}$ sono i pesi, \red{weight}, che determinano l'efficacia delle connessioni sinaptiche dei dendriti (durante l'addestramento si manipolano questi valori);
+    \item $w_{0i}$, detto \red{bias}, è un ulteriore peso che si considera collegato a un input fittizio con valore sempre $1$; questo è utile per <<tarare>> il punto di lavoro ottimale del neurone;
+    \item $net_i$ è il \red{livello di eccitazione} globale del neurone (potenziale interno);
+    \item $f\pt \cdot$ è la \red{funzione di attivazione} che determina il comportamento del neurone, ovvero il suo $out_i$ in funzione del suo livello di eccitazione $net_i$;
+\end{itemize}
+%
+\subsection{Funzione di Attivazione}\label{sub:neur_funzione_di_attivazione} % (fold)
+Nei neuroni biologici $f\pt \cdot$ è una funzione tutto-niente temporizzata: quanto $net_i$ supera una \textbf{certa soglia}, il neurone <<spara>> uno spike per poi tornare a riposo.
+\begin{quote}
+    Esistono reti artificiali, denominate \textbf{spiral neural network} che modellano questo comportamento e processano l'informazione attraverso treni di impulsi.
+\end{quote}
+Le reti neurali più comunemente utilizzate operano con \textbf{livelli continui} e $f\pt\cdot$ è una funzione \textbf{non-lineare} ma \textbf{continua} e \textbf{differenziabile}.
+\\
+Una delle funzioni di attivazione più comunemente utilizzata è la \textbf{sigmoide} nelle varianti:
+\begin{itemize}
+    \item \textbf{standard logistic function}, chiamata semplicemente sigmoid, con valori in $\itc{0,\,1}$:
+        \[
+            \fx[net] = \si\pt{net} = \frac{1}{1 + e^{-net}}
+        \]
+        La cui derivata è pari a:
+        \[
+            \sigma'\pt{net} = \frac{\dd}{\dd net}\pt{\frac{1}{1 + e^{-net}}} = \frac{e^{-net}}{\pt{1 + e^{-net}}^2} = \si\pt{net}\pt{1- \si\pt{net}}
+        \]
+    \item \textbf{tangente iperbolica} ($\tanh$) con valori in $\itc{-1,\,1}$: può essere ottenuta dalla funzione precedente, a seguito di una trasformazione di scala ($\times 2$) e traslazione ($-1$).
+        \[
+            \fx[net] = \tau\pt{net} = 2\si\pt{2 \cdot net} - 1
+        \]
+        La cui derivata è pari a:
+        \[
+            \tau'\pt{net} = 1 - \tau\pt{net}^2
+        \]
+        $\tanh$ è leggermente più complessa di sigmoid ma \red{preferibile} sia perché è simmetrica rispetto allo zero, sia perché converge più rapidamente;
+\end{itemize}
+% subsection Funzione di Attivazione (end)
+% section Neurone Artificiale (end)
+\section{Tipologie di Reti Neurali}\label{sec:tipologie_di_reti_neurali} % (fold)
+Le reti neurali sono composte da gruppi di neuroni artificiali organizzati in livelli.
+Tipicamente sono presenti: un livello di \textbf{input}, un livello di \textbf{output} e uno o più livelli \textbf{intermedi} o \textbf{nascosti}.
+\begin{quote}
+    Ogni livello contiene uno o più neuroni
+\end{quote}
+\begin{note}[Feedforward]
+    Nelle reti \textbf{feedforward} le connessioni collegano i neuroni di un livello con i neuroni di un livello \red{successivo}.
+    Non sono consentite connessioni all'indietro o connessioni verso lo stesso livello.
+    È di gran lunga la rete più utilizzata.
+    \begin{center}
+        \includegraphics[width=.6\textwidth]{assets/rete-neur-visual.png}
+    \end{center}
+\end{note}
+\begin{note}[Recurrent]
+    Nelle reti \textbf{ricorrenti} sono previste \red{connessioni di feedback}, in genere verso neuroni dello stesso livello.
+    Questo complica notevolmente il flusso delle informazioni e l'addestramento, richiedendo di considerare il comportamento in più istanti temporali, \textbf{unfolding in time}.
+    \\
+    D'altro canto queste reti sono più indicate per la gestione di \textbf{sequenze}, perché dotate di un \textbf{effetto memoria}, di breve termine, che al tempo $t$ rende disponibile l'informazione processata a $t-1$, $t-2$, etc.
+    Un particolare tipo di rete ricorrente è \ac{lstm}.
+\end{note}
+%
+\subsection{Multilayer Perceptron}\label{sub:multilayer_perceptron} % (fold)
+Il termine \textbf{perceptron} (percettrone) deriva dal modello di neurone proposto da Rosenblatt.
+\\
+Il percettrone utilizza una funzione di attivazione lineare a soglia.
+Un singolo percettrone, o una rete di percettroni a due soli livelli (input e output), può essere addestrato con una semplice regola chiamata \textbf{delta rule} (ispirata alla regola di \textbf{Hebb}).
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/mlp-visual.png}
+\end{cimage}
+Una rete a due livelli di percettroni lineari a soglia è in grado di apprendere solo mapping lineari e pertanto il numero di funzioni approssimabili è piuttosto limitato.
+\begin{definition}{MLP}{}
+    Un \textbf{\ac{mlp}} è una rete feedforward con almeno $3$ livelli (almeno $1$ nascosto) e con funzioni di attivazione non lineari.
+\end{definition}
+Un teorema noto come \textbf{universal approximation theorem} asserisce che ogni funzione continua che mappa intervalli di numeri reali su un intervallo di numeri reali può essere approssimata da un \ac{mlp} con un solo hidden layer.
+\subsubsection{Forward Propagation}\label{sec:forward_propagation} % (fold)
+Con \textbf{forward propagation} (o \red{inference}) si intende la propagazione dell'informazione in avanti: dal livello di input a quello di output.
+Una volta addestrata, una rete neurale può semplicemente processare pattern attraverso \textbf{forward propagation}.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/rete-3-lvl-mlp.png}
+    \caption{}\label{fig:rete-3-lvl-mlp}
+\end{cimage}
+In \cref{fig:rete-3-lvl-mlp} una rete a $3$ livelli $\pt{d:n_h:s}$: \red{input} $d$ neuroni, \red{livello nascosto} $n_h$ neuroni, \red{output} $s$ neuroni.
+\\
+Il numero totale di \textbf{pesi} (o parametri) è: $d \times n_h + n_h \times s + n_H + s$; dove gli ultimi due termini corrispondono ai pesi dei bias.
+\\
+Invece il $k$-esimo valore di output può essere calcolato come:
+\[
+    \begin{aligned}
+        z_k &= f\pt{\sum_{\for[j][][n_h]}w_{jk} \cdot y_j + w_{0k}} \\
+            &= f\pt{\sum_{\for[j][][n_h]}w_{jk}\cdot f\pt{\sum_{\for[][][d]}{w_{ij}\cdot x_i + w_{0j}}} + w_{0k}}
+    \end{aligned}
+\]
+% subsubsection Forward Propagation (end)
+% subsection Multilayer Perceptron (end)
+% section Tipologie di Reti Neurali (end)
+% chapter Reti Neurali (end)
