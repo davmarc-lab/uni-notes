@@ -108,7 +108,7 @@ Una rete a due livelli di percettroni lineari a soglia è in grado di apprendere
     Un \textbf{\ac{mlp}} è una rete feedforward con almeno $3$ livelli (almeno $1$ nascosto) e con funzioni di attivazione non lineari.
 \end{definition}
 Un teorema noto come \textbf{universal approximation theorem} asserisce che ogni funzione continua che mappa intervalli di numeri reali su un intervallo di numeri reali può essere approssimata da un \ac{mlp} con un solo hidden layer.
-\subsubsection{Forward Propagation}\label{sec:forward_propagation} % (fold)
+\subsubsection{Forward Propagation}\label{sec:mlp_forward_propagation} % (fold)
 Con \textbf{forward propagation} (o \red{inference}) si intende la propagazione dell'informazione in avanti: dal livello di input a quello di output.
 Una volta addestrata, una rete neurale può semplicemente processare pattern attraverso \textbf{forward propagation}.
 \begin{cimage}
@@ -126,7 +126,28 @@ Invece il $k$-esimo valore di output può essere calcolato come:
             &= f\pt{\sum_{\for[j][][n_h]}w_{jk}\cdot f\pt{\sum_{\for[][][d]}{w_{ij}\cdot x_i + w_{0j}}} + w_{0k}}
     \end{aligned}
 \]
+\begin{cimage}
+    \includegraphics[width=.3\textwidth]{assets/forw-prop-visual.png}
+\end{cimage}
+%
 % subsubsection Forward Propagation (end)
+\subsubsection{Training}\label{sec:mlp_training} % (fold)
+Fissata la topologia, l'addestramento di una rete neurale consiste nel \textbf{determinare il valore dei pesi} $w$ che determinano il \textbf{mapping desiderato} tra input e output.
+\begin{quote}[Cosa si intende per mapping desiderato?]
+    Se la rete neurale deve operare come un \link[chap:classificazione]{classificatore}, l'output desiderato è l'etichetta corretta della classe del pattern in input.
+    Se la rete deve risolvere un problema di \link[chap:regressione]{regressione}, l'output desiderato è il valore corretto della variabile dipendente, in corrispondenza del valore della variabile indipendente fornita in input.
+\end{quote}
+Nel 1986 Rumelhart, Hinton e Williams hanno introdotto l'algoritmo di \textbf{Error Backpropagation} suscitando grande attenzione scientifica: l'algoritmo risolve il cosiddetto problema del \textbf{credit assignment}, ovvero quali pesi sono responsabili per gli errori.
+\\
+Matematicamente si tratta dell'applicazione della regola di \textbf{derivazione a catena}, idea che però per decenni nessuno aveva applicato con successo in questo contesto.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/mlp-train-visual.png}
+\end{cimage}
+%
+% subsubsection Training (end)
+\subsubsection{Backpropagation}\label{sec:backpropagation} % (fold)
+
+% subsubsection Backpropagation (end)
 % subsection Multilayer Perceptron (end)
 % section Tipologie di Reti Neurali (end)
 % chapter Reti Neurali (end)
