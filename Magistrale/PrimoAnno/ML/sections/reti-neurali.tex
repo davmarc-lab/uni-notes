@@ -120,12 +120,12 @@ In \cref{fig:rete-3-lvl-mlp} una rete a $3$ livelli $\pt{d:n_h:s}$: \red{input} 
 Il numero totale di \textbf{pesi} (o parametri) è: $d \times n_h + n_h \times s + n_H + s$; dove gli ultimi due termini corrispondono ai pesi dei bias.
 \\
 Invece il $k$-esimo valore di output può essere calcolato come:
-\[
-    \begin{aligned}
+\begin{equation}
+    \begin{aligned}\label{eq:forw-prop}
         z_k &= f\pt{\sum_{\for[j][][n_h]}w_{jk} \cdot y_j + w_{0k}} \\
             &= f\pt{\sum_{\for[j][][n_h]}w_{jk}\cdot f\pt{\sum_{\for[][][d]}{w_{ij}\cdot x_i + w_{0j}}} + w_{0k}}
     \end{aligned}
-\]
+\end{equation}
 \begin{cimage}
     \includegraphics[width=.3\textwidth]{assets/forw-prop-visual.png}
 \end{cimage}
@@ -145,9 +145,129 @@ Matematicamente si tratta dell'applicazione della regola di \textbf{derivazione 
 \end{cimage}
 %
 % subsubsection Training (end)
-\subsubsection{Backpropagation}\label{sec:backpropagation} % (fold)
-
-% subsubsection Backpropagation (end)
 % subsection Multilayer Perceptron (end)
+\subsection{Backpropagation}\label{sub:backpropagation} % (fold)
+Per gestire un problema di classificazione con $s$ classi e pattern $d$-dimensionali,si può utilizzare una rete \ac{mlp} con $d:n_H:s$ neuroni nei tre livelli.
+Ovvero tanti neuroni di input quante sono le feature e tanti neuroni di output quante sono le classi.
+$n_H$ è invece un \textbf{iperparametro}: un valore ragionevole è $n_H = 1 / 10^n$.
+\emptyln{}
+La \red{pre-normalizzazione} dei pattern di input, attraverso min-max scaling, standardization o whitening, favorisce la convergenza durante l'addestramento.
+L'addestramento supervisionato avviene presentando alla rete pattern di cui è nota la classe e propagando (\link[sec:mlp_forward_propagation]{forward propagation}) gli input verso gli output attraverso l'\cref{eq:forw-prop}.
+\\
+Dato un pattern di training di classe $g$, il vettore di output desiderato $t$ (usando $\tanh$ come funzione di attivazione) assume la forma:
+\[
+    t = \ps{-1,\,-1,\,\dots,\,1,\,\dots,\,-1}
+\]
+La differenza tra l'output prodotto della rete e quello desiderato è l'errore della rete.
+L'obiettivo dell'algoritmo di apprendimento è di \textbf{modificare i pesi della rete} in modo da \textbf{minimizzare l'errore medio sui pattern} del training set.
+Prima dell'inizio dell'addestramento i pesi sono inizializzati con valori \red{random in range specifici}.
+\emptyln{}
+Siano:
+\begin{itemize}
+    \item $z = \ps{\vc{z_1}{z_s}}$ l'output prodotto dalla rete, tramite forward propagation, in corrispondenza del pattern $x = \ps{\vc{x_1}{x_d}}$ di classe $g$ fornito in input;
+    \item $t = \ps{\vc{t_1}{t_2}}$ l'output desiderato, dove $t_i = 1$ per $i = g$, $t_i = -1$ altrimenti;
+\end{itemize}
+Scegliendo come \red{loss function} la \textbf{somma dei quadrati degli errori}, l'errore per il pattern $x$ è:
+\[
+    J\pt{w,x} \equiv \half\sum_{\for[c][][s]}\pt{t_c-z_c}^2
+\]
+che quantifica l'output prodotto per il pattern $x$ si discosta da quello desiderato.
+\begin{note}
+    \begin{itemize}
+        \item la dipendenza dai pesi $w$ è implicita in $z$;
+        \item l'errore $J\pt w$ sull'intero training set è la media di $J\pt{w,x}$ su tutti i pattern $x$ appartenenti al training set;
+        \item la somma dei quadrati degli errori \red{non è una loss ottimale} per la classificazione;
+    \end{itemize}
+\end{note}
+$J\pt w$ può essere ridotto modificando i pesi $w$ in direzione \textbf{opposta al gradiente} di $J$.
+Infatti il vettore gradiente indica la direzione di maggior crescita di una funzione e muovendoci in direzione \red{opposta} si riduce al massimo l'errore.
+\emptyln{}
+Quando la minimizzazione dell'errore avviene attraverso passi in direzione opposta al gradiente l'algoritmo di \textbf{backpropagation} è denominato anche \textbf{gradient descent}.
+Esistono anche tecniche di minimizzazione del secondo ordine che possono accelerare la convergenza.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/backprop-grad-visual.png}
+\end{cimage}
+In seguito si considerano:
+\begin{itemize}
+    \item la modifica dei pesi $w_{jk}$ \textbf{hidden-output};
+    \item la modifica dei pesi $w_{ij}$ \textbf{input-hidden};
+\end{itemize}
+%
+\subsubsection{Modifica pesi hidden-output}\label{sec:bp_modifica_pesi_hidden_output} % (fold)
+\begin{equation}
+    \begin{aligned}
+        \frac{\dd J}{\dd w_{jk}} &= \frac{\dd}{\dd w_{jk}}\pt{\half \sum_{\for[c][][s]} \pt{t_c-z_c}^2} \\
+                                 &=\pt{t_k - z_k}\frac{\dd \pt{-z_k}}{\dd w_{jk}} \\
+                                 &=\pt{t_k-z_k}\frac{\dd\pt{-\fx[net_k]}}{\dd w_{jk}} = -\pt{t_k-z_k}\cdot\frac{\fx[net_k]}{\dd net_k}\cdot\frac{\dd net_k}{\dd w_{jk}} \\
+                                 &=-\pt{t_k-z_k}\cdot \dfx[net_k]\cdot\frac{\dd\sum_{\for[s]}w_{sk}\cdot y_s}{\dd w_{jk}} \\
+                                 & = -\pt{t_k-z_k}\cdot\dfx[net_k]\cdot y_j
+    \end{aligned}
+\end{equation}
+posto $\dt_k = \pt{t_k-z_k}\cdot \dfx[net_k]$, allora $\frac{\dd J}{\dd w_{jk}} = -\dt_k\cdot t_j$
+\\
+Pertanto il peso $w_{jk}$ può essere aggiornato come:
+\begin{equation}\label{eq:bp-w-update}
+    w_{jk} = w_{jk} + \eta \cdot \dt_k \cdot y_j
+\end{equation}
+dove $\eta$ è il \textbf{learning rate}.
+\begin{note}
+    Se si usano i \red{bias} il peso $w_{0k}$ si aggiorna ponendo $y_0 = 1$
+\end{note}
+% subsubsection BP: modifica pesi hidden-output (end)
+\subsubsection{Modifica pesi input-hidden}\label{sec:bp_modifica_pesi_input_hidden} % (fold)
+\begin{equation}
+    \begin{aligned}
+        \frac{\dd J}{\dd w_{ij}} &= \frac{\dd}{\dd w_{ij}}\pt{\half\sum_{\for[c][][s]}\pt{t_c-z_c}^2} = -\sum_{\for[c][][s]}\pt{t_c-z_c}\frac{\dd z_c}{\dd w_{ij}} \\
+                                 &= -\sum_{\for[c][][s]}\pt{t_c-z_c}\frac{\dd z_c}{\dd net_c}\cdot\frac{\dd net_c}{\dd w_{ij}} = -\sum_{\for[c][][s]}\pt{t_c-z_c}\cdot\dfx[net_c]\cdot\frac{\dd net_c}{\dd w_{ij}} \\
+    \end{aligned}
+\end{equation}
+con:
+\begin{equation*}
+    \begin{aligned}
+        \frac{\dd net_c}{\dd w_{ij}} &= \frac{\dd}{\dd w_{ij}}\sum_{\for[r][][n_H]}w_{rc}\cdot y_r = \frac{\dd}{\dd w_{ij}} \sum_{\for[r][][n_H]}w_{rc}\cdot\dfx[net_r] \\
+                                     &= \frac{\dd}{\dd w_{ij}}\pt{w_{jc}\cdot\fx[net_j]} = w_{jc}\frac{\dd \fx[net_j]}{\dd net_j}\cdot\frac{\dd net_j}{\dd w_{ij}} \\
+                                     &= w_{jc} \cdot \dfx[net_j] \cdot \frac{\dd}{\dd w_{ij}} \sum_{\for[q][][d]}w_{qj}\cdot x_q = w_{jc} \cdot \dfx[net_j] \cdot x_i
+    \end{aligned}
+\end{equation*}
+\begin{equation*}
+    \frac{\dd J}{\dd w_{ij}} = -\sum_{\for[c][][s]}\dt_c \cdot w_{jc} \cdot \dfx[net_j]\cdot x_i = -x_i \cdot \dfx[net_j]\sum_{\for[c][][s]}w_{jc}\cdot\dt_c
+\end{equation*}
+Posto $\dt_j = \dfx[net_j]\cdot\sum_{\for[c][][s]}w_{jc}\cdot \dt_c$ allora $\frac{\dd J}{\dd w_{ij}} = -\dt_j \cdot x_i$
+\\
+Pertanto il peso $w_{ij}$ può essere aggiornato come:
+\begin{equation}\label{eq:bp-input-hidden}
+    w_{ij} = w_{ij} + \eta \cdot \dt_j \cdot x_i
+\end{equation}
+\begin{note}
+    Se si usano i \red{bias} il peso $w_{0j}$ si aggiorna ponendo $x_0 = 1$
+\end{note}
+%
+% subsubsection BP: modifica pesi input-hidden (end)
+\subsubsection{BP: Algoritmo}\label{sec:bp_algoritmo} % (fold)
+Nella versione \red{online} i pattern del training set sono presentati sequenzialmente e i pesi sono aggiornati dopo la presentazione di ogni pattern:
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/bp-algo-online.png}
+\end{cimage}
+\begin{note}
+    La \link[sub:convergenza]{convergenza} si valuta monitorando l'andamento del loss e l'accuratezza sul validation set
+\end{note}
+La versione online richiede l'aggiornamento dei pesi a seguito della presentazione di ogni pattern: problemi di \red{efficienza} e \red{robustezza}.
+%
+% subsubsection BP: Algoritmo (end)
+\subsubsection{Stochastic Gradient Descent}\label{sec:stochastic_gradient_descent} % (fold)
+È l'approccio più utilizzato per implementare backpropagation:
+\begin{itemize}
+    \item a ogni epoca, gli $n$ pattern del training set sono \red{ordinati} in modo \red{casuale} e poi suddivisi, considerandoli sequenzialmente, in gruppi (denominati \textbf{mini-batch}) di uguale dimensione $size_{mb}$:
+        \begin{itemize}
+            \item se $size_{mb} = 1 \rightarrow$ <<stochastic>> online;
+            \item se $size_{mb} = n \rightarrow$ <<full>> batch;
+        \end{itemize}
+    \item i valori del \textbf{gradiente} sono algebricamente accumulati in variabili temporanee; l'aggiornamento dei pesi avviene solo quando tutti i pattern di un mini-batch sono stati processati;
+\end{itemize}
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/stoc-grad-desc-algo.png}
+\end{cimage}
+% subsubsection Stochastic Gradient Descent (end)
+% subsection Backpropagation (end)
 % section Tipologie di Reti Neurali (end)
 % chapter Reti Neurali (end)
