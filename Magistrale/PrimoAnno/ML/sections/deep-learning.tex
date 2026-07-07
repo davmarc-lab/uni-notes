@@ -1,0 +1,136 @@
+% ltex: language=it
+\chapter{Deep Learning}\label{chap:deep_learning} % (fold)
+\section{Introduzione}\label{sec:dl_introduzione} % (fold)
+Con il termine \ac{dnn} si denotano reti <<profonde>> composte da molti livelli organizzati gerarchicamente.
+\\
+Le implicazioni di universal approximation theroem e la difficoltà di addestrare reti con livelli hanno portato per lungo tempo a focalizzarsi su reti con un solo livello hidden.
+L'esistenza di soluzioni non implica efficienza: esistono funzioni computabili con complessità polinomiale operando su $k$ livelli, che richiedono una complessità esponenziale se si opera su $k-1$ livelli.
+\emptyln{}
+L'organizzazione gerarchica consente di \textbf{condividere} e \textbf{riusare} informazioni.
+Lungo la gerarchia è possibile selezionare feature specifiche e scartare dettagli inutili al fine di massimizzare l'invarianza.
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/why-deep-visual.png}
+\end{cimage}
+\begin{note}[Ma quanto deep?]
+    Le \ac{dnn} oggi maggiormente utilizzate consistono di un numero di livelli compreso tra $7$ e $100$.
+    Reti più profonde hanno dimostrato di poter garantire prestazioni leggermente miglior, a discapito dell'efficienza.
+\end{note}
+\subsection{Livelli e Complessità}\label{sub:livelli_e_complessita} % (fold)
+La profondità (numero di livelli) è solo uno dei fattori di complessità.
+Il numero di \textbf{neuroni}, di \textbf{connessioni} e di \textbf{pesi} caratterizzano altresì la complessità di una \ac{dnn}.
+\\
+Maggiore è il numero di \red{pesi}, ovvero di \red{parametri da apprendere}, maggiore è la complessità del \textbf{training}.
+Al tempo stesso un elevato numero di \red{neuroni} e \red{connessioni} rende \textbf{forward} e \textbf{back propagation} più costosi, poiché aumenta il numero di operazioni necessarie.
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/dnn-comparison-visual.png}
+\end{cimage}
+% subsection Livelli e complessita (end)
+%
+\subsection{Tipologie di DNN}\label{sub:tipologie_di_dnn} % (fold)
+\begin{itemize}
+    \item[] Modelli feedforward <<\textbf{discriminativi}>> per la classificazione, o regressione, ocn training prevalentemente \red{supervisionato}:
+        \begin{itemize}
+            \item \ac{fcdnn} (MLP con almeno due livelli hidden);
+            \item \ac{cnn} (o ConvNet);
+        \end{itemize}
+    \item[] Modelli ricorrenti con \textbf{memoria e attenzione}:
+        \begin{itemize}
+            \item \ac{rnn};
+            \item \ac{lstm};
+            \item \red{Transformers};
+        \end{itemize}
+    \item[] Addestramento \red{non supervisionato} (modelli addestrati a ricostruire l'input e utilizzati per denoising, anomaly detection, ...):
+        \begin{itemize}
+            \item \ac{gan};
+            \item \ac{vae};
+        \end{itemize}
+    \item[] Reinforcement learning, per apprendere comportamenti:
+        \begin{itemize}
+            \item Deep Q-Learning;
+        \end{itemize}
+\end{itemize}
+\newpage
+\begin{description}
+    \item[Big Data]: disponibilità di dataset etichettati di grandi dimensioni.
+        \\
+        La superiorità delle tecniche di deep learning rispetto ad altri approcci si manifesta quando sono disponibili \red{grandi quantità} di dati di training.
+        \begin{cimage}
+            \includegraphics[width=.4\textwidth]{assets/big-data-visual.png}
+        \end{cimage}
+    
+    \item[GPU Computing]: il training di modelli complessi, profondi e con molti pesi e connessioni, richiede elevate potenze computazionali.
+        La disponibilità di GPU con migliaia di core e GB di memoria interna ha consentito di ridurre drasticamente i tempi di training.
+    \item[Vanishing gradient]: la retro propagazione del gradiente è problematica su reti profonde se si utilizza la \link[par:sigmoid]{sigmoide} come funzione di attivazione.
+        Il problema può essere gestito con attivazione \textbf{Relu} e migliore \link[sub:inizializzazione_dei_pesi]{inizializzazione dei pesi}.
+\end{description}
+% subsection Tipologie di DNN (end)
+%
+\subsection{Funzione di attivazione: Relu}\label{sub:funzione_di_attivazione_relu} % (fold)
+Nelle reti \ac{mlp} la funzione di attivazione più utilizzata è la \link[par:sigmoid]{sigmoide}.
+Nelle reti profonde, l'utilizzo della sigmoide è problematico per la retro propagazione del gradiente (problema del \textbf{vanishing gradient}: la derivata della sigmoide è tipicamente minore di 1 e l'applicazione della regola di derivazione a catena porta a moltiplicare molti termini minori di 1 con la conseguenza di ridurre parecchio i valori del gradiente nei livelli lontani dall'output.
+\\
+La sigmoide ha un comportamento \red{saturante}, allontanandosi dallo 0.
+Nelle regioni di saturazione la derivata vale 0 e pertanto il gradiente si annulla.
+\emptyln{}
+L'utilizzo di \ac{relu} come funzione di attivazione risolve il problema:
+\[
+    \fx[net] = \max{\pt{0,\,net}}
+\]
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/relu-func-visual.png}
+\end{cimage}
+\begin{itemize}
+    \item la derivata vale $0$ per valori negativi o nulli di $net$ e $1$ per valori positivi;
+    \item per valori positivi nessuna saturazione;
+    \item porta ad attivazioni \red{sparse} (parte dei neuroni sono spenti) conferendo maggiore robustezza alla rete;
+\end{itemize}
+\subsubsection{Varianti}\label{sec:relu_varianti} % (fold)
+Sebbene \ac{relu} sia spesso la funzione di attivazione di default, alcune delle sue varianti possono essere più efficaci.
+\begin{itemize}
+    \item \textbf{Leaky Relu}, evita che nella parte negativa il gradiente sia 0, e quindi permette ai neuroni spenti durante il training di potersi attivare;
+    \item \ac{elu} oltre a non avere gradiente nullo nella parte negativa, è più smoothed vicino allo 0 (no discontinuità per $\al = 1$);
+\end{itemize}
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/active-func-visual.png}
+\end{cimage}
+% subsubsection Relu: varianti (end)
+%
+\subsubsection{Dropout}\label{sec:dropout} % (fold)
+È una tecnica di regolarizzazione utile per controllare l'overfitting:
+\begin{itemize}
+    \item specialmente nel caso di modelli molto grandi addestrati su dataset relativamente piccoli;
+    \item rallenta la convergenza, ma può migliorare la generalizzazione;
+    \item usato per addestrare AlexNet su ImageNet;
+\end{itemize}
+Durante il training alcuni neuroni spenti per far sì che l'output non dipenda da specifici neuroni, ma sia determinato in modo più robusto.
+In \red{inference} tutti i neuroni sono attivi.
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/dropout-visual.png}
+\end{cimage}
+\begin{note}
+    In una \ac{cnn} è solitamente applicato solo ai livelli \red{fully connected} nella parte finale della rete, ma non all'output.
+\end{note}
+% subsubsection Dropout (end)
+% subsection Funzione di attivazione: Relu (end)
+%
+% section Introduzione (end)
+\section{Convolutional Neural Network}\label{sec:cnn} % (fold)
+
+% section Convolutional Neural Network (end)
+%
+\section{Recurrent Neural Network}\label{sec:rnn} % (fold)
+
+% section Recurrent Neural Network (end)
+%
+\section{Natural Language Processing}\label{sec:nlp} % (fold)
+
+% section Natural Language Processing (end)
+%
+\section{Large Language Models}\label{sec:llm} % (fold)
+
+% section Large Language Models (end)
+%
+\section{Reinforcement Learning}\label{sec:rl} % (fold)
+
+% section Reinforcement Learning (end)
+% chapter Deep Learning (end)
