@@ -40,3 +40,6 @@ echo "--- copied sections dir ---"
 
 cp -r ./template/main.tex ${DIR}/
 echo "--- copied main.tex ---"
+
+ln -s ${RELATIVE}template/.snippets ${DIR}/.snippets
+echo "--- link snippets dir ---"
