@@ -87,7 +87,7 @@ L'assegnazione può diventare esclusiva scegliendo, per ogni pattern, il cluster
 % subsection Algoritmi di Clustering (end)
 % section Introduzione (end)
 \section{Clustering Gerarchico}\label{sec:clustering_gerarchico} % (fold)
-Simile al modo di eseguire \link[def:clsf]{classificazione} in tassonomia biologica:
+Simile al modo di eseguire \hyperref[def:clsf]{classificazione} in tassonomia biologica:
 \begin{itemize}
     \item gli insetti sono \red{gerarchicamente} classificati specializzandone le specie a partire da famiglie molto ampie fino a famiglie più ridotte;
 \end{itemize}
@@ -112,8 +112,8 @@ K-means (o C-means) è un metodo \red{computazionalmente molto semplice} e altre
     \item richiede in \textbf{input} il numero di cluster $s$ e una soluzione iniziale.
         Produce \textbf{buoni risultati} a patto di fornire una ragionevole soluzione iniziale e un numero adeguato di classi;
     \item il tipo di \textbf{ottimizzazione} è iterativa e locale; pertanto il metodo può convergere a massimi locali della soluzione.
-        La \link[sub:convergenza]{convergenza} si ottiene solitamente in pochi passi: $< 10$;
-    \item identifica cluster iper-sferici nel caso in cui venga utilizzata la \link[eq:dis_euclidea]{distanza euclidea} come misura di distanza tra i pattern o cluster iper-ellissoidali nel caso di \link[par:distanza_mahalanobis]{distanza di Mahalanobis}.
+        La \hyperref[sub:convergenza]{convergenza} si ottiene solitamente in pochi passi: $< 10$;
+    \item identifica cluster iper-sferici nel caso in cui venga utilizzata la \hyperref[eq:dis_euclidea]{distanza euclidea} come misura di distanza tra i pattern o cluster iper-ellissoidali nel caso di \hyperref[par:distanza_mahalanobis]{distanza di Mahalanobis}.
 \end{itemize}
 Nella sua versione base l'algoritmo può essere così descritto:
 \begin{cimage}
@@ -190,7 +190,7 @@ Il \textit{silhouette diagram} è una rappresentazione grafica degli score utili
 % subsubsection Soluzione iniziale e Validazione (end)
 % subsection K-means (end)
 \subsection{Fuzzy K-means}\label{sub:fuzzy_k_means} % (fold)
-La variante \textbf{Fuzzy} del \link[sub:k_means]{K-means} consente a un pattern di appartenere con un certo \textbf{grado di probabilità} a diverse classi.
+La variante \textbf{Fuzzy} del \hyperref[sub:k_means]{K-means} consente a un pattern di appartenere con un certo \textbf{grado di probabilità} a diverse classi.
 Il criterio di ottimizzazione in questo caso è:
 \[
     J_{fuz} = \sum_{\for[][][s]}\sum_{\for[j][][]}{\ps{\ba{C_i}{x_j, \Te}}^m \cdot \nm{x_j - \te_i}^2}
@@ -209,11 +209,11 @@ Le \textbf{probabilità di appartenenza} si calcolano come:
     $m > 1$ è un parametro che definisce quanto l'appartenenza ai diversi cluster debba essere sfumata (solitamente $m = 2$)
 \end{note}
 \emptyln{}
-Lo pseudocodice dell'algoritmo è molto simile al \link[fig:k-means-pseudo-base]{K-means}:
+Lo pseudocodice dell'algoritmo è molto simile al \hyperref[fig:k-means-pseudo-base]{K-means}:
 \begin{cimage}
     \includegraphics[width=.6\textwidth]{assets/fuzzy-k-means-pseudo-base.png}
 \end{cimage}
-Rispetto al \link[fig:k-means-pseudo-base]{K-means}, questa variante \textbf{fornisce a volte} una convergenza più robusta verso la soluzione finale.
+Rispetto al \hyperref[fig:k-means-pseudo-base]{K-means}, questa variante \textbf{fornisce a volte} una convergenza più robusta verso la soluzione finale.
 \\
 D'altro canto uno \textbf{svantaggio} è legato al fatto che l'appartenenza di un pattern a un cluster dipende implicitamente dal numero di cluster, e se questo è specificato in modo incorretto si possono ottenere cattive soluzioni.
 %
@@ -280,11 +280,11 @@ A tal fine vengono eseguiti \red{iterativamente}, fino a convergenza, due passi:
 \subsubsection{Caso Specifico}\label{sec:caso_specifico} % (fold)
 Sfruttando le peculiarità di \ac{em}, si assume l'esistenza di una \textbf{componente nascosta} $y_y$ per ogni pattern, che indica quale delle $s$ distribuzioni gaussiane ha generato il pattern $x_j$.
 \\
-Il \link[def:likelihood]{log-likelihood-completo} assume ora la forma:
+Il \hyperref[def:likelihood]{log-likelihood-completo} assume ora la forma:
 \[
     \log{\lkho{\Te}{\mathcal X,y}} = \sum_{\for[j]}\log{\pt{\al_{yj} \cdot p_{yj}\pt{x_j|\te_{yj}}}}
 \]
-sebbene gli $y_j$ non siano noti, \textbf{una loro stima}, o meglio una stima della loro distribuzione, può essere derivata (\link[eq:theor-bayes]{teorema di Bayes}) dai parametri $\Te[g]$ disponibili all'iterazione $g$ corrente.
+sebbene gli $y_j$ non siano noti, \textbf{una loro stima}, o meglio una stima della loro distribuzione, può essere derivata (\hyperref[eq:theor-bayes]{teorema di Bayes}) dai parametri $\Te[g]$ disponibili all'iterazione $g$ corrente.
 Per un singolo $y_j$ e corrispondente $x_j$:
 \[
     \ba{y_j = k}{x_j,\Te[g]} = \ba{k}{x_j,\Te[g]} = \dfrac{\al[g]_k \cdot p_k\pt{x_j|\te[g]_k}}{\displaystyle\sum_{\for[][][s]}\al[g]_i \cdot p_i\pt{x_j|\te[g]_i}}
@@ -293,7 +293,7 @@ Per un generico vettore $y$ di osservazioni:
 \[
     \ba{y}{\mathcal X,\Te[g]} = \prod_{\for[j]}\ba{y_j}{x_j,\Te[g]}
 \]
-Il valore atteso $Q$ \link[sec:caso_generale]{precedente} può essere scritto come:
+Il valore atteso $Q$ \hyperref[sec:caso_generale]{precedente} può essere scritto come:
 \[
     \begin{aligned}
         Q\pt{\Te|\Te[g]} &= \sum_{y \in \Psi}{\log{\lkho{\Te}{\mathcal X, y}} \cdot \ba{y}{\mathcal X, \Te[g]}} = \\
@@ -335,7 +335,7 @@ A seguito di alcuni passaggi (non banali) durante i quali l'ottimizzazione è es
     \includegraphics[width=.6\textwidth]{assets/em-pseudo.png}
     \caption{}\label{fig:em-pseudo}
 \end{cimage}
-L'algoritmo è simile a \link[sub:fuzzy_k_means]{fuzzy k-means}, ma in questo caso, oltre ai centroidi (qui i vettori medi $\m[\inc g]_k$), abbiamo maggiori gradi di libertà nella forma dei cluster che possono essere \red{ellissoidali}.
+L'algoritmo è simile a \hyperref[sub:fuzzy_k_means]{fuzzy k-means}, ma in questo caso, oltre ai centroidi (qui i vettori medi $\m[\inc g]_k$), abbiamo maggiori gradi di libertà nella forma dei cluster che possono essere \red{ellissoidali}.
 \begin{warning}[Attenzione all'implementazione]
     Le matrici di covarianza non possono essere generate completamente random, ma è necessario che siano simmetriche e definite positive (si utilizzano matrici diagonali).
     \emptyln{}
@@ -345,7 +345,7 @@ L'algoritmo è simile a \link[sub:fuzzy_k_means]{fuzzy k-means}, ma in questo ca
     \begin{center}
         \includegraphics[width=.4\textwidth]{assets/em-visual.png}
     \end{center}
-    A differenza di \link[sub:k_means]{K-means} e \link[sub:fuzzy_k_means]{Fuzzy K-means}, \ac{em} è in grado di identificare nuvole di punti con forme ellissoidali.
+    A differenza di \hyperref[sub:k_means]{K-means} e \hyperref[sub:fuzzy_k_means]{Fuzzy K-means}, \ac{em} è in grado di identificare nuvole di punti con forme ellissoidali.
 \end{example}
 % subsubsection Algoritmo (end)
 % subsection Expectation Maximization (end)

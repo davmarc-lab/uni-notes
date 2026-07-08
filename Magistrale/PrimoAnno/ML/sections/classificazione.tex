@@ -975,7 +975,7 @@ Le decisioni possono essere tra loro \textbf{combinate} in diversi modi, tra cui
 \end{itemize}
 %
 \subsubsection{Prestazioni Teoriche}\label{sec:prestazioni_teoriche} % (fold)
-Dato un problema di classificazione binario e un \red{multi-classificatore} costituito da $nc$ classificatori ($nc$ dispari), la \link[th:maj-vote-rule]{majority vote rule} classifica il pattern come appartenente alla classe cha ha ottenuto almeno $k = \pt{nc + 1} / 2$ voti.
+Dato un problema di classificazione binario e un \red{multi-classificatore} costituito da $nc$ classificatori ($nc$ dispari), la \hyperref[th:maj-vote-rule]{majority vote rule} classifica il pattern come appartenente alla classe cha ha ottenuto almeno $k = \pt{nc + 1} / 2$ voti.
 \\
 Sia $P$ la probabilità che ogni singolo classificatore esegua la classificazione correttamente, la probabilità $P_{multi}\pt{nc}$ che la \red{decisione del multi-classificatore} sia corretta è esprimibile attraverso la \textbf{distribuzione binomiale}:
 \[
@@ -1014,9 +1014,9 @@ L'approccio \red{One-Against-One}, consente di risolvere un problema di classifi
 Se $s$ sono le classi del problema, si addestrano $s \times\pt{s-1}/2$ classificatori binari: \textbf{tutte le possibili coppie indipendentemente dall'ordine}.
 \emptyln{}
 Durante la classificazione, il pattern $x$ viene classificato da ogni classificatore binario, che assegna un voto alla classe, tra le due, più probabile.
-Al termine il pattern $x$ è assegnato alla classe che ha ricevuto più voti (\link[th:maj-vote-rule]{majority vote rule}).
+Al termine il pattern $x$ è assegnato alla classe che ha ricevuto più voti (\hyperref[th:maj-vote-rule]{majority vote rule}).
 \emptyln{}
-È in genere più accurato di \link[def:svm-one-ag-all]{One-Against-All} anche se meno efficiente in quanto richiede l'addestramento di un numero maggiore di classificatori.
+È in genere più accurato di \hyperref[def:svm-one-ag-all]{One-Against-All} anche se meno efficiente in quanto richiede l'addestramento di un numero maggiore di classificatori.
 % subsubsection One-Against-One (end)
 % subsection Fusione a livello di decisione (end)
 %
@@ -1066,7 +1066,7 @@ In \red{Random Forest} i singoli classificatori sono \textbf{classification tree
 La suddivisione si bassa sul confronto di una singola feature con una soglia.
 \emptyln{}
 Per la <<crescita>> dell'albero a partire da un training set, si sceglie, in modo greedy, a ogni livello la coppia che meglio separa le classi.
-Per la \textbf{classificazione} di un nuovo pattern si visita l'albero e una volta giunti a una foglia, si classifica il pattern sulla base della classe più comune nel nodo: \link[th:maj-vote-rule]{majority vote rule}.
+Per la \textbf{classificazione} di un nuovo pattern si visita l'albero e una volta giunti a una foglia, si classifica il pattern sulla base della classe più comune nel nodo: \hyperref[th:maj-vote-rule]{majority vote rule}.
 \begin{cimage}
     \includegraphics[width=.6\textwidth]{assets/class-tree-es.png}
     \caption{In numero le probabilità di sopravvivenza (sinistra) e la percentuale di campioni nella foglia (destra)}\label{fig:class-tree-es}

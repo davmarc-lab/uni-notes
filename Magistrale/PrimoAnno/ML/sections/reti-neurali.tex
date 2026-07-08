@@ -97,7 +97,7 @@ Tipicamente sono presenti: un livello di \textbf{input}, un livello di \textbf{o
 \end{note}
 % section Tipologie di Reti Neurali (end)
 %
-\section{Multilayer Perceptron}\label{sec:multilayer_perceptron} % (fold)
+\section{Multilayer Perceptron}\label{sec:mlp} % (fold)
 Il termine \textbf{perceptron} (percettrone) deriva dal modello di neurone proposto da Rosenblatt.
 \\
 Il percettrone utilizza una funzione di attivazione lineare a soglia.
@@ -136,8 +136,8 @@ Invece il $k$-esimo valore di output può essere calcolato come:
 \subsection{Training}\label{sub:mlp_training} % (fold)
 Fissata la topologia, l'addestramento di una rete neurale consiste nel \textbf{determinare il valore dei pesi} $w$ che determinano il \textbf{mapping desiderato} tra input e output.
 \begin{quote}[Cosa si intende per mapping desiderato?]
-    Se la rete neurale deve operare come un \link[chap:classificazione]{classificatore}, l'output desiderato è l'etichetta corretta della classe del pattern in input.
-    Se la rete deve risolvere un problema di \link[chap:regressione]{regressione}, l'output desiderato è il valore corretto della variabile dipendente, in corrispondenza del valore della variabile indipendente fornita in input.
+    Se la rete neurale deve operare come un \hyperref[chap:classificazione]{classificatore}, l'output desiderato è l'etichetta corretta della classe del pattern in input.
+    Se la rete deve risolvere un problema di \hyperref[chap:regressione]{regressione}, l'output desiderato è il valore corretto della variabile dipendente, in corrispondenza del valore della variabile indipendente fornita in input.
 \end{quote}
 Nel 1986 Rumelhart, Hinton e Williams hanno introdotto l'algoritmo di \textbf{Error Backpropagation} suscitando grande attenzione scientifica: l'algoritmo risolve il cosiddetto problema del \textbf{credit assignment}, ovvero quali pesi sono responsabili per gli errori.
 \\
@@ -153,7 +153,7 @@ Ovvero tanti neuroni di input quante sono le feature e tanti neuroni di output q
 $n_H$ è invece un \textbf{iperparametro}: un valore ragionevole è $n_H = 1 / 10^n$.
 \emptyln{}
 La \red{pre-normalizzazione} dei pattern di input, attraverso min-max scaling, standardization o whitening, favorisce la convergenza durante l'addestramento.
-L'addestramento supervisionato avviene presentando alla rete pattern di cui è nota la classe e propagando (\link[sub:mlp_forward_propagation]{forward propagation}) gli input verso gli output attraverso l'\cref{eq:forw-prop}.
+L'addestramento supervisionato avviene presentando alla rete pattern di cui è nota la classe e propagando (\hyperref[sub:mlp_forward_propagation]{forward propagation}) gli input verso gli output attraverso l'\cref{eq:forw-prop}.
 \\
 Dato un pattern di training di classe $g$, il vettore di output desiderato $t$ (usando $\tanh$ come funzione di attivazione) assume la forma:
 \[
@@ -250,7 +250,7 @@ Nella versione \red{online} i pattern del training set sono presentati sequenzia
     \includegraphics[width=.8\textwidth]{assets/bp-algo-online.png}
 \end{cimage}
 \begin{note}
-    La \link[sub:convergenza]{convergenza} si valuta monitorando l'andamento del loss e l'accuratezza sul validation set
+    La \hyperref[sub:convergenza]{convergenza} si valuta monitorando l'andamento del loss e l'accuratezza sul validation set
 \end{note}
 La versione online richiede l'aggiornamento dei pesi a seguito della presentazione di ogni pattern: problemi di \red{efficienza} e \red{robustezza}.
 % subsubsection BP: Algoritmo (end)
@@ -308,7 +308,7 @@ Invece di $num_{epoch}$ e $size_{mb}$ alcuni tool \textbf{richiedono in input il
 Se nel livello di output si utilizza come funzione di attivazione:
 \begin{itemize}
     \item $\tanh$: i valori di uscita sono nell'intervallo $\itc{-1,\,1}$, e quindi non sono probabilità;
-    \item \link[par:sigmoid]{sigmoid}: i valori di uscita sono compresi nell'intervallo $\itc{0,\,1}$, ma non abbiamo nessuna garanzia che la somma sui neuroni di uscita sia $1$ (requisito fondamentale affinché si possano interpretare come distribuzione probabilistica):
+    \item \hyperref[par:sigmoid]{sigmoid}: i valori di uscita sono compresi nell'intervallo $\itc{0,\,1}$, ma non abbiamo nessuna garanzia che la somma sui neuroni di uscita sia $1$ (requisito fondamentale affinché si possano interpretare come distribuzione probabilistica):
         \[
             \sum_{\for[c][][s]}{z_c \ne 1}
         \]
@@ -355,7 +355,7 @@ Consideriamo un problema di regressione dove sia la variabile indipendente (inpu
 \begin{quote}
     \begin{itemize}
         \item Utilizzando la terminologia introdotta per la regressione si affronta un problema di \red{multivariate multiple regression};
-        \item La rete neurale è in grado di trovare un mapping non lineare tra input e output, pertanto il termine \link[sec:lineare]{linear} non si applica;
+        \item La rete neurale è in grado di trovare un mapping non lineare tra input e output, pertanto il termine \hyperref[sec:lineare]{linear} non si applica;
     \end{itemize}
 \end{quote}
 Se l'output assume valori \red{reali non limitati} si consiglia di non utilizzare funzioni di attivazione nel livello finale: i target vector $t$ non sono soggetti a vincoli.
@@ -364,7 +364,7 @@ Se l'output assume valori \red{reali non limitati} si consiglia di non utilizzar
 \]
 In ogni caso è consigliabile, per maggiore stabilità riscalare l'output nel range $\itc{0,\,1}$.
 \begin{quote}
-    Come \red{loss function} si può usare una qualsiasi fra: \link[def:rmse]{\ac{mse}}, \link[def:mae]{\ac{mae}}, \link[def:mape]{\ac{mape}}
+    Come \red{loss function} si può usare una qualsiasi fra: \hyperref[def:rmse]{\ac{mse}}, \hyperref[def:mae]{\ac{mae}}, \hyperref[def:mape]{\ac{mape}}
 \end{quote}
 % subsubsection Loss Function per Regressione (end)
 % subsection Cross-Entropy Loss (end)
@@ -373,7 +373,7 @@ In ogni caso è consigliabile, per maggiore stabilità riscalare l'output nel ra
 L'inizializzazione random dei pesi in un \red{range ottimale} è molto importante per la convergenza della rete.
 \\
 La <<vecchia>> inizializzazione con \textbf{distribuzione normale a media 0 e deviazione standard 1}, tende a produrre una varianza degli output di un livello maggiore di quella degli input.
-Ciò combinato con funzioni di attivazione \red{saturanti} (come \link[par:sigmoid]{sigmoid} e \red{tanh}) può portare a correzioni quasi nulle del gradiente e quindi la rete tende a non convergere.
+Ciò combinato con funzioni di attivazione \red{saturanti} (come \hyperref[par:sigmoid]{sigmoid} e \red{tanh}) può portare a correzioni quasi nulle del gradiente e quindi la rete tende a non convergere.
 \emptyln{}
 \begin{definition}{Inizializzazione Xavier}{}
     Per mantenere la varianza di output simile a quella di input si possono inizializzare i pesi: con distribuzione normale a media $0$ e deviazione standard:
@@ -424,7 +424,7 @@ Quest'ultimo vale:
 pertanto l'aggiornamento dei pesi a seguito di backpropagation include un ulteriore termine denominato \textbf{weight decay} che ha l'effetto di \red{tirarlo verso} lo $0$.
 % subsubsection Weight Decay (end)
 \begin{example}{}{}
-    Considerando l'aggiornamento dei pesi di \link[sub:stochastic_gradient_descent]{SGD}:
+    Considerando l'aggiornamento dei pesi di \hyperref[sub:stochastic_gradient_descent]{SGD}:
     \[
         w_k = w_k - \eta \cdot \frac{\dd J_{Cross-Entropy}}{\dd w_k}
     \]
@@ -453,13 +453,13 @@ Tecniche di \textbf{scheduling} di learning rate e ottimizzatori con learning ra
 % subsection Tarate il Learning Rate (end)
 %
 \subsection{Momentum}\label{sub:momentum} % (fold)
-\link[sub:stochastic_gradient_descent]{SGD} con mini-batch può determinare una discesa del gradiente a \textbf{zig-zag} che rallenta la convergenza e la rende meno stabile: la discesa del gradiente può essere vista come la traiettoria di una biglia che rotola su una superficie sconnessa.
+\hyperref[sub:stochastic_gradient_descent]{SGD} con mini-batch può determinare una discesa del gradiente a \textbf{zig-zag} che rallenta la convergenza e la rende meno stabile: la discesa del gradiente può essere vista come la traiettoria di una biglia che rotola su una superficie sconnessa.
 Attratta dalla forza di gravità la biglia cerca di portarsi sul punto più basso.
 \\
 Nella fisica il \textbf{momento} conferisce alla biglia un moto privo di oscillazioni e cambi di direzione repentini.
 Inoltre l'inerzia accumulata consente di superare piccoli avvallamenti (minimi locali).
 \emptyln{}
-In \link[sub:stochastic_gradient_descent]{SGD} per evitare oscillazioni si può emulare il comportamento fisico: si tiene traccia dell'ultimo aggiornamento $\Dt w_k$ di ogni parametro $w_k$, e il \textbf{nuovo aggiornamento} è calcolato come \textbf{combinazione lineare} del precedente aggiornamento (che conferisce stabilità) e del gradiente attuale $\frac{\dd J}{\dd w_i}$ (che corregge la direzione):
+In \hyperref[sub:stochastic_gradient_descent]{SGD} per evitare oscillazioni si può emulare il comportamento fisico: si tiene traccia dell'ultimo aggiornamento $\Dt w_k$ di ogni parametro $w_k$, e il \textbf{nuovo aggiornamento} è calcolato come \textbf{combinazione lineare} del precedente aggiornamento (che conferisce stabilità) e del gradiente attuale $\frac{\dd J}{\dd w_i}$ (che corregge la direzione):
 \[
     \Dt w_k = \mu \cdot \Dt w_k - \eta \frac{\dd J_{tot}}{\dd w_k}
 \]
@@ -470,7 +470,7 @@ Valore tipico del parametro $\mu = 0.9$
 % subsection Momentum (end)
 %
 \subsection{Learning Rate adattivo}\label{sub:learning_rate_adattivo} % (fold)
-Oltre a \link[sub:momentum]{Momentum} esistono altri ottimizzatori per l'aggiornamento dei pesi che possono accelerare la convergenza nella discesa del gradiente:
+Oltre a \hyperref[sub:momentum]{Momentum} esistono altri ottimizzatori per l'aggiornamento dei pesi che possono accelerare la convergenza nella discesa del gradiente:
 \begin{itemize}
     \item \ac{nag};
     \item \ac{adagrad};
@@ -480,7 +480,7 @@ Oltre a \link[sub:momentum]{Momentum} esistono altri ottimizzatori per l'aggiorn
 \end{itemize}
 La maggior parte di adatta il learning rate $\eta$ a ogni specifico parametro: passi di discesa più lunghi lungo le direzioni in cui il gradiente varia poco.
 È necessario mantenere statistiche (parametro per parametro) sulla variazione del gradiente.
-\red{Adam} è considerato lo stato dell'arte, anche se non sempre fornisce risultati del più classico \link[sub:stochastic_gradient_descent]{SGD} con \link[sub:momentum]{momentum}.
+\red{Adam} è considerato lo stato dell'arte, anche se non sempre fornisce risultati del più classico \hyperref[sub:stochastic_gradient_descent]{SGD} con \hyperref[sub:momentum]{momentum}.
 \begin{cimage}
     \includegraphics[width=.8\textwidth]{assets/learn-rate-adatt-visual.png}
 \end{cimage}

@@ -159,7 +159,7 @@ Esistono diversi modi per valutare l'accuratezza di predizione.
     \[
         MAPE = \frac{1}{N}\sum_{\for[][][N]}{\ab{\frac{pred_i - true_i}{true_i}}}
     \]
-    È una variante del \link[def:mae]{MAE} dove la penalizzazione dipende dallo scostamento percentuale rispetto alla grandezza dei pattern.
+    È una variante del \hyperref[def:mae]{MAE} dove la penalizzazione dipende dallo scostamento percentuale rispetto alla grandezza dei pattern.
 \end{definition}
 \begin{definition}{R2, R Squared o coefficiente di determinazione}{r2}
     È un indicatore statistico, con valori compresi tra $0$ e $1$, che indica quanto il modello lineare <<fitta>> i dati: ovvero spiega la varianza della variabile \red{dipendente}.
@@ -178,7 +178,7 @@ Esistono diversi modi per valutare l'accuratezza di predizione.
 \end{definition}
 % subsection Accuratezza di Predizione (end)
 \emptyln{}
-Con un semplice accorgimento è possibile continuare a utilizzare la \link[sec:lineare]{regressione lineare}: nella teoria introdotta infatti l'importante è che la funzione di regressione sia \textbf{lineare rispetto ai parametri} e non rispetto alla variabile indipendente, i cui elementi possono comparire elevati a potenza, combinati tra loro, come argomento di funzioni trascendenti, etc.
+Con un semplice accorgimento è possibile continuare a utilizzare la \hyperref[sec:lineare]{regressione lineare}: nella teoria introdotta infatti l'importante è che la funzione di regressione sia \textbf{lineare rispetto ai parametri} e non rispetto alla variabile indipendente, i cui elementi possono comparire elevati a potenza, combinati tra loro, come argomento di funzioni trascendenti, etc.
 \begin{example}{}{}
     Per $d = 1$ e modello \red{quadratico} $y = \bt_1x^2 + \bt_2x + \bt_3$, scriviamo come:
     \[
@@ -233,7 +233,7 @@ L'iperparametro $C$ e i regolarizzatori del kernel usato permettono il \red{cont
 %
 % subsection Support Vector Regressor (end)
 \subsection{Random Forest Regressor}\label{sub:random_forest_regressor} % (fold)
-Stessa logica di creazione della foresta con \red{doppio bagging} su feature e pattern, ma con gli alberi \link[def:class-tree]{CART} usati come \textbf{regressori}.
+Stessa logica di creazione della foresta con \red{doppio bagging} su feature e pattern, ma con gli alberi \hyperref[def:class-tree]{CART} usati come \textbf{regressori}.
 \emptyln{}
 In questo caso ogni \red{nodo}, foglie comprese, predice un valore pari alla media delle $y$ dei pattern ad esso appartenenti, e la regola di suddivisione indotta dalla coppia (feature, soglia) minimizza l'\ac{mse} delle $y$ nei due nodi figli.
 \begin{cimage}
@@ -285,9 +285,9 @@ L'implementazione con \red{modello lineare} richiede ottimizzazione numerica, es
 \section{Riepilogo}\label{sec:riepilogo} % (fold)
 Per i problemi di \textbf{regressione pi piccole-medie dimensioni}:
 \begin{itemize}
-    \item il modello \textbf{\link[sec:lineare]{lineare}}, rispetto ai parametri, risolto tramite least square, con fattorizzazione \ac{svd}, è l'approccio più semplice che costituisce una sorta di baseline;
-    \item un modello \textbf{\link[sec:non_lineare]{non-lineare} rispetto alla variabile indipendente}, ma lineare rispetto ai parametri, può essere un'ottima seconda scelta perché si coniuga semplicità e flessibilità;
-    \item quando sono necessari modelli più potenti, \link[sub:svr]{\ac{svr}}, \link[sub:random_forest_regressor]{Random Forest} e \link[sub:gradient_boosting_regressor_trees]{Gradient Boosting} sono valide alternative.
+    \item il modello \textbf{\hyperref[sec:lineare]{lineare}}, rispetto ai parametri, risolto tramite least square, con fattorizzazione \ac{svd}, è l'approccio più semplice che costituisce una sorta di baseline;
+    \item un modello \textbf{\hyperref[sec:non_lineare]{non-lineare} rispetto alla variabile indipendente}, ma lineare rispetto ai parametri, può essere un'ottima seconda scelta perché si coniuga semplicità e flessibilità;
+    \item quando sono necessari modelli più potenti, \hyperref[sub:svr]{\ac{svr}}, \hyperref[sub:random_forest_regressor]{Random Forest} e \hyperref[sub:gradient_boosting_regressor_trees]{Gradient Boosting} sono valide alternative.
         In particolare, i metodi basati su \red{alberi} sono la prima scelta per dati tabellari eterogenei, mentre \ac{svr} meglio modelli fenomeni fisici continui;
     \item se la dipendenza tra variabile dipendente e indipendente è nota, ma non lineare rispetto ai parametri, l'ottimizzazione numerica con \red{Gausss-Newton} è la prima scelta.
 \end{itemize}

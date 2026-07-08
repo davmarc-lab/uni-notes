@@ -60,13 +60,13 @@ Al tempo stesso un elevato numero di \red{neuroni} e \red{connessioni} rende \te
     
     \item[GPU Computing]: il training di modelli complessi, profondi e con molti pesi e connessioni, richiede elevate potenze computazionali.
         La disponibilità di GPU con migliaia di core e GB di memoria interna ha consentito di ridurre drasticamente i tempi di training.
-    \item[Vanishing gradient]: la retro propagazione del gradiente è problematica su reti profonde se si utilizza la \link[par:sigmoid]{sigmoide} come funzione di attivazione.
-        Il problema può essere gestito con attivazione \textbf{Relu} e migliore \link[sub:inizializzazione_dei_pesi]{inizializzazione dei pesi}.
+    \item[Vanishing gradient]: la retro propagazione del gradiente è problematica su reti profonde se si utilizza la \hyperref[par:sigmoid]{sigmoide} come funzione di attivazione.
+        Il problema può essere gestito con attivazione \textbf{Relu} e migliore \hyperref[sub:inizializzazione_dei_pesi]{inizializzazione dei pesi}.
 \end{description}
 % subsection Tipologie di DNN (end)
 %
 \subsection{Funzione di attivazione: Relu}\label{sub:funzione_di_attivazione_relu} % (fold)
-Nelle reti \ac{mlp} la funzione di attivazione più utilizzata è la \link[par:sigmoid]{sigmoide}.
+Nelle reti \ac{mlp} la funzione di attivazione più utilizzata è la \hyperref[par:sigmoid]{sigmoide}.
 Nelle reti profonde, l'utilizzo della sigmoide è problematico per la retro propagazione del gradiente (problema del \textbf{vanishing gradient}: la derivata della sigmoide è tipicamente minore di 1 e l'applicazione della regola di derivazione a catena porta a moltiplicare molti termini minori di 1 con la conseguenza di ridurre parecchio i valori del gradiente nei livelli lontani dall'output.
 \\
 La sigmoide ha un comportamento \red{saturante}, allontanandosi dallo 0.
@@ -94,8 +94,9 @@ Sebbene \ac{relu} sia spesso la funzione di attivazione di default, alcune delle
     \includegraphics[width=.8\textwidth]{assets/active-func-visual.png}
 \end{cimage}
 % subsubsection Relu: varianti (end)
+% subsection Funzione di attivazione: Relu (end)
 %
-\subsubsection{Dropout}\label{sec:dropout} % (fold)
+\subsection{Dropout}\label{sub:dropout} % (fold)
 È una tecnica di regolarizzazione utile per controllare l'overfitting:
 \begin{itemize}
     \item specialmente nel caso di modelli molto grandi addestrati su dataset relativamente piccoli;
@@ -110,12 +111,78 @@ In \red{inference} tutti i neuroni sono attivi.
 \begin{note}
     In una \ac{cnn} è solitamente applicato solo ai livelli \red{fully connected} nella parte finale della rete, ma non all'output.
 \end{note}
-% subsubsection Dropout (end)
-% subsection Funzione di attivazione: Relu (end)
+% subsection Dropout (end)
 %
+\subsection{Autodiff}\label{sub:autodiff} % (fold)
+La maggior parte dei framework di deep learning rende disponibili meccanismi di composizione e propagazione automatica del gradiente attraverso \red{reverse-mode autodiff}:
+\begin{itemize}
+    \item si sfrutta la regola di derivazione a catena che permette di isolare il contributo di ogni layer (operatore) per poi ricomporre automaticamente i pezzi;
+    \item se si definisce un nuovo layer $f$ non esistente per un framework è richiesto di definire solo i \textbf{gradienti locali}:
+        \begin{itemize}
+            \item $\dfrac{\dr y}{\dr x}$ dell'output $y$ rispetto all'input $x$;
+            \item $\dfrac{\dr y}{\dr w}$ dell'output $y$ rispetto ai parametri locali $w$;
+        \end{itemize}
+\end{itemize}
+\begin{note}
+    La propagazione e combinazione con il resto dei gradienti è eseguita automaticamente
+\end{note}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/autodiff-visual.png}
+\end{cimage}
+In pratica input, output e pesi di un livello sono organizzati in tensori (multidimensionali) e il calcolo dei gradienti richiede derivate parziali, organizzate in matrici \textbf{Jacobiane}.
+\begin{quote}
+    La chain rule può essere applicata \textbf{moltiplicando} tra loro matrici Jacobiane, con le necessarie trasposizioni.
+    \\
+    Le GPU risultano particolarmente adatte a eseguire moltiplicazioni \ac{gemm}.
+\end{quote}
+\begin{example}{Livello \red{fully connected} senza bias: $y = Wx$}{}
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/autodiff-full-conn-ex.png}
+    \end{cimage}
+    \begin{itemize}
+        \item $x \in \R[n]$ ($n$ neuroni di input);
+        \item $y \in \R[m]$ ($m$ neuroni di output);
+        \item $W \in \R[m\times n]$ (matrice dei pesi locali);
+    \end{itemize}
+    \[
+        \frac{\dr y}{\dr x} = \ps{\frac{\dr y_i}{\dr x_j}} = \ps{W_{ij}} = W
+    \]
+    \[
+        \frac{\dr y}{\dr W_i} = x, \qquad \for[][][m]
+    \]
+\end{example}
+% subsection Autodiff (end)
 % section Introduzione (end)
+%
 \section{Convolutional Neural Network}\label{sec:cnn} % (fold)
-
+Le \ac{cnn} sono state progettate per processare \red{immagini}, per le quali l'elaborazione \textbf{locale}, pesi \textbf{condivisi} e \textbf{pooling} non solo semplificano il modello, ma lo rendono più efficace rispetto a modelli fully connected.
+Possono essere utilizzate anche per altri tipi di pattern.
+%
+\subsection{Architettura}\label{sub:cnn_architettura} % (fold)
+Una \ac{cnn} è composta da una gerarchia di livelli.
+Il livello di \red{input} è direttamente collegato ai \textbf{pixel} dell'immagine, mentre gli \red{ultimi livelli} sono generalmente \textbf{fully-connected} e operano come un \hyperref[sec:mlp]{classificatore MLP}.
+Nei livelli \red{intermedi} si utilizzano connessioni locali e pesi condivisi.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/cnn-arch-visual.png}
+\end{cimage}
+\begin{note}
+    Il campo visivo dei neuroni, chiamato \textbf{receptive field}, aumenta muovendosi verso l'alto della gerarchia
+\end{note}
+Le connessioni \red{locali} fanno sì che i neuroni \textbf{processino nello stesso modo} porzioni diverse dell'immagine.
+Si tratta di un comportamento desiderato, in quanto regioni diverse del campo visino contengono lo stesso tipo di informazioni (bordi, spigoli, porzioni di oggetti, ecc.).
+% subsection Architettura (end)
+%
+\subsection{Convoluzione}\label{sub:cnn_convoluzione} % (fold)
+La \textbf{convoluzione} è una delle più importanti operazioni di \textbf{image processing} attraverso la quale si applicano filtri digitali.
+Un \textbf{filtro} digitale (maschera 2D di pesi) è fatto scorrere sulle diverse posizioni di input; per ogni posizione viene generato un valore di output, eseguendo il \textbf{prodotto scalare} tra la maschera e la porzione dell'input coperta.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/convoluzione-visual.png}
+\end{cimage}
+\begin{description}
+    \item[Neuroni come convolutori] Si considerano i pixel come neuroni e le due immagini di input e di output come livelli successivi di una rete.
+        Dato un filtro $3\times 3$, se colleghiamo un neurone ai $9$ neuroni che esso <<copre>> nel livello precedente, e utilizziamo i pesi del filtro come pesi delle connessioni $w$, notiamo che un classico \textbf{neurone} di una \hyperref[sec:mlp]{MLP} esegue di fatto una \hyperref[sub:cnn_convoluzione]{convoluzione}
+\end{description}
+% subsection Convoluzione (end)
 % section Convolutional Neural Network (end)
 %
 \section{Recurrent Neural Network}\label{sec:rnn} % (fold)

@@ -43,13 +43,13 @@ return {
         i(1, ""),
         t("}"),
     }),
-    s({ trig = "bold", desc = "Italic text (\\textit{})" }, {
-        t("\\red{"),
+    s({ trig = "bold", desc = "Bold text (\\textbf{})" }, {
+        t("\\textbf{"),
         i(1, ""),
         t("}"),
     }),
-    s({ trig = "italic", desc = "Bold text (\\textbf{})" }, {
-        t("\\red{"),
+    s({ trig = "italic", desc = "Italic text (\\textit{})" }, {
+        t("\\textit{"),
         i(1, ""),
         t("}"),
     }),
@@ -68,12 +68,16 @@ return {
         end, {}),
         t("}"),
     }),
-    s({ trig = "witalic", dscr = "Wrap bold text" }, {
-        t("\\textbf{"),
+    s({ trig = "witalic", dscr = "Wrap italic text" }, {
+        t("\\textit{"),
         f(function(_, snip)
             return snip.env.TM_SELECTED_TEXT or {}
         end, {}),
         t("}"),
+    }),
+    s({ trig = "item", dscr = "Item new line", indent = true }, {
+        t({ "", "\t\\item " }),
+        i(1),
     }),
     s({ trig = "itemize", dscr = "Itemize environment (opt wrap)", indet = true }, {
         t({ "\\begin{itemize}", "\t\\item " }),
@@ -90,9 +94,6 @@ return {
         end),
         i(1, ""),
         t({ "", "\\end{enumerate}" }),
-    }),
-    s({ trig = "item", dscr = "Item new line" }, {
-        t({ "", "\t\\item" }),
     }),
     s({ trig = "ieq", dscr = "Inline equation" }, {
         t("$"),
@@ -112,7 +113,7 @@ return {
     s({ trig = "begin", dscr = "Begin environment block", indet = true }, {
         t("\\begin{"),
         i(1, ""),
-        t({ "}", "" }),
+        t({ "}", fake_indent }),
         i(0),
         t({ "", "\\end{" }),
         f(function(args)
@@ -125,4 +126,12 @@ return {
     make_group("sub", "subsection", "sub", "Labeled subsection"),
     make_group("subs", "subsubsection", "sub", "Labeled subsubsection"),
     make_group("par", "paragraph", "par", "Labeled paragraph"),
+    s({ trig = "link", desc = "Link (\\hyperref[]{})" }, {
+        t("\\hyperref["),
+        i(2),
+        t("]{"),
+        i(1),
+        t("}"),
+        i(0),
+    }),
 }
