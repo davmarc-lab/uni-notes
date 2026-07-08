@@ -102,8 +102,8 @@ return {
     }),
     s({ trig = "eq", dscr = "Equation block", indet = true }, {
         t({ "\\[", fake_indent }),
-        i(1),
-        t({ "", "\\]", "" }),
+        i(0),
+        t({ "", "\\]"}),
     }),
     s({ trig = "beq", dscr = "Numbered equation block", indet = true }, {
         t({ "\\begin{equation}", fake_indent }),
@@ -113,7 +113,9 @@ return {
     s({ trig = "begin", dscr = "Begin environment block", indet = true }, {
         t("\\begin{"),
         i(1, ""),
-        t({ "}", fake_indent }),
+        t({ "}"}),
+        i(2),
+        t({"", fake_indent}),
         i(0),
         t({ "", "\\end{" }),
         f(function(args)

@@ -180,9 +180,79 @@ Un \textbf{filtro} digitale (maschera 2D di pesi) è fatto scorrere sulle divers
 \end{cimage}
 \begin{description}
     \item[Neuroni come convolutori] Si considerano i pixel come neuroni e le due immagini di input e di output come livelli successivi di una rete.
-        Dato un filtro $3\times 3$, se colleghiamo un neurone ai $9$ neuroni che esso <<copre>> nel livello precedente, e utilizziamo i pesi del filtro come pesi delle connessioni $w$, notiamo che un classico \textbf{neurone} di una \hyperref[sec:mlp]{MLP} esegue di fatto una \hyperref[sub:cnn_convoluzione]{convoluzione}
+        Dato un filtro $3\times 3$, se colleghiamo un neurone ai $9$ neuroni che esso <<copre>> nel livello precedente, e utilizziamo i pesi del filtro come pesi delle connessioni $w$, notiamo che un classico \textbf{neurone} di una \hyperref[sec:mlp]{MLP} esegue di fatto una \hyperref[sub:cnn_convoluzione]{convoluzione}.
+        \begin{cimage}
+            \includegraphics[width=.6\textwidth]{assets/neuro-conv-filter-visual.png}
+        \end{cimage}
+        \[
+            net = \sum_{\for[j][][9]}{w_j\cdot in_j}
+        \]
 \end{description}
+%
+\subsubsection{Volumi}\label{sub:cnn_volumi} % (fold)
+I neuroni di ciascuno livello sono organizzati in griglie o \red{volumi 3D}, si tratta in realtà di una notazione grafica utile per la compressione delle connessioni locali.
+\begin{note}
+    \begin{description}
+        \item[MLP] $\rightarrow$ organizzazione lineare dei neuroni nei livelli:
+            \begin{cimage}
+                \includegraphics[width=.6\textwidth]{assets/vol-mlp-layers.png}
+            \end{cimage}
+        \item[CNN] $\rightarrow$ i livelli sono organizzati come griglie 3D di neuroni:
+            \begin{cimage}
+                \includegraphics[width=.6\textwidth]{assets/vol-cnn-layers.png}
+            \end{cimage}
+            Sui piani \textbf{width - height} si conserva l'organizzazione spaziale <<retinotipica>> dell'immagine in input; mentre la terza dimensione \textbf{depth} individua le diverse \red{feature map}.
+    \end{description}
+\end{note}
+%
+% subsubsection Volumi (end)
 % subsection Convoluzione (end)
+%
+\subsection{Convoluzione 3D}\label{sub:cnn_convoluzione_3d} % (fold)
+Il filtro opera su una porzione del \textbf{volume} di input.
+Nell'\hyperref[fig:cnn-conv-3d-es]{esempio} ogni neurone del volume di output è connesso a $5\times 5 \times 3 = 75$ neuroni del livello precedente.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/cnn-conv-3d-es.png}
+    \caption{}\label{fig:cnn-conv-3d-es}
+\end{cimage}
+Ciascuna fetta di neuroni (stessa \textbf{depth}) denota una \textbf{feature map}.
+Nell'\hyperref[fig:cnn-conv-3d-es]{esempio} si trovano:
+\begin{itemize}
+    \item 3 feature map (dimensione $32\times32$) nel volume di input;
+    \item 6 feature map (dimensione $28\times28$) nel volume di output;
+\end{itemize}
+I pesi sono \red{condivisi} a livello di \red{feature map}.
+I neuroni di una stessa feature map processano porzioni diverse del volume di input nello stesso modo.
+Ogni feature map può essere vista come il risultato di uno \textbf{specifico filtraggio} dell'input.
+\begin{quote}
+    Nell'esempio il numero di \red{connessioni} tra i due livelli è $\pt{28\times28\times6}\times\pt{5\times5\times3} = 352800$, ma il numero totale di pesi è $6 \times\pt{5\times5\times3 + 1} = 456$.
+\end{quote}
+Quando un filtro 3D viene fatto scorrere sul volume di input, invece di spostarsi con \textbf{passi} unitari si può utilizzare un passo, o \red{Stride} maggiore.
+Questa operazione riduce la dimensione delle feature map nel volume di output e conseguentemente il numero di connessioni.
+\begin{note}
+    Sui livelli iniziali della rete per piccoli stride (2 o 4), è possibile ottenere un elevato guadagno in efficienza a discapito di una leggera penalizzazione in accuratezza.
+\end{note}
+Ulteriore possibilità, per regolare la dimensione delle feature map, è quella di aggiungere un \textbf{bordo} al volume di input.
+Con il parametro \red{Padding} si denota lo spessore in pixel del bordo.
+\emptyln{}
+Sia $W_{out}$ la dimensione orizzontale della feature map di output e $W_{in}$ la corrispondente dimensione nell'input.
+Sia inoltre $F$ la dimensione orizzontale del filtro.
+Vale la seguente relazione:
+\[
+    W_{out} = \frac{\pt{W_{in} - F + 2 \cdot Padding}}{Stride} + 1
+\]
+% subsection Convoluzione 3D (end)
+\subsection{Pooling}\label{sub:cnn_pooling} % (fold)
+Un livello di \red{pooling} esegue un'\red{aggregazione} delle informazioni nel volume di input, generando feature map di dimensione \red{inferiore}.
+L'obiettivo è quello di conferire \textbf{invarianza} rispetto a semplici trasformazioni dell'input mantenendo al tempo stesso le informazioni significative ai fini della discriminazione dei pattern.
+\\
+L'\red{aggregazione} opera nell'ambito di ciascuna feature map, cosicché il numero di feature map nel volume di input e di output è lo stesso.
+Gli operatori di aggregazione più utilizzati sono la media ($Avg$) e il massimo ($Max$): entrambi <<piuttosto>> \red{invarianti per piccole traslazioni}.
+Questo tipo di aggregazione \textbf{non ha parametri/pesi} da apprendere.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/cnn-pooling-visual.png}
+\end{cimage}
+% subsection Pooling (end)
 % section Convolutional Neural Network (end)
 %
 \section{Recurrent Neural Network}\label{sec:rnn} % (fold)
