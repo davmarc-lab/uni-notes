@@ -53,6 +53,12 @@ return {
         i(1, ""),
         t("}"),
     }),
+    s({ trig = "ac", desc = "Acronym (\\ac{})" }, {
+        t("\\ac{"),
+        i(1, ""),
+        t("}"),
+    }),
+
     -- ==== WRAPPERS ====
     s({ trig = "wred", dscr = "Wrap red text" }, {
         t("\\red{"),
@@ -76,7 +82,7 @@ return {
         t("}"),
     }),
     s({ trig = "item", dscr = "Item new line", indent = true }, {
-        t({ "", "\t\\item " }),
+        t({ "", "\\item " }),
         i(1),
     }),
     s({ trig = "itemize", dscr = "Itemize environment (opt wrap)", indet = true }, {
@@ -103,7 +109,7 @@ return {
     s({ trig = "eq", dscr = "Equation block", indet = true }, {
         t({ "\\[", fake_indent }),
         i(0),
-        t({ "", "\\]"}),
+        t({ "", "\\]" }),
     }),
     s({ trig = "beq", dscr = "Numbered equation block", indet = true }, {
         t({ "\\begin{equation}", fake_indent }),
@@ -113,9 +119,22 @@ return {
     s({ trig = "begin", dscr = "Begin environment block", indet = true }, {
         t("\\begin{"),
         i(1, ""),
-        t({ "}"}),
+        t({ "}" }),
         i(2),
-        t({"", fake_indent}),
+        t({ "", fake_indent }),
+        i(0),
+        t({ "", "\\end{" }),
+        f(function(args)
+            return args[1][1]
+        end, { 1 }),
+        t("}"),
+    }),
+    s({ trig = "quote", dscr = "Quote environment", indet = true }, {
+        t("\\begin{"),
+        i(1, "quote"),
+        t({ "}" }),
+        i(2),
+        t({ "", fake_indent }),
         i(0),
         t({ "", "\\end{" }),
         f(function(args)

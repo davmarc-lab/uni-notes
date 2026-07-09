@@ -28,7 +28,7 @@ Al tempo stesso un elevato numero di \red{neuroni} e \red{connessioni} rende \te
 %
 \subsection{Tipologie di DNN}\label{sub:tipologie_di_dnn} % (fold)
 \begin{itemize}
-    \item[] Modelli feedforward <<\textbf{discriminativi}>> per la classificazione, o regressione, ocn training prevalentemente \red{supervisionato}:
+    \item[] Modelli feedforward <<\textbf{discriminativi}>> per la classificazione, o regressione, con training prevalentemente \red{supervisionato}:
         \begin{itemize}
             \item \ac{fcdnn} (MLP con almeno due livelli hidden);
             \item \ac{cnn} (o ConvNet);
@@ -60,7 +60,7 @@ Al tempo stesso un elevato numero di \red{neuroni} e \red{connessioni} rende \te
     
     \item[GPU Computing]: il training di modelli complessi, profondi e con molti pesi e connessioni, richiede elevate potenze computazionali.
         La disponibilità di GPU con migliaia di core e GB di memoria interna ha consentito di ridurre drasticamente i tempi di training.
-    \item[Vanishing gradient]: la retro propagazione del gradiente è problematica su reti profonde se si utilizza la \hyperref[par:sigmoid]{sigmoide} come funzione di attivazione.
+    \item[Vanishing gradient]\label{it:vani-grad}: la retro propagazione del gradiente è problematica su reti profonde se si utilizza la \hyperref[par:sigmoid]{sigmoide} come funzione di attivazione.
         Il problema può essere gestito con attivazione \textbf{Relu} e migliore \hyperref[sub:inizializzazione_dei_pesi]{inizializzazione dei pesi}.
 \end{description}
 % subsection Tipologie di DNN (end)
@@ -253,6 +253,38 @@ Questo tipo di aggregazione \textbf{non ha parametri/pesi} da apprendere.
     \includegraphics[width=.6\textwidth]{assets/cnn-pooling-visual.png}
 \end{cimage}
 % subsection Pooling (end)
+\subsection{Training e Transfer Learning}\label{sub:cnn_training_e_transfer_learning} % (fold)
+Il training di \ac{cnn} complesse su dataset di grandi dimensioni può richiedere giorni/settimane di tempo macchina anche se eseguito su GPU.
+Fortunatamente, una colta che la rete è stata addestrata, il tempo richiesto per la classificazione di un nuovo pattern (\hyperref[sub:mlp_forward_propagation]{forward propagation}) è in genere \textbf{veloce}.
+\\
+Inoltre il training di una \ac{cnn} su un nuovo problema, richiede un \red{training set} etichettato di \textbf{notevoli dimensioni}.
+In alternativa al training da zero, possiamo perseguire due strade (\textbf{Transfer Learning}):
+\begin{itemize}
+    \item \textbf{Fine-Tuning} $\rightarrow$ si parte con una rete \red{pre-trained} addestrata su un problema simile e:
+        \begin{itemize}
+            \item si \red{rimpiazza} il livello di output con un nuovo livello di output softmax (adeguando il numero di classi);
+            \item come valori iniziali dei \red{pesi} si utilizzano quelli della rete pre-trained, tranne che per le connessioni tra il penultimo e ultimo livello i cui pesi sono inizializzati random;
+            \item si eseguono nuove \red{iterazioni di addestramento} (\hyperref[sub:stochastic_gradient_descent]{SGD}) per ottimizzare i pesi rispetto alle peculiarità del nuovo dataset, non è necessario che sia di grandi dimensioni;
+        \end{itemize}
+        
+    \item \textbf{Riutilizzo Features} $\rightarrow$ si utilizza una rete esistente, pre-trained, senza ulteriore fine-tuning.
+        Si estraggono, a livelli intermedi, le feature generate dalla rete durante il passo forward.
+        Si utilizzano queste feature per addestrare un classificatore esterno a classificare i pattern del nuovo dominio applicativo.
+\end{itemize}
+% subsection Training e Transfer Learning (end)
+\begin{note}[Principali innovazioni nel deep learning]
+    \begin{itemize}
+        \item \textbf{Batch Normalization}, dopo ogni livello si normalizzano gli output affinché gli input al livello successivo non si spostino troppo nello spazio (\textbf{covariate shift}):
+            \begin{quote}
+                La normalizzazione avviene a livello di minibatch e di singola feature nelle \ac{cnn}.
+                \\
+                Il training è molto più stabile e veloce, con un learning rate maggiore.
+            \end{quote}
+        \item \textbf{Skip Connections}, si aggiungono dei collegamenti laterali ai layer che sommano l'input originario all'output del layer.
+            In questo modo il mapping da apprendere è in termini di scostamento (o \red{residuale}) rispetto all'identità.
+            Le reti sono più profonde e si riduce il problema di \hyperref[it:vani-grad]{vanishing gradient}.
+    \end{itemize}
+\end{note}
 % section Convolutional Neural Network (end)
 %
 \section{Recurrent Neural Network}\label{sec:rnn} % (fold)
