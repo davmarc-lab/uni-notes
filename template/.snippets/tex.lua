@@ -17,6 +17,7 @@ local function make_group(trig, cmd, pre_label, desc)
         i(1, ""),
         t("}"),
         t("\\label{" .. pre_label .. ":"),
+        i(2, ""),
         f(function(args)
             local title = args[1][1] or ""
             -- lowercase
@@ -34,6 +35,29 @@ local function make_group(trig, cmd, pre_label, desc)
             return args[1][1]
         end, { 1 }),
         t(" (end)"),
+    })
+end
+
+local function make_quote(trig, env, desc)
+    return s({ trig = trig, dscr = desc, indet = true }, {
+        t("\\begin{" .. env .. "}"),
+        i(1),
+        t({ "", fake_indent }),
+        i(0),
+        t({ "", "\\end{" .. env .. "}" }),
+    })
+end
+
+local function make_math_block(trig, env, desc)
+    return s({ trig = trig, dscr = desc, indet = true }, {
+        t("\\begin{" .. env .. "}{"),
+        i(1),
+        t("}{"),
+        i(2),
+        t("}"),
+        t({ "", fake_indent }),
+        i(0),
+        t({ "", "\\end{" .. env .. "}" }),
     })
 end
 
@@ -81,9 +105,17 @@ return {
         end, {}),
         t("}"),
     }),
+    s({ trig = "link", desc = "Link (\\hyperref[]{})" }, {
+        t("\\hyperref["),
+        i(2),
+        t("]{"),
+        i(1),
+        t("}"),
+        i(0),
+    }),
     s({ trig = "item", dscr = "Item new line", indent = true }, {
         t({ "", "\\item " }),
-        i(1),
+        i(0),
     }),
     s({ trig = "itemize", dscr = "Itemize environment (opt wrap)", indet = true }, {
         t({ "\\begin{itemize}", "\t\\item " }),
@@ -129,30 +161,26 @@ return {
         end, { 1 }),
         t("}"),
     }),
-    s({ trig = "quote", dscr = "Quote environment", indet = true }, {
-        t("\\begin{"),
-        i(1, "quote"),
-        t({ "}" }),
-        i(2),
-        t({ "", fake_indent }),
-        i(0),
-        t({ "", "\\end{" }),
-        f(function(args)
-            return args[1][1]
-        end, { 1 }),
-        t("}"),
-    }),
+    -- quotes
+    make_quote("quote", "quote", "Quote environment"),
+    make_quote("note", "note", "Note environment"),
+    make_quote("tip", "tip", "Tip environment"),
+    make_quote("warning", "warning", "Warning environment"),
+    make_quote("critical", "critical", "Critical environment"),
+    -- page sections
     make_group("chap", "chapter", "chap", "Labeled chapter"),
     make_group("sec", "section", "sec", "Labeled section"),
     make_group("sub", "subsection", "sub", "Labeled subsection"),
     make_group("subs", "subsubsection", "sub", "Labeled subsubsection"),
     make_group("par", "paragraph", "par", "Labeled paragraph"),
-    s({ trig = "link", desc = "Link (\\hyperref[]{})" }, {
-        t("\\hyperref["),
-        i(2),
-        t("]{"),
-        i(1),
-        t("}"),
-        i(0),
-    }),
+    -- math
+    make_math_block("definition", "definition", "Definition tcolorbox"),
+    make_math_block("theorem", "theorem", "Theorem tcolorbox"),
+    make_math_block("proof", "outerproof", "Outer proof tcolorbox"),
+    make_math_block("proposition", "proposition", "Proposition tcolorbox"),
+    make_math_block("lemma", "lemma", "Lemma tcolorbox"),
+    make_math_block("corollary", "corollary", "Corollary tcolorbox"),
+    make_math_block("example", "example", "Example tcolorbox"),
+    make_math_block("remark", "remark", "Remark tcolorbox"),
+    make_math_block("axiom", "axiom", "Axiom tcolorbox"),
 }

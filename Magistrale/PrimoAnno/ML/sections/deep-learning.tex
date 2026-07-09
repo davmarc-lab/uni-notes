@@ -288,18 +288,223 @@ In alternativa al training da zero, possiamo perseguire due strade (\textbf{Tran
 % section Convolutional Neural Network (end)
 %
 \section{Recurrent Neural Network}\label{sec:rnn} % (fold)
-
+\subsection{Sequence to Sequence}\label{sub:rnn_sequence_to_sequence} % (fold)
+Le reti \red{feedforward}, come \hyperref[sec:mlp]{MLP} o \hyperref[sec:cnn]{CNN}, studiate fino a questo momento, operano su \textbf{vettore di dimensione prefissata}.
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/seq-to-seq.png}
+    \caption{}\label{fig:seq-to-seq}
+\end{cimage}
+Ad esempio l'input è un vettore immagine e l'output un vettore di probabilità delle classi.
+Questo caso è rappresentato dalla prima colonna della \cref{fig:seq-to-seq} come sequenza \textbf{One to one}.
+\\
+\begin{quote}
+    Applicazioni diverse richiedono che l'input e/o l'output possano essere sequenze, anche di lunghezza variabile.
+\end{quote}
+\begin{itemize}
+    \item \textbf{One to many}, \red{image captioning} dove l'input è un'immagine e l'output è una frase (sequenza di parole) in linguaggio naturale che la descrive;
+    \item \textbf{Many to one} \red{sentiment analysis} dove l'input è un testo e l'output un valore continuo che esprime il sentiment o giudizio (positivo o negativo);
+    \item \textbf{Many to many} \red{language translation} dove l'input è una frase in Inglese e l'output la sua traduzione in italiano;
+\end{itemize}
+\begin{definition}{\acl{rnn}}{rnn}
+    Le \textbf{reti ricorrenti} prevedono <<anche>> collegamenti all'indietro o verso lo stesso livello.
+    I modelli più comuni e diffusi prevedono collegamenti verso \textbf{lo stesso livello}.
+    \begin{cimage}
+        \includegraphics[width=.8\textwidth]{assets/rnn-time-visual.png}
+    \end{cimage}
+    A ogni step della sequenza, ad esempio a ogni istante temporale $t$, il livello riceve oltre all'\red{input} $x_\pt t$ anche il suo \textbf{output dello step precedente} $y_\pt{\dec t}$.
+    Questo consente alla rete di basare le sue decisioni sulla \textbf{storia passata} ovvero su tutti gli elementi di una sequenza e sulla loro \textbf{posizione reciproca}.
+\end{definition}
+\begin{note}
+    In una frase non è rilevante solo la presenza di specifiche parole ma è importante anche come le parole sono tra loro legate (posizione reciproca).
+    \\
+    La classificazione di video (sequenze di immagini) non necessariamente si basa sulle interrelazioni dei singoli frame.
+\end{note}
+% subsection Sequence to Sequence (end)
+%
+\subsection{Unfolding in Time}\label{sub:rnn_unfolding_in_time} % (fold)
+Una \red{cell} è una parte di rete ricorrente che preserva uno \textbf{stato} interno $x_\pt t$ per ogni istante temporale.
+È costituita da un numero prefissato di neuroni (può essere vista come layer).
+\begin{note}
+    $h_\pt t$ dipende dall'input $x_\pt t$ e dallo stato precedente:
+    \[
+        h_\pt t = \fx[h_\pt{\dec t},\, x_\pt t]
+    \]
+\end{note}
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/unfold-time.png}
+    \caption{}\label{fig:unfold-time}
+\end{cimage}
+Per poter addestrare, con \red{backpropagation}, una \ac{rnn} è necessario eseguire il cosiddetto \textbf{unfolding} o \textbf{unrolling in time} (parte destra della \cref{fig:unfold-time}), stabilendo a priori il numero d passi temporali su cui effettuare l'analisi.
+\\
+Di fatto una \ac{rnn} unfolded su 20 step equivale a una \ac{dnn} feedforward con 20 livelli.
+Pertanto addestrare \ac{rnn} che appaiono relativamente semplici può essere molto costoso e critico per la convergenza (problema del \hyperref[it:vani-grad]{vanishing gradient}).
+\begin{note}
+    Da notare che in una \ac{rnn} unfolded: l'input e l'output sono in generale collegati a tutte le istanze della cella e i pesi della cella (nascosti in $f$) \textbf{sono comuni a tutte le istanze della cella}.
+\end{note}
+% subsection Unfolding in Time (end)
+%
+\subsection{Basic Cells, LSTM, GRU}\label{sub:rnn_basic_cells_lstm_gru} % (fold)
+\subsubsection{Basic Cell}\label{sub:rnn_basic_cell} % (fold)
+In una \red{cella base} di \ac{rnn}: lo stato $h_\pt t$ dipende dall'input $x_\pt t$ e dallo stato precedente $h_\pt{\dec t}$
+\[
+    h_\pt t = \phi\pt{x_{\pt t}^T \cdot W_x + h_\pt{\dec t}^T \cdot W_h + b}
+\]
+dove:
+\begin{itemize}
+    \item $W_x$ e $W_y$ sono i vettori dei pesi e $b$ il bias da apprendere;
+    \item $\phi$ è la funzione di attivazione;
+\end{itemize}
+e l'output $y_\pt t$ corrisponde allo stato $h_\pt t$:
+\[
+    y_\pt t = h_\pt t
+\]
+Le celle base hanno difficoltà a ricordare/sfruttare input di step lontani: la memoria dei primi input \red{tende a svanire}.
+D'altro canto sappiamo che in una frase anche le prime parole possono avere un'importanza molto rilevante.
+\emptyln{}
+Per risolvere questo problema e facilitare la convergenza in applicazioni complesse, sono state proposte celle più evolute dotate di un effetto \textbf{memoria a lungo termine}: \ac{lstm} e \ac{gru} sono le più note tipologie.
+% subsubsection Basic Cell (end)
+%
+\subsubsection{LSTM}\label{sub:lstm} % (fold)
+In \acl{lstm} lo stato $h_\pt t$ è suddiviso in due vettori $h_\pt t$ e $c_\pt t$:
+\begin{itemize}
+    \item $h_\pt t$ è uno stato, o memoria, a \textbf{breve termine}, anche in questo caso uguale all'output della cella $y_\pt t$;
+    \item $c_\pt t$ è uno stato, o memoria, a \textbf{lungo termine};
+\end{itemize}
+La cella apprende durante il training cosa è importante \red{dimenticare} (\textbf{forget gate}) dello stato passato $c_\pt{\dec t}$ e cosa estrarre e aggiungere (\textbf{input gate}) dall'input corrente $x_\pt t$.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/lstm-visual.png}
+\end{cimage}
+Per il calcolo dell'output $y_\pt t = h\pt t$ si combina k'input corrente (\textbf{output gate}) con informazioni estratte dalla memoria a lungo termine.
+% subsubsection LSTM (end)
+%
+\subsubsection{GRU}\label{sub:gru} % (fold)
+\ac{gru} è una versione semplificata di \hyperref[sub:lstm]{LSTM}, che cerca di mantenere i vantaggi, riducendo i parametri e complessità.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/gru-visual.png}
+\end{cimage}
+Le principali semplificazioni sono:
+\begin{itemize}
+    \item un solo stato di memoria $h_\pt t$;
+    \item un solo gate, con logica invertita, per quantificare quanto dimenticare e quanto aggiungere: se necessario aggiungere prima di dimenticare;
+\end{itemize}
+% subsubsection GRU (end)
+%
+\subsubsection{Deep RNN}\label{sub:rnn_deep_rnn} % (fold)
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/deep-rnn.png}
+    \caption{}\label{fig:deep-rnn}
+\end{cimage}
+In \cref{fig:deep-rnn} una \hyperref[def:rnn]{RNN} costituita da \red{tre layer} (stacked): a destra la versione unfolded (su $\inc t$ step):
+\begin{itemize}
+    \item gli output di un livello sono gli input del livello successivo;
+    \item con più livelli possono essere apprese relazioni più complesse dei dati;
+    \item l'addestramento supervisionato consiste sempre nel fornire gli input e gli output desiderati per il solo ultimo livello;
+    \item se l'input sono immagini, i vettori $x_\pt t$ in genere non corrispondono ai pixel ma a feature di alto livello estratte da una \hyperref[sec:cnn]{CNN};
+    \item se l'input sono parole, i vettori $x_\pt t$ sono il risultato di \textbf{word embedding};
+\end{itemize}
+% subsubsection Deep RNN (end)
+% subsection Basic Cells, LSTM, GRU (end)
+%
+\subsection{Time Series, Dati statici e dinamici}\label{sub:rnn_time_series_dati_statici_e_dinamici} % (fold)
+\begin{example}{}{}
+    Una serie temporale (\textbf{time series}) può essere relativa all'andamento nel tempo: di un titolo di borsa, della temperatura di un ambiente, del consumo energetico di un impianto, ecc.
+    \\
+    Possiamo considerare una serie temporale come una funzione campionata in più istanti temporali.
+    Conoscendo i valori fino all'istante $t$ siamo interessati a predire il valore a $\inc t$.
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/time-series-ex-visual.png}
+    \end{cimage}
+\end{example}
+Prima di proporre modelli complessi, con il serio rischio di overfitting, si provano semplici baseline, valutandone le prestazioni e la generalizzazione:
+\begin{itemize}
+    \item \textbf{persistence model}: la predizione al tempo $\inc t$ corrisponde al valore al tempo $t$;
+    \item \textbf{linear model}: una semplice regressione lineare;
+\end{itemize}
+\begin{description}
+    \item[Modelli statici classici] Le serie temporali sono state studiate per decenni in ambito statistico ed esistono molti metodi, relativamente semplici, e talvolta preferibili a reti ricorrenti:
+        \begin{itemize}
+            \item \textbf{decorrelazione} dei dati della sequenza: se i valori di una sequenza sono correlati nel tempo, si ha l'impressione di riuscire a predire con grande successo;
+        \end{itemize}
+\end{description}
+%
+\subsubsection{Classificazione/Regressione su Serie Temporali}\label{sub:rnn_classificazione_regressione_su_serie_temporali} % (fold)
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/class-regr-temp-ser-rnn.png}
+\end{cimage}
+Un semplice \hyperref[sec:mlp]{MLP} (con uno o pochi layer) è collegato al vettore $Y_\pt t$:
+\begin{itemize}
+    \item nel caso di classificazione, tanti neuroni di output quante sono le classi;
+    \item nel caso di regressione, tanti neuroni quante sono le prediction ahead (uso tre neuroni per predire a $\inc t$, $t + 2$ e $t + 3$);
+\end{itemize}
+% subsubsection Classificazione/Regressione su Serie Temporali (end)
+%
+\subsubsection{Combinazione dati Statici e Dinamici}\label{sub:rnn_combinazione_dati_statici_e_dinamici} % (fold)
+Talvolta solo un sottoinsieme dei dati disponibili varia nel time-frame considerato (dati \textbf{dinamici}).
+Altri dati (\textbf{statici}) definiscono il contesto.
+\begin{example}{}{}
+    Informazioni di base di un paziente (\red{statici}) e l'evoluzione dei suoi livelli di glucosio (\red{dinamici}).
+    Il sistema si modella:
+    \begin{enumerate}
+        \item si replicano i dati statici in tutte le osservazioni (da $X_\pt 0$ a $X_\pt t$) $\rightarrow$ poco efficiente;
+        \item si forniscono i dati statici come input al \hyperref[sec:mlp]{MLP} finale $\rightarrow$ il modello ricorrente non è influenzato da essi (non ottimale);
+        \item si utilizzano i dati statici per definire lo stato hidden $h$ di ingresso (non più inizializzato) $\rightarrow$ di fatto si crea un modello \textbf{encoder-decoder} dove l'encoder opera su un solo istante temporale (vettore dei dati statici) e produce lo stato iniziale (contesto) per il decoder;
+    \end{enumerate}
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/rnn-data-static-dynamic.png}
+    \end{cimage}
+\end{example}
+% subsubsection Combinazione dati Statici e Dinamici (end)
+% subsection Time Series, Dati statici e dinamici (end)
 % section Recurrent Neural Network (end)
 %
 \section{Natural Language Processing}\label{sec:nlp} % (fold)
+L'elaborazione del linguaggio naturale è uno dei settori cui il deep learning ha dato i maggiori contributi.
+Tra le principali applicazioni:
+\begin{itemize}
+    \item \textbf{Text Classification}: Sentiment Analysis;
+    \item \textbf{Entity Extraction} (\textit{Named Entity Recognition}): estrarre dal testo non strutturato informazioni rilevanti;
+    \item \textbf{Summarization}: generare riassunti concisi di documenti;
+    \item \textbf{Generation}: generare testi in diversi ambiti specificando lo stile (applicazioni in ambito giornalistico/marketing);
+    \item \textbf{Machine Translation}: traduzione tra lingue, ma anche tra linguaggi di programmazione;
+    \item \textbf{Coding}: completamento intelligente del codice, creazione di funzioni da specifiche in linguaggio naturale, commenti automatici;
+    \item \textbf{Question Answering}: rispondere in linguaggio naturale a domande poste in linguaggio naturale;
+    \item \textbf{Digital Assistant e Chatbots}: dagli assistenti digitali a conversational AI;
+    \item \textbf{Automatic Speech Recognition e Synthesis}: traduzione del parlato in testo e sintesi vocale;
+    \item \textbf{Multimodal Extensions}: oltre al testo si utilizzano input/output di diversa natura (data un immagine generare una descrizione in linguaggio naturale);
+\end{itemize}
+%
+\subsection{Tokenization - Embedding}\label{sub:nlp_token_embed} % (fold)
 
+% subsection Tokenization - Embedding (end)
+%
+\subsection{Neural Machine Translation}\label{sub:nlp_neural_machine_translation} % (fold)
+
+% subsection Neural Machine Translation (end)
+%
+\subsection{Transformers}\label{sub:nlp_transformers} % (fold)
+
+% subsection Transformers (end)
+%
+\subsection{Large Language Models}\label{sub:nlp_large_language_models} % (fold)
+
+% subsection Large Language Models (end)
+%
+\subsection{Prompt Engineering e Few-shot Learning}\label{sub:nlp_prompt_engineering_e_few_shot_learning} % (fold)
+
+% subsection Prompt Engineering e Few-shot Learning (end)
+%
+\subsection{Embedding, Indexing, Tuning}\label{sub:nlp_embedding_indexing_tuning} % (fold)
+
+% subsection Embedding, Indexing, Tuning (end)
 % section Natural Language Processing (end)
 %
-\section{Large Language Models}\label{sec:llm} % (fold)
-
-% section Large Language Models (end)
-%
 \section{Reinforcement Learning}\label{sec:rl} % (fold)
+\subsection{Q-Learning}\label{sub:rl_q_learning} % (fold)
 
+% subsection Q-Learning (end)
+%
+\subsection{Deep Reinforcement Learning}\label{sub:rl_deep_reinforcement_learning} % (fold)
+
+% subsection Deep Reinforcement Learning (end)
 % section Reinforcement Learning (end)
 % chapter Deep Learning (end)
