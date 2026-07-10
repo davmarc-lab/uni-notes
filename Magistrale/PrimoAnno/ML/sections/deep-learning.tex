@@ -305,7 +305,7 @@ Questo caso è rappresentato dalla prima colonna della \cref{fig:seq-to-seq} com
     \item \textbf{Many to one} \red{sentiment analysis} dove l'input è un testo e l'output un valore continuo che esprime il sentiment o giudizio (positivo o negativo);
     \item \textbf{Many to many} \red{language translation} dove l'input è una frase in Inglese e l'output la sua traduzione in italiano;
 \end{itemize}
-\begin{definition}{\acl{rnn}}{rnn}
+\begin{definition}{Recurrent Neural Network}{rnn}
     Le \textbf{reti ricorrenti} prevedono <<anche>> collegamenti all'indietro o verso lo stesso livello.
     I modelli più comuni e diffusi prevedono collegamenti verso \textbf{lo stesso livello}.
     \begin{cimage}
@@ -474,27 +474,181 @@ Tra le principali applicazioni:
 \end{itemize}
 %
 \subsection{Tokenization - Embedding}\label{sub:nlp_token_embed} % (fold)
-
+\subsubsection{Tokenization}\label{sub:nlp_tokenization} % (fold)
+È il processo di \textbf{suddivisione del testo} in unità più piccole, chiamate \textbf{token} che costituiscono la sequenza di input fornita ai modelli di \hyperref[sec:nlp]{NLP} e quella prodotta in output dagli stessi.
+\emptyln{}
+I token possono essere intere parole, parti di parole, singoli caratteri o simboli.
+\begin{note}
+    Utilizzare token invece di parole consente di lavorare simultaneamente con più lingue anche basate su alfabeti diversi, con i simboli usati nei linguaggi di programmazione.
+\end{note}
+Il numero totale di token utilizzabili da un modello ne definisce il suo \textbf{vocabolario}.
+\emptyln{}
+La tecnica \ac{bpe} utilizzata per la creazione del vocabolario consente a GPT-3 di supportare fino a 46 lingue senza aumentare il numero di token (cosa che sarebbe necessaria utilizzando le parole).
+% subsubsection Tokenization (end)
+%
+\subsubsection{Embedding}\label{sub:nlp_embedding} % (fold)
+Fornire ai modelli gli \textbf{id} dei token o una rappresentazione \textbf{one-hot vector} derivata dagli stessi, non è efficace perché \red{non codifica la semantica} e la similarità tra parole.
+\\
+Le tecniche di \textbf{word} (o \textbf{token}) \textbf{embedding} associano a ogni parole/token del vocabolario un vettore di dimensionalità contenuta.
+Parole/token di \red{significato simile} sono associate a \textbf{vettori vicini} nello spazio.
+\begin{example}{Word2Vec}{}
+    Word2Vec è uno dei primi modelli di rete neurale (a due livelli) che può essere addestrato (\textbf{unsupervised}) per produrre l'embedding a partire da un corpus di testi.
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/word2vec-visual.png}
+    \end{cimage}
+\end{example}
+La rappresentazione delle parole con \textbf{vettori} nello spazio multidimensionale (embedding) consente di calcolare la similarità (semantica) tramite distanza \hyperref[eq:dis_euclidea]{Euclidea} e di \red{manipolare concetti con operazioni algebriche}:
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/embed-visual.png}
+\end{cimage}
+\[
+    King - Man + Woman \approx Queen
+\]
+% subsubsection Embedding (end)
 % subsection Tokenization - Embedding (end)
 %
 \subsection{Neural Machine Translation}\label{sub:nlp_neural_machine_translation} % (fold)
-
+Vengono elaborate sequenze in modalità \textbf{many-to-many}: la \textbf{traduzione} da una \red{lingua} a un'altra è l'applicazione più nota.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/nmt-visual.png}
+\end{cimage}
+I modelli più utilizzati si basano su architetture \hyperref[sec:rnn]{RNN} di tipo \textbf{Encoder-Decoder} con meccanismi di \textbf{attenzione}: per ogni parola viene assegnato un peso alle altre per essa importanti nella frase.
+\begin{note}
+    Nel decoder si opera in modo \textbf{autoregressivo}, ovvero si genera un token per volta che viene riportato in input per successive generazioni.
+\end{note}
 % subsection Neural Machine Translation (end)
 %
-\subsection{Transformers}\label{sub:nlp_transformers} % (fold)
-
+\subsection{Transformers}\label{sub:trsf_transformers} % (fold)
+\hyperref[sub:lstm]{LSTM} rappresenta un'importante evoluzione di basic \hyperref[sec:rnn]{RNN} cells ma la modellazione di relazioni tra \textbf{porzioni lontane} dell'input \red{non è ottimale} e la computazione è prevalentemente \red{sequenziale}.
+\\
+L'evoluzione dei \textbf{meccanismi di attenzione} (quando valuto un token \red{a quali altri token devo far attenzione e quali posso invece ignorare?}) ha portato all'architettura \textbf{transformers}.
+L'elemento chiave sono i layer di \textbf{self-attention} che mettono in relazione tra loro le parole nella frase per meglio \textbf{specificarne la semantica}.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/transf-es.png}
+\end{cimage}
+I transformers sono oggi utilizzati nella \textbf{maggior parte di applicazioni di \hyperref[sec:nlp]{NLP}}, ma hanno dimostrato buone prestazioni anche in altri settori.
+\emptyln{}
+I modelli più recenti per la gestione di sequenze sono basati su architettura transformer semplificata \textbf{decoder-only}:
+\begin{itemize}
+    \item architettura \textbf{colonnare}, come in tutte le reti ricorrenti utilizzate per sequenze:
+        \begin{itemize}
+            \item i pesi sono \textbf{condivisi} da tutte le colonne;
+            \item la generazione è autoregressiva (un token per volta);
+        \end{itemize}
+    \item per ogni colonna il \textbf{residual stream} (spazio multidimensionale) veicola le informazioni dal livello di input a quello di output;
+    \item per ogni layer, il blocco:
+        \begin{itemize}
+            \item \hyperref[sec:mlp]{MLP} è un semplice multilayer perceptron che può leggere e scrivere solo sul proprio residual stream;
+            \item \textbf{Attention} può leggere le informazioni dai residual stream di tutti i token precedenti e scrivere sul proprio residual stream;
+        \end{itemize}
+\end{itemize}
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/trasnf-nlp-visual.png}
+\end{cimage}
+\subsubsection{Residual Stream}\label{sub:trs_ftransf_residual_stream} % (fold)
+Ogni \textbf{residual stream} può essere visto come un \textbf{canale di informazione a elevata velocità} (spazio di dimensione $d_{model} = 12288$ in GPT-3).
+\\
+I moduli di \textbf{Attention} e \hyperref[sec:mlp]{MLP} possono leggere/scrivere da/su \textbf{sottospazi} dei residual stream anche senza interferire con l'informazione già presente (message passing).
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/res-stream-transf-visual.png}
+\end{cimage}
+% subsubsection Residual Stream (end)
 % subsection Transformers (end)
 %
-\subsection{Large Language Models}\label{sub:nlp_large_language_models} % (fold)
-
+\subsection{Large Language Models}\label{sub:large_language_models} % (fold)
+Si tratta di modelli linguistici \textbf{autoregressivi} di enormi dimensioni (miliardi di parametri) addestrati su \red{grandi corpus} di testo.
+L'efficacia dell'architettura \hyperref[sub:trsf_transformers]{transformers}, della tecnica di \textbf{addestramento} (predici il token successivo di una sequenza) e il fattore \textbf{scala} (sia nei parametri che nel dataset di training) hanno portato a \red{risultati ben oltre le aspettative}, non solo nelle classiche applicazioni di \hyperref[sec:nlp]{NLP} ma anche nel problem solving, reasoning, coding.
+%
+\subsubsection{Next Token Prediction}\label{sub:llm_next_token_prediction} % (fold)
+La parte più corposa nell'addestramento di un \hyperref[sub:large_language_models]{LLM} è basata sulla \textbf{predizione del prossimo token}, ottenuta facendo scorrere sul testo una finestra a lunghezza fissa.
+È detto \textbf{self-supervised} perché \red{non richiede etichettatura} manuale.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/next-token-pred-table.png}
+    \caption{In arancione i token forniti in input, in rosso i token da predire}\label{fig:next-token-pred-table}
+\end{cimage}
+Il training basato su \textbf{next token prediction} è stato criticato e considerato troppo semplicistico; ma probabilmente è uno dei punti di forza perché consente di apprendere:
+\begin{itemize}
+    \item non solo \textbf{proprietà linguistiche} e \textbf{statistiche} del linguaggio;
+    \item forza il modello a fare previsioni corrette anche in problemi di matematica, logica, coding, senso comune, dove (in assenza di un oracolo o memorizzazione esaustiva di tutti i casi) è possibile fare \textbf{previsioni corrette solo apprendendo un modello del problema sottostante};
+\end{itemize}
+% subsubsection Next Token Prediction (end)
 % subsection Large Language Models (end)
 %
-\subsection{Prompt Engineering e Few-shot Learning}\label{sub:nlp_prompt_engineering_e_few_shot_learning} % (fold)
-
+\subsection{Prompt Engineering e Few-shot Learning}\label{sub:prompt_engineering_e_few_shot_learning} % (fold)
+La costruzione di prompt efficaci (\textbf{prompt engineering}) è attualmente "\red{more of an art than a science}".
+È consigliabile inserire nel prompt elementi che possono dirigere la risposta del modello nella direzione giusta:
+\begin{itemize}
+    \item se termino il prompt con un <<punto elenco>> il modello comprende che mi aspetto una lista puntata;
+    \item si possono inserire nel prompt istruzioni tipo: <<elenca i singoli passi che ti hanno portato alla soluzione>>;
+\end{itemize}
+Questo comportamento può essere ulteriormente potenziato inserendo nel prompt stesso esempi (\textbf{Chain-of-Thoughs}).
+In questo modo si facilita ovviamente anche alla verifica di correttezza della risposta.
+%
+\subsubsection{Zero, One, Few-shot Prompting}\label{sub:nlp_zero_one_few_shot_prompting} % (fold)
+Per istruire un \hyperref[sub:large_language_models]{LLM} sul tipo di \textbf{estrazione di informazione} che ci aspettiamo, possiamo aggiungere uno o più esempi (<<\red{Q}: ... \red{A}: ...>>) direttamente nel prompt.
+\begin{description}
+    \item[Zero-shot] non include esempi e pone la domanda direttamente.
+    \item[One-shot] include un solo esempio.
+    \item[Few-shot] include alcuni esempi (in genere meno di 5).
+\end{description}
+% subsubsection Zero, One, Few-shot Prompting (end)
 % subsection Prompt Engineering e Few-shot Learning (end)
 %
 \subsection{Embedding, Indexing, Tuning}\label{sub:nlp_embedding_indexing_tuning} % (fold)
-
+\begin{definition}{Document Embedding}{}
+    Utile in applicazioni che richiedono di \textbf{individuare analogie o raggruppare testi per similarità}.
+    \\
+    Si utilizza un \hyperref[sub:large_language_models]{LLM} per estrarre un vettore di feature semanticamente significative da ciascun testo (\textbf{embedding}).
+    \begin{warning}
+        Attenzione a non confondere con il token embedding applicato in ingresso ai singoli token del prompt.
+    \end{warning}
+    Si possono calcolare \textbf{distanze} (\hyperref[eq:dis_euclidea]{Euclidea} o \hyperref[def:dis-cos]{coseno}) e/o applicare algoritmi di clustering agli embedding.
+    \begin{description}
+        \item[Operativamente] dato un archivio di documento posso utilizzare l'\hyperref[sub:large_language_models]{LLM} per pre-calcolare l'embedding e memorizzarli in archivio locale.
+            Dato un nuovo documento posso eseguire ricerche di similarità rispetto a quelli in archivio, estraendo l'embedding del solo nuovo documento e confrontandolo con quelli memorizzati.
+    \end{description}
+    \begin{center}
+        \includegraphics[width=.4\textwidth]{assets/doc-embed-visual.png}
+    \end{center}
+\end{definition}
+\emptyln{}
+Immaginiamo di voler utilizzare un \hyperref[sub:large_language_models]{LLM} potente per rispondere a domande poste in linguaggio naturale su un argomento molto specifico che l'\hyperref[sub:large_language_models]{LLM} non conosce.
+\\
+È possibile utilizzare il \textbf{fine tuning} del modello sul testo del manuale, ma non è semplice/efficiente.
+Una seconda possibilità potrebbe essere quella di \textbf{inserire nel prompt} tutto il manuale: anch'esso troppo lungo e poco efficiente.
+\\
+Un'alterativa efficace si basa su \textbf{data indexing} attraverso embedding.
+\begin{definition}{Data Indexing}{}
+    Si suddivide il manuale in chunk (pezzi di testo) parzialmente sovrapposti.
+    Di ciascuno di essi si calcola l'embedding utilizzando l'\hyperref[sub:large_language_models]{LLM} \red{A} e si crea un indice.
+    \\
+    Data una query in linguaggio naturale si calcola l'embedding della query sempre con \hyperref[sub:large_language_models]{LLM} \red{A} e si accede all'indice per identificare i chunk simili.
+    \\
+    Si sottopone all'\hyperref[sub:large_language_models]{LLM} \red{B} la query inserendo nel prompt (come contesto) il testo relativo ai soli chunk simili.
+    \begin{note}
+        \red{A} può essere un \hyperref[sub:large_language_models]{LLM} leggero, anche open source in locale, per garantire privacy e confidenzialità, mentre \red{B} un \hyperref[sub:large_language_models]{LLM} stato dell'arte da interrogare in cloud.
+    \end{note}
+\end{definition}
+%
+\subsubsection{Fine Tuning}\label{sub:eit_fine_tuning} % (fold)
+Quando un \hyperref[sub:large_language_models]{LLM} deve fornire risposte su un dominio specifico sul quale \textbf{non è stato addestrato} e non è possibile, per vincoli di lunghezza e costi, inserire la nuova conoscenza nel prompt, un'alternativa è il \textbf{fine-tuning} del modello stesso (oppure un suo \red{clone}).
+\emptyln{}
+Durante il fine tuning si adattano <<una parte>> dei parametri per ottimizzare le risposte sul nuovo dominio.
+A tal fine è necessario predisporre un set <<\textbf{etichettato}>> (Prompt - Output) di almeno \textbf{qualche centinaia di esempi}, da suddividere poi in \hyperref[def:ts]{training} e \hyperref[def:val-set]{validation}.
+\begin{note}
+    Le prestazioni tendono ad aumentare \textbf{solo} linearmente con il raddoppio del numero di esempi.
+\end{note}
+\begin{warning}
+    Il modello può dimenticare cose che conosceva o sapeva fare.
+\end{warning}
+Di certo non è immaginabile eseguire tuning di miliardi di parametri con poche centinaia di esempi, e sono ipotizzabili le seguenti alternative:
+\begin{itemize}
+    \item la maggior parte dei livelli sono bloccati e il tuning è eseguito \textbf{solo sull'ultimo o gli ultimi layer};
+    \item si aggiungono \textbf{adapters} (layer laterali) inizializzati in modo da non modificare le risposte iniziali del modello.
+        Durante il tuning il comportamento viene \red{lentamente} modificato.
+        La tecnica \ac{lora} è una delle più usate.
+\end{itemize}
+% subsubsection Fine Tuning (end)
 % subsection Embedding, Indexing, Tuning (end)
 % section Natural Language Processing (end)
 %
