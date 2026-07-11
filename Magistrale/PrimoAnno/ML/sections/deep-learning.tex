@@ -67,7 +67,7 @@ Al tempo stesso un elevato numero di \red{neuroni} e \red{connessioni} rende \te
 %
 \subsection{Funzione di attivazione: Relu}\label{sub:funzione_di_attivazione_relu} % (fold)
 Nelle reti \ac{mlp} la funzione di attivazione più utilizzata è la \hyperref[par:sigmoid]{sigmoide}.
-Nelle reti profonde, l'utilizzo della sigmoide è problematico per la retro propagazione del gradiente (problema del \textbf{vanishing gradient}: la derivata della sigmoide è tipicamente minore di 1 e l'applicazione della regola di derivazione a catena porta a moltiplicare molti termini minori di 1 con la conseguenza di ridurre parecchio i valori del gradiente nei livelli lontani dall'output.
+Nelle reti profonde, l'utilizzo della sigmoide è problematico per la retro propagazione del gradiente (problema del \textbf{vanishing gradient}): la derivata della sigmoide è tipicamente minore di 1 e l'applicazione della regola di derivazione a catena porta a moltiplicare molti termini minori di 1 con la conseguenza di ridurre parecchio i valori del gradiente nei livelli lontani dall'output.
 \\
 La sigmoide ha un comportamento \red{saturante}, allontanandosi dallo 0.
 Nelle regioni di saturazione la derivata vale 0 e pertanto il gradiente si annulla.
@@ -653,12 +653,117 @@ Di certo non è immaginabile eseguire tuning di miliardi di parametri con poche 
 % section Natural Language Processing (end)
 %
 \section{Reinforcement Learning}\label{sec:rl} % (fold)
+L'obiettivo è \textbf{apprendere un comportamento ottimale} a partire dalle esperienze passate.
+\\
+Un agente esegue \textbf{azioni} \red{$\mathbf a$} che modificano l'\textbf{ambiente}, provocando passaggi da uno \textbf{stato} \red{$\mathbf s$} all'altro.
+Quando l'agente ottiene risultati positivi riceve una ricompensa o \textbf{reward} \red{$\mathbf r$} che però può essere temporalmente ritardata rispetto all'azione, o alla sequenza di azioni, che l'hanno determinata.
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/rl-visual.png}
+\end{cimage}
+Un \textbf{episodio} (o game) è una sequenza finita di stati, azioni e reward:
+\[
+    s_0,\,a_0,\,r_1,\,s_1,\,a_1,\,r_2,\,s_2,\,\dots,\,s_{\dec n},\,a_{\dec n},\,r_n,\,s_n
+\]
+In ciascuno stato $s_{\dec t}$, l'obiettivo è scegliere l'azione ottimale $a_{\dec t}$, ovvero quella che massimizza il \textbf{future reward} $R_t$:
+\[
+    R_t = r_t + r_{\inc t} + \dots + r_n
+\]
+In molte applicazioni reali l'ambiente è \textbf{stocastico} (non è detto che la stessa azione determini sempre la stessa sequenza di stati e reward), pertanto applicando la logica del <<meglio un uovo oggi che una gallina domani>>, si pesano maggiormente i reward temporalmente vicini (\textbf{discounted future reward}):
+\[
+    R_t = r_t + \gm \cdot r_{\inc t} + \gm[2] \cdot r_{t+2} + \dots + \gm[n-t]\cdot r_n \qquad \text{con } 0 \le \gm \le 1
+\]
 \subsection{Q-Learning}\label{sub:rl_q_learning} % (fold)
-
+\begin{definition}{Discounted Future Reward}{dfr}
+    Il \textbf{discounted future reward} può essere definito ricorsivamente:
+    \[
+        R_t = r_t + \gm \cdot R_{\inc t}
+    \]
+\end{definition}
+Nel \textbf{Q-Learning} la funzione $Q\pt{s,\,a}$ indica l'\textbf{ottimalità} (o \red{qualità}) dell'azione $a$ quando ci si trova nello stato $s$.
+Volendo massimizzare il \hyperref[def:dfr]{discounted future reward} si pone:
+\[
+    Q\pt{s_t,\,a_t} = \max R_{\inc t}
+\]
+Nell'ipotesi che la funzione $Q\pt{s,\,a}$ sia \textbf{nota}, quando ci si trova in stato $s$, si può dimostrare che la \textbf{policy} ottimale è quella che sceglie l'azione $A^*$ tale che:
+\[
+    a^* = \argmax_a{Q\pt{x,\,a}}
+\]
+Il punto cruciale è dunque \red{l'apprendimento della funzione $Q$}.
+Data una \textbf{transizione} (quaterna) $<s_t,\,a_t,\,r_{\inc t},\,s_{\inc t}$, possiamo scrivere:
+\[
+    \begin{aligned}
+        Q\pt{s_t,\,a_t} &= \max\pg{R_{\inc t}} = \max{\pt{r_{\inc t} + \gm \cdot R_{t+2}}} \\
+                        &= r_{\inc t} + \gm \cdot \max\pg{R_{t+2}} = r_{\inc t} + \gm \cdot Q\pt{s_{\inc t},\,a_{\inc t}}
+    \end{aligned}
+\]
+L'azione $a_{\inc t}$, che non fa parte della quaterna, sarà scelta con la policy ottimale precedente, ottenendo:
+\begin{description}
+    \item[Equazione di Bellman]\[
+        Q\pt{s_t,\,a_t} = r_{\inc t} + \gm\cdot\max_a\pg{Q\pt{s_{\inc t},\,a}}
+    \]
+\end{description}
+L'algoritmo di apprendimento di $Q$ sfrutta l'equazione precedente:
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/eq-bellman-algo.png}
+\end{cimage}
+Dove $\al$ è il \textbf{learning rate}: se $\al = 1$ l'aggiornamento di $Q\pt{s_t,\,a_t}$ è eseguito esattamente con l'equazione di Bellman, se $\al < 1$, la modifica va nella direzione suggerita dall'equazione di Bellman.
+\begin{note}
+    Valori tipici iniziali:
+    \begin{itemize}
+        \item $\gm = 0.9$;
+        \item $\al = 0.5$ (in genere ridotto progressivamente durante l'apprendimento);
+    \end{itemize}
+\end{note}
+\begin{warning}[Quanto è grande $Q$?]
+    Tanti valori quanti sono i possibili stati $\times$ le possibili azioni
+\end{warning}
+\begin{example}{Q-Learning Grasping}{}
+    Sviluppato con \textbf{OpenAI Gym} + \textit{Box2D}
+    \emptyln{}
+    Un braccio robotico con \textbf{tre giunti} e \textbf{pinza}, deve prendere una pallina posta su un piedistallo di \red{altezza $Y$} e \red{posizione X} casuali.
+    \begin{center}
+        \includegraphics[width=.4\textwidth]{assets/q-learn-grasping-es.png}
+    \end{center}
+    \begin{description}
+        \item[Stato] codificato con $\Dt x$ e $\Dt y$ della pinza rispetto alla pallina $+$ \textbf{stato della pinza} (aperto/chiuso);
+        \item[Azioni] ruota a destra/sinistra su ognuno dei tre giunti, inverti stato pinza (chiudi se aperta e viceversa) $\rightarrow$ \textbf{7 azioni};
+    \end{description}
+    \textbf{Reward}:
+    \begin{itemize}
+        \item avvicinamento pallina $\rightarrow$ $+1$;
+        \item allontanamento pallina $\rightarrow$ $-1$;
+        \item movimento a pinza chiusa $\rightarrow$ $-0.2$;
+        \item cattura pallina $\rightarrow$ $+100$;
+    \end{itemize}
+    \begin{description}
+        \item[Q-Learning] Memorizzazione esplicita della tabella $Q$ con parametri di addestramento:
+            \begin{itemize}
+                \item $\veps = 0.1$
+                \item $\gm = 0.6$
+                \item $\al = 0.2$
+            \end{itemize}
+    \end{description}
+    \begin{center}
+        \includegraphics[width=.4\textwidth]{assets/grasping-res-visual.png}
+    \end{center}
+    Il grafico rappresenta, in \red{rosso}, la percentuale di episodi vinti (pallina catturata) durante l'addestramento ogni 100 episodi.
+    In \blue{blu} è riportata la percentuale di episodi vinti ogni 5000 episodi.
+\end{example}
 % subsection Q-Learning (end)
 %
 \subsection{Deep Reinforcement Learning}\label{sub:rl_deep_reinforcement_learning} % (fold)
-
+Nel 2013 ricercatori della società \textbf{Deep Mind} pubblicano l'articolo \textit{Playing Atari with Deep Reinforcement Learning} dove algoritmi di reinforcement learning sono utilizzati con successo per addestrare un calcolatore a giocare, a livello super-human, a numerosi giochi della console Atari.
+\emptyln{}
+La cosa di per sé non sarebbe \textbf{straordinaria}, se non per il fatto che lo stato $s$ osservato dall'agente non consiste di feature numeriche game-specific, ma di semplici immagini dello schermo (\textbf{raw pixel}).
+Questo permette tra l'altro allo stesso algoritmo di apprendere giochi diversi semplicemente giocando.
+\\
+Considerando lo stato $s$ formato da 4 immagini dello schermo a 256 livelli di grigio e risoluzione $86\times86$, il numero di stati è $256^{84\times84\times4} \approx 10^{67970}$, più del numero di atomi nell'universo.
+Diventa impossibile \textbf{gestire una tabella} $Q$ di tali dimensioni.
+\emptyln{}
+L'idea consiste nell'approssimare la funzione $Q$ con una \textbf{rete neurale deep} (\hyperref[sec:cnn]{CNN}) che, per ogni stato di input, fornisce in output un valore di qualità per ogni possibile azione.
+\begin{note}
+    Dopo oltre un decennio di studi sono stati messi a punto approcci ancora più efficienti e robusti come \ac{ppo} e \ac{grpo}, oggi ampiamente utilizzati anche per l'ottimizzazione del comportamento di \hyperref[sub:large_language_models]{LLM}.
+\end{note}
 % subsection Deep Reinforcement Learning (end)
 % section Reinforcement Learning (end)
 % chapter Deep Learning (end)

@@ -29,7 +29,7 @@ Altre tecniche di interesse:
     \item \acf{ica}: trasformazione lineare orientata a proiettare i pattern su componenti statisticamente \red{indipendenti} anche se non ortogonali (come in \ac{pca} e \ac{lda}).
         Considera statistiche oltre al secondo ordine, invece \ac{pca} si limita al secondo ordine;
     \item Kernel \ac{pca}: simile a \ac{pca} ma più potente perché il mapping è \red{non lineare}.
-        Utilizza un <<trucco>> simile a quello che permette di passare da \hyperref[sub:svm_lineari]{\ac{svm} lineare} a \hyperref[sec:svm_non_lineari]{\ac{svm} non lineare};
+        Utilizza un <<trucco>> simile a quello che permette di passare da \hyperref[sub:svm_lineari]{SVM lineare} a \hyperref[sec:svm_non_lineari]{SVM non lineare};
     \item \ac{lle}: trasformazione \red{non lineare} che invece di calcolare un mapping <<globale>>, considera le relazioni tra gruppi di pattern vicini.
 \end{itemize}
 %
@@ -59,7 +59,7 @@ $\vphi_{i1}$ indica la direzione di maggior \red{varianza} nel training set $TS$
 I primi $k$ autovettori sono detti \textbf{componenti principali}.
 \subsection{Proiezione e Retroproiezione}\label{sub:pca_proiezione_retroproiezione} % (fold)
 \begin{definition}{Proiezione $\pt{\rightarrow}$}{}
-    Una volta determinato lo spazio \hyperref[sec:principal_component_analysis]{\ac{pca}}, la proiezione di un pattern su tale spazio è semplicemente la \red{proiezione geometrica} di un vettore sull'iperpiano che definisce lo spazio.
+    Una volta determinato lo spazio \hyperref[sec:principal_component_analysis]{PCA}, la proiezione di un pattern su tale spazio è semplicemente la \red{proiezione geometrica} di un vettore sull'iperpiano che definisce lo spazio.
     \\
     \textbf{In realtà} la vera proiezione geometrica è un vettore che ha la stessa dimensionalità del vettore originale mentre in questo contesto indichiamo con \textbf{proiezione} il vettore (ridotto) nello \red{spazio \ac{pca}}.
     \\
@@ -69,7 +69,7 @@ I primi $k$ autovettori sono detti \textbf{componenti principali}.
     \end{center}
 \end{definition}
 \begin{definition}{Retro-proiezione $\pt{\leftarrow}$}{}
-    Dato un vettore nello spazio \hyperref[sec:principal_component_analysis]{\ac{pca}}, la sua retro-proiezione verso lo spazio originale si ottiene moltiplicando il vettore per la \textbf{matrice di proiezione} e sommando il \textbf{vettore medio}.
+    Dato un vettore nello spazio \hyperref[sec:principal_component_analysis]{PCA}, la sua retro-proiezione verso lo spazio originale si ottiene moltiplicando il vettore per la \textbf{matrice di proiezione} e sommando il \textbf{vettore medio}.
     \\
     Questa trasformazione \red{non sposta} spazialmente il vettore, che \textbf{giace sullo spazio \ac{pca}}, ma opera un cambiamento di coordinate che ne permette la codifica in termini delle $d$ componenti dello spazio originale.
     \[
@@ -89,7 +89,7 @@ I primi $k$ autovettori sono detti \textbf{componenti principali}.
         \item gli \textbf{autovalori} $\lambda_1$ e $\lambda_2$ sono le varianze della distribuzione lungo gli assi $\vphi_1$ e $\vphi_2$;
         \item $y_1$ e $y_2$ sono le proiezioni di $x$ sugli assi $\vphi_1$ e $\vphi_2$;
         \item se $\lambda_2$ è piccolo, $x$ può essere approssimato con $x'$ (\red{retroproiezione di $y$}) senza perdite significative di informazioni;
-        \item si può dimostrare che tra tutte le riduzioni di dimensionalità lineari \hyperref[sec:principal_component_analysis]{\ac{pca}} è quella che \textbf{preserva al massimo l'informazione} dei vettori originali;
+        \item si può dimostrare che tra tutte le riduzioni di dimensionalità lineari \hyperref[sec:principal_component_analysis]{PCA} è quella che \textbf{preserva al massimo l'informazione} dei vettori originali;
     \end{itemize}
 \end{example}
 %
@@ -190,7 +190,7 @@ Si dimostra che per la \textbf{massimizzazione} di $J_1$ lo spazio \ac{lda} è d
 È una tecnica \red{non lineare} (non supervisionata) per la riduzione di dimensionalità introdotta nel 2008 da Van der Maaten e Hinton.
 Rappresenta (insieme a UMAP) lo stato dell'arte per la visualizzazione 2D o 3D di dati multidimensionali.
 \emptyln{}
-Anche \hyperref[sec:principal_component_analysis]{\ac{pca}} (con $k = 2$ o $k = 3$) può essere utilizzata a tale scopo, ma dati con distribuzioni spiccatamente \red{non multinormali} non possono essere efficacemente <<ridotti>> attraverso un mapping lineare.
+Anche \hyperref[sec:principal_component_analysis]{PCA} (con $k = 2$ o $k = 3$) può essere utilizzata a tale scopo, ma dati con distribuzioni spiccatamente \red{non multinormali} non possono essere efficacemente <<ridotti>> attraverso un mapping lineare.
 \begin{cimage}
     \includegraphics[width=.4\textwidth]{assets/t-distr-sne-es.png}
     \caption{Visualizzazione 2D di MNIST}\label{fig:t-distr-sne-es}
@@ -198,9 +198,9 @@ Anche \hyperref[sec:principal_component_analysis]{\ac{pca}} (con $k = 2$ o $k = 
 %
 % section t-distributed Stochastic Neighbor Embedding (t-SNE) (end)
 \section{UMAP}\label{sec:umap} % (fold)
-\acf{umap} è una tecnica di riduzione di dimensionalità (non lineare e non supervisionata) simile a \hyperref[sec:t_distributed_stochastic_neighbor_embedding_t_sne]{\ac{tsne}}, utile per la visualizzazione 2D o 3D di dati multidimensionali.
+\acf{umap} è una tecnica di riduzione di dimensionalità (non lineare e non supervisionata) simile a \hyperref[sec:t_distributed_stochastic_neighbor_embedding_t_sne]{TSNE}, utile per la visualizzazione 2D o 3D di dati multidimensionali.
 \\
-Come per \hyperref[sec:t_distributed_stochastic_neighbor_embedding_t_sne]{\ac{tsne}} anche \ac{umap} preserva le distanze locali ed è in grado di individuare cluster di dati localmente connessi.
+Come per \hyperref[sec:t_distributed_stochastic_neighbor_embedding_t_sne]{TSNE} anche \ac{umap} preserva le distanze locali ed è in grado di individuare cluster di dati localmente connessi.
 \emptyln{}
 \ac{umap} ha maggiore capacità di preservare, anche, la struttura globale dei cluster.
 In altre parole, \ac{tsne} può visualizzare cluster vicini o lontani indipendentemente dalla loro similarità nello spazio originale, mentre \ac{umap} \textbf{preserva meglio} anche le \textbf{distanze inter-cluster}.
