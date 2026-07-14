@@ -178,7 +178,7 @@ Un criterio più oggettivo, che funziona per cluster sferici come quelli prodott
 \]
 dove $a$ è la distanza media intra cluster del pattern e $b$ la distanza tra il pattern e i pattern del cluster a esso più vicino (escluso quello di appartenenza).
 \\
-Il \textit{silhouette diagram} è una rappresentazione grafica degli score utili per la validation.add
+Il \textit{silhouette diagram} è una rappresentazione grafica degli score utili per la validation.
 \begin{note}
     È presente in scikit-learn la funzione \texttt{silhouette\_score()} che calcola questa metrica.
 \end{note}
@@ -197,7 +197,7 @@ Il criterio di ottimizzazione in questo caso è:
 \]
 dove $\ba{C_i}{x_j, \Te}$ è la \red{probabilità} che dato il pattern $x_j$ e l'insieme $\Te = \pg{\te_1,\,\dots,\,\te_s}$ di centroidi che definiscono la \textbf{soluzione attuale}, il cluster di \red{appartenenza} sia $C_i$.
 \emptyln{}
-I \red{centroidi} invece che come semplice media dei pattern si calcolano come \textbf{media pesata} riuspetto alle probabilità di appartenenza:
+I \red{centroidi} invece che come semplice media dei pattern si calcolano come \textbf{media pesata} rispetto alle probabilità di appartenenza:
 \[
 \te_i = \frac{\sum_{\for[j][][]}{\ba{C_i}{x_j, \Te}} \cdot x_j}{\sum_{\for[j][][]}{\ba{C_i}{x_j, \Te}}}
 \]

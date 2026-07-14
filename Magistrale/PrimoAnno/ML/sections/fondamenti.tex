@@ -362,7 +362,7 @@ Prestare particolare attenzione se vengono selezionato valori di bordo per uno o
     \begin{itemize}
         \item nella prima si valuta un classificatore SVM con kernel lineare e con $4$ valori di $C \to 4$ valutazioni;
         \item nella seconda si valuta il classificatore con kernel RBF, $4$ valori di $C$ e $2$ valori di $\gm \to 8$ valutazioni;
-        \item in totale $12$ valutazioni, ciascuna delle quali fatta con Cross Validatio;
+        \item in totale $12$ valutazioni, ciascuna delle quali fatta con Cross Validation;
     \end{itemize}
 \end{example}
 \begin{cimage}
@@ -604,7 +604,7 @@ Due soluzioni:
     Come in Face detection dove sono positive tutte le porzioni di immagine in cui appaiono i volti, e negative in quelle dove non compaiono.
     \\
     Analogamente possiamo considerare solo la classe \textbf{positivi} e un sistema (con soglia) in grado di calcolare la probabilità $p$ di appartenenza di un pattern alla classe.
-    Sia $t$ il valore di soglia, allora il pattern vioene classificato come positivo se $p > t$, come negativo in caso contrario.
+    Sia $t$ il valore di soglia, allora il pattern viene classificato come positivo se $p > t$, come negativo in caso contrario.
 \end{example}
 % subsection Problemi Closed e Open set (end)
 %
@@ -637,7 +637,7 @@ Si ha convergenza quando:
 \end{itemize}
 \begin{critical}
     \begin{itemize}
-        \item se la \textbf{loss} non decresce (o oscilla significativamente) il sistema non converge: 
+        \item se la \textbf{loss} non decresce (od oscilla significativamente) il sistema non converge: 
             \begin{itemize}
                 \item il metodo di ottimizzazione non è efficace;
                 \item gli iperparamentri sono fuori range;

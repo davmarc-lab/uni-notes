@@ -61,50 +61,25 @@ local function make_math_block(trig, env, desc)
     })
 end
 
-return {
-    s({ trig = "red", desc = "Red text (\\red{})" }, {
-        t("\\red{"),
+function make_wrappable(trig, cmd, desc)
+    return s({ trig = trig, dscr = desc .. " (opt wrap)", indet = true }, {
+        t("\\" .. cmd .. "{"),
+        f(function(_, snip)
+            return snip.env.TM_SELECTED_TEXT
+        end),
         i(1, ""),
         t("}"),
-    }),
-    s({ trig = "bold", desc = "Bold text (\\textbf{})" }, {
-        t("\\textbf{"),
-        i(1, ""),
-        t("}"),
-    }),
-    s({ trig = "italic", desc = "Italic text (\\textit{})" }, {
-        t("\\textit{"),
-        i(1, ""),
-        t("}"),
-    }),
-    s({ trig = "ac", desc = "Acronym (\\ac{})" }, {
-        t("\\ac{"),
-        i(1, ""),
-        t("}"),
-    }),
+    })
+end
 
+return {
     -- ==== WRAPPERS ====
-    s({ trig = "wred", dscr = "Wrap red text" }, {
-        t("\\red{"),
-        f(function(_, snip)
-            return snip.env.TM_SELECTED_TEXT or {}
-        end, {}),
-        t("}"),
-    }),
-    s({ trig = "wbold", dscr = "Wrap bold text" }, {
-        t("\\textbf{"),
-        f(function(_, snip)
-            return snip.env.TM_SELECTED_TEXT or {}
-        end, {}),
-        t("}"),
-    }),
-    s({ trig = "witalic", dscr = "Wrap italic text" }, {
-        t("\\textit{"),
-        f(function(_, snip)
-            return snip.env.TM_SELECTED_TEXT or {}
-        end, {}),
-        t("}"),
-    }),
+    make_wrappable("red", "red", "Red text \\red{}"),
+    make_wrappable("blue", "blue", "Blue text \\blue{}"),
+    make_wrappable("bold", "textbf", "Bold text \\textbf{}"),
+    make_wrappable("italic", "textit", "Italic text \\textit{}"),
+    make_wrappable("ac", "ac", "Acronym \\ac{}"),
+
     s({ trig = "link", desc = "Link (\\hyperref[]{})" }, {
         t("\\hyperref["),
         i(2),

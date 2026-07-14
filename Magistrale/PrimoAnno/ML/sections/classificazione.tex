@@ -425,7 +425,7 @@ La regola \hyperref[sec:nn]{nearest neighbor} produce un partizionamento dello s
     \includegraphics[width=.6\textwidth]{assets/tass-voronoi-visual.png}
     \caption{Rappresentazione grafica della tassellazione di Voronoi}\label{fig:tass-voronoi-visual}
 \end{cimage}
-Ogni elemento $x_i \in TS$ determina un tassello, all'interno del qualie i pattern saranno assegnati alla stessa classe di $x_i$.
+Ogni elemento $x_i \in TS$ determina un tassello, all'interno del quale i pattern saranno assegnati alla stessa classe di $x_i$.
 \\
 La regola di classificazione nearest neighbor è piuttosto radicale; infatti basta che un elemento del training set non sia molto ``affidabile'' (\red{outlier}) affinché tutti i pattern nelle sue vicinanze siano in seguito etichettati non correttamente.
 \begin{quote}
@@ -514,7 +514,7 @@ La \red{distanza euclidea}, che rappresenta il caso $L_2$ nella definizione di m
 \begin{equation}\label{eq:dis_euclidea}
     L_k\pt{a,\,b} = \pt{\sum_{i = 1}^d {\ab{a_i - b_i}^k}}^{1/k}
 \end{equation}
-Nella pratica, prima di adottare semplicemente la dispanza euclidea è bene valuratre lo spazio di variazione delle componenti (o \red{feature}) e la presenza di eventuali forti correlazioni tra le stesse.
+Nella pratica, prima di adottare semplicemente la distanza euclidea è bene valutare lo spazio di variazione delle componenti (o \red{feature}) e la presenza di eventuali forti correlazioni tra le stesse.
 \\
 Supponiamo ad esempio di voler classificare le persone sulla base dell'altezza e della lunghezza del piede.
 Ogni pattern $x$ (bidimensionale) risulta costituito da due feature: $x_1 =$ altezza, $x_2 =$ lunghezza del piede.
@@ -641,7 +641,7 @@ Invece di stimare la densità di probabilità delle classi, Vapnik suggerisce di
 \subsection{Idea alla Base}\label{sub:idea_alla_base} % (fold)
 Date due classi di pattern multidimensionali linearmente separabili, tra tutti i possibili iperpiani di separazione, \ac{svm} determina quello in grado di \red{separare le classi} con maggiore \textbf{margine} possibile.
 \begin{quote}
-    Il \textbf{margine} è la distanza minima di punti delle due classi nel training set dall'iperpiano idividuato.
+    Il \textbf{margine} è la distanza minima di punti delle due classi nel training set dall'iperpiano individuato.
 \end{quote}
 \begin{cimage}
     \includegraphics[width=.4\textwidth]{assets/svm-idea-visual.png}
@@ -975,7 +975,7 @@ Le decisioni possono essere tra loro \textbf{combinate} in diversi modi, tra cui
 \end{itemize}
 %
 \subsubsection{Prestazioni Teoriche}\label{sec:prestazioni_teoriche} % (fold)
-Dato un problema di classificazione binario e un \red{multi-classificatore} costituito da $nc$ classificatori ($nc$ dispari), la \hyperref[th:maj-vote-rule]{majority vote rule} classifica il pattern come appartenente alla classe cha ha ottenuto almeno $k = \pt{nc + 1} / 2$ voti.
+Dato un problema di classificazione binario e un \red{multi-classificatore} costituito da $nc$ classificatori ($nc$ dispari), la \hyperref[th:maj-vote-rule]{majority vote rule} classifica il pattern come appartenente alla classe che ha ottenuto almeno $k = \pt{nc + 1} / 2$ voti.
 \\
 Sia $P$ la probabilità che ogni singolo classificatore esegua la classificazione correttamente, la probabilità $P_{multi}\pt{nc}$ che la \red{decisione del multi-classificatore} sia corretta è esprimibile attraverso la \textbf{distribuzione binomiale}:
 \[
@@ -985,7 +985,7 @@ Sia $P$ la probabilità che ogni singolo classificatore esegua la classificazion
     La distribuzione binomiale permette di calcolare con quale probabilità estraiamo $m$ palline rosse da un'urna contenente $nc$ palline, se $P$ è la probabilità di estrarne una rossa in un singolo tentativo.
 \end{note}
 Nella formula di $P_{multi}\pt{nc}$ i casi favorevoli sono quelli in cui un numero di classificatori compreso tra $k$ e $nc$ hanno effettuato classificazione corretta.
-\begin{example}
+\begin{example}{}{}
     Se $P = 0.8$ (ogni classificatore commette il $20\%$ di errore di classificazione) stando alla formula precedente per un multi-classificatore con $nc$ componenti:
     \[
         \begin{aligned}
@@ -1058,7 +1058,7 @@ Ideato da Leo Breiman nel 2001, appartiene alla famiglia di metodi di \ac{bgg}:
 In \red{Random Forest} i singoli classificatori sono \textbf{classification tree} (alberi di classificazione).
 \begin{definition}{Classification Tree}{class-tree}
     I \red{classification tree} sono uno strumento molto utilizzato in applicazioni con pattern categorici o mixed (come Data Mining).
-    Per pattern numerici <<puri>> in genere non sono competitivi con \ac{SVM} se considerati singolarmente.
+    Per pattern numerici <<puri>> in genere non sono competitivi con \ac{svm} se considerati singolarmente.
     \\
     Esistono diversi tipi di alberi, tra cui: ID3, C4.5, CART (default in Random Forest).
 \end{definition}
@@ -1097,7 +1097,7 @@ Siano:
     \item $\pt{x_1,\,y_1},\,\dots,\,\pt{x_n,\,y_n}$ i pattern del $TS$ e le rispettive etichette, con $y_i \in \pg{+1,\,-1}$;
     \item $w_i^t$ il peso del pattern $x_i$ all'iterazione $t$;
     \item $h^t\pt x \to \pg{+1,\,-1}$ il classificatore introdotto all'iterazione $t$ e scelto tra i classificatori $h_j^t\pt x$ disponibili all'iterazione $t$;
-    \item $\al[t]$ il peso del classificatore $h^t\pt x$ nell'a,bito del multi-classificatore;
+    \item $\al[t]$ il peso del classificatore $h^t\pt x$ nell'ambito del multi-classificatore;
 \end{itemize}
 \subsubsection{Pseudocodice}\label{sec:pseudocodice} % (fold)
 
