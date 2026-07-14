@@ -1,0 +1,26 @@
+\documentclass[12pt, a4paper]{scrreprt}
+% \usepackage[italian]{babel}
+
+\usepackage{lecture}
+
+\usepackage{acronyms}
+
+\begin{document}
+
+\makefront{}
+
+\begingroup
+    \hypersetup{linkbordercolor=white, linkcolor=black} 
+    \tableofcontents
+
+    \tcblistof[\section*]{def}{List of Definitions}
+    \newpage
+\endgroup
+
+\chapter{Info}\label{chap:info} % (fold)
+% chapter Info (end)
+%
+% ======== INTRO ========
+\import{sections/}{intro.tex}
+%
+\end{document}
