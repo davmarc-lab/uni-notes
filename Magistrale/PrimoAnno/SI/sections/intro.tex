@@ -1,5 +1,4 @@
-% ltex: language=it
-\chapter{Intro}\label{chap:intro} % (fold)
+% ltex: language=it \chapter{Intro}\label{chap:intro} % (fold)
 \section{Introduzione}\label{sec:introduzione} % (fold)
 Ogni imprese o istituzione, sia pubblica che privata, si struttura e si organizza secondo la propria missione per conseguire gli \textbf{obiettivi} identificati:
 \begin{itemize}
@@ -39,7 +38,7 @@ Struttura e Processo\begin{definition}{Struttura Organizzativa}{}
         \item \textbf{operational}: è legato alle operazioni di breve termine di un'azienda, riguarda l'implementazione di beni e servizi;
     \end{itemize}
 \end{note}
-\begin{definition}{Processo}{}
+\begin{definition}{Processo}{proc}
     Insieme delle attività tra loro interrelate, finalizzate alla realizzazione di un risultato definito e misurabile che contribuisce al raggiungimento della missione dell'azienda.
     \\
     L'analisi dell'azienda come insiemi di processi determina una vista ortogonale rispetto a quella basata sulla sua organizzazione e sulle funzioni svolte dalle diverse divisioni.
@@ -50,5 +49,129 @@ Struttura e Processo\begin{definition}{Struttura Organizzativa}{}
     Il processo in questa accezione è quindi l'elemento di omogeneizzazione dell'organizzazione.
 \end{note}
 % subsection Struttura e Processo (end)
+%
+\subsection{Il Sistema Informativo}\label{sub:il_sistema_informativo} % (fold)
+I \hyperref[def:proc]{processi}, per poter operare, hanno bisogno di conoscere la risorsa o le risorse su cui agiscono, in altri termini hanno bisogno di informazioni.
+\begin{definition}{Information Processing Capacity}{}
+    Si definisce \textbf{Information Processing Capacity}, capacità elaborativa, l'adeguatezza di un'organizzazione rispetto alle necessità di elaborare informazioni a essa imposte dai propri obiettivi e dal contesto in cui opera.
+\end{definition}
+\begin{definition}{Sistema Informativo}{si}
+    L'insieme delle informazioni gestite (generate, utilizzate, elaborate) dai processi aziendali e le modalità per la loro gestione costituisce il \textbf{sistema informativo}.
+\end{definition}
+La porzione del sistema informativo in cui le informazioni sono raccolte, elaborate, archiviate e scambiate mediante l'uso di tecnologie informatiche costituisce il \textbf{sistema informatico}.
+% subsection Il Sistema Informativo (end)
+%
+\subsection{Ruolo dei Sistemi Informatici}\label{sub:ruolo_dei_sistemi_informatici} % (fold)
+I sistemi informatici si sono trasformati da semplici strumenti per \textbf{migliorare l'efficienza dei processi}, a elementi centrali dell'organizzazione aziendale in grado di rivoluzionare la struttura dei processi aziendali aumentando drasticamente \textbf{l'efficacia del sistema aziendale}.
+\\
+L'informatica assume quindi una duplice veste:
+\begin{itemize}
+    \item da un lato continua a essere una tecnologia con le proprie evoluzioni;
+    \item dall'altro si trasforma in una disciplina organizzativa;
+\end{itemize}
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/role-si-visual.png}
+\end{cimage}
+%
+\subsubsection{Efficacia ed efficienza}\label{sub:sic_efficacia_ed_efficienza} % (fold)
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/eff-sic-visual.png}
+\end{cimage}
+L'innovazione tecnologica incide positivamente sull'\textbf{efficienza} organizzativa (riduzione di costi e tempi di produzione).
+\\
+L'innovazione tecnologica incide indirettamente sull'\textbf{efficacia} organizzativa (miglioramento pianificazione strategica e aumento competitività).
+% subsubsection Efficacia ed efficienza (end)
+%
+\subsection{Evoluzione dei Sistemi Informatici}\label{sub:sic_evoluzione_dei_sistemi_informatici} % (fold)
+\begin{description}
+    \item[Fase 1] Automazione delle attività di raccolta, archiviazione e reperimento dei dati di natura operativa.
+        \begin{itemize}
+            \item \textbf{Caratteristiche}:
+                \begin{itemize}
+                    \item ripetitività delle operazioni da controllare;
+                    \item natura strutturata dei processi da gestire;
+                    \item grandi quantità di dati;
+                \end{itemize}
+            \item \textbf{Benefici}:
+                \begin{itemize}
+                    \item riduzione dei tempi e dei costi di elaborazione della risorsa informazione;
+                    \item minore probabilità di errore;
+                \end{itemize}
+        \end{itemize}
+    \item[Fase 2] Automazione delle attività di controllo e valutazione dell'andamento aziendale e delle scelte direzionali (controllo della produzione, analisi what-if, gestione del budget):
+        \begin{itemize}
+            \item \textbf{Caratteristiche}: il sistema informatico assume un ruolo non solo passivo ma anche di controllo attivo supportando i dirigenti e i quadri intermedi;
+            \item \textbf{Benefici}:
+                \begin{itemize}
+                    \item riduzione dei costi di coordinamento e controllo;
+                    \item possibilità di analisi impossibili se eseguite manualmente;
+                \end{itemize}
+        \end{itemize}
+    \item[Fase 3] Integrazione tra le applicazioni settoriali, informatizzazione delle comunicazioni:
+        \begin{itemize}
+            \item \textbf{Caratteristiche}:
+                \begin{itemize}
+                    \item i sistemi informatici integrati sono orientati ai dati;
+                    \item assenza di ridondanze e di incoerenze;
+                    \item possibilità di cooperare e di lavorare a distanza;
+                \end{itemize}
+            \item \textbf{Benefici}:
+                \begin{itemize}
+                    \item aumento della qualità dei dati;
+                    \item globalizzazione dell'azienda;
+                \end{itemize}
+        \end{itemize}
+\end{description}
+% subsection Evoluzione dei Sistemi Informatici (end)
+% subsection Ruolo dei Sistemi Informatici (end)
+%
+\subsection{Sistemi Informativi VS Basi di Dati}\label{sub:si_sistemi_informativi_vs_basi_di_dati} % (fold)
+I concetti di \hyperref[def:si]{Sistema Informativo} e di \textbf{Base di Dati} non devono essere considerati dei sinonimi.
+La definizione e la gestione di un \hyperref[def:si]{Sistema Informativo} richiede la perfetta conoscenza dei:
+\begin{itemize}
+    \item processi aziendali;
+    \item informazioni necessarie ai processi;
+    \item struttura aziendale;
+\end{itemize}
+Progettare un \hyperref[def:si]{Sistema Informativo} richiede competenze in ambito di:
+\begin{itemize}
+    \item organizzazione aziendale;
+    \item economia;
+    \item psicologia;
+\end{itemize}
+Un \hyperref[def:si]{Sistema Informativo} da un lato si adatta alle caratteristiche dell'azienda in cui è costruito, dall'altro ne modifica la struttura e processi ottimizzandone la struttura.
+\emptyln{}
+\begin{definition}{Basi di Dati}{db}
+    Le \textbf{Basi di Dati} sono una sottoporzione del \hyperref[def:si]{Sistema Informativo} atta alla memorizzazione strutturata delle informazioni.
+    La loro funzione è solo quella di fornire un supporto informatico per la memorizzazione dei dati; essendo questi il nucleo di tutti i sistemi informativi le basi di dati rivestono un ruolo centrale.
+\end{definition}
+\begin{note}
+    La modellazione imprecisa della base di dati implica lo scorretto funzionamento del \hyperref[def:si]{Sistema Informativo}
+\end{note}
+La definizione del Sistema Informatico include anche la modellazione della logica applicativa legata alla realizzazione dei processi.
+La definizione della base di dati deve prescindere quanto più possibile dalla logica delle applicazioni e deve invece codificare la sola realtà delle informazioni.
+\begin{note}
+    La logica dei dati è più stabile della logica applicativa: le procedure aziendali cambiano nel tempo ma le informazioni su cui operano rimangono costanti
+\end{note}
+I moderni Sistemi Informatici sono strutturati su tre livelli che rispettano la suddivisione proposta (\textit{three-tier}:
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/sis-infc-tier.png}
+\end{cimage}
+% subsection Sistemi Informativi VS Basi di Dati (end)
+%
+\subsection{Digital Trasformation}\label{sub:digital_trasformation} % (fold)
+La \ac{dt} mira a migliorare l'efficienza e l'efficacia delle possibilità offerte dalle nuove tecnologie.
+Tutti i settori aziendali pubblici e privati saranno coinvolti in questa trasformazione anche se con tempi e modi diversi.
+È importante sperimentare e capire dove e quando digitalizzare.
+\begin{note}
+    La \ac{dt} non è solo una questione tecnologica: richiede una strategia a lungo termine e un percorso a piccoli passi.
+    Inoltre ha bisogno di cambiamenti nella mentalità delle persone e nella ricerca di talenti digitali.
+\end{note}
+%
+\subsubsection{La Data Revolution}\label{sub:la_data_revolution} % (fold)
+I dati rappresentano il principale combustibile che alimenta la trasformazione digitale.
+La digitalizzazione è iniziata negli anni '70 con la progressiva diffusione dei calcolatori dando il via al processo di digitalizzazione dei processi e delle informazioni che continua ad accelerare ancora oggi cambiando nome ma non obiettivo.
+% subsubsection La Data Revolution (end)
+% subsection Digital Trasformation (end)
 % section Introduzione (end)
 % chapter Intro (end)
