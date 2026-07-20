@@ -97,15 +97,27 @@ return {
         f(function(_, snip)
             return snip.env.TM_SELECTED_TEXT
         end),
-        i(1, ""),
+        i(0, ""),
         t({ "", "\\end{itemize}" }),
     }),
+    s({ trig = "multimize", dscr = "Itemize environment multiple columns (opt wrap)", indet = true }, {
+        t("\\begin{multicols}{"),
+        i(1, "2"),
+        t({ "}", "" }),
+        t({ fake_indent .. "\\begin{itemize}", "\t\\item " }),
+        f(function(_, snip)
+            return snip.env.TM_SELECTED_TEXT
+        end),
+        i(0, ""),
+        t({ "", fake_indent .. "\\end{itemize}", "\\end{multicols}" }),
+    }),
+
     s({ trig = "enumerate", dscr = "Enumerate environment (opt wrap)", indet = true }, {
         t({ "\\begin{enumerate}", "\t\\item " }),
         f(function(_, snip)
             return snip.env.TM_SELECTED_TEXT
         end),
-        i(1, ""),
+        i(0, ""),
         t({ "", "\\end{enumerate}" }),
     }),
     s({ trig = "ieq", dscr = "Inline equation" }, {

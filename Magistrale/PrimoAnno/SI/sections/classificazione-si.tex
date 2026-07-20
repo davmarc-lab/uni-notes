@@ -1,4 +1,291 @@
 % ltex: language=it
 \chapter{Classificazione dei Sistemi Informativi}\label{chap:classificazione_dei_sistemi_informativi} % (fold)
-
+\section{SI e Aziende}\label{sec:si_e_aziende} % (fold)
+Un'azienda è una struttura di comando che governa processi operativi finalizzati al raggiungimento di uno o più obiettivi predefiniti.
+I \ac{si} supportano sia i processi di governo (\ac{si} direzionali e analitici), sia i processi operativi (\ac{si} operativi).
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/si-aziende-visual.png}
+    \caption{Catena del valore di Porter per un'azienda manifatturiera}\label{fig:si-aziende-visual}
+\end{cimage}
+\subsection{SI operativi}\label{sub:si_operativi} % (fold)
+Informatizzano i processi volti all'\textbf{esecuzione} di attività o alla loro \textbf{programmazione}:
+\begin{itemize}
+    \item Programmazione della fabbricazione e Fabbricazione;
+    \item Programmazione della distribuzione e Distribuzione;
+    \item Amministrazione;
+    \item Gestione del personale;
+\end{itemize}
+L'importanza dei \ac{si} operativi in un azienda dipende dall'\textbf{intensità informativa} del settore, ossia del contenuto informativo del settore.
+I \ac{si} sono una tecnologia di produzione nei settori che ``vendono'' informazioni (banche, assicurazioni, telecomunicazioni), mentre sono una tecnologia di processo quando il prodotto è materiale (aziende manifatturiere).
+\begin{note}
+    I \ac{si} supportano il coordinamento delle attività (la delocalizzazione aumenta la necessità di coordinamento); gli investimenti in tecnologia per i \ac{si} è proporzionale al ruolo del \ac{si} (varia tra l'1\% del fatturato nelle semplici manifatture e il 7\% delle aziende di telecomunicazione).
+    \begin{center}
+        \includegraphics[width=.6\textwidth]{assets/si-operativi-visual.png}
+    \end{center}
+\end{note}
+% subsection SI operativi (end)
+%
+\subsection{SI direzionali}\label{sub:si_direzionali} % (fold)
+Supportano il processo decisionale fornendo informazioni a manager per aiutarli a decidere.
+Il modello primario di questi sistemi deriva dal modello del ciclo di controllo:
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/si-direzionali-visual.png}
+\end{cimage}
+Dal punto di vista informativo, i processi direzionali si differenziano da quelli operativi poiché:
+\begin{itemize}
+    \item si basano su indici, ovvero informazioni aggregate e riassuntive;
+    \item l'elaborazione non è continua ma periodica;
+    \item sono costruiti sopra i \ac{si} operativi da cui estraggono le informazioni di base;
+\end{itemize}
+% subsection SI direzionali (end)
+%
+\subsection{SI analitici}\label{sub:si_analitici} % (fold)
+Supportano la comprensione dei fenomeni di business, si focalizzano su prodotti, clienti e processi:
+\begin{itemize}
+    \item permettono di profilare i \textbf{clienti} studiando le relative abitudini e comportamenti;
+    \item mantengono la storia del \textbf{prodotto} e permettono di monitorarne l'affidabilità.
+        Sono utilizzati soprattutto per beni durevoli;
+\end{itemize}
+\begin{note}
+    Gli \ac{si} analitici e direzionali condividono le seguenti caratteristiche:
+    \begin{itemize}
+        \item si basano su indici, ovvero informazioni aggregate e riassuntive;
+        \item l'elaborazione non è continua ma periodica;
+        \item sono costruiti sopra i \ac{si} operativi da cui estraggono le informazioni di base;
+    \end{itemize}
+\end{note}
+\begin{remark}{}{}
+    Mentre i sistemi direzionali valutano fenomeni \textbf{interni} all'azienda, quelli analitici misurano fenomeni \textbf{esterni} all'azienda
+\end{remark}
+\subsubsection{SI analitici per settori}\label{sub:si_analitici_per_settori} % (fold)
+Di seguito si riporta una tabella esemplificativa dell'utilizzo dei \ac{si} analitici per l'analisi della clientela nei diversi settori produttivi.
+\begin{ctable}{|m{0.2\textwidth}|m{0.3\textwidth}|m{0.3\textwidth}|}
+    \hline
+    \textbf{Settore} & \textbf{Numerosità dei clienti} & \textbf{Finalità di analisi} \\
+    \hline
+    \textbf{Telefonia} & Oltre 10 milioni & profittabilità e comportamento/preferenze \\
+    \hline
+    \textbf{Grandi banche} & Oltre 1 milione & profittabilità \\
+    \hline
+    \textbf{Aziende elettriche e gas} & Da 100 mila a 1 milione & profittabilità e comportamento/preferenze \\
+    \hline
+    \textbf{Pubblica amministrazione} & Oltre 10 milioni & studi di settore, segmentazione dei contribuenti, individuazione dei potenziali evasori \\
+    \hline
+    \textbf{Grande distribuzione} & Da 100 mila a 1 milione & comportamento/preferenze \\
+    \hline
+\end{ctable}
+% subsubsection SI analitici per settori (end)
+%
+\subsubsection{Mappa dei SI}\label{sub:mappa_dei_si} % (fold)
+Costruire una \textbf{mappa dei SI aziendali}, significa scomporli in moduli a fini conoscitivi e di classificazione.
+\\
+Un \textbf{modulo} rappresenta un blocco di funzionalità software che supportano una fase di un processo aziendale, omogeneo per frequenza, attore e profilo di casi d'uso.
+Un modulo descrive un'esigenza informativa e quindi indica il potenziale impiego di tecnologia informatica.
+\\
+La suddivisione in moduli è utilizzata anche dai grandi produttori di package (SAP, Microsoft, ORACLE) per strutturare le proprie offerte.
+I moduli possono essere:
+\begin{itemize}
+    \item \textbf{orizzontali}: non variano al variare della tipologia aziendale;
+    \item \textbf{verticali}: sono utilizzati in specifici settori produttivi (bancario, manifatturiero, chimico);
+\end{itemize}
+% subsubsection Mappa dei SI (end)
+% subsection SI analitici (end)
+%
+\subsection{Il Portafoglio Applicativo Aziendale}\label{sub:il_portafoglio_applicativo_aziendale} % (fold)
+\begin{definition}{Portafoglio Applicativo Aziendale}{}
+    Rappresenta una possibile mappa dei \hyperref[def:si]{SI} aziendali; può essere considerato un'esplosione della catena del valore di Porter ottenuta incrociando le \red{fasi del ciclo di trasformazione} con la \red{tipologia delle attività} applicabili per la pianificazione ed esecuzione di ciascuna fase del ciclo.
+    Ogni incrocio individua un modulo.
+\end{definition}
+\begin{note}[Pianificazione]
+    La \textbf{pianificazione} ha lo scopo di determinare i piani e controllarne l'avanzamento.
+    Le attività di pianificazione si distinguono per l'orizzonte temporale e il livello di dettaglio.
+\end{note}
+\begin{note}[Attività di esecuzione]
+    Le \textbf{attività di esecuzione} attuano le operazioni pianificate producendo così l'output desiderato.
+    I sistemi di supporto all'esecuzione elaborano informazioni in tempo reale originando benefici riconducibili ai risparmi su attività burocratiche o alle migliori prestazioni di tempi e costi dei processi.
+\end{note}
+\begin{cimage}
+    \includegraphics[width=\textwidth]{assets/paa-prof-pianif-table.png}
+    \caption{Profilo dei Livelli di Pianificazione}\label{fig:paa-prof-pianif-table}
+\end{cimage}
+\begin{cimage}
+    \includegraphics[width=\textwidth]{assets/paa-prof-esec-table.png}
+    \caption{Profilo delle Attività di Esecuzione}\label{fig:paa-prof-esec-table}
+\end{cimage}
+\begin{cimage}
+    \includegraphics[width=\textwidth]{assets/paa-port-appl-table.png}
+    \caption{Portafoglio Applicativo}\label{fig:paa-port-appl-table}
+\end{cimage}
+Al portafoglio applicativo corrisponde un insieme di moduli standard.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/paa-mod.png}
+\end{cimage}
+Il portafoglio applicativo si differenzia in base alla tipologia di azienda.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/paa-chim-side-es.png}
+    \caption{Portafoglio aziende chimiche e siderurgiche}\label{fig:paa-chem-es}
+\end{cimage}
+\begin{itemize}
+    \item prodotto più semplice: meno enfasi sulla progettazione;
+    \item poche materie prime;
+    \item complesso il monitoraggio e la manutenzione degli impianti (CIM livello 2 e 3);
+    \item notevole l'investimento sui ricambi degli impianti (e-procurement);
+    \item necessità di coordinamento nei complessi multi-stabilitmento (supply-chain management);
+\end{itemize}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/paa-telef-es.png}
+    \caption{Portafoglio aziende telefoniche}\label{fig:paa-telef-es}
+\end{cimage}
+\begin{itemize}
+    \item importanza primaria del contatto con il cliente (CRM);
+    \item problematiche di gestione della rete complesse;
+\end{itemize}
+% subsection Il Portafoglio Applicativo Aziendale (end)
+%
+\subsection{Smart Manufacturing (AKA CIM)}\label{sub:smart_manufacturing} % (fold)
+Lo \ac{sm} è un'architettura multilivello che collega diversi livelli di un sistema di produzione ed è finalizzata all'ottimizzazione dei processi e alla gestione delle risorse.
+Vantaggi:
+\begin{itemize}
+    \item riduzione delle scorte: attraverso il controllo della produzione e della pianificazione;
+    \item riduzione del tempo di commercializzazione;
+    \item aumento della qualità del prodotto: analisi e controllo del processo di produzione;
+    \item riduzione dei costi grazie alla maggiore efficienza della fabbrica;
+\end{itemize}
+\begin{note}
+    \ac{sm} è organizzato in un'architettura a 5 livelli.
+    Ogni livello esegue le proprie elaborazioni ed è collegato con gli altri.
+    \begin{center}
+        \includegraphics[width=.8\textwidth]{assets/sm-level-visual.png}
+    \end{center}
+\end{note}
+% subsection Smart Manufacturing (CIM) (end)
+% section SI e Aziende (end)
+%
+\section{I sistemi SCADA}\label{sec:scada} % (fold)
+Il componente di un sistema \hyperref[sub:smart_manufacturing]{CIM} preposto al controllo dei sistemi industriali, all'acquisizione e all'analisi dei dati da essi prodotti è denominato \textbf{SCADA}.
+\begin{definition}{SCADA}{scada}
+    I sistemi \ac{scada} sono usati per monitorare e controllare grandi impianti industriali e sistemi meccanici/elettronici distribuiti sul territorio.
+    I principali ambiti di applicazione sono:
+    \begin{itemize}
+        \item grandi impianti industriali e processi industriali complessi;
+        \item telecomunicazioni;
+        \item sistemi di gestione di acqua, fognature, distribuzione energia (HERA);
+        \item sistemi di produzione dell'energia (impianti fotovoltaici ed eolici);
+        \item raffinerie;
+        \item trasporti (aeroporti, controllo del traffico, ferrovie);
+        \item centri di ricerca (CERN);
+    \end{itemize}
+    L'adozione di un sistema \ac{scada} permette di risparmiare tempo e denaro:
+    \begin{itemize}
+        \item meno spostamenti per i lavoratori;
+        \item riduzione delle esigenze del personale;
+        \item aumento della produttività;
+        \item maggiore reattività rispetto a situazioni anomale;
+        \item riduzione dei costi di gestione;
+        \item maggiore affidabilità degli impianti;
+    \end{itemize}
+\end{definition}
+\subsection{Architettura dei Sistemi SCADA}\label{sub:architettura_dei_sistemi_scada} % (fold)
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/arch-scada-visual.png}
+\end{cimage}
+\begin{itemize}
+    \item \textbf{Sensori e Attuatori}:
+        \begin{itemize}
+            \item pressione, velocità, luminosità, umidità, temperatura, livello, distanza;
+            \item valvole, pompe, motori;
+        \end{itemize}
+    \item \textbf{Controlli}:
+        \begin{itemize}
+            \item \textbf{\ac{plc}}: è un qualunque dispositivo programmabile in grado di risolvere una logica che implementa un algoritmo;
+            \item \textbf{\ac{rtu}}: non elabora né risolve alcuna logica.
+                È una unità terminale che ricevuti gli ``ordini'' da una unità di classe superiore non fa altro che eseguirli.
+                Si tratta quindi di un ripetitore con capacità di comunicazione, una morsettiera intelligente utile a ridurre i costi di cablaggio e a lasciare distribuiti sul campo gli I/O di un sistema di automazione e controllo;
+        \end{itemize}
+    \item \textbf{Gateway}: raccolgono le informazioni dai \ac{plc}/\ac{rtu} e si occupano di trasferirle in tempo reale al sistema centralizzato implementando opportuni protocolli di trasmissione, crittografia e sicurezza:
+        \begin{itemize}
+            \item modbus;
+            \item DNP3;
+        \end{itemize}
+    \item \textbf{Front-end Server}: ricevono i dati dai diversi siti e li traducono in un formato dal server Scada.
+        Sono logicamente separati da quest'ultimo a garanzia di un tempo di acquisizione in real-time;
+    \item \textbf{Scada Server}: implementando le funzionalità di monitoraggio e di gestione degli allarmi.
+        Operano in tempo reale tipicamente utilizzando uno stream dati.
+        Utilizza un database contenente una serie limitata di dati di dettaglio.
+        Può supportare il controllo automatico tramite interfacce grafiche disposte in una control room, oppure può implementare regole di alerting automatiche;
+    \item \textbf{Data Server}: si occupa di salvare una versione storica dei dati (es. campionamento ogni 15 minuti per ogni segnale).
+        È la base dati utilizzata a fini di analisi:
+        \begin{itemize}
+            \item statistiche;
+            \item tuning sei sistemi e ottimizzazione delle performance;
+            \item data mining;
+        \end{itemize}
+\end{itemize}
+% subsection Architettura dei Sistemi SCADA (end)
+%
+\subsection{Evoluzione dei sistemi SCADA}\label{sub:evoluzione_dei_sistemi_scada} % (fold)
+\begin{description}
+    \item[Scalabilità] L'incremento del numero degli impianti monitorati e dei segnali raccolti pone il problema dell'enorme mole di dati da gestire (in tempo reale), da memorizzare e da analizzare.
+    \item[Capacità di analisi dei dati raccolti] Ai moduli per il controllo operativo dei sistemi si aggiungono moduli per la valorizzazione dei dati storici raccolti:
+        \begin{itemize}
+            \item data mining;
+            \item analisi performance;
+        \end{itemize}
+    \item[Sicurezza] I sistemi \ac{scada} controllano infrastrutture critiche.
+        Il livello di sicurezza dei sistemi commerciali è basato su tecnologie che sono 5-10 anni in ritardo rispetto allo stato dell'arte dell'IT:
+        \begin{itemize}
+            \item attacchi da parte di hacker esterni;
+            \item attacchi da parte di insider;
+        \end{itemize}
+        oggi la sicurezza dei sistemi \ac{scada} è basata sul funzionamento su \ac{vpn} separate rispetto a quella aziendale.
+\end{description}
+% subsection Evoluzione dei sistemi SCADA (end)
+%
+\subsection{Dai sistemi SCADA all'Industria 4.0}\label{sub:dai_sistemi_scada_all_industria_4_0} % (fold)
+\begin{definition}{Industria 4.0}{}
+    Il termine \textbf{Industria 4.0} indica una tendenza dell'automazione industriale che integra nuove tecnologie produttive per migliorare le condizioni di lavoro e aumentare la produttività e la qualità produttiva degli impianti.
+\end{definition}
+\subsubsection{Le Tecnologie coinvolte}\label{sub:le_tecnologie_coinvolte} % (fold)
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/ind4-tec-visual.png}
+\end{cimage}
+%
+\paragraph{Internet of Things}\label{par:internet_of_things} % (fold)
+Indica le connessioni digitali tra gli oggetti che si rendono riconoscibili e acquisiscono intelligenza grazie al fatto di poter comunicare dati su se stessi e accedere a informazioni aggregate da parte di altri.
+Le applicazioni dell'\ac{iot}, spaziano dalla domotica alla medicina, dal settore energy a quello del divertimento.
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/ind4-iot-visual.png}
+\end{cimage}
+% paragraph Internet of Things (end)
+% subsubsection Le Tecnologie coinvolte (end)
+%
+\subsubsection{I sistemi MES}\label{sub:i_sistemi_mes} % (fold)
+I \textbf{\ac{mes}} permettono la gestione della fabbrica nel suo complesso (ricevono ordini dall'ERP), raccolgono informazioni dallo \hyperref[def:scada]{SCADA} e forniscono informazioni aggiornate all'ERP.
+Le principali funzionalità dei \ac{mes} sono:
+\begin{multicols}{2}
+    \begin{itemize}
+        \item assegnazione delle risorse e stato;
+        \item pianificazione delle operazioni;
+        \item spedizione della produzione;
+        \item gestione del lavoro;
+        \item gestione della qualità;
+        \item analisi delle prestazioni;
+        \item ottimizzazione del processo;
+        \item tracciamento del prodotto;
+        \item gestione della manutenzione;
+    \end{itemize}
+\end{multicols}
+I principali benefici dei \ac{mes} sono:
+\begin{multicols}{2}
+    \begin{itemize}
+        \item riduce il tempo del ciclo di produzione;
+        \item riduce i costi di set up;
+        \item elimina o riduce il tempo di inserimento dei dati;
+        \item migliora l'efficienza della produzione;
+        \item conferisce potere alle persone che operano nell'impianto;
+    \end{itemize}
+\end{multicols}
+% subsubsection I sistemi MES (end)
+% subsection Dai sistemi SCADA all'Industria 4.0 (end)
+% section I sistemi SCADA (end)
 % chapter Classificazione dei Sistemi Informativi (end)
