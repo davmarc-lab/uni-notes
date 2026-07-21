@@ -281,6 +281,7 @@ I principali benefici dei \ac{mes} sono:
         \item riduce il tempo del ciclo di produzione;
         \item riduce i costi di set up;
         \item elimina o riduce il tempo di inserimento dei dati;
+        \columnbreak
         \item migliora l'efficienza della produzione;
         \item conferisce potere alle persone che operano nell'impianto;
     \end{itemize}
@@ -288,4 +289,93 @@ I principali benefici dei \ac{mes} sono:
 % subsubsection I sistemi MES (end)
 % subsection Dai sistemi SCADA all'Industria 4.0 (end)
 % section I sistemi SCADA (end)
+%
+\section{I sistemi ERP}\label{sec:i_sistemi_erp} % (fold)
+Il termine \ac{erp} è stato coniato agli inizi degli anni '90 da Gartner Group per indicare una suite di moduli applicativi che supportano l'intera gamma dei processi aziendali.
+I moduli possono essere sia orizzontali sia verticali.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/erp-module-visual.png}
+\end{cimage}
+\begin{definition}{ERP}{}
+    L'\acl{erp} è la gestione integrata dei processi aziendali.
+    È un software che promette l'integrazione fluida di tutte le informazioni che circolano in azienda: dati finanziari, contabili, relativi alle risorse umane, alla catena di approvvigionamento e ai clienti.
+    \begin{note}
+        Un database, un'applicazione e un'interfaccia unificata per l'intera azienda
+    \end{note}
+    \begin{center}
+        \includegraphics[width=.6\textwidth]{assets/erp-def.png}
+    \end{center}
+\end{definition}
+\subsection{Sistemi ERP allargati}\label{sub:sistemi_erp_alargati} % (fold)
+I moduli citati precedentemente rappresentano il \textit{core} degli \ac{erp} a cui possono essere aggiunti ulteriori moduli:
+\begin{itemize}
+    \item \textbf{\ac{plm}}: di supporto alla gestione della documentazione tecnica del prodotto e dei relativi processi produttivi;
+    \item \textbf{\ac{scm}}: di supporto alla pianificazione e al controllo delle attività interazionali;
+    \item \textbf{\ac{crm}}: di supporto all'interazione con il cliente;
+    \item \textbf{E-Procurement}: permettono la realizzazione di mercati elettronici interaziendali in cui le condizioni quadro e i fornitori sono definite dagli uffici acquisti, mentre sono i reparti utenti a seguire gli acquisti veri e propri abbattendo così costi e tempi;
+\end{itemize}
+\begin{note}
+    Il vantaggio dell'integrazione sta nella \textbf{circolarità dell'informazione}
+\end{note}
+La suite \ac{erp} rispecchia una precisa concezione del sistema informativo che si basa sulle seguenti caratteristiche distintive:
+\begin{itemize}
+    \item unicità dell'informazione;
+    \item estensione e modularità funzionale;
+    \item prescrittività;
+\end{itemize}
+% subsection Sistemi ERP alargati (end)
+%
+\subsection{Il paradigma ERP}\label{sub:il_paradigma_erp} % (fold)
+\subsubsection{Unicità dell'informazione}\label{sub:erp_unicit_dell_informazione} % (fold)
+Tutte le elaborazioni condividono uno e un solo valore per ogni informazione.
+L'unicità dell'informazione è ottenuta utilizzando un'unica base di dati condivisa che offre i seguenti vantaggi:
+\begin{itemize}
+    \item \textbf{sincronizzazione dei dati}: la sincronizzazione dei dati permette la sincronizzazione dei processi indipendenti (l'arrivo di un materiale al magazzino aggiorna la situazione delle scorte, degli ordini ai fornitori e della contabilità);
+    \item \textbf{assenza di ridondanza}: non sono più necessarie complesse procedure di aggiornamento dei dati presenti nelle diverse isole aziendali;
+    \item \textbf{tracciabilità degli aggiornamenti}: è sempre possibile individuare perché e chi ha modificato un certo valore;
+    \item \textbf{affidabilità dell'informazione aziendale}: provenendo da un'unica sorgente, non si rischia che i dati direzionali siano inconsistenti perdendo di conseguenza di credibilità (la quantità totale venduta registrata in contabilità differisce da quella registrata dalla divisione vendite);
+\end{itemize}
+\begin{note}
+    Il mancato pagamento di un cliente è registrato nel sistema contabile, ma fino alla sincronizzazione degli archivi il sistema commerciale continuerà ad accettare ordini dal cliente.
+    \emptyln{}
+    Le scorte di materie prime sono memorizzate, oltre che su quella del magazzino, anche sulla base di dati di programmazione.
+    Per ogni materiale esisteranno quindi due giacenze inconsistenti.
+    \emptyln{}
+    I dati di vendita di una multinazionale sono registrati da sistemi locali eterogenei; il consolidamento dei dati richiede ogni volta un processo ad hoc e dura alcuni giorni.
+\end{note}
+% subsubsection Unicità dell'informazione (end)
+%
+\subsubsection{Estensione e Modularità}\label{sub:erp_estensione_e_modularit} % (fold)
+L'ampiezza della copertura dei sistemi \ac{erp} fa si che questi possano essere utilizzati come unica soluzione per il \hyperref[sub:il_sistema_informativo]{SI}.
+\\
+La modularità del sistema permette all'azienda di scegliere solo i moduli di interesse.
+Le strategie adottabili sono le seguenti:
+\begin{itemize}
+    \item \textbf{incrementale}: si acquistano progressivamente i moduli che nella precedente configurazione del \hyperref[def:si]{SI} mancavano o erano realizzati mediante \textit{sistemi legacy} inadeguati;
+    \item \textbf{one stop shopping}: si predilige la linearità acquistando i moduli di un solo vendor, possibilmente in un'unica tranche;
+    \item \textbf{best of breed}: vengono utilizzati i moduli di diversi vendor che meglio si prestano alle esigenze dell'azienda o che vengono considerati i migliori;
+\end{itemize}
+Tipicamente:
+\begin{itemize}
+    \item \textbf{azienda con funzioni core di nicchia}: si adotta un approccio best of breed per le funzioni core dell'azienda (privilegiando la specializzazione) e mentre si adotta un unico fornitore per le rimanenti (privilegiando il fattore costo e il livello di integrazione);
+    \item \textbf{azienda con funzioni core gerarchiche}: si adotta un unico fornitore che copra tutte le funzionalità possibili (privilegiando il costo e il livello di integrazione), mentre si adotta un approccio best of breed per le funzioni non coperte;
+\end{itemize}
+% subsubsection Estensione e Modularità (end)
+%
+\subsubsection{Prescrittività}\label{sub:erp_prescrittivit} % (fold)
+I sistemi \ac{erp} incorporano la logica del processo gestionale.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/erp-presc-visual.png}
+\end{cimage}
+È necessario far aderire i processi aziendali a quelli definiti nell'\ac{erp}.
+L'approccio a un progetto \ac{erp} è invertito rispetto a quanto avviene nella progettazione di un \hyperref[def:si]{SI} ``su misura''.
+L'impatto organizzativo può essere elevato, tuttavia:
+\begin{itemize}
+    \item i processi \ac{erp} sono basati sulle best practice del settore;
+    \item garantiscono la correttezza e standardizzazione delle operazioni;
+    \item favorisce la razionalizzazione dei processi, facendo coincidere il progetto informatico \ac{erp} con un progetto di \ac{bpr};
+\end{itemize}
+% subsubsection Prescrittività (end)
+% subsection Il paradigma ERP (end)
+% section I sistemi ERP (end)
 % chapter Classificazione dei Sistemi Informativi (end)
