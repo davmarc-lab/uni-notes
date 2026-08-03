@@ -406,5 +406,111 @@ L'unicità dell'informazione e modularità rimangono comunque caratteristiche fo
 %
 \section{I sistemi CRM}\label{sec:crm} % (fold)
 Il termine \textbf{\acl{crm}} indica il processo integrato e strutturato per la gestione della relazione con la clientela, il cui scopo è costruire relazioni personalizzate di lungo periodo, capaci di aumentare la soddisfazione del cliente e, conseguentemente, di aumentare il valore dell'impresa per il cliente e del cliente per l'impresa.
+\begin{note}
+    Il cliente diventa il focus centrale della strategia commerciale
+\end{note}
+Le aziende telefoniche rappresentano il miglior esempio dell'approccio \ac{crm}:
+\begin{itemize}
+    \item telefono e SIM possono essere comprate via web;
+    \item il cliente può confezionare su misura la tariffa scegliendo in base ai servizi per lui più importanti;
+    \item i call center sono attivi 24h al giorno;
+\end{itemize}
+\begin{warning}
+    Quest'approccio non è possibile senza il supporto informatico
+\end{warning}
+I sistemi \ac{crm} sono i moduli del \hyperref[def:si]{SI} che supportano le relazioni con il cliente e informatizzano i flussi di attività attraverso cui le richieste del cliente vengono servite.
+\\
+Il ruolo dei sistemi \ac{crm} varia a seconda dei settori di attività ed è massimo nelle aziende con \textbf{relazioni frequenti} e \textbf{continuate} nel tempo con una \textbf{clientela numerosa}, geograficamente distribuita, che interagisce attraverso diversi canali.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/ruolo-crm-visual.png}
+\end{cimage}
+Esistono tre moduli principali in un sistema \ac{crm}:
+\begin{itemize}
+    \item \textbf{\ac{crm} operativo}: informatizza i canali attraverso cui avvengono i contatti con il cliente: Presenza -- Voce -- Web -- Corrispondenza;
+    \item \textbf{\ac{crm} analitico}: informatizza l'analisi della clientela al fine di definire le politiche di promozione e di contatto;
+    \item \textbf{\ac{crm} direzionale}: permette al management di valutare la performance dell'azienda verso il cliente;
+\end{itemize}
+\begin{note}
+    Il \textbf{\ac{crm} analitico} supporta il settore commerciale e marketing nella pianificazione delle proprie attività.
+    \\
+    Il \textbf{\ac{crm} direzionale} supporta la dirigenza nel valutare l'efficienza del settore marketing e commerciale.
+    Entrambi si basano su dati di sintesi memorizzati nel DW aziendale.
+\end{note}
+\subsection{Architettura dei sistemi CRM}\label{sub:crm_arch} % (fold)
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/crm-arch-visual.png}
+\end{cimage}
+% subsection Architettura dei sistemi CRM (end)
+%
+\subsection{Il paradigma CRM}\label{sub:crm_il_paradigma_crm} % (fold)
+Le caratteristiche che denotano un sistema \ac{crm} possono essere così riassunte:
+\begin{itemize}
+    \item \textbf{multicanalità}: il cliente sceglie di volta in volta il canale di contatto più conveniente.
+        \begin{note}
+            Il servizio deve essere erogabile 24h
+        \end{note}
+    \item \textbf{completezza e unicità dei dati su prodotti e clienti}: per rendere possibile la multicanalità le informazioni sul cliente devono essere condivise dai diversi sistemi di contatto che utilizzeranno una base di dati comune;
+    \item \textbf{catene di servizio}: le richieste sottoposte ai front-end generano una serie di attività complesse sui sistemi di back-end.
+        L'efficienza del sistema \ac{crm} dipende quindi dalla capacità di integrare i servizi del \hyperref[def:si]{SI}.
+\end{itemize}
+% subsection Il paradigma CRM (end)
+%
+\subsection{I canali CRM}\label{sub:crm_i_canali_crm} % (fold)
+\subsubsection{Presenza}\label{sub:crm_presenza} % (fold)
+Il cliente interagisce direttamente con l'azienda.
+Il \ac{crm} dà supporto al venditore nel ciclo di individuazione del cliente, di contatto, di trattativa e di ordinazione vera e propria.
+\\
+Dato che l'automazione è indirizzata soprattutto al venditore si parla di applicazioni \ac{sfa}.
+Questi sistemi nati negli anni '80 sono stati ampiamente utilizzati dai venditori di prodotti complessi.
+I venditori vengono dotati di un computer portatile che:
+\begin{multicols}{2}
+    \begin{itemize}
+        \item permette di mettere a punto le offerte ai clienti;
+        \item contiene schede informative e dimostrazioni dei prodotti;
+        \item raccoglie gli ordini;
+        \item raccoglie informazioni sull'andamento delle visite ai clienti;
+        \item i dati e le informazioni così raccolte vengono poi trasmesse al sistema centrale dell'azienda che provvede alla loro gestione;
+    \end{itemize}
+\end{multicols}
+% subsubsection Presenza (end)
+%
+\subsubsection{Voce e corrispondenza}\label{sub:crm_voce_e_corrispondenza} % (fold)
+Il cliente interagisce via telefono con una rete di \textbf{operatori} assistiti dal sistema \ac{crm}, e di \textbf{sistemi automatici} integrati con gli apparati telefonici (call-center).
+La componente informatica:
+\begin{itemize}
+    \item permette di smistare le chiamate in base al servizio richiesto;
+    \item fornisce risposte e servizi in maniera automatica e con modalità self-service;
+    \item rende trasparente la \textbf{multilocalizzazione} dei call-center;
+    \item supporta gli operatori;
+\end{itemize}
+Nel canale corrispondenza il cliente interagisce via e-mail con l'azienda in cui gli operatori smistano le lettere in entrata.
+L'azienda può inoltre utilizzare sistemi automatici di invio rendendo possibili campagne di marketing o servizi informazioni altrimenti irrealizzabili.
+%
+\subsubsection{Web}\label{sub:crm_web} % (fold)
+Il \textbf{canale web} (detto di \textit{commercio elettronico}) è diventato il principale canale \ac{crm}:
+\begin{itemize}
+    \item vendita self-service 24 ore su 24;
+    \item possibilità di personalizzazione per singolo utente;
+    \item evidenza al cliente dello stato degli ordini;
+    \item registrazione del percorso di navigazione del cliente (\textit{click stream analysis});
+\end{itemize}
+I servizi web si classificano in:
+\begin{itemize}
+    \item \textbf{\ac{b2c}}: punti di accesso per gli utenti finali fortemente orientati all'acquisto;
+    \item \textbf{\ac{b2b}}: punti di accesso per le aziende partner maggiormente orientata ai servizi;
+\end{itemize}
+\begin{note}
+    Oggi in Italia oltre l'80\% dei siti di commercio elettronico sono di tipo \ac{b2b}.
+    Negli anni '90 i progetti \ac{crm}-web erano realizzati come sistemi custom, si stanno oggi affermando \textbf{pacchetti web-enabled front-end} in cui è necessaria la sola fase di personalizzazione.
+\end{note}
+% subsubsection Web (end)
+% subsubsection Voce e corrispondenza (end)
+% subsection I canali CRM (end)
+%
+\subsection{Il mercato CRM}\label{sub:crm_il_mercato_crm} % (fold)
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/mercato-crm-visual.png}
+\end{cimage}
+% subsection Il mercato CRM (end)
 % section I sistemi CRM (end)
 % chapter Classificazione dei Sistemi Informativi (end)

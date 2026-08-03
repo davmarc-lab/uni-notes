@@ -61,7 +61,7 @@ local function make_math_block(trig, env, desc)
     })
 end
 
-function make_wrappable(trig, cmd, desc)
+local function make_wrappable(trig, cmd, desc)
     return s({ trig = trig, dscr = desc .. " (opt wrap)", indet = true }, {
         t("\\" .. cmd .. "{"),
         f(function(_, snip)
@@ -141,6 +141,9 @@ return {
         t({ "}" }),
         i(2),
         t({ "", fake_indent }),
+        f(function(_, snip)
+            return snip.env.TM_SELECTED_TEXT
+        end),
         i(0),
         t({ "", "\\end{" }),
         f(function(args)
