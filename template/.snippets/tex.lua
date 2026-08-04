@@ -92,6 +92,12 @@ return {
         t({ "", "\\item " }),
         i(0),
     }),
+    s({ trig = "ditem", dscr = "Description Item new line", indent = true }, {
+        t({ "", "\\item[" }),
+        i(1),
+        t("] "),
+        i(0),
+    }),
     s({ trig = "itemize", dscr = "Itemize environment (opt wrap)", indet = true }, {
         t({ "\\begin{itemize}", "\t\\item " }),
         f(function(_, snip)
@@ -111,7 +117,6 @@ return {
         i(0, ""),
         t({ "", fake_indent .. "\\end{itemize}", "\\end{multicols}" }),
     }),
-
     s({ trig = "enumerate", dscr = "Enumerate environment (opt wrap)", indet = true }, {
         t({ "\\begin{enumerate}", "\t\\item " }),
         f(function(_, snip)
@@ -120,6 +125,14 @@ return {
         i(0, ""),
         t({ "", "\\end{enumerate}" }),
     }),
+    s({ trig = "description", dscr = "Description environment", indet = true }, {
+        t({ "\\begin{description}", "\t\\item[" }),
+        i(1, ""),
+        t("] "),
+        i(0, ""),
+        t({ "", "\\end{description}" }),
+    }),
+
     s({ trig = "ieq", dscr = "Inline equation" }, {
         t("$"),
         i(1),
