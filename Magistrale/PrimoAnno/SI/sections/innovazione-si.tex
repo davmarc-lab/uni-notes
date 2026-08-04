@@ -117,9 +117,299 @@ Le correzioni agli obiettivi raggiungibili nei due orizzonti temporali definiti 
         \item definizione degli interventi infrastrutturali e definizione del piano finale;
     \end{itemize}
 \end{note}
+\begin{quote}[Il percorso di adozione nei Sistemi Informativi]
+    Il percorso di digitalizzazione è incrementale e raramente permette di saltare dei passaggi.
+    È \textbf{rischioso}, \textbf{costoso} e \textbf{inutile} adottare soluzioni avanzate senza avere completamente sfruttato quelle semplici:
+    \begin{itemize}
+        \item i manager non sono pronti: non hanno il \textit{mindset} giusto;
+        \item i dati non sono pronti: non sono di qualità sufficiente;
+        \item i processi delle aziende non sono pronte:non sono definiti in modo da appoggiarsi ai dati e di reagire a essi;
+    \end{itemize}
+    Dubitare dei consulenti e dei fornitori di software che offrono analisi avanzate se la vostra azienda sfrutta a malapena un foglio Excel.
+\end{quote}
 % subsection Top Down VS Bottom Up (end)
 % section Definizione degli obiettivi (end)
 %
 \section{Creare aziende data-driven}\label{sec:creare_aziende_data_driven} % (fold)
+Il termine \textbf{aziende data-driven} si riferisce ad aziende in cui le decisioni e i processi sono supportate dai dati.
+Le decisioni si basano su conoscenze quantitative piuttosto che qualitative; i processi e le conoscenze sono una risorsa dell'azienda che non vanno persi se i manager cambiano.
+\begin{quote}
+    La differenza tra una decisione basata sui dati e una buona decisione è un buon manager
+\end{quote}
+L'adozione di una mentalità basata sui dati va ben oltre l'adozione di una soluzione business intelligence comporta:
+\begin{itemize}
+    \item creare una cultura dei dati;
+    \item cambiare la mentalità dei manager;
+    \item cambiare processi;
+    \item migliorare la qualità di tutti i dati;
+\end{itemize}
+Quello della \textbf{digitalizzazione} è un percorso che coinvolge tre dimensioni principali.
+Passare da A a B è un processo pluriennale fatto di obiettivi intermedi, ciascuno dei quali deve essere raggiungibile.
+Inoltre:
+\begin{itemize}
+    \item deve risolvere un problema e apportare valore;
+    \item deve essere realizzabile in un intervallo di tempo limitato (in genere meno di un anno);
+    \item i costi devono essere economicamente correlati agli utili;
+\end{itemize}
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/data-driven-digitali-graph.png}
+\end{cimage}
 % section Creare aziende data-driven (end)
+%
+\section{Il Business Process Reengineering}\label{sec:il_business_process_reengineering} % (fold)
+Il \textbf{\ac{bpr}} nasce come completo ripensamento e radicale ridisegno dei fondamentali processi di un'organizzazione alla luce delle potenzialità offerte dai nuovi strumenti informatici.
+L'accento è sulla discontinuità, sul salto nelle prestazioni, sulla completa assenza di vincoli di riprogettazione.
+\\
+Il concetto di \ac{bpr} nasce agli inizi degli anni '90 per impulso di Michael Hammer, un professore di informatica del MIT che afferma:
+\begin{quote}
+    It is time to stop paving the cow paths.
+    Instead of embedding outdated processes in silicon and software, we should obliterate them and start over.
+    We should ``reengineer'' our businesses: use the power of modern information technology to radically redesign our business processes in order to achieve dramatic improvements in their performance.
+\end{quote}
+%
+\subsection{I Processi Aziendali}\label{sub:bpr_i_processi_aziendali} % (fold)
+\begin{description}
+    \item[Processo] \Cref{def:proc}
+        \begin{cimage}
+            \includegraphics[width=.8\textwidth]{assets/20260804_100831.png}
+        \end{cimage}
+    \item[Cliente] È la persona o gruppo che richiede o usa un prodotto o servizio realizzato tramite il processo.
+        Il cliente può essere interno o esterno all'azienda.
+        Ogni output può avere molti clienti e viceversa.
+\end{description}
+Il processo e la sua ``manutenzione'' diventano gli elementi centrali del ciclo di innovazione dei \hyperref[def:si]{SI}.
+\begin{note}
+    Il primo compito del progettista è quello di descrivere e classificare i processi.
+    Particolare rilevanza hanno le \textbf{classificazioni normative}, ossia quelle che descrivono la struttura dei processi come dovrebbe essere o effettivamente è nelle migliori aziende del settore (best practice).
+    La classificazioni normative:
+    \begin{itemize}
+        \item vengono mappate nei principali pacchetti software;
+        \item forniscono un'informazione della situazione \textit{to be};
+    \end{itemize}
+\end{note}
+% subsection I Processi Aziendali (end)
+%
+\subsection{Definizione}\label{sub:bpr_definizione} % (fold)
+\begin{definition}{Business Process Reengineering}{bpr}
+    Il \ac{bpr} è la completa revisione dei processi aziendali al fine di massimizzarne il valore derivante dalle singole componenti, attraverso interventi sia di riduzione dei costi sia di massimizzazione dell'efficacia.
+    \begin{note}
+        Può essere innescato da un aggiornamento tecnologico
+    \end{note}
+    \begin{center}
+        \includegraphics[width=.8\textwidth]{assets/bpr-vantaggi-visual.png}
+    \end{center}
+\end{definition}
+% subsection Definizione (end)
+%
+\subsection{Approcci di Miglioramento}\label{sub:approcci_di_miglioramento} % (fold)
+\begin{description}
+    \item[Orientale] Miglioramento continuo
+        \begin{cimage}
+            \includegraphics[width=.4\textwidth]{assets/bpr-orie-visual.png}
+        \end{cimage}
+    \item[Occidentale] Miglioramento discontinuo
+        \begin{cimage}
+            \includegraphics[width=.4\textwidth]{assets/bpr-occi-visual.png}
+        \end{cimage}
+\end{description}
+Le varie modalità di reingegnerizzazione \textbf{variano} in funzione dello scopo e dell'ampiezza del cambiamento.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/bpr-mode-reeng-graph.png}
+\end{cimage}
+Esistono tre tipi di cambiamento:
+\begin{itemize}
+    \item \textbf{Streamlining}, approccio incrementale sui processi: ricerca il miglioramento delle prestazioni modificando il processo attuale (modifica le sequenze, semplifica le attività, automatizza le attività, ...)
+        \\
+        \red{\textbf{Pianificare il presente}}
+    \item \textbf{Business Process Reengineering}, approccio radicale sui processi: ricerca un cambiamento radicale del processo attuale (eliminare e combinare con un altro processo, ricostruire da zero, introdurre competenze completamente nuove, ...)
+        \\
+        \red{\textbf{Pianificare il futuro a parità di business}}
+    \item \textbf{Enterprise Transformation}, approccio radicale sul business: ricerca una riconfigurazione del business (eliminare/sviluppare combinazioni prodotto/mercato, sviluppare alleanze strategiche, ribilanciare il portafoglio di business, ...)
+        \\
+        \red{\textbf{Pianificare il business}}
+\end{itemize}
+% subsection Approcci di Miglioramento (end)
+%
+\subsection{Fasi del BPR}\label{sub:fasi_del_bpr} % (fold)
+\begin{itemize}
+    \item Identificazione dei processi da reingegnerizzare:
+        \begin{itemize}
+            \item \red{descrivere i processi};
+            \item \red{identificazione del breakthrough};
+            \item \red{analisi dei tempi di ciclo};
+            \item \red{analisi della creazione del valore};
+        \end{itemize}
+    \item Definizione delle priorità di intervento sulla base del loro impatto (Analisi di Pareto);
+    \item Reingegnerizzazione dei processi per rimuovere le barriere alla performance;
+    \item Implementazione del cambiamento;
+    \item Istituzionalizzazione delle misure per il miglioramento continuo;
+\end{itemize}
+% subsection Fasi del BPR (end)
+%
+\subsection{Descrivere i Processi}\label{sub:bpr_descrivere_i_processi} % (fold)
+Le \textbf{variabili di progettazione} dei processi rilevanti ai fini della loro corretta analisi e progettazione sono:
+\begin{itemize}
+    \item \textbf{flusso delle attività}: sequenza di attività attraverso cui il processo è svolto.
+        Determina la durata e incide sul livello di servizio in base alle sue flessibilità.
+        Assieme alle risorse umane e al livello della tecnologia determina la qualità dell'output.
+        Può essere modellato con diagrammi che esprimano la sequenza: Activity Diagram (UML);
+    \item \textbf{organizzazione del processo}: sia dal punto di vista della suddivisione operativa del lavoro, sia della struttura di coordinamento e controllo aziendale.
+        Determina il livello di accorpamento delle attività.
+        Il legame tra la struttura aziendale e i processi può essere modellata mediante diagrammi Linear Responsability Charting (LRC);
+    \item \textbf{competenze delle risorse umane}: la cui adeguatezza è condizione fondamentale per la trasformazione a seguito dell'innovazione tecnologica;
+    \item \textbf{sistema di misurazione e controllo delle prestazioni}: necessario per governare il processo e per valutare gli attori aziendali che lo eseguono.
+        Viene realizzato utilizzando sistemi di \textit{Key Performance Indicator} o di \textit{Balanced Scorecard}.
+\end{itemize}
+%
+\subsubsection{Linear Responsability Charting}\label{sub:linear_responsability_charting} % (fold)
+Determina una visione tabellare della responsabilità organizzativa che integra quella dell'organigramma che non specifica il \textbf{ruolo} delle varie strutture nel processo considerato.
+Si ottiene incrociando le attività del processo (o le fasi a un livello più aggregato) con le divisioni (o le loro parti).
+Il ruolo è indicato dalle etichette inserite nelle celle della griglia risultante:
+\begin{itemize}
+    \item \textbf{D} = decide, autorizza, ratifica;
+    \item \textbf{E} = esegue;
+    \item \textbf{A} = partecipa a tempo parziale, fornisce assistenza operativa e supporto;
+    \item \textbf{I} = è sistematicamente informato;
+\end{itemize}
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/lrc-es-visual.png}
+\end{cimage}
+%
+\paragraph{Le Risorse Umane}\label{par:bpr_le_risorse_umane} % (fold)
+Le risorse umane determinano la differenza tra il risultato effettivo e il massimo teoricamente possibile da una configurazione del processo.
+Le tecnologie innovative necessitano di figure professionali che non esistono in azienda e devono essere acquisite dal mercato o create internamente.
+\\
+Il reperimento può essere costoso e complesso perché si manifesta per tutte le aziende contemporaneamente (quando il mercato si accorge della potenzialità offerta da una certa tecnologia).
+La formazione degli utenti pone molti problemi gestionali:
+\begin{itemize}
+    \item gli utenti devono superare l'avversione al cambiamento;
+    \item spesso i vantaggi delle nuove soluzioni non sono subito evidenti;
+    \item il rischio maggiore è di introdurre un cambiamento maggiore delle capacità individuali di adattamento inducendo il rifiuto del nuovo sistema;
+\end{itemize}
+% paragraph Le Risorse Umane (end)
+% subsubsection Linear Responsability Charting (end)
+%
+\subsubsection{Key Performance Indicator}\label{sub:key_performance_indicator} % (fold)
+Per verificare l'efficacia del processo è necessario misurare quantitativamente come questo soddisfa i requisiti del cliente.
+Per ogni processo i requisiti da soddisfare variano in base alla prospettiva, ossia in base al tipo di cliente:
+\begin{itemize}
+    \item \textbf{Committente}: impianto ben disegnato, completamente operativo, consegnato puntualmente;
+    \item \textbf{Senior Management}: efficacia dell'investimento;
+    \item \textbf{Utenti}: comfort, ambiente di lavoro che favorisca la produttività;
+    \item \textbf{Fornitori}: specifiche complete, leadtimes adeguati;
+\end{itemize}
+\begin{definition}{Key Performance Indicator}{kpi}
+    La capacità di un processo nel soddisfare i requisiti dei clienti si misura tramite i \textbf{\ac{kpi}}.
+    Un \ac{kpi} è un indicatore quantificabile dell'efficacia (grado di raggiungimento dell'obiettivo) e/o dell'efficienza (economicità nel raggiungimento dell'obiettivo) di un processo o di un sottoprocesso.
+    \\
+    Un \ac{kpi} ha le seguenti caratteristiche:
+    \begin{itemize}
+        \item quantificabile;
+        \item rilevabile;
+        \item correlato con l'obiettivo di business interno di processo;
+    \end{itemize}
+\end{definition}
+Per poter ``misurare'' un processo tramite i \ac{kpi} è necessario crearne la mappa, ossia identificare con esattezza gli \textbf{output}, gli \textbf{obiettivi} e le \textbf{attività principali}:
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/kpi-obiettivi.png}
+\end{cimage}
+%
+\paragraph{Proprietà}\label{par:kpi_proprieta} % (fold)
+Nota la mappa di ogni processo strategico è possibile creare i \ac{kpi} che devono essere definiti in base ai seguenti principi:
+\begin{itemize}
+    \item \textbf{significatività}: collegamento con gli obiettivi strategici;
+    \item \textbf{controllabilità}: misurazione di risultati che possono essere influenzati o azioni che possono essere intraprese, focalizzazione su un ben definito periodo di tempo;
+    \item \textbf{semplicità}: facilità concettuale, pochi indicatori sono preferibili a una metrica complessa, possibilità di trade-offs con altri sistemi di misurazione;
+    \item \textbf{misurabilità}: disponibilità dei dati, affidabilità e accuratezza dei dati;
+    \item \textbf{equilibrio}: collegamento degli \red{indicatori tecnici} con le attività di un processo, collegamento degli \red{indicatori di risultato} con gli obiettivi e gli output di un processo;
+\end{itemize}
+\begin{note}
+    Gli \textbf{indicatori di risultato} misurano le performance a un momento dato, mentre gli \textbf{indicatori tecnici} misurano attività che influenzano la performance.
+\end{note}
+% paragraph Proprietà (end)
+%
+\paragraph{La mappa degli indicatori}\label{par:kpi_la_mappa_degli_indicatori} % (fold)
+Un indicatore cattura un singolo aspetto del fenomeno (es. processo, divisione, azienda) che misura.
+Per misurare efficacemente il fenomeno è necessario definire una mappa integrata di \ac{kpi} che copra diversi punti di vista a diversi livelli di dettaglio.
+La mappa deve chiarire:
+\begin{itemize}
+    \item \textbf{fenomeno da misurare}: il processo o il soggetto da valutare;
+    \item \textbf{obiettivi}: specifica quale scopo deve raggiungere il processo o il soggetto.
+        Conoscendo gli obiettivi è possibile derivare quali sono gli aspetti più importanti da misurare per controllare il raggiungimento dell'obiettivo stesso;
+    \item \textbf{misure}: identificazione concreta ma ancora qualitativa degli aspetti da monitorare;
+    \item \textbf{stakeholder}: soggetti interessati ai \ac{kpi}.
+        Soggetti diversi sono interessati ad aspetti diversi dello stesso fenomeno e conseguentemente a indicatori diversi, tipicamente a diversi livelli di aggregazione;
+    \item \textbf{sorgente dati}: determina l'effettiva calcolabilità dell'indicatore;
+    \item \textbf{formulazione}: specifica la formula di calcolo dell'indicatore;
+\end{itemize}
+% paragraph La mappa degli indicatori (end)
+% subsubsection Key Performance Indicator (end)
+%
+\subsubsection{Overall Equipment Effectiveness}\label{sub:kpi_overall_equipment_effectiveness} % (fold)
+\ac{oee} è il principale \hyperref[def:kpi]{KPI} per misurare le capacità di produzione di un'azienda manifatturiera.
+È spesso usato nella Lean Manufacturing per raggiungere l'eccellenza operativa.
+\[
+    \textit{Availability}\times\textit{Performance}\times\textit{Quality}
+\]
+\begin{itemize}
+    \item \textbf{Availability} $\itc{0,\,1}$: percentuale di tempo lavorato rispetto al tempo disponibile;
+    \item \textbf{Performance} $\itc{0,\,1}$: percentuale di pezzi effettivamente lavorati rispetto ai pezzi teoricamente lavorabili.
+        Nella pianificazione vengono calcolati i pezzi che possono essere lavorati a regime ottimale, qualsiasi riduzione di queste prestazioni indica una diminuzione della produzione;
+    \item \textbf{Quality} $\itc{0,\,1}$: Rapporto percentuale dei pezzi conformi sul totale dei pezzi prodotti.
+        In questo modo, si evidenziano i cali di produzione legati a scarti o rilavorazioni, che incidono sull'inefficienza complessiva.
+\end{itemize}
+\begin{note}
+    Il calcolo dettagliato/automatico dell'\ac{oee} richiede \hyperref[def:scada]{SCADA} e \hyperref[sub:i_sistemi_mes]{MES}
+\end{note}
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/oee-es-table.png}
+    \caption{Esempio di OEE}\label{fig:oee-es-table}
+\end{cimage}
+% subsubsection Overall Equipment Effectiveness (end)
+% subsection Descrivere i Processi (end)
+%
+\subsection{Identificazione dei Breakthrough}\label{sub:bpr_identificazione_dei_breakthrough} % (fold)
+Esistono dei livelli di performance di un processo (in termini di costo, qualità, servizio o tempi di ciclo) il cui raggiungimento comporta un miglioramento significativo e più che proporzionale dei benefici (costo, qualità servizio, tempi di ciclo).
+\\
+Esistono due modalità fondamentali per l'identificazione del Breakthrough:
+\begin{itemize}
+    \item \textbf{voce del cliente};
+    \item \textbf{benchmarking};
+\end{itemize}
+%
+\subsubsection{Analisi della Voce del Cliente}\label{sub:bpr_analisi_della_voce_del_cliente} % (fold)
+L'analisi della voce del cliente (\acl{voc}) è un processo sistematico attraverso il quale un'azienda raccoglie, interpreta e comprende le opinioni, le aspettative e le esperienze dei propri clienti riguardo a prodotti, servizi o brand.
+Quest'analisi può essere condotta tramite vari metodi, tra cui:
+\begin{itemize}
+    \item \textbf{sondaggi e questionari}: raccogliendo feedback diretti da parte dei clienti;
+    \item \textbf{interviste}: incontri faccia a faccia o telefonici per ottenere più risposte approfondite;
+    \item \textbf{social media e recensioni online}: monitorando i commenti e le opinioni espresse dai clienti sulle piattaforme digitali;
+    \item \textbf{focus group}: gruppi di discussione con clienti selezionati per raccogliere insight più qualitativi;
+    \item \textbf{analisi dei dati di supporto clienti}: esaminando le richieste e le problematiche sollevate attraverso canali come il servizio clienti o i call center;
+\end{itemize}
+Il cliente va inteso sia come cliente finale, sia come cliente interno (di un processo), sia come stakeholder della supply chain.
+\begin{warning}[Che succede se non si include la Voce del Cliente in un progetto \ac{bpr}?]
+    \begin{itemize}
+        \item potenziale rischio per l'organizzazione di non offrire ciò che il cliente vuole, quando lo vuole;
+        \item possibile perdita di posizionamento e in prospettiva perdita di clienti chiave;
+        \item rischio di focalizzare il \hyperref[sec:il_business_process_reengineering]{BPR} su aree non a valore per il cliente;
+        \item ambiente di lavoro fra i clienti interni stressante;
+    \end{itemize}
+\end{warning}
+% subsubsection Analisi della Voce del Cliente (end)
+%
+\subsubsection{Il Benchmarking}\label{sub:bpr_il_benchmarking} % (fold)
+Il \textbf{benchmarking} è un processo di comparazione, attraverso il quale l'organizzazione può comparare le performance interne con standard esterni di eccellenza.
+Vengono utilizzati i \hyperref[sub:key_performance_indicator]{KPI} per quantificare la prestazione.
+\\
+L'obiettivo del benchmarking è quello di ottenere e mantenere una performance best-in-class attraverso iniziative di miglioramento.
+L'osservazione dell'approccio di altre organizzazioni a un problema o a un processo può catalizzare soluzioni innovative.
+Il benchmarking può notevolmente accelerare un processo di cambiamento con un'efficacia di comunicazione considerevole.
+% subsubsection Il Benchmarking (end)
+% subsection Indetificazione dei Breakthrough (end)
+%
+\subsection{L'analisi dei Tempi di Ciclo}\label{sub:bpr_l_analisi_dei_tempi_di_ciclo} % (fold)
+
+% subsection L'analisi dei Tempi di Ciclo (end)
+% section Il Business Process Reengineering (end)
 % chapter L'innovazione nei Sistemi Informativi (end)
