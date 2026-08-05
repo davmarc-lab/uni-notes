@@ -247,6 +247,27 @@ Esistono tre tipi di cambiamento:
 % subsection Fasi del BPR (end)
 %
 \subsection{Descrivere i Processi}\label{sub:bpr_descrivere_i_processi} % (fold)
+La scomposizione dei processi dettaglia i processi per i successivi livelli di approfondimento:
+\begin{itemize}
+    \item \textbf{macroprocesso}: ne è un esempio la catena del valore di \hyperref[fig:si-aziende-visual]{Porter}.
+        È utile soprattutto nelle fasi iniziali per strutturare l'analisi e per individuare l'area di intervento;
+    \item \textbf{processo}: illustra a un livello ragionevolmente dettagliato le operazioni svolte da un'azienda $\rightarrow$ il macroprocesso ``Sviluppo prodotti'' si decompone in: ``Concept'' --- ``Pianificazione'' --- ``Progettazione'' --- ``Prototipazione'' --- ``Test'' --- ``Ingegnerizzazione'';
+    \item \textbf{fase}: ha lo scopo di descrivere il modo in cui un processo è implementato.
+        Una fase è una \red{tappa del processo} $\rightarrow$ il processo ``Progettazione'' comprende le \red{fasi} di: ``Sviluppo specifiche'' --- ``Gestione del \hyperref[def:ce]{concurrent engineering}'' --- ``Realizzazione del \hyperref[def:ve]{value engineering}'' --- ``Documentazione delle specifiche di progetto'' --- ``Sviluppo prototipi'' --- ``Gestione delle richieste di brevetto'';
+    \item \textbf{attività}: è il livello adottato nella fase di studio dei processi.
+        Sono determinate scomponendo ulteriormente le fasi secondo una logica sequenziale;
+\end{itemize}
+\begin{definition}{Concurrent Engineering}{ce}
+    Approccio sistematico alla progettazione di un prodotto/servizio che consideri contemporaneamente tutti gli aspetti del ciclo di vita dal concepimento fino all'eliminazione.
+    Esso definisce simultaneamente il prodotto, il processo di produzione e tutti i processi a esso correlati
+\end{definition}
+\begin{definition}{Vaule Engineering}{ve}
+    Analisi delle caratteristiche di un prodotto/servizio, svolta da personale qualificato, finalizzata a migliorarne l'efficacia, l'affidabilità, la qualità, la sicurezza e il costo
+\end{definition}
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/scomp-ger-proc-visual.png}
+    \caption{Scomposizione gerarchica}\label{fig:scomp-ger-proc-visual}
+\end{cimage}
 Le \textbf{variabili di progettazione} dei processi rilevanti ai fini della loro corretta analisi e progettazione sono:
 \begin{itemize}
     \item \textbf{flusso delle attività}: sequenza di attività attraverso cui il processo è svolto.
@@ -400,11 +421,13 @@ Il cliente va inteso sia come cliente finale, sia come cliente interno (di un pr
 %
 \subsubsection{Il Benchmarking}\label{sub:bpr_il_benchmarking} % (fold)
 Il \textbf{benchmarking} è un processo di comparazione, attraverso il quale l'organizzazione può comparare le performance interne con standard esterni di eccellenza.
-Vengono utilizzati i \hyperref[sub:key_performance_indicator]{KPI} per quantificare la prestazione.
+\red{Vengono utilizzati i \hyperref[sub:key_performance_indicator]{KPI} per quantificare la prestazione}
 \\
 L'obiettivo del benchmarking è quello di ottenere e mantenere una performance best-in-class attraverso iniziative di miglioramento.
-L'osservazione dell'approccio di altre organizzazioni a un problema o a un processo può catalizzare soluzioni innovative.
-Il benchmarking può notevolmente accelerare un processo di cambiamento con un'efficacia di comunicazione considerevole.
+\begin{note}
+    L'osservazione dell'approccio di altre organizzazioni a un problema o a un processo può catalizzare soluzioni innovative.
+    Il benchmarking può notevolmente accelerare un processo di cambiamento con un'efficacia di comunicazione considerevole.
+\end{note}
 % subsubsection Il Benchmarking (end)
 % subsection Indetificazione dei Breakthrough (end)
 %
