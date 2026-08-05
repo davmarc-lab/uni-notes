@@ -1,5 +1,5 @@
 % ltex: language=it
-\chapter{L'innovazione nei Sistemi Informativi}\label{chap:l_innovazione_nei_sistemi_informativi} % (fold)
+\chapter{Pianificazione dei Sistemi Informativi}\label{chap:pianificazione_dei_sistemi_informativi} % (fold)
 Nella maggior parte dei processi innovativi sono le persone e i processi a frenare l'innovazione a causa dell'avversione all'innovazione e alla \textbf{legge di Martec (2013)}.
 \begin{cimage}
     \includegraphics[width=.6\textwidth]{assets/martec-law-graph.png}
@@ -432,7 +432,287 @@ L'obiettivo del benchmarking è quello di ottenere e mantenere una performance b
 % subsection Indetificazione dei Breakthrough (end)
 %
 \subsection{L'analisi dei Tempi di Ciclo}\label{sub:bpr_l_analisi_dei_tempi_di_ciclo} % (fold)
-
+L'\textbf{analisi dei tempi di ciclo} (o \textit{cycle time analysis}) è una tecnica utilizzata per misurare e ottimizzare l'efficienza dei processi produttivi od operativi, analizzando il tempo necessario per completare un ciclo di lavoro.
+È uno strumento fondamentale in contesti industriali, logistici, o di gestione dei progetti, per identificare inefficienze e migliorare le produttività.
+\\
+Il tempo di ciclo può essere suddiviso in diverse fasi:
+\begin{itemize}
+    \item \textbf{tempo di lavorazione} (Processing Time): il tempo effettivo dedicato alla realizzazione dell'attività o del prodotto;
+    \item \textbf{tempo di attesa} (Waiting time): il tempo durante il quale il lavoro è in attesa tra una fase e l'altra;
+    \item \textbf{setup time}: il tempo richiesto per preparare una macchina o un processo prima di iniziare il lavoro;
+    \item \textbf{tempo di movimentazione} (Transport time): il tempo impiegato per spostare materiali o informazioni da una fase all'altra;
+    \item \textbf{tempo di inattività} (Idle time): periodi in cui risorse o macchine non vengono utilizzate;
+\end{itemize}
+\begin{note}[Obiettivi]
+    Gli obiettivi dell'analisi sono:
+    \begin{itemize}
+        \item identificare i colli di bottiglia: riconoscere le fasi che rallentano l'intero processo;
+        \item ridurre i tempi morti: eliminare o minimizzare i tempi di inattività o di attesa;
+        \item ottimizzare le risorse: migliorare l'allocazione di macchinari, manodopera e materiali;
+        \item aumentare l'efficienza complessiva: ridurre il tempo totale necessario per completare un ciclo, migliorando la produttività;
+    \end{itemize}
+\end{note}
+%
+\begin{example}{Il Caso delle Utilities}{}
+    Il processo di fatturazione di un'azienda che commercializza energia elettrica è il seguente:
+    \begin{multicols}{2}
+        \begin{itemize}
+            \item la fatturazione è posteriore al periodo di erogazione;
+            \item il processo di fatturazione può iniziare solo dopo il termine del periodo di consumo perché alcuni dati devono essere aggiornati alla fine del periodo;
+            \item il calcolo è complicato per la presenza di un numero elevato di contratti/offerte che variano nel tempo;
+            \item ogni ritardo nella fatturazione determina una perdita finanziaria in quanto i pagamenti sono a $X$ giorni dalla fattura;
+            \item l'azienda aveva attraversato una fase rapida di crescita passando da poche centinaia di clienti a decine di migliaia nell'arco di 3 anni;
+            \item l'azienda lamentava tempi di fatturazione dell'ordine di 4-5 giorni imputando come causa tempi molto lunghi di elaborazione del software preposto;
+            \item i test fatti sul sistema \hyperref[sec:i_sistemi_erp]{ERP} non hanno evidenziato ritardi nei tempi di lavorazione;
+            \item l'ulteriore scomposizione delle attività di fatturazione ha evidenziato l'esistenza di un insieme di controlli \textit{fuori sistema} fatti su fogli Excel che di fatto impegnavano l'80\% del tempo di fatturazione.
+                \begin{enumerate}
+                    \item download dei dati dall'\hyperref[sec:i_sistemi_erp]{ERP} verso Excel;
+                    \item applicazione di controlli definiti da regole;
+                    \item verifica dei dati anomali (presenti in meno dell 0.1\% delle fatture);
+                    \item correzione dei dati sull'\hyperref[sec:i_sistemi_erp]{ERP};
+                \end{enumerate}
+        \end{itemize}
+    \end{multicols}
+    \begin{center}
+        \includegraphics[width=.8\textwidth]{assets/proc-utilities-es.png}
+    \end{center}
+    Quale soluzioni adottare?
+    \begin{itemize}
+        \item[A.] Accettare il tempo di ciclo
+        \item[B.] Implementare i controlli aggiuntivi personalizzando il processo di fatturazione
+        \item[\red{C.}] \red{Eliminare i controlli dal processo di fatturazione}
+    \end{itemize}
+    L'implementazione dei controlli sull'\hyperref[sec:i_sistemi_erp]{ERP} risulta inadeguata:
+    \begin{itemize}
+        \item onerosa a causa delle necessità di caricare a sistema nuovi dati;
+        \item ricorrente in quanto le regole di controllo dipendono dai meccanismi legati ai contatti di fornitura che vengono aggiornati più volte nell'anno in base all'andamento del costo dell'energia;
+        \item genera un lock-in rispetto al software;
+    \end{itemize}
+    È stato valutato meno oneroso il rischio di emettere una fattura sbagliata su 1000 piuttosto che accettare una perdita finanziaria certa.
+\end{example}
+\begin{note}
+    È fondamentale focalizzarsi sui processi che contribuiscono maggiormente alla creazione del valore
+    \begin{warning}
+        Non tutti i processi inefficienti e distorti sono necessariamente ad alto valore aggiunto
+    \end{warning}
+\end{note}
 % subsection L'analisi dei Tempi di Ciclo (end)
+%
+\subsection{L'analisi della Creazione del Valore}\label{sub:bpr_l_analisi_della_creazione_del_valore} % (fold)
+Permette di identificare le attività che ``aggiungono valore al cliente'' attraverso alcune domande chiave.
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/dom-analisi-valore-bpr.png}
+\end{cimage}
+% subsection L'analisi della Creazione del Valore (end)
+%
+\subsection{Definizione delle priorità di intervento}\label{sub:bpr_definizione_delle_priorit_di_intervento} % (fold)
+Non tutti i business sono uguali in relazione delle difficoltà del ridisegno.
+La scelta dei processi su quali intervenire deve tenere conto dell'impatto potenziale, della difficoltà di implementazione e del tempo disponibile per la realizzazione.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/diff-impl-proc-graph.png}
+\end{cimage}
+Inoltre la scelta dei processi sui quali intervenire dipende dagli obiettivi della reingegnerizzazione.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/reing-proc-graph.png}
+\end{cimage}
+%
+\subsubsection{Analisi di Pareto}\label{sub:bpr_analisi_di_pareto} % (fold)
+L'analisi di Pareto è uno strumento statistico utilizzato per \textbf{identificare} e \textbf{focalizzarsi} sugli elementi che hanno il maggiore impatto su un determinato fenomeno.
+Si basa sul principio di Pareto, noto anche come \textbf{legge 80/20}, che afferma che circa l'80\% degli effetti derivano dal 20\% delle cause.
+\begin{quote}
+    Questo principio è stato sviluppato dall'economista italiano Vilfredo Pareto e applicato in vari ambiti, come la gestione aziendale, la qualità e l'economia
+\end{quote}
+\begin{description}
+    \item[Obiettivo] L'analisi di Pareto ha come obiettivo principale quello di evidenziare le cause principali di un problema, per permettere alle organizzazioni di concentrarsi su quelle aree che generano il maggior impatto, piuttosto che dispersa risorse su fattori meno significativi.
+\end{description}
+Può essere suddivisa in diverse fasi:
+\begin{itemize}
+    \item \textbf{raccolta dei dati}: i dati vengono raccolti in relazione a un fenomeno o problema specifico.
+        Ad esempio, in un'azienda potrebbe trattarsi di errori di produzione, reclami dei clienti, o tempi di inattività delle macchine;
+        \item \textbf{classificazione e ordinamento}: i dati raccolti vengono classificati in categorie e ordinati in ordine decrescente di frequenza o impatto.
+            Questo consente di identificare le cause più frequenti o quelle che causano il maggior danno;
+        \item \textbf{creazione di un grafico di Pareto}: si costruisce un grafico a barre in cui l'asse delle $x$ rappresenta le diverse categorie, l'asse delle $y$ mostra la frequenza o l'importanza relativa di ogni categoria, e le barre sono ordinate dalla più alta alla più bassa.
+            Si sovrappone una linea cumulativa che mostra la percentuale accumulata di ogni categoria (dall'alto verso il basso);
+        \item \textbf{identificazione del ``20\% cruciale''}
+\end{itemize}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/pareto-graph.png}
+    \caption{Diagramma di Pareto}\label{fig:pareto-graph}
+\end{cimage}
+\begin{note}
+    L'analisi di Pareto facilita l'individuazione delle aree ``a maggiore impatto''
+\end{note}
+% subsubsection Analisi di Pareto (end)
+% subsection Definizione delle priorità di intervento (end)
+%
+\subsection{Reingegnerizzazione dei Processi}\label{sub:bpr_reingegnerizzazione_dei_processi} % (fold)
+I nuovi strumenti analitici aiutano a concepire nuovi modi di organizzare il flusso di lavoro, per esempio:
+\begin{itemize}
+    \item \textbf{azienda estesa}: gestire i processi oltre i confini organizzativi (comunicazione LAN e WAN, Internet);
+    \item \textbf{parallelizzazione}: sostituire processi sequenziali con processi parallelizzati (workflow, groupware, networking);
+    \item \textbf{riallocazione}: riposizionare esperti funzionali incorporando l'expertise in sistemi e strumenti (Data Base distribuiti, \hyperref[sec:i_sistemi_erp]{ERP}, soluzioni Web);
+    \item \textbf{eliminazione}: verificare la necessità di attività e funzioni tradizionali, ed eliminare steccati (automazione delle funzioni, integrazione applicazioni);
+    \item \textbf{cicli di miglioramento continuo}: costruire cicli di feedback per stimolare il miglioramento di performance (data warehouse, Decision Support Manager, Business Intelligent System);
+\end{itemize}
+\begin{note}
+    L'Information Technology va strategicamente interpretata come fattore di successo ottimale per le prestazioni dei processi di business e sono \textbf{parte integrante} delle tecniche di reengineering.
+    Tuttavia devono essere \textbf{sviluppate contestualmente} con il ``modello d'impresa''.
+    \begin{center}
+        \includegraphics[width=.6\textwidth]{assets/it-impatto-visual.png}
+    \end{center}
+\end{note}
+%
+\subsubsection{I Ruoli della Tecnologia nell'Innovazione}\label{sub:bpr_i_ruoli_della_tecnologia_nell_innovazione} % (fold)
+La tecnologia è un fattore abilitante dell'innovazione: l0adozione di processi paralleli è abilitata dai software di \textit{collaboration}.
+Senza interne il commercio elettronico non esisterebbe.
+\\
+Tuttavia abbiamo affermato più volte che è necessario pensare alla scelta delle tecnologica di implementazione DOPO aver fatto Innovazione su processi e informazioni.
+\begin{description}
+    \item[Innovazioni tecnology-driven] Si basano su tecnologie estremamente innovative tale per cui gli stakeholder del servizio/problema non riescono neanche a immaginarne l'utilizzo.
+        \\
+        Azienda che lavora per bandi a progetto, i quali ogni anno ne escono a centinaia ma la divisione bandi riesce a studiarne solo un numero limitato per capire se sono adatti alla partecipazione dell'azienda.
+        Si può chiedere a un LLM di fare un pre-screening di TUTTI i bandi e indicare quelli potenzialmente interessanti.
+        Il personale dell'ufficio bandi NON conosce le potenzialità di un LLM e NON considera l'attività dell'analisi dei bandi come un problema ma piuttosto come la sua attività naturale.
+        Quindi non lo propone come tema di miglioramento.
+    \item[Innovazioni application-driven] Si basano su tecnologie note tale per cui gli stakeholder del servizio/problema ne conoscono le potenzialità.
+        L'innovazione sta nel immaginarsi l'utilizzo nello specifico contesto.
+        \\
+        App come MyCicero consentono di pagare il parcheggio mediante App:
+        \begin{multicols}{2}
+            \begin{itemize}
+                \item senza dover cercare la colonnina per il pagamento;
+                \item non richiedono di avere monetine;
+                \item permettono di allungare/accorciare dinamicamente la sosta;
+            \end{itemize}
+        \end{multicols}
+        Questi software si basano su tecnologie note da 15 anni, l'innovazione è strettamente legata all'utilizzo nel contesto parcheggi e alla capacità delle aziende di trovare accodi con le pubbliche amministrazioni locali.
+        \begin{note}
+            In modo simile la maggior parte delle innovazioni di processo si basano sull'adozione di software con capacità note.
+        \end{note}
+\end{description}
+% subsubsection I Ruoli della Tecnologia nell'Innovazione (end)
+%
+\subsubsection{Il Ridisegno dei Processi}\label{sub:bpr_il_ridisegno_dei_processi} % (fold)
+\begin{quote}
+    Risultati immediati e tangibili sono essenziali:
+    \begin{itemize}
+        \item giustificano l'impegno delle risorse;
+        \item determinano la credibilità del processo di gestione del cambiamento;
+        \item forniscono la prova che il management è impegnato nel processo di cambiamento;
+        \item creano entusiasmo tra le persone;
+    \end{itemize}
+\end{quote}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/rid-proc-fasi.png}
+    \caption{Fasi del ridisegno dei processi}\label{fig:rid-proc-fasi}
+\end{cimage}
+\paragraph{Condivisione degli obiettivi di business}\label{par:bpr_condivisione_degli_obiettivi_di_business} % (fold)
+\begin{note}[Attività principali]
+    \begin{itemize}
+        \item Documentare la visione aziendale di strategie e obiettivi;
+        \item Rilevare piani di sviluppo, eventi chiave già pianificati;
+        \item Rilevare ruolo e attese dell'Azienda, dei clienti e ``partecipi'' del processo;
+    \end{itemize}
+\end{note}
+\begin{note}[Risultati]
+    \begin{itemize}
+        \item Quadro di riferimento degli orientamenti strategici e obiettivi di sviluppo;
+        \item Linee guida per lo sviluppo;
+        \item Modello di interrelazione volumi, costi, servizio;
+    \end{itemize}
+\end{note}
+% paragraph Condivisione degli obiettivi di business (end)
+%
+\paragraph{Definizione delle linee guida}\label{par:bpr_definizione_delle_linee_guida} % (fold)
+\begin{note}[Attività principali]
+    \begin{itemize}
+        \item Selezionare i processi di gestione da considerare;
+        \item Identificare le skills necessarie e selezionare le risorse;
+        \item Strutturare i team e pianificare le attività;
+        \item Sviluppare e promuovere il programma di comunicazione;
+    \end{itemize}
+\end{note}
+\begin{note}[Risultati]
+    \begin{itemize}
+        \item Quadro processi e priorità;
+        \item Macro target definiti;
+        \item Risorse da coinvolgere e composizione dei team;
+        \item Struttura operativa del programma;
+        \item Approccio alla comunicazione, con programma e scopi;
+    \end{itemize}
+\end{note}
+% paragraph Definizione delle linee guida (end)
+%
+\paragraph{Analisi di base e benchmark}\label{par:bpr_analisi_di_base_e_benchmark} % (fold)
+\begin{note}[Attività principali]
+    \begin{itemize}
+        \item Analizzare i processi attuali e i sottoprocessi;
+        \item Confrontare i processi con maggiore potenziale di miglioramento con le Best Practice;
+        \item Analizzare e definire le priorità per i processi chiave e sottoprocessi;
+        \item Sviluppare processi interni ed esterni per la definizione dei clienti;
+        \item Definire le priorità relative alle opportunità di miglioramento;
+    \end{itemize}
+\end{note}
+\begin{note}[Output fondamentali]
+    \begin{center}
+        \includegraphics[width=.6\textwidth]{assets/anal-bench-out-visual.png}
+    \end{center}
+    \begin{center}
+        \includegraphics[width=.6\textwidth]{assets/anal-bench-out-cont-visual.png}
+    \end{center}
+\end{note}
+% paragraph Analisi di base e benchmark (end)
+%
+\paragraph{Generazione di concetti e progettazione del cambiamento}\label{par:bpr_generazione_di_concetti_e_progettazione_del_cambiamento} % (fold)
+\begin{note}[Attività principali]
+    \begin{itemize}
+        \item Sviluppare la visione di un processo eccellente;
+        \item Disegnare le opzioni per i nuovi processi;
+        \item Definire i requisiti in termini di risorse e tecnologie;
+    \end{itemize}
+\end{note}
+\begin{note}[Output fondamentali]
+    \begin{center}
+        \includegraphics[width=.6\textwidth]{assets/gen-prog-camb-visual.png}
+    \end{center}
+\end{note}
+% paragraph Generazione di concetti e progettazione del cambiamento (end)
+%
+\paragraph{Pianificare l'implementazione}\label{par:bpr_pianificare_l_implementazione} % (fold)
+\begin{note}[Attività principali]
+    \begin{itemize}
+        \item Preparare e concordare il piano d'implementazione;
+        \item Accordarsi sulla futura struttura organizzativa post-implementazione;
+        \item Accordarsi sull'architettura e il piano di migrazione;
+        \item Allineare i criteri di misurazione delle prestazioni;
+    \end{itemize}
+\end{note}
+\begin{note}[Risultati]
+    \begin{center}
+        \includegraphics[width=.6\textwidth]{assets/pian-res-visual.png}
+    \end{center}
+\end{note}
+% paragraph Pianificare l'implementazione (end)
+%
+\paragraph{La realizzazione del Cambiamento è un Processo Continuo}\label{par:bpr_la_realizzazione_del_cambiamento_un_processo_continuo} % (fold)
+\begin{note}[Attività chiave]
+    \begin{itemize}
+        \item Condurre incontri frequenti sullo stato di avanzamento;
+        \item Impiegare le risorse in funzione delle necessità realizzative;
+        \item Incoraggiare, supportare e guidare tutti coloro che stanno lavorando per il processo di cambiamento;
+        \item Monitorare i sistemi di misurazione dei processi;
+        \item Individuare le azioni di miglioramento delle prestazioni;
+        \item Comunicare i risultati a tutta l'organizzazione;
+    \end{itemize}
+\end{note}
+\begin{note}[Risultato]
+    \begin{itemize}
+        \item Gestione del processo di cambiamento;
+        \item Il raggiungimento dei risultati viene monitorato e comunicato;
+    \end{itemize}
+\end{note}
+% paragraph La realizzazione del Cambiamento è un Processo Continuo (end)
+% subsubsection Il Ridisegno dei Processi (end)
+% subsection Reingegnerazione dei Processi (end)
 % section Il Business Process Reengineering (end)
-% chapter L'innovazione nei Sistemi Informativi (end)
+% chapter Pianificazione dei Sistemi Informativi (end)
