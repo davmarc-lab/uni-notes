@@ -222,7 +222,265 @@ Questa fase si articola su quattro punti:
 \end{description}
 %
 \subsection{Work Breakdown Structure}\label{sub:ftt_wbs} % (fold)
-La \acf{wbs} costituisce una rappresentazione del progetto,
+La \acf{wbs} costituisce una rappresentazione del progetto, in forma grafica e/o descrittiva che, suddividendo le attività in livelli, consente un'analisi di dettaglio indispensabile per una corretta identificazione delle attività elementari la cui esecuzione integrata conduce alla realizzazione dell'intero progetto.
+\begin{note}
+    Evidenzia il collegamento tra i \textit{deliverables} e le attività senza avere alcuna relazione con lo sviluppo delle attività.
+\end{note}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/wbs-visual.png}
+\end{cimage}
+La \ac{wbs} serve a:
+\begin{multicols}{2}
+    \begin{itemize}
+        \item non dimenticare parti di lavoro ed evitare duplicazioni;
+        \item fare chiarezza e trasparenza da subito;
+        \item facilitare la comunicazione tra gli stakeholders;
+        \item permette a tutti di riferirsi in maniera omogenea e inequivocabile al lavoro da eseguirsi;
+        \item operare aggregazioni di dati elementari (tempi, costi, ricavi) sulle parti di lavoro;
+    \end{itemize}
+\end{multicols}
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/wbs-es-visual.png}
+\end{cimage}
+%
+\subsubsection{Diagramma di Gantt}\label{sub:ftt_diagramma_di_gantt} % (fold)
+Il \textbf{diagramma di Gantt} consiste in una tabella nella quale le righe servono per indicare le attività previste dalla \hyperref[sub:ftt_wbs]{WBS}, mentre le colonne si utilizzano per indicare i tempi necessari per realizzarle.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/diag-gantt-visual.png}
+\end{cimage}
+Man mano che il progetto progredisce, delle barre secondarie, delle frecce o delle barre colorate possono essere aggiunte al diagramma, per indicare le attività sottostanti completate o una porzione completata di queste.
+\emptyln{}
+Il diagramma di Gantt è lo strumento ufficiale per gestire la pianificazione temporale del progetto.
+Più in particolare il diagramma di Gantt serve a:
+\begin{itemize}
+    \item pianificare la tempistica delle attività di progetto;
+    \item verificare la fattibilità temporale del progetto;
+    \item permettere a tutti gli interpreti del progetto di avere un quadro generale e integrato delle date di inizio e fine delle attività di progetto;
+    \item ufficializzare a livello strategico le date desiderate/imposte di inizio, fine ed eventuali milestone intermedie (Master Schedule);
+    \item ufficializzare a livello operativo le date di inizio e fine attese di ciascuna attività elementare (Gantt di dettaglio);
+    \item controllare durante l'avanzamento del progetto gli scostamenti temporali (ritardi/anticipi) rispetto alle date pianificate;
+    \item verificare continuamente le nuove stime a finire del progetto o di sue parti a fronte dei consuntivi e per facilitare le relative correzioni;
+\end{itemize}
+% subsubsection Diagramma di Gantt (end)
+%
+\subsubsection{Diagramma di PERT}\label{sub:ftt_diagramma_di_pert} % (fold)
+Un \hyperref[sub:ftt_diagramma_di_gantt]{diagramma di Gantt} non modella l'interdipendenza delle attività, caratteristica invece della programmazione reticolare, cioè del \textbf{diagramma \ac{pert}}.
+A ogni attività possono essere in generale associati una serie di attributi: durata (o data di inizio o fine), predecessori, risorsa, costo.
+\\
+Il diagramma di \ac{pert} è la rappresentazione grafica del progetto sulla quale sono indicate:
+\begin{itemize}
+    \item tutte le attività previste dalla \hyperref[sub:ftt_wbs]{WBS};
+    \item le milestones;
+    \item condizionamenti reciproci temporali tra le attività (legami di precedenza);
+\end{itemize}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/diag-pert-sample.png}
+\end{cimage}
+Il primo nodo è sempre quello di inizio progetto, l'ultimo invece è sempre quello di fine progetto.
+I legami di precedenza che solitamente sono utilizzati sono:
+\begin{itemize}
+    \item \textbf{Finish to Start}: l'attività $B$ non può iniziare se non è terminata l'attività $A$;
+    \item \textbf{Start to Start}: l'attività $B$ non può iniziare se non è iniziata l'attività $A$;
+    \item \textbf{Start to Finish}: l'attività $B$ non può finire se non è iniziata l'attività $A$;
+    \item \textbf{Finish to Finish}: l'attività $B$ non può finire se non è finita l'attività $A$;
+\end{itemize}
+\begin{note}
+    A ogni legame di precedenza può essere associato un ritardo (lag) oppure un anticipo
+\end{note}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/rel-diag-pert-visual.png}
+\end{cimage}
+Conoscendo la durata prevista per ciascuna attività e le relative relazioni di precedenza è possibile definire la tempificazione del progetto e il relativo \textbf{percorso critico} ossia la catena di attività che condiziona la durata del progetto.
+\\
+L'identificazione del percorso critico si effettua in due fasi:
+\begin{itemize}
+    \item \textbf{forward pass (cammino in avanti)}: si parte dall'inizio del progetto e si sommano le durate di ciascuna attività fino a determinare la data di fine progetto.
+        Alla fine di questa fase per ogni attività sono determinate le date: \textbf{early start} (data inizio al più presto) ed \textbf{early finish} (data fine al più presto).
+    \item \textbf{backward pass (cammino all'indietro)}: si parte dalla fine del progetto e si sottrae la durata di ciascuna attività.
+        Alla fine di questa fase per ogni attività sono determinate le date: \textbf{late start} (data inizio al più tardi) e \textbf{late finish} (data fine al più tardi).
+\end{itemize}
+Per determinare le quattro date per ogni attività si calcola l'offset (\textbf{Total Float}) che indica il ritardo massimo che può avere la singola attività senza ritardare la data di completamento del progetto.
+\[
+    \textit{Total Float} = \textit{Late Start} - \textit{Early Start}
+\]
+\begin{note}
+    Le attività con \textit{Total Float} pari a zero sono \textbf{critiche}, la catena formata dalle attività critiche viene chiamata \textbf{percorso critico}
+\end{note}
+Le fasi tipiche di gestione di un \ac{pert} includono:
+\begin{itemize}
+    \item \textbf{pianificazione e costruzione del modello} (reticolo) di dettaglio sulla base della \hyperref[sub:ftt_wbs]{WBS} e considerando la relativa sequenza logica;
+    \item \textbf{stime e tempi di analisi dei percorsi}: a ogni attività viene attribuita una stima della durata prevista;
+    \item \textbf{programmazione operativa}: sulla base dei risultati ottenuti dall'analisi dei percorsi inizia il lavoro di definizione di risorse da impiegare;
+\end{itemize}
+\begin{note}
+    La realizzazione di un \ac{pert} richiede in generale \textbf{molte revisioni} e \textbf{riedizioni del modello} al fine di rientrare nei vincoli di \red{costo} e \red{tempo} previsti
+\end{note}
+% subsubsection Diagramma di PERT (end)
 % subsection Work Breakdown Structure (end)
 % section Il Progetto proposto (end)
+%
+\section{Analisi Costi-Benefici}\label{sec:ftt_analisi_costi_benefici} % (fold)
+Questa sezione si articola su tre punti:
+\begin{itemize}
+    \item \textbf{Valutazione dei benefici attesi}: fornisce una valutazione dettagliata dei benefici attesi, limitatamente a quelli monetizzabili o comunque misurabili secondo criteri oggettivi:
+        \begin{itemize}
+            \item individuazione e descrizione dei benefici attesi;
+            \item individuazione ed esplicitazione delle metriche dei valori attesi;
+            \item correlazione obiettivi-benefici;
+        \end{itemize}
+    \item \textbf{Stima dei costi}:
+        \begin{itemize}
+            \item individuazione delle principali voci di costo;
+            \item esplicitazione delle metriche utilizzate;
+            \item stima dei costi di impianto e di esercizio;
+        \end{itemize}
+    \item \textbf{Analisi dell'investimento}: fornisce una valutazione comparata dei benefici e dei costi che si presentano nelle diverse alternative tenendo conto che questi si concretizzeranno in istanti diversi.
+        Essa deve indicare:
+        \begin{itemize}
+            \item le giustificazioni economiche all'investimento;
+            \item gli elementi per la scelta nel caso in cui si comparino più alternative;
+        \end{itemize}
+\end{itemize}
+%
+\subsection{Stima dei Costi}\label{sub:ftt_stima_dei_costi} % (fold)
+I costi legati a un \hyperref[sub:il_sistema_informativo]{SI} possono essere classificati utilizzando diversi criteri:
+\begin{itemize}
+    \item \textbf{Classificazione per tipologia di risorsa}:
+        \begin{itemize}
+            \item \textbf{costi delle tecnologie} (hardware e software);
+            \item \textbf{costi del personale} informatico dedicato allo sviluppo, gestione e manutenzione delle applicazioni, assistenza agli utenti, pianificazione e amministrazione;
+            \item \textbf{costi dei servizi esterni}: ovvero tutti quelli legati alle attività di manutenzione e assistenza agli utenti;
+            \item \textbf{altri costi} non legati direttamente alle tecnologie informatiche (immobili, materiali di consumo, etc.);
+        \end{itemize}
+    \item \textbf{Classificazione per missione}:
+        \begin{itemize}
+            \item \textbf{costi di sviluppo}: comprende sia i costi di costruzione (progettazione e realizzazione) e oneri necessari per ottenere il sistema, sia i costi di avviamento legati alle attività per mettere in esercizio il sistema acquisito;
+            \item \textbf{costi di esercizio}: costi necessari per il corretto funzionamento dei sistemi e l'utilizzo delle applicazioni da parte degli utenti;
+                \begin{note}
+                    Tipicamente rappresentano circa il 70\%-80\% di tutti i costi informatici di un'azienda (fonte Gartner Group)
+                \end{note}
+        \end{itemize}
+    \item \textbf{Classificazione in interni ed esterni}:
+        \begin{itemize}
+            \item \textbf{costi interni} che si dividono in:
+                \begin{itemize}
+                    \item \red{diretti}: costi del personale tecnico impegnato nelle attività di sviluppo e di esercizio del sistema;
+                    \item \red{indotti}: costi legati alle attività svolte dagli utenti finali per attività connesse al progetto (es. tempo impiegato dagli utenti a caricare i dati negli archivi);
+                \end{itemize}
+            \item \textbf{costi esterni}: sono relativi all'acquisizione di prodotti hardware e software e dei servizi affidati a società esterne anziché svolti internamente;
+        \end{itemize}
+\end{itemize}
+\begin{note}
+    I procedimenti di stima e di valorizzazione dei costi varia a seconda del tipo di costo
+\end{note}
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/costi-stima-proc-table.png}
+\end{cimage}
+% subsection Stima dei Costi (end)
+%
+\subsection{Outsourcing}\label{sub:ftt_outsourcing} % (fold)
+L'\textbf{outsourcing} ha luogo quando un'organizzazione affida tramite un accordo contrattuale a un fornitore esterno la responsabilità di una o più funzioni o servizi specializzati precedentemente svolti internamente.
+\begin{note}[Vantaggi]
+    \begin{multicols}{2}
+        \begin{itemize}
+            \item Riduzione dei costi di gestione: l'outsourcer riesce a conseguire profitti per effetto delle sue competenze specialistiche e delle economie di scala;
+            \item Benefici finanziari: l'outsourcing evita la necessità di investimenti in beni immobili;
+            \item Aumento del livello qualitativo del servizio;
+            \item Accesso a tecnologie avanzate;
+            \item Possibilità di incrementi di capacità a richiesta;
+        \end{itemize}
+    \end{multicols}
+\end{note}
+Il rapporto di outsourcing può essere utilizzato per tutte le componenti di un \hyperref[sub:il_sistema_informativo]{sistema informativo}:
+\begin{tasks}(2)
+    \task CED;
+    \task Server;
+    \task Stazioni di lavoro (pc);
+    \task Help desk;
+    \task Siti web;
+\end{tasks}
+\begin{note}
+    Quando si opta per l'outsourcing è necessario considerare il rischio di perdere il controllo del ``know how'' sul proprio sistema informativo: la progettazione del \hyperref[sub:il_sistema_informativo]{SI} deve sempre essere fatta all'interno dell'azienda appaltando all'esterno solo la gestione delle problematiche tecnologiche
+\end{note}
+% subsection Outsourcing (end)
+%
+\subsection{Cloud Computing nei SI}\label{sub:ftt_cloud_computing_nei_si} % (fold)
+Indica un insieme di tecnologie che permettono, tipicamente sotto forma di un servizio offerto da un \textbf{provider} al cliente, di \textbf{memorizzare/archiviare e/o elaborare dati} grazie all'utilizzo di risorse hardware/software distribuite e virtualizzate in rete.
+\begin{itemize}
+    \item \textbf{\ac{saas}}: consiste nell'utilizzo di programmi installati su un server remoto.
+        Questo acronimo condivide in parte la filosofiadi un termine oggi in disuso: \acf{asp};
+    \item \textbf{\ac{daas}}: vengono messi a disposizione via web solamente dati ai quali gli utenti possono accedere tramite qualsiasi applicazione come se fossero residenti su un disco locale;
+    \item \textbf{\ac{paas}}: viene messa a disposizione una piattaforma di sviluppo in cloud comprensiva di componenti di base specifici per il cloud in modo che il programmatore possa concentrarsi sulla logica applicativa;
+    \item \textbf{\ac{iaas}}: l'utente acquista come servizio un'intera piattaforma hardware comprensiva di sistema operativo e suite di programmi \textit{on-the-shelf};
+\end{itemize}
+%
+\subsubsection{Cloud Pubblico vs Privato}\label{sub:ftt_cloud_pubblico_vs_privato} % (fold)
+In un \textbf{cloud pubblico} le infrastrutture e i servizi sono offerti attraverso internet tipicamente da un fornitore terzo.
+Il cloud offre ilmassimo livello di efficienza nella condivisione delle risorse sebbene sia maggiormente vulnerabile agli attacchi.
+Un cloud pubblico è la soluzione migliore quando:
+\begin{itemize}
+    \item l'obiettivo è testare l'applicazione che si sta sviluppando;
+    \item si vuole utilizzare un'applicazione \ac{saas} che si ritenga abbia un buon livello di protezione contro gli attacchi;
+    \item è forte l'esigenza di scalabilità;
+    \item l'utilizzo del cloud è legato a un progetto a cui collaborano più aziende;
+\end{itemize}
+% subsubsection Cloud Pubblico vs Privato (end)
+%
+\subsubsection{Multi Cloud}\label{sub:ftt_multi_cloud} % (fold)
+È la distribuzione su più \textbf{cloud provider} della propria piattaforma cloud con l'obiettivo di:
+\begin{itemize}
+    \item evitare il vendor lock-in e sfruttare le soluzioni migliori;
+    \item ridurre i rischi: la distribuzione di sistemi critici su più servizi cloud offre un'ulteriore tolleranza ai guasti;
+\end{itemize}
+\begin{note}
+    In un multi cloud risulta più complesso definire appropriate policy per: Security, Trust e Deploying, Balancing e Provisioning
+\end{note}
+% subsubsection Multi Cloud (end)
+%
+\subsubsection{Vantaggi e Svantaggi delle soluzioni Cloud}\label{sub:ftt_vantaggi_svantaggi_delle_soluzioni_cloud} % (fold)
+\begin{note}[Vantaggi Economici]
+    \begin{itemize}
+        \item capacità di diminuire i costi di start-up di un sistema;
+        \item possibilità di dimensionare sistemi e applicazioni sulla base del normale carico di lavoro gestendo i picchi di carico tramite la capacità di scalare tipica delle infrastrutture cloud;
+        \item capacità di ottimizzare i costi sia in termini di risprse computazionali, sia in termini di risorse umane di gestione;
+        \item possibilità di ridurre gli investimenti a fronte di maggiori spese correnti;
+    \end{itemize}
+\end{note}
+\begin{note}[Vantaggi Operativi]
+    \begin{itemize}
+        \item drastica riduzione dei \textbf{tempi di realizzazione} e di \textbf{messa in esercizio} di nuovi servizi;
+        \item rapida capacità di scalare le risorse rapidamente per venire incontro a nuove esigenze o a requisiti modificati;
+        \item rapido ed efficiente provisioning e deprovisioning delle risorse;
+        \item decisa ottimizzazione dei consumi energetici sia per le esigenze computazionali, sia per le esigenze di refrigerazione dei centri di elaborazione;
+    \end{itemize}
+\end{note}
+\begin{critical}[Svantaggi]
+    \begin{itemize}
+        \item \textbf{Mancato rispetto della normativa sulla privacy}: la normativa in materia di protezione dei dati personali non è nata pensando a uno scenario di tipo ``cloud'', le classiche figure previste dalla normativa si adattano male;
+        \item \textbf{Compromissione delle caratteristiche di sicurezza dei dati}:
+            \begin{multicols}{2}
+                \begin{itemize}
+                    \item reale isolamento tra le risorse virtualizzate;
+                    \item compromissione delle interfacce di management;
+                    \item reale cancellazione dei dati;
+                    \item gestione delle identità;
+                \end{itemize}
+            \end{multicols}
+            \begin{note}
+                Anche nel mondo ``cloud'' gli aspetti di sicurezza sono regolati da clausole, SLA e panali che quindi devono essere attentamente valutati da chi si occupa di sicurezza
+            \end{note}
+        \item \textbf{Compromissione della sicurezza di rete};
+    \end{itemize}
+\end{critical}
+% subsubsection Vantaggi e Svantaggi delle soluzioni Cloud (end)
+%
+\subsubsection{Cloud vs Appliance}\label{sub:ftt_cloud_vs_appliance} % (fold)
+\begin{definition}{Appliance}{}
+    In ambito informatico con il termine \textbf{appliance} si identifica un hardware integrato con il software necessario a fornire una specifica funzionalità.
+    Non permettono/richiedono configurazioni, parametrizzazioni o tuning.
+    Di conseguenza la loro messa in opera e la loro gestione non richiede personale IT specializzato.
+\end{definition}
+% subsubsection Cloud vs Appliance (end)
+% subsection Cloud Computing nei SI (end)
+% section Analisi Costi-Benefici (end)
 % chapter Studio di Fattibilità (end)
