@@ -408,7 +408,7 @@ Il rapporto di outsourcing può essere utilizzato per tutte le componenti di un 
 Indica un insieme di tecnologie che permettono, tipicamente sotto forma di un servizio offerto da un \textbf{provider} al cliente, di \textbf{memorizzare/archiviare e/o elaborare dati} grazie all'utilizzo di risorse hardware/software distribuite e virtualizzate in rete.
 \begin{itemize}
     \item \textbf{\ac{saas}}: consiste nell'utilizzo di programmi installati su un server remoto.
-        Questo acronimo condivide in parte la filosofiadi un termine oggi in disuso: \acf{asp};
+        Questo acronimo condivide in parte la filosofica di un termine oggi in disuso: \acf{asp};
     \item \textbf{\ac{daas}}: vengono messi a disposizione via web solamente dati ai quali gli utenti possono accedere tramite qualsiasi applicazione come se fossero residenti su un disco locale;
     \item \textbf{\ac{paas}}: viene messa a disposizione una piattaforma di sviluppo in cloud comprensiva di componenti di base specifici per il cloud in modo che il programmatore possa concentrarsi sulla logica applicativa;
     \item \textbf{\ac{iaas}}: l'utente acquista come servizio un'intera piattaforma hardware comprensiva di sistema operativo e suite di programmi \textit{on-the-shelf};
@@ -416,7 +416,7 @@ Indica un insieme di tecnologie che permettono, tipicamente sotto forma di un se
 %
 \subsubsection{Cloud Pubblico vs Privato}\label{sub:ftt_cloud_pubblico_vs_privato} % (fold)
 In un \textbf{cloud pubblico} le infrastrutture e i servizi sono offerti attraverso internet tipicamente da un fornitore terzo.
-Il cloud offre ilmassimo livello di efficienza nella condivisione delle risorse sebbene sia maggiormente vulnerabile agli attacchi.
+Il cloud offre il massimo livello di efficienza nella condivisione delle risorse sebbene sia maggiormente vulnerabile agli attacchi.
 Un cloud pubblico è la soluzione migliore quando:
 \begin{itemize}
     \item l'obiettivo è testare l'applicazione che si sta sviluppando;
@@ -442,7 +442,7 @@ Un cloud pubblico è la soluzione migliore quando:
     \begin{itemize}
         \item capacità di diminuire i costi di start-up di un sistema;
         \item possibilità di dimensionare sistemi e applicazioni sulla base del normale carico di lavoro gestendo i picchi di carico tramite la capacità di scalare tipica delle infrastrutture cloud;
-        \item capacità di ottimizzare i costi sia in termini di risprse computazionali, sia in termini di risorse umane di gestione;
+        \item capacità di ottimizzare i costi sia in termini di risorse computazionali, sia in termini di risorse umane di gestione;
         \item possibilità di ridurre gli investimenti a fronte di maggiori spese correnti;
     \end{itemize}
 \end{note}
@@ -480,7 +480,96 @@ Un cloud pubblico è la soluzione migliore quando:
     Non permettono/richiedono configurazioni, parametrizzazioni o tuning.
     Di conseguenza la loro messa in opera e la loro gestione non richiede personale IT specializzato.
 \end{definition}
+Nell'ambito dei \hyperref[sub:il_sistema_informativo]{sistemi informativi} si stanno oggi diffondendo diversi DBMS con questo modello di business:
+\begin{itemize}
+    \item \textbf{SAP HANA Appliance}: per applicazioni OLAP e OLTP;
+    \item \textbf{Oracle Exadata/Exalogic}: per applicazioni OLAP e OLTP;
+    \item \textbf{IBM Netezza}: solo per applicazioni OLAP;
+\end{itemize}
+\begin{note}[Vantaggi]
+    \begin{tasks}(2)
+        \task Riduzione dei costi e tempi di set up;
+        \task Riduzione dei costi del personale IT dovuto a manutenzione e tuning;
+        \task Performance elevate;
+        \task Buona scalabilità;
+        \task Possono essere usate come mattone di base per la costruzione di \textit{private cloud};
+    \end{tasks}
+\end{note}
 % subsubsection Cloud vs Appliance (end)
 % subsection Cloud Computing nei SI (end)
+%
+\subsection{Total Cost Ownership}\label{sub:ftt_total_cost_ownership} % (fold)
+Il \textbf{\ac{tco}} rappresenta il costo totale legato all'acquisto, all'implementazione, all'uso e alla manutenzione di un asset per tutto il suo ciclo di vita.
+\begin{itemize}
+    \item \textbf{Costi di acquisto / Capitale (CAPEX)} pagati in upfront: hardware, software, installazioni;
+    \item \textbf{Costi Operativi (OPEX)}, costi ricorrenti: energie elettrica, personale, manutenzione e supporto, rete e connettività e costi di licenze ricorrenti;
+    \item \textbf{Costi indiretti/nascosti}: downtime o perdita di produttività, formazione del personale, aggiornamenti e migrazioni, costi di sicurezza e compliance;dd
+\end{itemize}
+% subsection Total Cost Ownership (end)
+%
+\subsection{Individuazione dei Benefici}\label{sub:ftt_individuazione_dei_benefici} % (fold)
+\begin{description}
+    \item[Benefici Monetizzabili] Sono quelli a cui è possibile associare direttamente un valore di tipo monetario: maggiori guadagni, minori costi.
+        \begin{example}{Benefici monetizzabili per le Pubbliche Amministrazioni}{}
+            \begin{multicols}{2}
+                \begin{itemize}
+                    \item Riduzione del personale;
+                    \item Riduzioni di preesistenti spese informatiche (interne ed esterne);
+                    \item Riduzioni di canoni affitto locali, spese di archiviazione;
+                    \item Incrementi o anticipazioni nella riscossione;
+                    \item Aumento dei servizi a pagamento (totale o parziale);
+                \end{itemize}
+            \end{multicols}
+        \end{example}
+    \item[Benefici Misurabili] Pur non essendo possibile associagli direttamente un valore economico è necessario individuare dei \textbf{misuratori} (\hyperref[def:kpi]{KPI}) tramite i quali si possa quantificare il loro valore.
+    \item[Benefici Intangibili] Possono essere valutati solo in base a considerazioni qualitative, aziendali, sociali o politiche.
+        \begin{example}{Benefici intangibili per le Pubbliche Amministrazioni}{}
+            \begin{tasks}(2)    
+                \task Miglioramento del servizio all'utenza esterna;
+                \task Miglioramento dell'immagine dell'organizzazione;
+                \task Maggiore motivazione e autonomia del personale;
+                \task Migliore disponibilità dell'informazione;
+                \task Affidabilità dell'informazione;
+                \task Riduzione dei supporti cartacei;
+                \task Miglioramento della metodologia di lavoro;
+                \task Efficacia e rapidità del processo decisionale;
+            \end{tasks}
+        \end{example}
+        Dato che costi e benefici non si realizzeranno nello stesso momento è necessario definire l'istante temporale a cui fare riferimento attualizzando costi e benefici rispetto a tale data.
+        Avendo a disposizione dati comparabili sarà possibile effettuare un'analisi comparativa che indichi quale sarà la redditività del progetto.
+\end{description}
+\begin{note}[Benefici Misurabili nelle P.A.]
+    Gli indicatori chiave delle prestazioni (\hyperref[sub:key_performance_indicator]{KPI}), esprimono il raggiungimento degli obiettivi e sono il riferimento per la gestione nel suo complesso, secondo criteri di responsabilità e autonomia decisionale.
+    \emptyln{}
+    Tra questi indicatori assume particolare rilevanza a \red{livello esogeno} il livello di \textbf{servizio reso agli utenti interni o esterni}.
+    Fornisce una misura della qualità percepita del prodotto/servizio erogato, mentre a \red{livello endogeno} resta alta l'attenzione per le \textbf{iniziative in grado di migliorare la qualità di vita} e del lavoro degli operatori. 
+    \emptyln{}
+    La variazione indotta dal progetto su queste variabili, o su di un loro sottoinsieme, rappresenta una differente chiave di valutazione della validità del risultato atteso.
+    Si tratta di una \textbf{valutazione più ampia} rispetto a quella condotta tenendo conto delle sole variabili monetizzabili e che pertanto \textbf{richiede l'adozione di un differente approccio metodologico}.
+    \begin{center}
+        \includegraphics[width=.8\textwidth]{assets/benef-misur-pa-table.png}
+    \end{center}
+\end{note}
+% subsection Individuazione dei Benefici (end)
 % section Analisi Costi-Benefici (end)
+%
+\section{Raccomandazioni per le fasi realizzative}\label{sec:ftt_raccomandazioni_per_le_fasi_realizzative} % (fold)
+Sulla base degli approfondimenti effettuati durante lo svolgimento dello \textbf{studio di fattibilità} si presentano un insieme di indicazioni da tener presenti per risolvere o minimizzare le problematiche emerse.
+Questa sezione si articola su tre punti:
+\begin{enumerate}
+    \item \textbf{Indicazioni per l'approvvigionamento}:
+        \begin{itemize}
+            \item criteri per la determinazione della tipologia di fornitore;
+            \item criteri di selezione delle offerte;
+            \item indicazioni sulle modalità di approvvigionamento;
+        \end{itemize}
+    \item \textbf{Indicazioni per la gestione del progetto}:
+        \begin{itemize}
+            \item indicazioni sul piano di qualità e la gestione del rischio;
+            \item indicazioni sul \textit{project management};
+            \item esigenze di negoziazione delle varianti;
+        \end{itemize}
+    \item \textbf{Riepilogo degli elementi utili alla stesura del capitolato};
+\end{enumerate}
+% section Raccomandazioni per le fasi realizzative (end)
 % chapter Studio di Fattibilità (end)

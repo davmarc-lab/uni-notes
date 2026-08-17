@@ -12,181 +12,196 @@ local f = ls.function_node
 local fake_indent = "    "
 
 local function make_group(trig, cmd, pre_label, desc)
-	return s({ trig = trig, dscr = desc }, {
-		t("\\" .. cmd .. "{"),
-		i(1, ""),
-		t("}"),
-		t("\\label{" .. pre_label .. ":"),
-		i(2, ""),
-		f(function(args)
-			local title = args[1][1] or ""
-			-- lowercase
-			local label = title:lower()
-			-- replace non-alphanumeric characters with underscores
-			label = label:gsub("[^a-zA-Z0-9]+", "_")
-			-- trim potential leading/trailing underscores
-			label = label:gsub("^_+", ""):gsub("_+$", "")
-			return label
-		end, { 1 }),
-		t({ "} % (fold)", "" }),
-		i(0),
-		t({ "", "% " .. cmd .. " " }),
-		f(function(args)
-			return args[1][1]
-		end, { 1 }),
-		t(" (end)"),
-	})
+    return s({ trig = trig, dscr = desc }, {
+        t("\\" .. cmd .. "{"),
+        i(1, ""),
+        t("}"),
+        t("\\label{" .. pre_label .. ":"),
+        i(2, ""),
+        f(function(args)
+            local title = args[1][1] or ""
+            -- lowercase
+            local label = title:lower()
+            -- replace non-alphanumeric characters with underscores
+            label = label:gsub("[^a-zA-Z0-9]+", "_")
+            -- trim potential leading/trailing underscores
+            label = label:gsub("^_+", ""):gsub("_+$", "")
+            return label
+        end, { 1 }),
+        t({ "} % (fold)", "" }),
+        i(0),
+        t({ "", "% " .. cmd .. " " }),
+        f(function(args)
+            return args[1][1]
+        end, { 1 }),
+        t(" (end)"),
+    })
 end
 
 local function make_quote(trig, env, desc)
-	return s({ trig = trig, dscr = desc, indet = true }, {
-		t("\\begin{" .. env .. "}"),
-		i(1),
-		t({ "", fake_indent }),
-		f(function(_, snip)
-			return snip.env.TM_SELECTED_TEXT
-		end),
-		i(0),
-		t({ "", "\\end{" .. env .. "}" }),
-	})
+    return s({ trig = trig, dscr = desc, indet = true }, {
+        t("\\begin{" .. env .. "}"),
+        i(1),
+        t({ "", fake_indent }),
+        f(function(_, snip)
+            return snip.env.TM_SELECTED_TEXT
+        end),
+        i(0),
+        t({ "", "\\end{" .. env .. "}" }),
+    })
 end
 
 local function make_math_block(trig, env, desc)
-	return s({ trig = trig, dscr = desc, indet = true }, {
-		t("\\begin{" .. env .. "}{"),
-		i(1),
-		t("}{"),
-		i(2),
-		t("}"),
-		t({ "", fake_indent }),
-		i(0),
-		t({ "", "\\end{" .. env .. "}" }),
-	})
+    return s({ trig = trig, dscr = desc, indet = true }, {
+        t("\\begin{" .. env .. "}{"),
+        i(1),
+        t("}{"),
+        i(2),
+        t("}"),
+        t({ "", fake_indent }),
+        i(0),
+        t({ "", "\\end{" .. env .. "}" }),
+    })
 end
 
 local function make_wrappable(trig, cmd, desc)
-	return s({ trig = trig, dscr = desc .. " (opt wrap)", indet = true }, {
-		t("\\" .. cmd .. "{"),
-		f(function(_, snip)
-			return snip.env.TM_SELECTED_TEXT
-		end),
-		i(1, ""),
-		t("}"),
-	})
+    return s({ trig = trig, dscr = desc .. " (opt wrap)", indet = true }, {
+        t("\\" .. cmd .. "{"),
+        f(function(_, snip)
+            return snip.env.TM_SELECTED_TEXT
+        end),
+        i(1, ""),
+        t("}"),
+    })
 end
 
 return {
-	-- ==== WRAPPERS ====
-	make_wrappable("red", "red", "Red text \\red{}"),
-	make_wrappable("blue", "blue", "Blue text \\blue{}"),
-	make_wrappable("bold", "textbf", "Bold text \\textbf{}"),
-	make_wrappable("italic", "textit", "Italic text \\textit{}"),
-	make_wrappable("ac", "ac", "Acronym \\ac{}"),
+    -- ==== WRAPPERS ====
+    make_wrappable("red", "red", "Red text \\red{}"),
+    make_wrappable("blue", "blue", "Blue text \\blue{}"),
+    make_wrappable("bold", "textbf", "Bold text \\textbf{}"),
+    make_wrappable("italic", "textit", "Italic text \\textit{}"),
+    make_wrappable("ac", "ac", "Acronym \\ac{}"),
 
-	s({ trig = "link", desc = "Link (\\hyperref[]{})" }, {
-		t("\\hyperref["),
-		i(2),
-		t("]{"),
-		i(1),
-		t("}"),
-		i(0),
-	}),
-	s({ trig = "item", dscr = "Item new line", indent = true }, {
-		t({ "", "\\item " }),
-		i(0),
-	}),
-	s({ trig = "ditem", dscr = "Description Item new line", indent = true }, {
-		t({ "", "\\item[" }),
-		i(1),
-		t("] "),
-		i(0),
-	}),
-	s({ trig = "itemize", dscr = "Itemize environment (opt wrap)", indet = true }, {
-		t({ "\\begin{itemize}", "\t\\item " }),
-		f(function(_, snip)
-			return snip.env.TM_SELECTED_TEXT
-		end),
-		i(0, ""),
-		t({ "", "\\end{itemize}" }),
-	}),
-	s({ trig = "multimize", dscr = "Itemize environment multiple columns (opt wrap)", indet = true }, {
-		t("\\begin{multicols}{"),
-		i(1, "2"),
-		t({ "}", "" }),
-		t({ fake_indent .. "\\begin{itemize}", "\t\\item " }),
-		f(function(_, snip)
-			return snip.env.TM_SELECTED_TEXT
-		end),
-		i(0, ""),
-		t({ "", fake_indent .. "\\end{itemize}", "\\end{multicols}" }),
-	}),
-	s({ trig = "enumerate", dscr = "Enumerate environment (opt wrap)", indet = true }, {
-		t({ "\\begin{enumerate}", "\t\\item " }),
-		f(function(_, snip)
-			return snip.env.TM_SELECTED_TEXT
-		end),
-		i(0, ""),
-		t({ "", "\\end{enumerate}" }),
-	}),
-	s({ trig = "description", dscr = "Description environment", indet = true }, {
-		t({ "\\begin{description}", "\t\\item[" }),
-		i(1, ""),
-		t("] "),
-		i(0, ""),
-		t({ "", "\\end{description}" }),
-	}),
+    s({ trig = "link", desc = "Link (\\hyperref[]{})" }, {
+        t("\\hyperref["),
+        i(2),
+        t("]{"),
+        i(1),
+        t("}"),
+        i(0),
+    }),
+    s({ trig = "item", dscr = "Item new line", indent = true }, {
+        t({ "", "\\item " }),
+        i(0),
+    }),
+    s({ trig = "task", dscr = "Task new line", indent = true }, {
+        t({ "", "\\task " }),
+        i(0),
+    }),
+    s({ trig = "ditem", dscr = "Description Item new line", indent = true }, {
+        t({ "", "\\item[" }),
+        i(1),
+        t("] "),
+        i(0),
+    }),
+    s({ trig = "itemize", dscr = "Itemize environment (opt wrap)", indet = true }, {
+        t({ "\\begin{itemize}", "\t\\item " }),
+        f(function(_, snip)
+            return snip.env.TM_SELECTED_TEXT
+        end),
+        i(0, ""),
+        t({ "", "\\end{itemize}" }),
+    }),
+    s({ trig = "multimize", dscr = "Itemize environment multiple columns (opt wrap)", indet = true }, {
+        t("\\begin{multicols}{"),
+        i(1, "2"),
+        t({ "}", "" }),
+        t({ fake_indent .. "\\begin{itemize}", "\t\\item " }),
+        f(function(_, snip)
+            return snip.env.TM_SELECTED_TEXT
+        end),
+        i(0, ""),
+        t({ "", fake_indent .. "\\end{itemize}", "\\end{multicols}" }),
+    }),
+    s({ trig = "bullets", dscr = "Bullet list using tasks env (opt wrap)", indet = true }, {
+        t("\\begin{tasks}("),
+        i(1, "2"),
+        t({ ")" }),
+        t({ fake_indent, "\t\\task " }),
+        f(function(_, snip)
+            return snip.env.TM_SELECTED_TEXT
+        end),
+        i(0, ""),
+        t({ "", "\\end{tasks}" }),
+    }),
+    s({ trig = "enumerate", dscr = "Enumerate environment (opt wrap)", indet = true }, {
+        t({ "\\begin{enumerate}", "\t\\item " }),
+        f(function(_, snip)
+            return snip.env.TM_SELECTED_TEXT
+        end),
+        i(0, ""),
+        t({ "", "\\end{enumerate}" }),
+    }),
+    s({ trig = "description", dscr = "Description environment", indet = true }, {
+        t({ "\\begin{description}", "\t\\item[" }),
+        i(1, ""),
+        t("] "),
+        i(0, ""),
+        t({ "", "\\end{description}" }),
+    }),
 
-	s({ trig = "ieq", dscr = "Inline equation" }, {
-		t("$"),
-		i(1),
-		t("$"),
-	}),
-	s({ trig = "eq", dscr = "Equation block", indet = true }, {
-		t({ "\\[", fake_indent }),
-		i(0),
-		t({ "", "\\]" }),
-	}),
-	s({ trig = "beq", dscr = "Numbered equation block", indet = true }, {
-		t({ "\\begin{equation}", fake_indent }),
-		i(1),
-		t({ "", "\\end{equation}", "" }),
-	}),
-	s({ trig = "begin", dscr = "Begin environment block", indet = true }, {
-		t("\\begin{"),
-		i(1, ""),
-		t({ "}" }),
-		i(2),
-		t({ "", fake_indent }),
-		f(function(_, snip)
-			return snip.env.TM_SELECTED_TEXT
-		end),
-		i(0),
-		t({ "", "\\end{" }),
-		f(function(args)
-			return args[1][1]
-		end, { 1 }),
-		t("}"),
-	}),
-	-- quotes
-	make_quote("quote", "quote", "Quote environment"),
-	make_quote("note", "note", "Note environment"),
-	make_quote("tip", "tip", "Tip environment"),
-	make_quote("warning", "warning", "Warning environment"),
-	make_quote("critical", "critical", "Critical environment"),
-	-- page sections
-	make_group("chap", "chapter", "chap", "Labeled chapter"),
-	make_group("sec", "section", "sec", "Labeled section"),
-	make_group("sub", "subsection", "sub", "Labeled subsection"),
-	make_group("subs", "subsubsection", "sub", "Labeled subsubsection"),
-	make_group("par", "paragraph", "par", "Labeled paragraph"),
-	-- math
-	make_math_block("definition", "definition", "Definition tcolorbox"),
-	make_math_block("theorem", "theorem", "Theorem tcolorbox"),
-	make_math_block("proof", "outerproof", "Outer proof tcolorbox"),
-	make_math_block("proposition", "proposition", "Proposition tcolorbox"),
-	make_math_block("lemma", "lemma", "Lemma tcolorbox"),
-	make_math_block("corollary", "corollary", "Corollary tcolorbox"),
-	make_math_block("example", "example", "Example tcolorbox"),
-	make_math_block("remark", "remark", "Remark tcolorbox"),
-	make_math_block("axiom", "axiom", "Axiom tcolorbox"),
+    s({ trig = "ieq", dscr = "Inline equation" }, {
+        t("$"),
+        i(1),
+        t("$"),
+    }),
+    s({ trig = "eq", dscr = "Equation block", indet = true }, {
+        t({ "\\[", fake_indent }),
+        i(0),
+        t({ "", "\\]" }),
+    }),
+    s({ trig = "beq", dscr = "Numbered equation block", indet = true }, {
+        t({ "\\begin{equation}", fake_indent }),
+        i(1),
+        t({ "", "\\end{equation}", "" }),
+    }),
+    s({ trig = "begin", dscr = "Begin environment block", indet = true }, {
+        t("\\begin{"),
+        i(1, ""),
+        t({ "}" }),
+        i(2),
+        t({ "", fake_indent }),
+        f(function(_, snip)
+            return snip.env.TM_SELECTED_TEXT
+        end),
+        i(0),
+        t({ "", "\\end{" }),
+        f(function(args)
+            return args[1][1]
+        end, { 1 }),
+        t("}"),
+    }),
+    -- quotes
+    make_quote("quote", "quote", "Quote environment"),
+    make_quote("note", "note", "Note environment"),
+    make_quote("tip", "tip", "Tip environment"),
+    make_quote("warning", "warning", "Warning environment"),
+    make_quote("critical", "critical", "Critical environment"),
+    -- page sections
+    make_group("chap", "chapter", "chap", "Labeled chapter"),
+    make_group("sec", "section", "sec", "Labeled section"),
+    make_group("sub", "subsection", "sub", "Labeled subsection"),
+    make_group("subs", "subsubsection", "sub", "Labeled subsubsection"),
+    make_group("par", "paragraph", "par", "Labeled paragraph"),
+    -- math
+    make_math_block("definition", "definition", "Definition tcolorbox"),
+    make_math_block("theorem", "theorem", "Theorem tcolorbox"),
+    make_math_block("proof", "outerproof", "Outer proof tcolorbox"),
+    make_math_block("proposition", "proposition", "Proposition tcolorbox"),
+    make_math_block("lemma", "lemma", "Lemma tcolorbox"),
+    make_math_block("corollary", "corollary", "Corollary tcolorbox"),
+    make_math_block("example", "example", "Example tcolorbox"),
+    make_math_block("remark", "remark", "Remark tcolorbox"),
+    make_math_block("axiom", "axiom", "Axiom tcolorbox"),
 }
