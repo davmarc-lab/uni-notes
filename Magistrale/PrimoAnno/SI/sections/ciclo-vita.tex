@@ -5,4 +5,171 @@ Il \textbf{ciclo di vita dei progetti} approvati in fase di pianificazione è ri
 \begin{cimage}
     \includegraphics[width=.8\textwidth]{assets/ciclo-vita-prog-fasi-visual.png}
 \end{cimage}
+%
+\section{Strategie di acquisizione: Make or Buy?}\label{sec:cv_strategie_di_acquisizione_make_or_buy} % (fold)
+La realtà è molto complessa, per commentarla è utile schematizzare, ma con spirito critico:
+\begin{itemize}
+    \item quasi nessuno fa tutto in casa;
+    \item l'affidamento totale all'esterno è raro, e se estremo e non governato diventa pericoloso e potenzialmente inefficace;
+\end{itemize}
+È necessario distinguere i seguenti termini:
+\begin{itemize}
+    \item \textbf{acquisto sul mercato di un bene o servizio}: accezione generica riferita alla scelta di acquisizione da terzi (Buy) invece che realizzare internamente (Make) un bene o un servizio;
+    \item \textbf{esternalizzazione (\hyperref[sub:ftt_outsourcing]{outsourcing})}: presuppone una qualche forma di stabilità del rapporto di ``collaborazione'' tra l'impresa e il terzista con una prospettiva di medio termine;
+\end{itemize}
+%
+\subsection{Outsourcing: Classificazione}\label{sub:cv_outsourcing_classificazione} % (fold)
+\begin{description}
+    \item[In base alla missione affidata al Fornitore] Esistono i tipi: \red{\ac{ito}}, \red{Business Process Outsourcing}
+        \begin{definition}{Information Technology Outsourciung}{ito}
+            L'outsourcing delle attività di sviluppo, esercizio, manutenzione dei \hyperref[sub:il_sistema_informativo]{Sistemi Informativi} e delle risorse informatiche.
+            \\
+            Può essere:
+            \begin{itemize}
+                \item Full Outsourcing;
+                \item Selective Outsourcing (spesso ``Multisourcing'');
+            \end{itemize}
+        \end{definition}
+        \begin{definition}{Business Process Outsourcing}{bpo}
+            Il \textbf{\ac{bpo}} è l'outsourcing dei processi operativi dell'organizzazione, di solito ``strumentali'' e non ``core'':
+            \begin{multicols}{2}
+                \begin{itemize}
+                    \item personale;
+                    \item contabilità e finanza;
+                    \item assistenza agli utenti;
+                    \item relazioni con gli utenti;
+                    \item acquisti e forniture;
+                    \item commercio elettronico su internet;
+                \end{itemize}
+            \end{multicols}
+            \begin{note}
+                Alcuni casi di servizi ``core'', con rapporti stretti di partnership fra \textbf{amministrazione} e \textbf{fornitore}
+            \end{note}
+        \end{definition}
+    \item[In base all'ampiezza del mandato conferito al Fornitore] Esistono i tipi: \red{Full Outsourcing}, \red{Selective Outsourcing}
+        \begin{definition}{Insourcing}{}
+            La funzione IT è delegata a una società di servizi separata dall'organizzazione a cui fornisce servizi ma da essa posseduta, oppure è comunque formalizzato o quasi il rapporto fra struttura IT e altre strutture.
+            \begin{quote}
+                Fornisce e implementa nuovi servizi e architetture IT sulla base di \textbf{contratti informali} (controllo di gestione come centro di ricavi) o \textbf{contratti di servizio} (definizione di tariffe per i servizi);
+            \end{quote}
+            Nel caso di \hyperref[def:bpo]{\ac{bpo}} si parla di \textbf{Captive Company}: società ``prigioniera'' cioè fondata da un altra azienda con lo scopo di eseguire operazioni per conto dell'azienda madre;
+        \end{definition}
+        \begin{definition}{Selective Outsourcing}{}
+            Nel \textbf{Selective Outsourcing} è \textbf{delegata a più fornitori esterni}: fornisce e implementa nuovi servizi e architetture IT sulla base di più contatti di durata limitata (circa 3-5 anni).
+            \begin{note}
+                L'organizzazione attua un approccio tattico per creare un ambiente competitivo: complessità gestionale accresciuta
+            \end{note}
+            \begin{description}
+                \item[Pro]
+                    \begin{multicols}{2}
+                        \begin{itemize}
+                            \item Clima di competizione fra i fornitori: riduzione costi e ottimizzazione della scelta;
+                            \item Controllo del committente  su coordinamento e integrazione;
+                            \item Riduzione dei singoli tempi di acquisizione;
+                            \item Possibile semplificazione della gestione dei singoli contratti;
+                            \item Minore rischio di insuccesso globale;
+                        \end{itemize}
+                    \end{multicols}
+                \item[Contro]
+                    \begin{itemize}
+                        \item Aumento della complessità di gestione dei molti contratti;
+                        \item Possibile ``scarica barile'';
+                        \item Difficoltà di integrazione;
+                    \end{itemize}
+            \end{description}
+        \end{definition}
+        \begin{definition}{Full Outsourcing}{full-outsourcing}
+            Nel \textbf{Full Outsourcing} la funzione IT è \textbf{delegata a un unico fornitore esterno} che fornisce e implementa nuovi servizi e architetture IT sulla base di un unico contratto di servizio.
+            \emptyln{}
+            L'organizzazione intende creare una partnership strategica con l'outsourcer: è il modello classico di \hyperref[sub:ftt_outsourcing]{outsourcing}, dove il contratto copre la maggior parte delle esigenze IT dell'organizzazione e ha una lunga durata, 5-10 anni.
+            \begin{warning}
+                Nella realtà è spesso una via di mezzo: non si ha un ``full'' outsourcing in quanto sono coinvolti più servizi in un'unica collaborazione
+            \end{warning}
+            \begin{description}
+                \item[Pro] 
+                    \begin{itemize}
+                        \item Interfaccia unica;
+                        \item Unitarietà e integrazione delle componenti;
+                        \item Riduzione di costi e tempi di acquisizione;
+                        \item Possibile semplificazione nella gestione del contratto (uno solo);
+                    \end{itemize}
+                \item[Contro] 
+                    \begin{multicols}{2}
+                        \begin{itemize}
+                            \item Limitata ``ottimizzazione'' nella scelta;
+                            \item Perdita di controllo;
+                            \item Riduzione del potere negoziabile e lock-in;
+                            \item Demotivazione del personale IT interno;
+                            \item Rischio di insuccesso globale;
+                            \item Complessità del singolo contratto;
+                        \end{itemize}
+                    \end{multicols}
+            \end{description}
+        \end{definition}
+        \begin{definition}{Joint Venture}{}
+            La funzione IT è \textbf{delegata a una società di servizi separata e indipendente} dall'organizzazione a cui fornisce sevizi in partecipazione con un fornitore: fornisce e implementa nuovi servizi de architetture IT sulla base di un contratto di servizio.
+            \emptyln{}
+            La maggioranza delle quote può essere dell'uno o dell'altro, a seconda che si voglia privilegiare il controllo del committente o la responsabilità e l'impegno del fornitore.
+        \end{definition}
+        \begin{note}[Consorzi e RTI]
+            La funzione IT è delegata a un consorzio, stabile o temporaneo, costituito da più fornitori esterni: fornisce e implementa nuovi servizi e architetture IT sulla base di un unico contratto di servizio.
+            L'organizzazione intende creare una partnership strategica con il Consorzio.
+            \emptyln{}
+            La complessità gestionale è superiore a quella del \hyperref[def:full-outsourcing]{Full Outsourcing}: difficoltà di omogeneizzazione delle diverse culture, conoscenze e sistemi.
+            Spesso si tratta di un \textbf{RTI} (ovvero un raggruppamento temporaneo di imprese), cioè di una struttura costituita per l'occasione e non permanente.
+        \end{note}
+\end{description}
+% subsection Outsourcing: Classificazione (end)
+%
+\subsection{Compiti e Responsabilità della Funzione IT}\label{sub:cv_compiti_e_responsabilit_della_funzione_it} % (fold)
+\begin{note}[Compiti]
+    \begin{itemize}
+        \item \textbf{Progettazione}:
+            \begin{itemize}
+                \item studi di fattibilità e rappresentazione dei requisiti;
+                \item stima investimenti e analisi dei costi/benefici;
+                \item contratti e atti di gara;
+            \end{itemize}
+        \item \textbf{Pianificazione e Controllo}:
+            \begin{itemize}
+                \item pianificazione informatica coerente alla missione;
+                \item definizione delle priorità dei progetti;
+                \item verifica del raggiungimento degli obiettivi;
+            \end{itemize}
+        \item \textbf{Relazione con gli Utenti}:
+            \begin{itemize}
+                \item acquisizione dei requisiti e dei bisogni reali;
+                \item verifica della soddisfazione degli utenti;
+            \end{itemize}
+        \item \textbf{Osservatorio sul mercato dell'IT}:
+            \begin{itemize}
+                \item controllo delle soluzioni proposte dal Fornitore;
+                \item contenimento del rischio di perdita di controllo;
+            \end{itemize}
+    \end{itemize}
+\end{note}
+\begin{note}[Responsabilità]
+    \begin{itemize}
+        \item \textbf{Gestione dei Progetti (\red{Project Management})}:
+            \begin{multicols}{2}
+                \begin{itemize}
+                    \item gestione dei rapporti con il Fornitore;
+                    \item budget e controllo di gestione;
+                    \item verifica lo stato di avanzamento dei lavori;
+                    \item accettazione/collaudo dei prodotti;
+                    \item misura dei livelli di servizio;
+                    \item segnalazione tempestiva di rilievi e non conformità;
+                    \item proposta di azioni correttive o preventive;
+                    \item monitoraggio;
+                \end{itemize}
+            \end{multicols}
+        \item \textbf{Gestione delle banche dati (Data Administration \& Data Architect)}
+    \end{itemize}
+\end{note}
+% subsection Compiti e Responsabilità della Funzione IT (end)
+% section Strategie di acquisizione: Make or Buy? (end)
+%
+\section{Definizione del Contratto}\label{sec:cv_definizione_del_contratto} % (fold)
+
+% section Definizione del Contratto (end)
 % chapter Ciclo di Vita di un Progetto Informatico (end)
