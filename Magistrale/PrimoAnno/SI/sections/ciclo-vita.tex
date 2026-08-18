@@ -6,7 +6,7 @@ Il \textbf{ciclo di vita dei progetti} approvati in fase di pianificazione è ri
     \includegraphics[width=.8\textwidth]{assets/ciclo-vita-prog-fasi-visual.png}
 \end{cimage}
 %
-\section{Strategie di acquisizione: Make or Buy?}\label{sec:cv_strategie_di_acquisizione_make_or_buy} % (fold)
+\section{Strategie di Acquisizione: Make or Buy?}\label{sec:cv_strategie_di_acquisizione_make_or_buy} % (fold)
 La realtà è molto complessa, per commentarla è utile schematizzare, ma con spirito critico:
 \begin{itemize}
     \item quasi nessuno fa tutto in casa;
@@ -163,13 +163,107 @@ La realtà è molto complessa, per commentarla è utile schematizzare, ma con sp
                     \item monitoraggio;
                 \end{itemize}
             \end{multicols}
-        \item \textbf{Gestione delle banche dati (Data Administration \& Data Architect)}
+        \item \textbf{Gestione delle banche dati (Data Administration \& Data Architect)}: sorvegliare la qualità dei dati;
+        \item \textbf{Gestione della sicurezza (Security Management)}:
+            \begin{itemize}
+                \item sorvegliare l'applicazione delle politiche di sicurezza;
+                \item verificare il rispetto della normativa vigente;
+            \end{itemize}
     \end{itemize}
 \end{note}
 % subsection Compiti e Responsabilità della Funzione IT (end)
-% section Strategie di acquisizione: Make or Buy? (end)
+%
+\subsection{Fattori Chiave di Successo}\label{sub:cv_fattori_chiave_di_successo} % (fold)
+\begin{itemize}
+    \item \textbf{Scelta della strategia di Sourcing}:
+        \begin{itemize}
+            \item approccio progressivo;
+            \item adattarsi al mutare di condizioni interne o esterne;
+        \end{itemize}
+    \item \textbf{Selezione del Fornitore}: ricerca delle garanzie necessarie a contenere i rischi;
+    \item \textbf{Definizione del Contratto}:
+        \begin{itemize}
+            \item responsabilità reciproche Cliente-Fornitore;
+            \item modelli di applicazione delle tariffe;
+            \item pariteticità, correttezza, funzionalità, flessibilità;
+        \end{itemize}
+    \item \textbf{Governo del Contratto}
+\end{itemize}
+% subsection Fattori Chiave di Successo (end)
+% section Strategie di Acquisizione: Make or Buy? (end)
+%
+\section{Strategie di Realizzazione}\label{sec:cv_strategie_di_realizzazione} % (fold)
+Le necessità informatiche portano alla necessità di realizzare un software applicativo sono:
+\begin{itemize}
+    \item nuove esigenze di automazione di processi non coperti dal sistema informatico;
+    \item adeguamento di applicazioni esistenti: \textbf{MAC} (Manutenzione Correttiva) e \textbf{MEV} (Manutenzione Evolutiva);
+\end{itemize}
+Le nuove esigenze di automazione possono essere risolte con modalità diverse:
+\begin{description}
+    \item[Sviluppo di programmi ad hoc] Utile quando le funzioni da informatizzare sono peculiari della specifica azienda o dove i sistemi commerciali esistenti richiedessero un notevole sforzo di adeguamento/integrazione.
+        Maggiore possibilità di personalizzazione e maggiore incertezza sui tempi e costi di realizzazione; inoltre richiede competenze interne ed esterne specifiche;
+    \item[Riuso di programmi ad hoc sviluppati per altre PA] Le pubbliche amministrazioni sono obbligate a condividere con altre le applicazioni sviluppate.
+        \\
+        Utile quando le funzioni da informatizzare sono simili a quelle già realizzate.
+        Forti impatti sul \red{modello di business} delle \textit{software house} produttrici del software che dovranno orientarsi al mercato delle personalizzazioni.
+    \item[Utilizzo di sistemi informatici open source] Questa soluzione ha un basso costo iniziale, un maggior controllo sul costo complessivo d'esercizio (\hyperref[sub:ftt_total_cost_ownership]{\ac{tco}}) e una maggiore indipendenza dai fornitori.
+        \begin{note}
+            Può determinare una maggiore trasparenza della soluzione grazie all'accesso ai sorgenti
+        \end{note}
+        \begin{warning}
+            Maggiore \red{possibilità di personalizzazione}, tuttavia:
+            \begin{multicols}{2}
+                \begin{itemize}
+                    \item ridotta compatibilità con standard commerciali quando questi rappresentano lo <<standard de facto>>;
+                    \item supporto non sempre disponibile;
+                    \item instabilità di mercato;
+                    \item potenziale mancanza di una evoluzione del sistema nel tempo;
+                \end{itemize}
+            \end{multicols}
+        \end{warning}
+    \item[Utilizzo di sistemi informatici proprietari con ricorso a licenza d'uso] Rispetto al \textbf{software open source} fornisce normalmente una maggiore garanzia in termini di affidabilità e performance.
+        Può essere necessario per compatibilità con altre soluzioni già presenti in azienda.
+        Rispetto a soluzioni open source va comunque valutato il reale \hyperref[sub:ftt_total_cost_ownership]{\ac{tco}} anche considerando i rischi legati a mancanza di supporto adeguato, manutenzione correttiva ed evolutiva.
+\end{description}
+% section Strategie di Realizzazione (end)
 %
 \section{Definizione del Contratto}\label{sec:cv_definizione_del_contratto} % (fold)
-
+\begin{definition}{Contratto}{}
+    Il \textbf{contratto}, secondo l'art. 1321 del Codice Civile, è un accordo di due o più parti per costruire, regolare o estinguere tra loro un rapporto giuridico patrimoniale.
+\end{definition}
+Esistono diversi tipi di contratto:
+\begin{description}
+    \item[Contratto d'Appalto art. 1655 C.C.] L'appalto è il contratto con il quale una parte assume, con organizzazione dei mezzi necessari e con gestione a proprio rischio, il compimento di un'opera o di un servizio verso un corrispettivo in denaro
+    \item[Contratto d'Opera art. 2222 C.C.] Prestazione di lavoro personale dell'obbligato
+    \item[Contratto di Compravendita art. 1472 C.C.] Cessione/acquisizione di qualcosa
+\end{description}
+\begin{note}[Visione Manageriale]
+    Un contratto ha l'obiettivo di \textbf{soddisfare} entrambe le parti, ed eventuali terzi interessati; se i risultati non vengono raggiunti, entrambi hanno fallito.
+    Quindi un contratto deve:
+    \begin{itemize}
+        \item \textbf{definire}, in modo cooperativo tra le parti, \textbf{le prestazioni} in termini di contenuti, costi, qualità e responsabilità;
+        \item \textbf{eliminare le ambiguità} nel rapporto tra le parti e prevenire difficoltà e situazioni anomale;
+    \end{itemize}
+    \begin{warning}
+        Ma non può pretendere di \textbf{prevedere tutto} in dettaglio, quindi deve specificare non solo \textbf{obblighi} e \textbf{impegni} ma anche \textbf{procedure} e \textbf{regole di relazione}
+    \end{warning}
+\end{note}
+%
+\subsection{Gestione dei Contratti}\label{sub:cv_gestione_dei_contratti} % (fold)
+Il successo di un contratto dipende da molti fattori fra cui:
+\begin{itemize}
+    \item competenze tecniche e legislative dei suoi estensori;
+    \item competenze tecniche e manageriali del personale preposto al suo governo durante tutto il ciclo di vita;
+\end{itemize}
+Il contratto rappresenta il \textbf{principale strumento} a disposizione delle parti per evitare le ambiguità nel loro rapporto.
+Un contratto ben strutturato facilità le attività degli organi preposti al governo del contratto stesso:
+\begin{tasks}(2)    
+    \task comitato guida;
+    \task direzione dei lavori;
+    \task monitoraggio;
+    \task collaudo;
+    \task certificazioni di qualità;
+\end{tasks}
+% subsection Gestione dei Contratti (end)
 % section Definizione del Contratto (end)
 % chapter Ciclo di Vita di un Progetto Informatico (end)

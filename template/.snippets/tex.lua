@@ -105,7 +105,7 @@ return {
         t("] "),
         i(0),
     }),
-    s({ trig = "itemize", dscr = "Itemize environment (opt wrap)", indet = true }, {
+    s({ trig = "mize", dscr = "Itemize environment (opt wrap)", indet = true }, {
         t({ "\\begin{itemize}", "\t\\item " }),
         f(function(_, snip)
             return snip.env.TM_SELECTED_TEXT
