@@ -6,6 +6,12 @@
 
 \begin{document}
 
+\begingroup
+    \hypersetup{linkbordercolor=white, linkcolor=black} 
+    \tableofcontents
+    \newpage
+\endgroup
+
 \section{Contratto per la Manutenzione ed Evoluzione dei SI}\label{sec:contratto_per_la_manutenzione_ed_evoluzione_dei_si} % (fold)
 Contratto sviluppato da CONSIP - società pubblica che fornisce consulenza tecnologica, organizzativa e di progetto agli uffici del Ministero dell'Economia.
 \emptyln{}
@@ -31,7 +37,7 @@ Molti enti utilizzano una struttura in due parti:
         \item Rispetto della normativa sui rapporti di lavoro con possibile penalizzazione;
         \item Obblighi di riservatezza, con possibile risoluzione;
         \item Brevetti e diritti d'autore, rispetto garantito dal fornitore;
-        \item Utilizzo di hw e sw: l'impresa deve essere autorizzata;
+        \item Utilizzo di HW e SW: l'impresa deve essere autorizzata;
         \item Danni, responsabilità civile e assicurazione;
         \item Oneri fiscali e spese contrattuali;
         \item Cauzione: il 10\% del valore contrattuale, ridotto se l'azienda è certificata per la qualità, aumentato in caso di ribasso significativo; il costo di una polizza per la cauzione è 0,5-1\% del valore assicurato;
@@ -50,7 +56,7 @@ Molti enti utilizzano una struttura in due parti:
         \item Oggetto, luogo della prestazione e responsabile del proc.;
         \item Durata e affiancamento;
         \item Obblighi e adempimenti a carico dell'impresa;
-        \item Proprietà del sw sviluppato e dei prodotti in genere;
+        \item Proprietà del SW sviluppato e dei prodotti in genere;
         \item Dimensioni massime dei singoli servizi;
         \item Piano della qualità;
         \item Garanzie;
@@ -95,10 +101,10 @@ Nei primi due, affiancamento del fornitore uscente e negli ultimi due trasferime
 \end{itemize}
 % subsection Obbligi e Adempimenti a carico dell'impresa (end)
 %
-\subsection{Proprietà del sw sviluppato}\label{sub:propriet_del_sw_sviluppato} % (fold)
-L'amministrazione acquisisce la proprietà, con diritto di sfruttamento, di sw e della documentazione.
+\subsection{Proprietà del SW sviluppato}\label{sub:propriet_del_sw_sviluppato} % (fold)
+L'amministrazione acquisisce la proprietà, con diritto di sfruttamento, di SW e della documentazione.
 Essa può acquistare le licenze dei pacchetti utilizzati dal fornitore, oppure di utilizzare componenti open source.
-% subsection Proprietà del sw sviluppato (end)
+% subsection Proprietà del SW sviluppato (end)
 %
 \subsection{Dimensioni massime dei singoli servizi}\label{sub:dimensioni_massime_dei_singoli_servizi} % (fold)
 \begin{description}
@@ -177,5 +183,281 @@ Vengono indicate:
     \item subappaltatori;
 \end{itemize}
 % subsection Subappalto (end)
+%
+\subsection{Pianificazione delle attività}\label{sub:pianificazione_delle_attivit} % (fold)
+Gli interventi sono pianificati in accordo tra le parti, con un \textbf{Piano di Lavoro} così come specificato nel \red{Capitolato} (par 5.2 modalità di esecuzione e 5.3 gestione della fornitura), definendo un \textbf{Piano Generale} (subentro, trasferimento know-how, servizi continuativi).
+\\
+Per obiettivo di sviluppo:
+\begin{itemize}
+    \item il committente richiede al fornitore la quantificazione di un obiettivo;
+    \item il fornitore stima l'impegno umano o i punti funzione;
+    \item il committente decide se accettare o meno;
+    \item il fornitore predispone un piano di lavoro, rendiconta via via e consuntiva;
+\end{itemize}
+% subsection Pianificazione delle attività (end)
+%
+\subsection{Produttività e Risorse Impiegate}\label{sub:produttivit_e_risorse_impiegate} % (fold)
+\begin{itemize}
+    \item Produttività del personale (come specificata nell'offerta);
+    \item Indicazione del responsabile;
+    \item Curricula delle persone impiegate, valutate dal committente con possibilità di richiesta di sostituzione;
+    \item Regole per la sostituzione da parte del fornitore;
+\end{itemize}
+% subsection Produttività e Risorse Impiegate (end)
+%
+\subsection{Consegna dei Prodotti}\label{sub:consegna_dei_prodotti} % (fold)
+\begin{itemize}
+    \item Rispetto dei tempi e dello standard, sia quelli di base sia quelli migliorativi;
+    \item Accettazione formale del committente;
+    \item Penali;
+\end{itemize}
+% subsection Consegna dei Prodotti (end)
+%
+\subsection{Collaudo}\label{sub:collaudo} % (fold)
+Verifica dell'esatto e completo adempimento da parte del fornitore di quanto oggetto del contratto, originariamente concepito per i prodotti oltreché disciplinato dal contratto.
+\\
+Si verificano che infrastruttura IT e programmi SW siano:
+\begin{itemize}
+    \item conformi alle prescrizioni attuali;
+    \item in grado di svolgere le funzioni richieste;
+\end{itemize}
+\begin{note}
+    Viene effettuato da esperti incaricati dal cliente:
+    \begin{itemize}
+        \item soggetti diversi da chi ha diretto l'esecuzione dei lavori;
+        \item con il coinvolgimento dell'utente;
+        \item alla presenza di incaricati del fornitore;
+    \end{itemize}
+\end{note}
+L'esito del collaudo è negativo se non vengono superate le prescritte prove funzionali e diagnostiche.
+\begin{note}
+    Le operazioni di collaudo vengono ripetute con le stesse condizioni e modalità, entro un determinato termine fissato contrattualmente
+\end{note}
+In caso ulteriore di collaudo negativo:
+\begin{itemize}
+    \item prevista la risoluzione del contratto per inadempimento;
+    \item incameramento del deposito cauzionale prestato dal fornitore;
+    \item diritto al risarcimento dell'eventuale ulteriore danno;
+\end{itemize}
+In caso di contratto di \hyperref[sub:ftt_outsourcing]{outsourcing}:
+\begin{itemize}
+    \item analisi da parte del cliente:
+        \begin{itemize}
+            \item quantità e qualità delle risorse impiegate;
+            \item produttività raggiunta in sede di esecuzione contrattuale;
+            \item documentazione prodotta;
+        \end{itemize}
+    \item utilizzo di strumenti di verifica diretta della prestazione e della sua efficienza ed efficacia;
+\end{itemize}
+% subsection Collaudo (end)
+%
+\subsection{Monitoraggio}\label{sub:monitoraggio} % (fold)
+\begin{definition}{Controllo di processo}{}
+    \begin{itemize}
+        \item esame periodico delle prestazioni di servizio rese, rapporti periodici sulla misura dei livelli di servizio;
+        \item esecuzione di verifiche sull'erogazione dei servizi (verifiche ispettive);
+    \end{itemize}
+    È parallelo al \textbf{Ciclo di Vita} che realizza il prodotto intervenendo sulle anomalie che emergono.
+\end{definition}
+\begin{definition}{Monitoraggio}{}
+    Azione continua e parallela all'esecuzione del contratto a supporto della direzione lavori.
+    Tiene sotto controllo:
+    \begin{itemize}
+        \item le modalità di conduzione del contratto;
+        \item lo stato di avanzamento dei lavori;
+        \item la quantità e la qualità, i livelli di servizio, dei beni forniti e dei servizi erogati;
+        \item i processi messi in atto dal fornitore per l'erogazione dei servizi;
+    \end{itemize}
+\end{definition}
+\begin{note}
+    Il fornitore:
+    \begin{itemize}
+        \item prende atto del monitoraggio (Capitolato, par 6.4);
+        \item invia informazioni sulle ispezioni dei certificati di qualità;
+        \item permette accesso a documentazione;
+        \item accetta verifiche ispettive;
+    \end{itemize}
+\end{note}
+\begin{description}
+    \item[Vigilanza in Corso d'Opera] Sull'attuazione dei contratti informatici è obbligatoria per i contratti di grande rilievo della PA.
+        Viene affidata a una terza parte, chiamata il \textbf{monitore}:
+        \begin{itemize}
+            \item indipendente rispetto ai contraenti;
+            \item qualificata dal CNIPA (per la PA, Circ 16/98, 17/98);
+        \end{itemize}
+        È complementare al \hyperref[sub:collaudo]{collaudo} e mira a garantire il raggiungimento degli obiettivi attraverso la \textbf{prevenzione}.
+    \item[Azione di Prevenzione] Controllo costante in \textbf{tutte le fasi del ciclo di vita} dei beni e servizi forniti.
+        Si analizza la \red{conduzione del contratto} attuata dal fornitore e la \textbf{qualità dei prodotti forniti e dei servizi erogati} in tutte le fasi del ciclo di vita:
+        \begin{itemize}
+            \item processi usati dal fornitore per l'erogazione dei servizi;
+            \item verifica dell'accuratezza delle misure e del rispetto delle soglie;
+            \item valutazione della soddisfazione degli utenti finali;
+            \item analisi dei risultati ottenuti in relazione agli investimenti effettuati per identificare il valore aggiunto del contratto;
+        \end{itemize}
+    \item[Azione di Diagnosi] Identificazione delle \textbf{cause delle anomalie e delle conseguenti azioni correttive}:
+        \begin{itemize}
+            \item messe in atto a cura del fornitore;
+            \item sotto la responsabilità del cliente;
+        \end{itemize}
+    \item[Azione di Consuntivo dei dati] Si raccolgono sistematicamente i dati relativi al contratto a \textbf{supporto di pianificazioni} e \textbf{stime di futuri progetti}.
+        Si verifica l'andamento delle \textbf{prestazioni erogate}:
+        \begin{itemize}
+            \item livelli di servizio e risorse utilizzate;
+            \item problemi incontrati nello svolgimento delle attività e modalità di risoluzione degli stessi (\textit{best practice});
+        \end{itemize}
+\end{description}
+\begin{warning}[Obblighi contrattuali del Fornitore]
+    \begin{itemize}
+        \item Accettare che le attività svolte in esecuzione del contratto siano \textbf{sottoposte a monitoraggio}: consente l'accesso ai propri uffici e/o impianti in cui hanno luogo le attività regolate da contratto e accetta lo svolgimento di verifiche ispettive;
+        \item Designare un responsabile dei rapporti con il \textbf{monitore};
+        \item Prestare la necessaria collaborazione al \textbf{monitore}, trasmette tempestivamente la documentazione di:
+            \begin{itemize}
+                \item \textbf{riscontro} (piano di progetto e della qualità);
+                \item \textbf{consuntivo} (rapporti periodici, SAL);
+                \item \textbf{supporto} alla misura dei livelli di servizio (registrazioni);
+            \end{itemize}
+        \item Rendere disponibili gli \textbf{elementi di fornitura} (applicazioni SW, documentazione);
+        \item Partecipare a sedute di riesame congiunto delle attività;
+    \end{itemize}
+\end{warning}
+% subsection Monitoraggio (end)
+%
+\subsection{Penali}\label{sub:penali} % (fold)
+Il contratto può definire \textbf{penalità pecuniarie} da applicare in caso di inadempimenti:
+\begin{itemize}
+    \item non hanno lo scopo di far risparmiare il committente in funzione di un minore livello di servizio ricevuto;
+    \item servono soprattutto a rafforzare l'impegno del fornitore nel rispettare i livelli di servizio sanciti contrattualmente;
+    \item devono essere correlate all'entità dell'inadempimento;
+\end{itemize}
+\begin{example}{}{}
+    \begin{itemize}
+        \item Ritardi nella consegna e messa in funzione di sistemi;
+        \item Collaudi negativi;
+        \item Fermi dell'HW (non ripristinati nei termini previsti);
+        \item Malfunzionamenti SW (non ripristinati nei termini previsti);
+        \item Mancato raggiungimento dei livelli di servizio previsti;
+    \end{itemize}
+\end{example}
+% subsection Penali (end)
+%
+\subsection{Corrispettivo}\label{sub:corrispettivo} % (fold)
+Il pagamento corrisposte del committente al fornitore, determinato in modo anche articolato.
+Esistono due tipi:
+\begin{itemize}
+    \item \textbf{a corpo} (prezzo fisso) valore globale;
+    \item \textbf{a misura} (a consuntivo), vengono definiti valori unitari di prodotti forniti o risorse utilizzate, e viene \textbf{commisurato alla quantità}, di solito entro minimi e massimi predefiniti;
+\end{itemize}
+\begin{note}
+    Sono possibili soluzioni intermedie:
+    \begin{itemize}
+        \item a corpo con correttivi;
+        \item in contratti articolati una parte a corpo e una parte a misura;
+        \item con indici di prestazioni (\textbf{premi});
+    \end{itemize}
+\end{note}
+\subsubsection{Modelli a Corpo}\label{sub:modelli_a_corpo} % (fold)
+Corrispettivo determinato come \textbf{valore globale}.
+Il contratto \textbf{definisce} il prezzo complessivo, non scomposto in funzione di risorse utilizzate o quantità di prodotto realizzato.
+Viene determinato mediante la stima della quantità di SW da sviluppare ovvero dell'impegno necessario a produrla.
+\begin{warning}
+    Non definisce alcuna \textbf{tariffa unitaria}
+\end{warning}
+Si utilizza se:
+\begin{itemize}
+    \item è possibile definire bene la fornitura, quindi il fornitore può quantificare effettivamente le risorse necessarie;
+    \item il committente voglia assicurarsi un prezzo contrattuale già determinato al momento della stipula del contratto globale.
+\end{itemize}
+\begin{note}
+    Spesso si usa impropriamente anche quando è difficile per il committente stimare a priori le risorse necessarie, oppure non si dispone delle specifiche ma si può fissare come vincolo la quantità di risorse
+\end{note}
+Il pagamento del corrispettivo si avviene in funzione del raggiungimento di predeterminati stati di avanzamento dei lavori.
+\begin{note}[Vantaggi]
+    \begin{itemize}
+        \item Gestione del contratto molto semplice se le specifiche sono ben definite;
+        \item Il cliente è al riparo da possibili sorprese;
+        \item Il fornitore si assume i rischi;
+        \item Può applicarsi alla manutenzione adeguativa o correttiva, ma con estrema cautela;
+    \end{itemize}
+\end{note}
+\begin{warning}[Svantaggi]
+    Scarsa flessibilità e scarsa garanzia di corrispondenza tra prodotto ottenuto e spesa sostenuta:
+    \begin{itemize}
+        \item prezzo alto il cliente paga troppo rispetto al lavoro svolto;
+        \item prezzo troppo basso il fornitore entra in sofferenza, contiene i costi e diminuisce la qualità;
+    \end{itemize}
+\end{warning}
+\begin{critical}[Criticità]
+    \begin{itemize}
+        \item Definizione del prezzo basata su una stima delle risorse necessarie e del loro costo unitario;
+        \item Necessario realizzare uno studio di fattibilità;
+        \item Volatilità delle specifiche;
+    \end{itemize}
+\end{critical}
+% subsubsection Modelli a Corpo (end)
+%
+\subsubsection{Modelli a Misura}\label{sub:modelli_a_misura} % (fold)
+Esistono due categorie fondamentali:
+\begin{description}
+    \item[Prodotti Forniti] Il contratto definisce:
+        \begin{itemize}
+            \item il limite superiore di prezzo mediante stima della quantità di SW necessario;
+            \item Tariffe unitarie per unità di prodotto SW;
+            \item Modalità di calcolo del corrispettivo pagato a consuntivo (non riferito alle risorse impegnate nella produzione, ma \textbf{riferito} alla quantità di \textbf{SW realizzato});
+        \end{itemize}
+        \begin{note}[Vantaggi]
+            \begin{itemize}
+                \item Riduzione dei costi perché è più facile stimare le funzionalità;
+                \item Garanzia di realizzazione di tutti gli sviluppi previsti;
+                \item Il cliente è al riparo da possibili sorprese;
+                \item Il fornitore è incentivato ad aumentare la produttività;
+                \item Flessibilità rispetto all'instabilità delle normative;
+            \end{itemize}
+        \end{note}
+        \begin{warning}[Svantaggi]
+            \begin{itemize}
+                \item Gestione del contratto complessa;
+                \item Non applicabile facilmente a manutenzione adeguativa o correttive, inoltre è difficile stimarne la dimensione;
+            \end{itemize}
+        \end{warning}
+        \begin{critical}[Criticità]
+            \begin{itemize}
+                \item Definizione delle tariffe unitarie per unità di prodotto SW: inclusiva di tutte le attività prevista dal ciclo di vita e basata sui punti funzione o altri indicatori;
+                \item Effettiva applicazione del ciclo di vita del SW contrattualmente definito:
+                    \begin{itemize}
+                        \item il cliente deve esercitare un'azione di sorveglianza sul processo produttivo del fornitore;
+                        \item il fornitore potrebbe contrarre i costi e aumentare la produttività a discapito della qualità dovuta;
+                    \end{itemize}
+            \end{itemize}
+        \end{critical}
+    \item[Risorse Utilizzate] Il contratto definisce:
+        \begin{itemize}
+            \item il limite superiore di prezzo determinato mediante la stima dell'impegno necessario;
+            \item tariffe unitarie per figura professionale;
+            \item modalità di calcolo del corrispettivo pagato a consuntivo è riferito alle \textbf{risorse impegnate nella produzione} e non alla quantità di SW realizzato;
+        \end{itemize}
+        \begin{note}[Vantaggi]
+            \begin{itemize}
+                \item Gestione del contratto semplice;
+                \item Flessibilità rispetto all'instabilità delle normative, insufficiente analisi dei requisiti;
+                \item Può applicarsi alla manutenzione adeguativa/correttiva;
+                \item Il fornitore è al riparo da possibili sorprese;
+            \end{itemize}
+        \end{note}
+        \begin{warning}[Svantaggi]
+            Il cliente assume i rischi: volatilità delle specifiche, imprevisti, errata stima dell'impegno
+        \end{warning}
+        \begin{critical}[Criticità]
+            \begin{itemize}
+                \item Assenza di correlazione tra prodotto ottenuto e spesa sostenuta (a meno di verifiche accurate sulla qualità dei prodotti);
+                \item Definizione delle tariffe unitarie per figura professionale;
+            \end{itemize}
+        \end{critical}
+\end{description}
+% subsubsection Modelli a Misura (end)
+% subsection Corrispettivo (end)
+%
+\subsection{Fatturazione}\label{sub:fatturazione} % (fold)
+Articolazione temporale dei pagamenti sulla base delle attività commissionate e svolte.
+% subsection Fatturazione (end)
 % section Contratto per la Manutenzione ed Evoluzione dei SI (end)
 \end{document}
