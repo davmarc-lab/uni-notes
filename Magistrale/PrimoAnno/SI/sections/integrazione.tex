@@ -185,4 +185,244 @@ Possono essere classificati in quattro categorie:
 \end{itemize}
 % subsection Conflitti Strutturali (end)
 % section Comparazione degli Schemi (end)
+%
+\section{Allineamento e Fusione degli Schemi}\label{sec:db_allineamento_e_fusione_degli_schemi} % (fold)
+Con il termine \textbf{allineamento degli schemi} si intende l'eliminazione dei conflitti in essi presenti tramite l'applicazione di trasformazione agli schemi sorgenti o allo schema riconciliato temporaneamente definito:
+\begin{itemize}
+    \item cambio dei nomi;
+    \item cambio dei tipi degli attributi;
+    \item modifica delle dipendenze funzionali;
+    \item modifica dei vincoli esistenti sugli schemi;
+\end{itemize}
+\begin{critical}
+    La soluzione dovrà essere fatta in modo da evitare perdite di informazioni
+\end{critical}
+\begin{warning}
+    Attenzione però a non eliminare importanti vincoli del sistema per poter includere situazioni impossibili
+\end{warning}
+In caso di incertezza è conveniente preferire le trasformazioni che avvantaggiano gli schemi che si ritengono più \red{centrali} nella struttura del futuro schema riconciliato.
+La strategia migliore è quella \textbf{binaria a scala}, in cui è possibile iniziare l'integrazione a partire dagli schemi ritenuti \textbf{più importanti} che formeranno il nucleo dello schema riconciliato.
+\begin{note}
+    Non sempre i conflitti possono essere risolti poiché \textbf{derivano da inconsistenze di base} del sistema informativo; in questo caso la soluzione deve essere discussa con gli utenti che dovranno fornire indicazioni su quale interpretazione del mondo reale basarsi
+\end{note}
+%
+\subsection{Principi della Fusione}\label{sub:db_principi_della_fusione} % (fold)
+\begin{description}
+    \item[Completezza] Dopo la sovrapposizione degli schemi sorgenti risulteranno evidenti ulteriori proprietà inter-schema che non si erano evidenziate in precedenza.
+        Il progettista deve quindi \textbf{esaminare lo schema} fin qui costruito alla ricerca di nuove proprietà che potranno essere esplicite inserendo nuove associazioni, gerarchie di generalizzazione;
+    \item[Minimalità] La sovrapposizione di più schemi può generare una forte ridondanza dei concetti che, sebbene espressi in modo univoco negli schemi sorgenti, risultano duplicati o comunque derivabili l'un l'altro in quello riconciliato.
+        Altre comuni fonti di ridondanza sono le relazioni cicliche tra i concetti e gli attributi derivati;
+        \begin{cimage}
+            \includegraphics[width=.4\textwidth]{assets/min-fus-scheme.png}
+        \end{cimage}
+    \item[Leggibilità] Il miglioramento della leggibilità dello schema \textbf{facilita e sveltisce} le successive fasi di progettazione.
+        Sebbene sia difficile misurare la differenza di leggibilità tra i due schemi, la nozione qualitativa del termine è realmente semplice;
+\end{description}
+% subsection Principi della Fusione (end)
+% section Allineamento e Fusione degli Schemi (end)
+%
+\section{Mapping}\label{sec:db_mapping} % (fold)
+Il risultato dell'\textbf{analisi delle sorgenti operazionali} finalizzata all'integrazione è composto da due elementi: lo schema riconciliato e il \textbf{mapping} ossia l'\textbf{insieme di corrispondenze} tra gli elementi presenti negli schemi sorgenti e quelli dello \textbf{schema di destinazione}.
+\begin{note}
+    Le funzioni di mapping vengono utilizzate ogniqualvolta si debba eseguire sui database locali una interrogazione espressa sullo schema riconciliato
+\end{note}
+\begin{definition}{GAV (Global-As-View)}{}
+    A ogni concetto dello schema globale deve essere associata una vista il cui significato è definito in base ai concetti che risiedono sugli schemi sorgenti.
+    Riduce l'estensibilità dello schema riconciliato poiché l'aggiunta di una nuova sorgente richiederà la modifica di tutti i concetti dello schema globale che la utilizzano.
+    \begin{note}
+        Facilita la modalità di definizione delle interrogazioni poiché per capire quali concetti dagli schemi sorgenti sono coinvolti sarà sufficiente sostituire a ogni concetto dello schema globale la definizione della vista che lo definisce rispetto ai concetti sugli schemi locali (\textit{unfolding})
+    \end{note}
+\end{definition}
+\begin{definition}{LAV (Local-As-View}{}
+    Lo schema globale è espresso indipendentemente dalle sorgenti, i cui concetti saranno definiti come viste sullo schema globale.
+    Richiede trasformazioni complesse (\textit{query rewriting}) per capire quali elementi degli schemi sorgenti devono essere presi in considerazione per ricreare il concetto espresso nello schema globale.
+    \begin{note}
+        Favorisce l'estensibilità dello schema riconciliato e la sua manutenzione, per esempio l'aggiunta di una nuova sorgente al sistema richiederebbe solo la definizione della vista sullo schema globale che non verrebbe quindi necessariamente modificato
+    \end{note}
+\end{definition}
+% section Mapping (end)
+%
+\section{Pulizia dei Dati}\label{sec:db_pulizia_dei_dati} % (fold)
+Con il termine \textbf{pulizia dei dati} (Data Cleaning o Data Cleansing o Data Scrubbing) si intende l'insieme delle operazioni atte a garantire la consistenza e la correttezza dei dati presenti nel livello riconciliato.
+Le principali cause di inconsistenza nei dati sono le seguenti:
+\begin{description}
+    \item[Errori di Battitura] Sono sempre possibili se al momento dell'inserimento non sono previste procedure di controllo dei valori inseriti;
+    \item[Differenza di formato dei Dati dello stesso Campo] Si verifica ogniqualvolta l'informazione memorizzata in un campo non sia rigidamente strutturata;
+    \item[Inconsistenza tra Valori e Descrizione dei Campi] Si verifica a causa dell'evoluzione del modo di operare in azienda o dal variare delle abitudini di vita che rendono indispensabile un'informazione di cui non era prevista la memorizzazione;
+    \item[Inconsistenza tra Valori di Campi Correlati] Si verifica quando i valori presenti in due o più campi sono singolarmente correlati ma tra loro inconsistenti (es. città = Bologna, regione = Lazio);
+    \item[Informazioni Mancanti] Quando le applicazioni del sistema operazionale consentono di non riempire alcuni dei campi, la fretta e lo scarso interesse verso un dato spingono spesso l'operatore a tralasciarne l'inserimento;
+    \item[Informazioni Duplicati] Si presentano quando due sorgenti forniscono la stessa informazione ma i record utilizzano chiavi diverse;
+\end{description}
+%
+\subsection{Tecniche basate su Dizionari}\label{sub:db_tecniche_basate_su_dizionari} % (fold)
+Con questo termine si indicano le \textbf{tecniche di verifica della correttezza} dei valori di un campo, basate su tabelle di riferimento (\textit{look-up table}) e dizionari per la ricerca di \textbf{abbreviazioni} e \textbf{sinonimi}.
+\begin{warning}
+    Sono applicabili solo quando il dominio del campo è conosciuto e limitato
+\end{warning}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/tecn-dict-based-visual.png}
+\end{cimage}
+Queste tecniche possono essere applicate anche a più campi contemporaneamente al fine di verificare eventuali \textbf{inconsistenze} tra due \textbf{campi correlati}.
+Per esempio, avendo a disposizione una tabella di riferimento che riporta le regioni italiane e, per ognuna di esse, l'elenco delle città che vi appartengono, è possibile verificare se i campi \textit{città} e \textit{regione} di un indirizzo sono tra loro consistenti.
+\emptyln{}
+Ogniqualvolta si debbano combinare in un'unica destinazione dati provenienti da sorgenti diverse senza una chiave comune, nasce la necessità di identificare i record corrispondenti.
+Se per esempio due database identificano diversamente due entità (equivalenti), il \textbf{join} dovrà essere eseguito sulla base dei campi comuni che non rappresentano un identificatore per l'entità.
+\\
+In questo caso si parla di \textbf{job approssimato} poiché non c'è certezza nella definizione dei record corrispondenti.
+\emptyln{}
+Quando due istanze diverse di uno stesso schema devono essere fuse assieme si parla di \textbf{purge/merge problem}: le due istanze non sono disgiunte.
+Inoltre anche nei singoli database un'entità potrebbe essere inserita più volte a causa di errori di battitura che non hanno permesso di verificare un precedente inserimento.
+% subsection Tecniche basate su Dizionari (end)
+%
+\subsection{Similarità tra Record}\label{sub:db_similarit_tra_record} % (fold)
+\subsubsection{Tecniche basate su Funzioni di Similarità}\label{sub:db_tecniche_basate_su_funzioni_di_similarit} % (fold)
+Comparando le sottostringhe di $A_i \in A$ e $B_i \in B$, la \textbf{similarità} si calcola con la seguente formula ricorsiva:
+\[
+    \textit{affinità}\pt{A,B} = \frac{1}{\ab A} \sum_{i = 1}^{\ab A}{\max_{j=1}^{\ab B} {\textit{affinità}\pt{A_i,B_i}}}
+\]
+dove la \textbf{comparazione tra i sottocampi elementari} è basata sul confronto tra stringhe e sulla verifica della presenza di abbreviazioni che vengono ricercate in base a pattern ben definiti:
+\begin{itemize}
+    \item un prefisso di una sottostringa;
+    \item combinazione di un prefisso e suffisso di una sottostringa (Dott.ssa sta per Dottoressa);
+    \item acronimo di una stringa;
+    \item concatenazione di più prefissi contenuti nella stringa (UNIBO sta per Università di Bologna);
+\end{itemize}
+% subsubsection Tecniche basate su Funzioni di Similarità (end)
+%
+\subsubsection{Tecniche basate su Gruppi di Regole}\label{sub:db_tecniche_basate_su_gruppi_di_regole} % (fold)
+Normalmente vengono valutate caratteristiche quali la edit-distance tra due stringhe o la differenza di valore tra due campi numerici.
+% subsubsection Tecniche basate su Gruppi di Regole (end)
+% subsection Similarità tra Record (end)
+% section Pulizia dei Dati (end)
+%
+\section{Master Data Management}\label{sec:db_master_data_management} % (fold)
+Con il termine \textbf{\ac{md}} si indica \textbf{l'insieme dei dati che identificano e descrivono entità fondamentali} per il business di un'azienda, che vengono gestiti attualmente da varie applicazioni, sia di tipo operazionale che analitico.
+\begin{definition}{Master Data Management}{mdm}
+    Il \ac{mdm} è \textbf{l'insieme di discipline}, \textbf{tecnologie} e \textbf{soluzioni} in grado di creare e mantenere consistenti, aggiornati, accurati e completi i dati di \red{importanza critica} e di fornire una visione unica a utenti, applicazioni e processi sia all'interno sia all'esterno dell'azienda.
+    Nell'ambito del \ac{mdm} si distinguono generalmente due aree più specifiche:
+    \begin{itemize}
+        \item \textbf{\ac{pim}}: incentrata sui \ac{md} di \textbf{Prodotto};
+        \item \textbf{\ac{cdi}}: incentrata sui \ac{md} relativi a \textbf{clienti/fornitori/utenti};
+    \end{itemize}
+\end{definition}
+%
+\subsection{Idea alla Base}\label{sub:db_idea_alla_base} % (fold)
+La dispersione e la ridondanza delle informazioni di importanza cruciale su diverse applicazioni provoca problemi di consistenza e di inefficienza nei processi aziendali.
+\\
+Per risolvere questi problemi si procede spostando i \ac{md} al di fuori delle singole applicazioni.
+Ciò ha diverse implicazioni:
+\begin{multicols}{2}
+    \begin{itemize}
+        \item viene create una nuova base dati ``master'' sincronizzata con quelle esistenti mediante tecniche di data integration in tempo reale;
+        \item si modificano i processi di business che toccano i \ac{md}, per alimentare e sfruttare al meglio la nuova base dati ``master'';
+        \item va definita la \red{ownership} dei \ac{md} e dei processi di alimentazione e gestione che li riguardano;
+    \end{itemize}
+\end{multicols}
+% subsection Idea alla Base (end)
+%
+\subsection{Scegliere i Master Data}\label{sub:db_scegliere_i_master_data} % (fold)
+Tipologie dei dati:
+\begin{tasks}(2)
+    \task non strutturati;
+    \task transazionali;
+    \task metadati;
+    \task gerarchici;
+    \task master;
+\end{tasks}
+Caratteristiche dei \ac{md}:
+\begin{tasks}(2)    
+    \task \textbf{quantità}: la creazione di un'architettura per la gestione dei \ac{md} si giustifica solo per quantità elevate di informazioni;
+    \task \textbf{lifetime}: i \ac{md} tendono a essere meno volatili dei dati transazionali.
+        In base a ciò aziende diverse possono fare scelte per la stessa informazione: i contatti possono essere considerati \ac{md} da un'azienda se la loro durata è pluriennale;
+    \task \textbf{valore}: maggiore p il valore di un'informazione, maggiore è la probabilità che sia considerato un \ac{md};
+    \task \textbf{complessità}: per dati con limitate problematiche di gestione p poco utile allestire un meccanismo di \hyperref[def:mdm]{MDM};
+    \task \textbf{riusabilità}: un concetto riutilizzato da più sistemi aziendali richiede con elevata probabilità una gestione basata su un sistema \hyperref[def:mdm]{MDM};
+    \task \textbf{centralità}: i \ac{md} sono centrali a più applicazioni e vengono da essi creati, modificati, letti e cancellati;
+\end{tasks}
+% subsection Scegliere i Master Data (end)
+%
+\subsection{Gestione dei Master Data}\label{sub:db_gestione_dei_master_data} % (fold)
+Il \hyperref[def:mdm]{MDM} non è semplicemente un problema tecnologico, in molti casi impatta pesantemente i \textbf{processi aziendali} e determina problemi di natura politica e organizzativa.
+Il \ac{mdm} include sia la creazione, sia la manutenzione dei \ac{md} di conseguenza un progetto di \ac{mdm} non può essere considerato un'attività una tantum poiché determina una porzione di \hyperref[sub:il_sistema_informativo]{SI} che deve essere mantenuta nel tempo.
+\emptyln{}
+La principali fasi di un progetto di \ac{mdm} sono:
+\begin{enumerate}
+    \item \textbf{Identificare la sorgente dati}: tipicamente il numero dei DB che memorizzano \ac{md} è superiore alle aspettative;
+    \item \textbf{Specificare produttori e consumatori di \ac{md}}: il tipo di operazioni e la numerosità degli attori che operano sui \ac{md} incidono sulla complessità del processo di gestione;
+    \item \textbf{Raccogliere metadati sui \ac{md}}: è fondamentale definire univocamente i \ac{md} sia a livello sintattico che a livello semantico;
+    \item \textbf{Identificare gli esperti dei \ac{md}}: per ogni sorgente si identificano persone in grado di descrivere come i \ac{md} debbano essere trasformati per renderli compatibili con la versione condivisa;
+    \item \textbf{Definire il processo di data-governance e il relativo gruppo di lavoro}: il gruppo di lavoro deve avere le competenze e l'autorità per prendere decisioni relativamente a come vengono gestiti i \ac{md};
+    \item \textbf{Sviluppare un modello di gestione dei \ac{md}}: dal punto di vista tecnico è la fase più importante del progetto poiché in essa si decide:
+        \begin{itemize}
+            \item l'architettura da utilizzare;
+            \item il formato dei \ac{md};
+            \item i record esclusi/inclusi;
+        \end{itemize}
+    \item \textbf{Scegliere uno strumento}: nel caso in cui il sistema di gestione dei \ac{md} non sia sviluppato internamente, il \textit{tool} viene scelto in base al tipo di \ac{md} gestiti e alle scelte fatte nella fase precedente;
+    \item \textbf{Progettare e implementare l'infrastruttura di gestione}: l'infrastruttura si occupa di collezionare e rendere disponibili i \ac{md} alle applicazioni esistenti;
+    \item \textbf{Generare e testare i \ac{md}}: questo processo iterativo permette di far evolvere la soluzione grezza al fine di considerare progressivamente tutte le specificità dei dati non catturate durante la prima fase di analisi;
+    \item \textbf{Modificare le applicazioni produttrici e consumatrici di \ac{md}}: in base alle interfacce messe a disposizione e in base alle politiche di gestione prescelte, le applicazioni che modificano o utilizzano i metadati dovranno essere modificate;
+    \item \textbf{Definire il processo di manutenzione}: il processo di \textbf{manutenzione} deve mettere in grado gli esperti di \ac{md} di verificarne la qualità e di correggerne gli errori.
+        Il processo \red{deve quindi definire ruoli, modi e tempi} per la manutenzione dei \ac{md} ma deve anche \red{prevedere gli strumenti di attuazione}.
+        Un tool per il controllo dei \ac{md} deve per esempio:
+        \begin{itemize}
+            \item mostrare quali inconsistenze si sono verificate sui dati;
+            \item mostrare quale sorgente e quale utente è responsabile dell'incoerenza;
+            \item suggerire correzioni;
+        \end{itemize}
+\end{enumerate}
+% subsection Gestione dei Master Data (end)
+%
+\subsection{Architetture per MDM}\label{sub:db_architetture_per_mdm} % (fold)
+\subsubsection{Consolidamento}\label{sub:db_consolidamento} % (fold)
+L'architettura viene fisicamente istanziata mediante un hub centrale che contiene i \textbf{golden record}.
+La proprietà dei dati rimane delle applicazioni sorgenti che li possono modificare in autonomia.
+L'aggiornamento dei \ac{md} non è sincrono con gli eventi che li creano/aggiornano conseguentemente l'architettura non garantisce che siano aggiornati.
+Vengono utilizzati principalmente per attività di reportistica direzionale; possono essere scaricati periodicamente sulle applicazioni che li utilizzano come versione di riferimento: comporta una modifica alle sorgenti che devono prevedere come integrare il dato di ritorno.
+\begin{cimage}
+    \includegraphics[width=.2\textwidth]{assets/arch-mdm-ocnsolid.png}
+\end{cimage}
+% subsubsection Consolidamento (end)
+%
+\subsubsection{A registro}\label{sub:db_arch_mdm_a_registro} % (fold)
+Viene costruito un \textbf{registro centrale} che collega le versioni locali dei dati di cui si è verificata la corrispondenza: le sorgenti pubblicano i propri dati e l'hub contiene un riferimento a essi.
+La proprietà dei dati rimane delle applicazioni sorgenti che li possono modificare in autonomia.
+L'\textbf{hub} esegue gli algoritmi di pulizia e di match tra i record, assegna un identificatore univoco a quelli distinti e gli associa le versioni corrispondenti nelle diverse applicazioni.
+\begin{multicols}{2}
+    \begin{itemize}
+        \item nessun aggiornamento è inviato alle sorgenti;
+        \item il miglioramento di qualità raggiungibile è limitato;
+        \item la logica per la ricostruzione del dato è complessa poiché deve agire su più applicazioni;
+        \item l'impatto sulle applicazioni e sui processi è limitato;
+    \end{itemize}
+\end{multicols}
+I \ac{md} sono utilizzati per armonizzare il comportamento tra più applicazioni ma non sono utilizzati durante le transazioni dei sistemi sorgente.
+\begin{cimage}
+    \includegraphics[width=.2\textwidth]{assets/arch-mdm-registro.png}
+\end{cimage}
+% subsubsection A registro (end)
+%
+\subsubsection{Coesistenza}\label{sub:db_arch_mdm_coesistenza} % (fold)
+Viene costruito un \textbf{hub centrale} che mantiene una versione aggiornata dei dati che viene in seguito, con \textbf{modalità non sincrona}, riversata sulle sorgenti: la proprietà dei dati rimane delle applicazioni sorgenti che li possono modificare in autonomia.
+L'aggiornamento dei \ac{md} non è sincrono con gli eventi che li creano/aggiornano conseguentemente l'architettura non garantisce che i \ac{md} siano aggiornati.
+Gli \ac{md} vengono utilizzati per armonizzare il comportamento tra più applicazioni e come punto di riferimento centralizzato.
+\begin{cimage}
+    \includegraphics[width=.2\textwidth]{assets/arch-mdm-coesistenza.png}
+\end{cimage}
+% subsubsection Coesistenza (end)
+%
+\subsubsection{Transazionale}\label{sub:db_arch_mdm_transazionale} % (fold)
+Viene costruito un \textbf{hub centrale} che mantiene una versione aggiornata utilizzata in modo sincrono da tutte le applicazioni: le proprietà dei \ac{md} è \textbf{trasferita} all'hub che è l'unico soggetto che può \red{modificarli} sulla base delle segnalazioni effettuate dalle sorgenti.
+Il dato aggiornato deve essere reso disponibile in modo sincrono alle sorgenti, per questo si sfrutta principalmente il meccanismo di \textbf{publish-subscribe} dei web service.
+\begin{note}
+    Dove è possibile l'hub stesso aggiorna i db degli applicativi sorgenti in modo da limitare le modifiche all'applicazione.
+    Inoltre utilizza politiche transazionali per garantire la consistenza delle informazioni.
+\end{note}
+Gli \ac{md} sono utilizzati sia nella normale operatività delle applicazioni operazionali, sia per armonizzare il comportamento tra più applicazioni.
+\begin{cimage}
+    \includegraphics[width=.2\textwidth]{assets/arch-mdm-transazionale.png}
+\end{cimage}
+% subsubsection Transazionale (end)
+% subsection Architetture per MDM (end)
+% section Master Data Management (end)
 % chapter Integrazione di Basi di Dati (end)

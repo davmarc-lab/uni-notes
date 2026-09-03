@@ -1,0 +1,42 @@
+% ltex: language=it
+\documentclass{article}
+
+% Shared preamble from project root
+\usepackage{lecture}
+
+\begin{document}
+
+\begingroup
+    \hypersetup{linkbordercolor=white, linkcolor=black} 
+    \tableofcontents
+    \newpage
+\endgroup
+
+\section{Descrizione del caso AUSL}\label{sec:descrizione_del_caso_ausl} % (fold)
+Un'AUSL vuole valutare possibili soluzioni all'annoso problema dell'anagrafica assistita:
+\begin{itemize}
+    \item i residenti nella provincia di riferimento;
+    \item i non residenti che per scelta o necessità usufruiscono di prestazioni;
+\end{itemize}
+AL momento i dati anagrafici degli assistiti sono mantenuti da più applicazioni, tra loro parzialmente incoerenti e ridondanti.
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/ausl-initial.png}
+\end{cimage}
+\begin{description}
+    \item[Scelta/Revoca del medico di base] È l'ufficio che si occupa di associare a tutti i residenti un medico di base/pediatra.
+        La scelta/revoca deve essere fatta forzatamente presentandosi in ufficio.
+        \item[CUP - Centro Unico Prenotazioni] È l'unico ufficio che gestisce le prenotazioni per tutte le prestazioni specialistiche.
+            La prenotazione può essere fatta allo sportello oppure telefonicamente utilizzando il codice della ricetta del medico di base.
+\end{description}
+\begin{note}[Ogni struttura dispone di un ufficio accettazioni che regola ricoveri e dimissioni]
+\end{note}
+Il reparto di \textbf{pronto soccorso} ha un proprio sportello di accettazione vista l'urgenza dei ricoveri: i pazienti possono giungere al \textbf{PS} in stato confusionale o in stato di incoscienza e devono comunque essere registrati.
+\emptyln{}
+I \textbf{flussi regionali} permettono di comunicare con le altre AUSL le prestazioni svolte su assistiti non residenti:
+\begin{itemize}
+    \item in uscita sono spedite tutte le prestazioni/ricoveri effettuati da \textbf{NON} residenti;
+    \item in entrata vengono ricevute tutte le prestazioni/ricoveri effettuati da residenti della provincia fatte in altre AUSL;
+\end{itemize}
+Come anagrafica principale è stata scelta quella dell'ufficio scelta/revoca del medico di base poiché tale scelta rappresenta un'operazione obbligatoria \textbf{per tutti e soli i residenti} e da fare di persona.
+% section Descrizione del caso AUSL (end)
+\end{document}
