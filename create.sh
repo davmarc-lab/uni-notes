@@ -43,3 +43,6 @@ echo "--- copied main.tex ---"
 
 ln -s ${RELATIVE}template/.snippets ${DIR}/.snippets
 echo "--- link snippets dir ---"
+
+ln -s ./template/standalone/ ${DIR}/
+echo "--- copy standalone dir ---"
