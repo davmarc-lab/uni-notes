@@ -425,4 +425,146 @@ Gli \ac{md} sono utilizzati sia nella normale operatività delle applicazioni op
 % subsubsection Transazionale (end)
 % subsection Architetture per MDM (end)
 % section Master Data Management (end)
+%
+\section{What's Next}\label{sec:db_what_s_next} % (fold)
+\subsection{Integration}\label{sub:db_integration} % (fold)
+L'integrazione dei dati è un obiettivo a tendere che i sistemi informativi inseguono dagli anni' 70 perché con essa determina:
+\begin{itemize}
+    \item qualità del dato;
+    \item ottimizzazione di processo;
+    \item capacità di analisi;
+\end{itemize}
+Con il procedere della digitalizzazione aumenta il numero di sorgenti dati e diventa sempre più complesso mantenerle integrate e sincronizzate.
+% subsection Integration (end)
+%
+\subsection{Data Fabric}\label{sub:db_data_fabric} % (fold)
+Il \textbf{Data Fabric} permette un accesso e una condivisione in un ambiente distribuito anche multi-cloud.
+Consente un quadro di gestione dei dati unico e coerente, che permette l'accesso ai dati e l'elaborazione senza soluzione di continuità a sorgenti che altrimenti sarebbero a silo.
+Sfrutta sia le capacità umane che quelle delle macchine per accedere ai dati sul posto o per supportarne il consolidamento laddove necessario.
+Identifica e collega continuamente i dati provenienti da applicazioni diverse scoprendo relazioni rilevanti per il business tra le sorgenti dati disponibili.
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/data-fabric.png}
+\end{cimage}
+È un architettura unificata con un insieme integrato di tecnologie e servizi:
+\begin{itemize}
+    \item progettata per fornire \red{dati integrati e arricchiti} - al momento giusto, nel metodo giusto e al giusto consumatore di dati - a supporto dei carichi di lavoro sia operativi che analitici;
+    \item combina le tecnologie chiave di gestione dei dati, come il catalogo dei dati, la governance dei dati, l'integrazione dei dati, la pipeline dei dati e l'orchestrazione dei dati;
+\end{itemize}
+% subsection Data Fabric (end)
+%
+\subsection{Data Ops}\label{sub:db_data_ops} % (fold)
+\textbf{DevOps} deriva dalla contrazione inglese di \textit{development} e \textit{operations}, inteso come ``messa in produzione'' o \textit{deployment}.
+\begin{quote}[Dal DevOps al DataOps]
+    A collaborative data management practice focused on improving the communication, integration and automation of data flows between data managers and data consumers across an organization
+\end{quote}
+\begin{note}[Alcune regole di base]
+    \begin{itemize}
+        \item stabilire misure di progresso e performance in ogni fase;
+        \item automatizzare il maggior numero possibile di fasi del flusso di dati;
+        \item stabilire una disciplina di governance (governance-as-code);
+        \item progettare il processo di crescita per l'estensibilità;
+    \end{itemize}
+\end{note}
+% subsection Data Ops (end)
+%
+\subsection{Data Mesh}\label{sub:db_data_mesh} % (fold)
+\begin{definition}{Data Mesh}{}
+    Data mesh is a decentralized sociotechnical approach in managing and accessing analytical data at a scale
+\end{definition}
+\begin{note}[Obiettivo]
+    Abilitare le organizzazioni a diventare maggiormente Data Driven cambiando il modo in cui queste organizzano i propri team e le proprie architetture dati.
+\end{note}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/data-mesh-graph.png}
+\end{cimage}
+\begin{warning}
+    L'approccio data mesh richiede competenze diffuse di \textbf{Data Architect} e \textbf{Data Science} in azienda
+\end{warning}
+%
+\subsubsection{Limiti Data Platform}\label{sub:db_limiti_delle_data_platform} % (fold)
+Col proliferare delle diverse sorgenti informative diventa sempre più complesso \textbf{armonizzare i dati} all'interno di un \textbf{modello centralizzato} e mantenerlo aggiornato.
+Le diverse modalità di fruizione del dato e la necessità di eseguire sperimentazioni nella gestione della \textbf{sincronizzazione} e \textbf{prioritizzazione} delle pipeline di elaborazione.
+\emptyln{}
+I team di lavoro sono organizzati per \textbf{competenza tecnologica} e non per \textbf{competenza di business}: rischio di difficoltà nel comprendere a pieno le esigenze del business e il business ha scarsa fiducia nel dato.
+% subsubsection Limiti delle Data Platform (end)
+%
+\subsubsection{I principi Data Mesh}\label{sub:db_i_principi_del_data_mesh} % (fold)
+\paragraph{Domain Ownership}\label{par:db_domain_ownership} % (fold)
+Nel paradigma Data Mesh l'infrastruttura dati è responsabile della fornitura delle tecnologie utili alla gestione e al processamento dei dati, ma sono i \textbf{domini} a essere responsabili delle pipeline di ingestion, pulizia e aggregazione dei dati al fine di generare assets (\textbf{Data Products}) utilizzabili e consumabili da applicazioni e/o altri domini.
+\begin{note}
+    Ogni dominio è responsabile della gestione e manutenzione delle proprie pipeline (ETL) e un set di funzionalità applicate a ogni dominio che si occupano salvare, catalogare e gestire gli accessi ai dati di terzi.
+\end{note}
+Una volta che i dati sono stati forniti e in seguito trasformati dal rispettivo dominio, gli owners di dominio possono quindi sfruttare i dati per \textbf{esigenze analitiche} od \textbf{operazionali}.
+La decentralizzazione domain-oriented richiede che i team sui domini abbiano competenze pratiche nella gestione e analisi del dato.
+I \textbf{data scientist} sono decentralizzati.
+% paragraph Domain Ownership (end)
+%
+\paragraph{Data As A Product}\label{par:db_data_as_a_product} % (fold)
+Le caratteristiche più importanti che un \textbf{Data Product} deve mappare sono:
+\begin{itemize}
+    \item \textbf{Discoverable} e \textbf{Addensale}: il Data Product deve fornire intrinsecamente e intenzionalmente tutte le informazioni utili a trovarlo facilmente oltre a un indirizzo unico di accesso al dato;
+    \item \textbf{Understandable}, \textbf{Trustworthy} e \textbf{Accessible}: i Data Products devono esporre informazioni semantiche che permettano la facile comprensione del dato, logiche di quality check, integrity test, lineage e tecniche di accesso native che ne estendano l'usabilità;
+    \item \textbf{Interoperable} e \textbf{Secure}: perché un Data Product sia interoperabile occorre utilizzare formati aperti e strutture dati stabili che rispettino le policy definite a livello globale, che prevedono anche aspetti di security e privacy;
+\end{itemize}
+\begin{note}
+    Il principio del Data As A Product è pensato per indirizzare problematiche di data quality e dei vecchi data silo, o ancora meglio quello che \textbf{Gartner} chiama \textbf{dark data}.
+    \begin{definition}{Dark Data}{}
+        I \textbf{dark data} sono gli asset informativi che le organizzazioni raccolgono, elaborano e archiviano durante le normali attività aziendali, ma che generalmente non riescono a utilizzare per altri scopi.
+        \emptyln{}
+        Simili alla materia oscura in fisica, i dati oscuri spesso comprendono l'universo delle risorse informative della maggior parte delle organizzazioni.
+        Quindi, le organizzazioni spesso conservano i dati oscuri solo per scopi di conformità.
+        \begin{note}
+            Conservare e mettere in sicurezza i dati comporta tipicamente più spese che valore
+        \end{note}
+    \end{definition}
+\end{note}
+% paragraph Data as A Product (end)
+%
+\paragraph{Federated Computational Governance}\label{par:db_federated_computational_governance} % (fold)
+Il Data Mesh segue i principi dei sistemi distribuiti, attraverso una collezione di Data Product indipendenti, con una propria gestione  del lifecycle messa direttamente in mano ai team di dominio.
+Al fine di rendere questi Data Product interoperabili tra loro, un'implementazione di Data Mesh richiede un \textbf{modello di governance} che abbracci allo stesso tempo:
+\begin{itemize}
+    \item la decentralizzazione in domini e l'ampia autonomia dei team nella definizione di Data Product;
+    \item La definizione di un set di \textbf{regole globali} da applicare a tutti i Data Product e alle loro interfacce di comunicazione;
+\end{itemize}
+Un fattore critico di successo per il Data Mesh è quindi riuscire a trovare e mantenere un \textbf{giusto equilibrio} tra centralizzazione e decentralizzazione, definendo quali decisioni debbano essere prese localmente e quali invece vadano definite globalmente, quali Data Product decentralizzare maggiormente e quali mantenere sotto un'ownership più centrale.
+% paragraph Federated Computational Governance (end)
+%
+\paragraph{Self-Service Platform}\label{par:db_self_service_platform} % (fold)
+Per sviluppare, distribuire, eseguire, monitorare e accedere ai \hyperref[par:db_data_as_a_product]{Data Products} occorre un'infrastruttura (\hyperref[sub:db_limiti_delle_data_platform]{Data Platform}) adeguata.
+Le competenze necessarie per definire e sviluppare un ecosistema infrastrutturale di questa complessità sono altamente specializzate ed è necessario un coordinamento e una governance architetturale centralizzata.
+\emptyln{}
+La \hyperref[sub:db_limiti_delle_data_platform]{Data Platform} deve fornire i servizi utili ai team di dominio al fine di poter gestire l'intera filiera dei propri \hyperref[par:db_data_as_a_product]{Data Product}.
+È necessario quindi predisporre una \textbf{self-serve data infrastructure}: una \textbf{Data Platform} che espone servizi e funzionalità che abilitano i team di dominio a gestire il ciclo di vita dei \textbf{Data Product} in autonomia.
+% paragraph Self-Service Platform (end)
+% subsubsection I principi del Data Mesh (end)
+%
+\subsubsection{Quando usare il Data Mesh?}\label{sub:db_quando_usare_il_data_mesh} % (fold)
+Il Data Mesh non è corretto se:
+\begin{itemize}
+    \item si pensa al Data Mesh come a una tecnologia e non come a un modello operativo;
+    \item si pensa al Data Mesh come a una soluzione a scaffale;
+    \item non è stata definita una Data Strategy aziendale;
+    \item non emergono business-case (data driven) che portano valore alla business unit (dominio);
+    \item manca il mindset culturale rispetto a processi di decision-making in modalità bottom-up;
+    \item c'è scarsità di risorse data-addicted all'interno dell'organizzazione e dei team;
+\end{itemize}
+% subsubsection Quando usare il Data Mesh? (end)
+%
+\subsubsection{Data Mesh vs Data Fabric}\label{sub:db_data_mesh_vs_data_fabric} % (fold)
+\hyperref[sub:db_data_fabric]{Data Fabric} e \hyperref[sub:db_data_mesh]{Data Mesh} definiscono architetture per accedere ai dati attraverso più tecnologie e piattaforme:
+\begin{itemize}
+    \item \textbf{Data Fabric}: tenta di centralizzare e coordinare la gestione dei dati e affronta la complessità basandosi pesantemente su metadati;
+    \item \textbf{Data Mesh}: pone enfasi sulla decentralizzazione e sull'autonomia del dominio dei dati, concentrandosi sul cambiamento organizzativo, sulle persone e sui processi;
+\end{itemize}
+\begin{warning}
+    Definiscono \textbf{approcci risolutivi} e non soluzioni pratiche:
+    \begin{itemize}
+        \item non si escludono a vicenda;
+        \item sono \textbf{framework architetturali} e non architetture: i framework devono essere adattati e personalizzati alle proprie esigenze, dati,  processi e terminologia;
+    \end{itemize}
+\end{warning}
+% subsubsection Data Mesh vs Data Fabric (end)
+% subsection Data Mesh (end)
+% section What's Next (end)
 % chapter Integrazione di Basi di Dati (end)

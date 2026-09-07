@@ -38,5 +38,87 @@ I \textbf{flussi regionali} permettono di comunicare con le altre AUSL le presta
     \item in entrata vengono ricevute tutte le prestazioni/ricoveri effettuati da residenti della provincia fatte in altre AUSL;
 \end{itemize}
 Come anagrafica principale è stata scelta quella dell'ufficio scelta/revoca del medico di base poiché tale scelta rappresenta un'operazione obbligatoria \textbf{per tutti e soli i residenti} e da fare di persona.
+L'anagrafica principale aggiornata è resa disponibile sull'intranet dell'AUSL agli altri uffici con frequenza mensile: gli archivi locali sono spesso più aggiornati visto che è raro recarsi all'ufficio scelta/revoca.
+\\
+Ogni applicativo ha una propria struttura relazionale:
+\begin{itemize}
+    \item i campi si differenziano nelle diverse applicazioni in base alle funzioni svolte;
+    \item i formati non sono standardizzati;
+\end{itemize}
+\begin{note}
+    Per gli assistiti extra-AUSL fanno fede la tessera sanitaria e i dati inseriti al primo contatto (per ogni applicativo), per gli stranieri senza CF viene inserita una codifica a parte
+\end{note}
+I flussi regionali in entrata sono sempre ritardati di un mese.
+\emptyln{}
+Ogni applicazione può inserire nuovi assistiti.
+Di conseguenza un errore nell'inserimento del codice sanitario comporta la duplicazione dei dati: difficile tracciare tutte le prestazioni effettuate da un paziente nelle diverse strutture.
+\\
+L'incoerenza dei dati comporta problemi nelle attività operative: un assistito fa una prenotazione al CUP.
+La prenotazione e il codice dell'assistito sono mandati all'ufficio di accettazione della struttura:
+\begin{itemize}
+    \item se il codice sanitario è imputato male non risulterà alcuna prenotazione;
+    \item se l'indirizzo dell'assistito è cambiato i risultati non saranno ricevuti;
+    \item se il numero di telefono è cambiato non sarà possibile comunicare eventuali variazioni nella prenotazione;
+\end{itemize}
+Solo gli aggiornamenti comunicati direttamente all'ufficio scelta/revoca vengono diffusi a tutte le applicazioni.
+Ogni applicazione deve prevedere una propria procedura di fusione dei dati.
+\\
+Il livello di affidabilità delle applicazioni varia fortemente:
+\begin{itemize}
+    \item Ufficio scelta/revoca contiene spesso dei dati obsoleti e parziali;
+    \item il PS è il reparto con dati meno attendibili;
+    \item il CUP è l'ufficio con i dati più aggiornati perché è l'ufficio in cui transitano la maggior parte delle prestazioni.
+        I dati sono però meno attendibili se le prenotazioni sono fatte telefonicamente;
+\end{itemize}
 % section Descrizione del caso AUSL (end)
+%
+\section{Soluzioni}\label{sec:soluzioni} % (fold)
+\subsection{Soluzione Coesistenza}\label{sub:soluzione_coesistenza} % (fold)
+Si costruisce un nuovo DB per i master data e si definiscono i flussi di alimentazione da e verso le applicazioni.
+A tutte le applicazioni deve essere aggiunta una procedura per l'integrazione dei dati in ingresso, mentre i processi operazionali non sono modificati ma operano semplicemente su dati di qualità migliore.
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/sol-coes-ausl.png}
+\end{cimage}
+\begin{itemize}
+    \item Va definita la struttura standard dei dati e le regole di standardizzazione: il formato deve soddisfare tutte le esigenze informative delle sorgenti ossia deve permettere di alimentarle;
+    \item Vanno definite le politiche di pulizia dei dati;
+    \item Va definita una politica per il merge dei dati presso l'hub: se la sorgente mantiene la data dell'ultima modifica va considerato il dato più aggiornato (informazioni discordanti vanno valutate in base al livello di affidabilità delle sorgenti);
+\end{itemize}
+\begin{note}
+    Per aumentare la qualità dei dati sarebbe utile concordare la modalità e la tempistica di aggiornamento dei dati presso le sorgenti
+\end{note}
+% subsection Soluzione Coesistenza (end)
+%
+\subsection{Soluzione Transazionale}\label{sub:soluzione_transazionale} % (fold)
+Si costruisce un nuovo DB per i master data e si modificano tutte le applicazioni per permettere la gestione transazionale dei dati.
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/sol-trans-ausl.png}
+\end{cimage}
+\begin{enumerate}
+    \item L'utente del CUP invoca il web service del sistema di MDM richiedendo i dati anagrafici della tessera sanitaria;
+    \item Il web service restituisce l'ultima versione committed dei dati;
+    \item L?utente del CUP richiede di modificare l'indirizzo di residenza;
+    \item Se nessuna applicazione sta utilizzando il record e le politiche di qualità sono soddisfatte il record è locked e l'utente CUP può apportare le modifiche: solo alcuni uffici possono effettuare le modifiche;
+    \item Il sistema verifica la qualità del dato e accetta/rifiuta l'aggiornamento;
+    \item IL lock viene rilasciato e il dato diventa visibile a tutti;
+\end{enumerate}
+% subsection Soluzione Transazionale (end)
+%
+\subsection{Transazionale vs Coesistenza}\label{sub:transazionale_vs_coesistenza} % (fold)
+\begin{note}[Contro Transazionale]
+    \begin{itemize}
+        \item maggiore impatto sulle applicazioni;
+        \item possibile solo se non esistono applicazioni legacy: se ciò non è verosimile è necessario studiare una strategia mista transazionale-coesistenza;
+        \item assume che tutti i sistemi siano sempre in rete: se temporaneamente un'applicazione non in rete può sfruttare una copia locale dei dati ma \textbf{non deve permettere l'aggiornamento};
+        \item richiede di definire chi è l'owner del processo di gestione dei MD: non tutti i problemi sono risolvibili da un processo automatico che comunque deve essere supervisionato, fatto evolvere;
+    \end{itemize}
+\end{note}
+\begin{note}[Pro Transazionale]
+    \begin{itemize}
+        \item garantisce sempre l'allineamento dei dati tra le applicazioni interne (circolarità dell'informazione);
+        \item centralizza la gestione dei dati e le politiche di aggiornamento;
+    \end{itemize}
+\end{note}
+% subsection Transazionale vs Coesistenza (end)
+% section Soluzioni (end)
 \end{document}
