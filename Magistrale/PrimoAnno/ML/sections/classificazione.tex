@@ -1071,6 +1071,32 @@ Per la \textbf{classificazione} di un nuovo pattern si visita l'albero e una vol
     \includegraphics[width=.6\textwidth]{assets/class-tree-es.png}
     \caption{In numero le probabilità di sopravvivenza (sinistra) e la percentuale di campioni nella foglia (destra)}\label{fig:class-tree-es}
 \end{cimage}
+\begin{example}{Apprendimento di un albero CART}{}
+    Per ogni nodo, a partire dalla radice, l'algoritmo suddivide gli $m$ pattern entranti del training set in due sottoinsiemi disgiunti di dimensioni $m_{left}$ e $m_{right}$.
+    \\
+    La suddivisione avviene in modo \red{greedy} considerando una \textbf{singola feature $k$} e una \textbf{soglia $t_k$}.
+    La coppia $\pt{k,t_k}$ è scelta come quella che produce sottoinsiemi più \red{puri}, minimizzando:
+    \[
+        J\pt{k,t_k} = \frac{m_{left}}{m}G_{left} + \frac{m_{right}}{m}G_{right}
+    \]
+    $G_{left}$ e $G_{right}$ sono le \textbf{impurità} dei due sottoinsiemi.
+    Per calcolare le impurità si può usare \textbf{Gini} o \textbf{Entropia}:
+    \[
+        \textit{Gini} = 1 - \sum_{i=1}^s{p_i^2}
+    \]
+    \[
+        \textit{Entropia} = - \sum_{i=1}^s{p_i\log_2\pt{p_i}}
+    \]
+    dove $p_i$ sono le probabilità delle classi.
+    \begin{note}
+        Le due metriche portano a risultati spesso molto simili: la prima è usata come default perché più efficiente da calcolare
+    \end{note}
+    Il processo \textbf{continua ricorsivamente}, splittando i sottoinsiemi creati fino a quando:
+    \begin{itemize}
+        \item si raggiunge in ogni ramo la profondità massima specificata da iperparametro $max_depth$;
+        \item non è possibile \textbf{ridurre ulteriormente} le impurità;
+    \end{itemize}
+\end{example}
 In Random Forest, per rendere maggiormente indipendenti i classificatori: per ogni nodo la scelta della feature migliore su cui partizionare non è fatta sull'intero insieme delle $d$ feature (dimensionalità dei pattern), ma su un sottoinsieme random di $d'$ (si solito $d' = \sqrt d$).
 \\
 In assenza di questo accorgimento, noto anche come \red{feature bagging}, molti tree sceglierebbero con elevata probabilità le stesse variabili.

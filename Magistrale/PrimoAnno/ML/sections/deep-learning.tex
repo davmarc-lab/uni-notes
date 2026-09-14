@@ -507,6 +507,16 @@ La rappresentazione delle parole con \textbf{vettori} nello spazio multidimensio
 % subsubsection Embedding (end)
 % subsection Tokenization - Embedding (end)
 %
+\subsection{Generazione Autoregressiva}\label{sub:nlp_generazione_autoregressiva} % (fold)
+In un modello \textbf{generativo} sequence-to-sequence il risultato viene normalmente prodotto token by token in maniera \textbf{autoregressiva}, ovvero il token $i$-esimo prodotto è appeso all'input che produce il token $\pt{\inc i}$-esimo e continua iterando in questo modo.
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/gen-autoregre-visual.png}
+\end{cimage}
+\begin{note}
+    Inizio e fine sequenza (lunghezza variabile) sono gestiti da token speciali: Start-Of-Sequence e End-Of-Sequence
+\end{note}
+% subsection Generazione Autoregressiva (end)
+%
 \subsection{Neural Machine Translation}\label{sub:nlp_neural_machine_translation} % (fold)
 Vengono elaborate sequenze in modalità \textbf{many-to-many}: la \textbf{traduzione} da una \red{lingua} a un'altra è l'applicazione più nota.
 \begin{cimage}
@@ -553,6 +563,36 @@ I moduli di \textbf{Attention} e \hyperref[sec:mlp]{MLP} possono leggere/scriver
     \includegraphics[width=.8\textwidth]{assets/res-stream-transf-visual.png}
 \end{cimage}
 % subsubsection Residual Stream (end)
+%
+\subsubsection{Dove sono i pesi?}\label{sub:trs_dove_sono_i_pesi} % (fold)
+Nel disegno, una singola \textbf{colonna} si un LLM di medie dimensioni con 90 miliardi di parametri e 100 layers.
+\begin{itemize}
+    \item i pesi sono \textbf{condivisi tra colonne diverse} e quindi non dipendono dalla lunghezza del prompt;
+    \item trascurando encoding/decoding ci sono 900 milioni di parametri per \textbf{layer};
+    \item una tipica proporzione è $^2/_3$ per il blocco \hyperref[sec:mlp]{MLP} e $^1/_3$ per il modulo di \textbf{Attention}.
+\end{itemize}
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/pesi-transformer-es-visual.png}
+\end{cimage}
+% subsubsection Dove sono i pesi? (end)
+%
+\subsubsection{Transformer vs RNN}\label{sub:transformer_vs_rnn} % (fold)
+Il \hyperref[sub:trsf_transformers]{transformer} \textbf{migliora significativamente due aspetti}:
+\begin{itemize}
+    \item il meccanismo di attention non diluisce informazioni durante la propagazione;
+    \item tutte le celle dello stesso livello \textbf{possono essere elaborate in parallelo}, perché non dipendono dalle precedenti nello stesso livello ma da quelle del livello precedente;
+\end{itemize}
+Propagazione del flusso computazionale in \hyperref[def:rnn]{RNN} a tre livelli:
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/rnn-slusso-visual.png}
+    \caption{Parallelismo \red{wavefront} poco efficiente in GPU}\label{fig:rnn-slusso-visual}
+\end{cimage}
+Propagazione del flusso computazionale in \hyperref[sub:trsf_transformers]{Transformer} a tre livelli:
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/flusso-transformers-visual.png}
+    \caption{Tutto il layer può essere processato in parallelo}\label{fig:flusso-transformers-visual}
+\end{cimage}
+% subsubsection Transformer vs RNN (end)
 % subsection Transformers (end)
 %
 \subsection{Large Language Models}\label{sub:large_language_models} % (fold)

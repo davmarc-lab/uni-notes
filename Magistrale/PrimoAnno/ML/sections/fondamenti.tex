@@ -608,6 +608,20 @@ Due soluzioni:
 \end{example}
 % subsection Problemi Closed e Open set (end)
 %
+\subsection{Anomaly Detection}\label{sub:anomaly_detection} % (fold)
+L'obiettivo è quello di capire se si sta verificando una \textbf{situazione anomala prima che sia troppo tardi}.
+Raramente si hanno a disposizione sufficienti dati per descrivere i casi di anomalia, mentre sono disponibili molti dati del funzionamento normale.
+\emptyln{}
+Allora si può approcciare il problema \textbf{apprendendo} in modo non supervisionato la singola classe del funzionamento normale.
+Dopo l'addestramento il modello analizza lo stato del sistema e produce un allarme, chiamata \textbf{anomalia}, quando questo si \textbf{discosta} dal funzionamento normale.
+\begin{example}{}{}
+    Supponiamo che la seguente nuvola di punti neri (\textbf{vibrazioni}, \textbf{assorbimento}) caratterizzi il funzionamento normale di una macchina utensile.
+    \begin{center}
+        \includegraphics[width=.8\textwidth]{assets/anom-det-ex.png}
+    \end{center}
+\end{example}
+% subsection Anomaly Detection (end)
+%
 \paragraph{Sistemi Biometrici}\label{par:sistemi_biometrici} % (fold)
 Un sistema biometrico esegue la \textbf{verifica d'identità} ($1:1$) o \textbf{identificazione} ($1:N$) di un soggetto sulla base di una sua caratteristica fisica o comportamentale.
 La verifica d'identità può essere assimilata a un problema di classificazione binario:
