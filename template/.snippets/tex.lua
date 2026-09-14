@@ -81,6 +81,7 @@ return {
     make_wrappable("blue", "blue", "Blue text \\blue{}"),
     make_wrappable("bold", "textbf", "Bold text \\textbf{}"),
     make_wrappable("italic", "textit", "Italic text \\textit{}"),
+    make_wrappable("tt", "texttt", "Code text \\texttt{}"),
     make_wrappable("ac", "ac", "Acronym \\ac{}"),
 
     s({ trig = "link", desc = "Link (\\hyperref[]{})" }, {
