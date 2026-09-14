@@ -100,12 +100,82 @@ The action prefix operator always has an action on its left and a process on its
 \begin{note}
     In \ac{fsp} identifiers beginning with a \textbf{lowercase} letter denote actions and identifiers beginning with an \textbf{uppercase} letter denote processes
 \end{note}
-The definition of a new process: $Q = \pt{x\to P}$: a process can be defined in terms of other processes, by means of operators.
+The definition of a new process: $Q = \pt{x\to P}$: a process can be defined in terms of other processes, by means of operators:
+\begin{itemize}
+    \item a process can be defined in terms of other processes, by means of operators;
+    \item syntax/grammar: using a ``\texttt{.}'' as a terminator;
+\end{itemize}
+\begin{note}
+    Non-finite processed specified by means of \textbf{recursive} specification: $P = \pt{x\to P}$;
+\end{note}
+Definition of multiple processes: $P = \pt{x\to Q},\, Q = \pt{y\to P}$;
+\begin{example}{Light Switch}{switch-process}
+    \begin{codeblock}{}
+    SWITCH = OFF,
+    OFF = (on->ON),
+    ON = (off->OFF).
+    \end{codeblock}
+    Equivalent description (applying \textbf{substitution}):
+    \begin{codeblock}{}
+    SWITCH = (on->off->SWITCH).
+    \end{codeblock}
+    Corresponding \ac{lts}:
+    \begin{center}
+        \includegraphics[width=.4\textwidth]{assets/light-switch-ex.png}
+    \end{center}
+\end{example}
+\begin{example}{Stop Process}{}
+    The following example illustrates a process that engages in the action once and then stops:
+    \begin{codeblock}
+    ONESHOT = (once->STOP).
+    \end{codeblock}
+    \begin{note}
+        \texttt{STOP} is a predefined with a specific behaviour
+    \end{note}
+    Corresponding \ac{lts}:
+    \begin{center}
+        \includegraphics[width=.4\textwidth]{assets/stop-process-ex.png}
+    \end{center}
+\end{example}
 % paragraph Action Prefix (end)
 % subsection Modelling a Process (end)
-% section Modelling Using LTS and FSP (end)
 %
-\section{RESTYLE AND TO SLIDE [19 COIN]}\label{sec:restyle_and_to_slide_nn} % (fold)
-
-% section RESTYLE AND TO SLIDE [nn] (end)
+\subsubsection{Modelling Atomic Actions and Events}\label{sub:md_modelling_atomic_actions_and_events} % (fold)
+\begin{definition}{Alphabet}{}
+    The \textbf{alphabet} of a process is the set of actions in which it can engage: for example, the alphabet of the \hyperref[ex:switch-process]{\texttt{SWITCH}} is \texttt{\{on, off\}}.
+\end{definition}
+A message may \textbf{only engage in the actions in its alphabet}, however it may have actions in its alphabet in which it never engages.
+In \ac{fsp} the alphabet of a process is determined implicitly by the set of actions referenced in its definition.
+%
+\paragraph{Modelling Choice}\label{par:alph_modelling_choice} % (fold)
+Given a state, there could be possible multiple transitions, depending on events or internal state.
+In \ac{fsp}:
+\begin{description}
+    \item[Choice construct] If $x$ and $y$ actions then $\pt{x\to P\,|\,y\to Q}$ describes a process which initially engages in either of the actions $x$ or $y$.
+        After the first action has occurred, the subsequent behaviour is described by $P$ if the first action was $x$ and $Q$ if the first action was $y$.
+\end{description}
+\begin{example}{Drink Dispencer Machine}{}
+    \ac{fsp} specification:
+    \begin{codeblock}{}
+    DRINKS = (red->coffee->DRINKS
+             |blue->tea->DRINKS
+             ).
+    \end{codeblock}
+    Corresponding \ac{lts}:
+    \begin{center}
+        \includegraphics[width=.4\textwidth]{assets/drink-machine-process-ex.png}
+    \end{center}
+\end{example}
+% paragraph Modelling Choice (end)
+%
+\paragraph{Modelling Non-Deterministic Choice}\label{par:alph_modelling_non_deterministic_choice} % (fold)
+The process $\pt{x\to P\, |\, x\to Q}$ is said to be \textbf{non-deterministic} since after the action $x$, it may behave as either $P$ or $Q$.
+\begin{codeblock}{}
+    COIN = (toss->heads->COIN
+           |toss->tails->COIN
+           ).
+\end{codeblock}
+% paragraph Modelling Non Deterministic Choice (end)
+% subsubsection Modelling Atomic Actions and Events (end)
+% section Modelling Using LTS and FSP (end)
 % chapter Modelling Concurrent Systems (end)
