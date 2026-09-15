@@ -29,20 +29,20 @@ echo "Created dir path: \"${DIR}\""
 ln -s ${RELATIVE}template/pkg/ ${DIR}/pkg
 echo "--- link to custom package ---"
 
+ln -s ${RELATIVE}template/.snippets ${DIR}/.snippets
+echo "--- link snippets dir ---"
+
+cp -r ./template/sections ${DIR}/
+echo "--- copied sections dir ---"
+
+cp -r ./template/standalone ${DIR}/standalone
+echo "--- copied standalone dir ---"
+
 cp -r ./template/acronyms.sty ${DIR}/
 echo "--- copied acronyms.sty ---"
 
 cp -r ./template/lecture.sty ${DIR}/
 echo "--- copied preamble.sty ---"
 
-cp -r ./template/sections ${DIR}/
-echo "--- copied sections dir ---"
-
 cp -r ./template/main.tex ${DIR}/
 echo "--- copied main.tex ---"
-
-ln -s ${RELATIVE}template/.snippets ${DIR}/.snippets
-echo "--- link snippets dir ---"
-
-ln -s ./template/standalone/ ${DIR}/
-echo "--- copy standalone dir ---"
