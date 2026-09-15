@@ -1,0 +1,36 @@
+\documentclass[12pt, a4paper]{scrreprt}
+\usepackage[italian]{babel}
+
+\usepackage{lecture}
+
+\usepackage{acronyms}
+
+\begin{document}
+
+\makefront{}
+
+\begingroup
+    \hypersetup{linkbordercolor=white, linkcolor=black} 
+    \tableofcontents
+
+    \tcblistof[\section*]{def}{List of Definitions}
+    \tcblistof[\section*]{th}{List of Theorems}
+    \newpage
+\endgroup
+
+\chapter{Info}\label{chap:info} % (fold)
+Insegnamento da 6 crediti componente del corso: Ingegneria del Software e Modelli Computazionali.
+\textbf{Orario lezioni}
+\begin{itemize}
+    \item Mercoledì 12 - 14 Aula 2.11
+    \item Giovedì 10 - 13 Aula 2.1
+\end{itemize}
+\begin{description}
+    \item[Ricevimento] Su appuntamento da richiedere via mail
+\end{description}
+% chapter Info (end)
+%
+% ======== INTRO ========
+\import{sections/}{intro.tex}
+%
+\end{document}
