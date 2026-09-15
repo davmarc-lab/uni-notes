@@ -196,9 +196,6 @@ jobs:
         with:
           root_file: ${{ steps.entry.outputs.texfile }}
           working_directory: ${{ matrix.project.path }}
-          latexmk_use_xelatex: ${{ matrix.project.xelatex || false }}
-          latexmk_shell_escape: ${{ matrix.project.shell_escape || false }}
-          extra_system_packages: ${{ matrix.project.extra_packages || '' }}
           args: >-
             -pdf
             -interaction=nonstopmode
