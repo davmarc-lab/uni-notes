@@ -1,6 +1,9 @@
 % ltex: language=it
 \chapter{Intro}\label{chap:intro} % (fold)
 \section{Linguaggi di Programmazione}\label{sec:i_linguaggi_di_programmazione} % (fold)
+\begin{definition}{Linguaggio di programmazione}{}
+    È uno strumento per descrivere in modo rigoroso \textbf{procedure} per la risoluzione di problemi.
+\end{definition}
 \begin{note}
     Compilatore: front-end (parser, \dots) + code generation
 \end{note}
@@ -9,11 +12,13 @@ Generazione automatica del codice del parser per un nuovo linguaggio tramite un 
     \item lessico: espressioni regolari (o automi a stati finiti);
     \item sintassi: grammatiche (EBNF o automi a pila);
 \end{itemize}
-Funzionamento del parser generato:
-\begin{itemize}
-    \item input: sorgente di un programma;
-    \item output: elenco errori lessicali/sintattici, se \textbf{privo di errori} \red{albero sintattico} del programma;
-\end{itemize}
+\begin{note}[Parser]
+    Funzionamento del parser generato:
+    \begin{itemize}
+        \item input: sorgente di un programma;
+        \item output: elenco errori lessicali/sintattici o, se \textbf{privo di errori}, un \red{albero sintattico} del programma;
+    \end{itemize}
+\end{note}
 \begin{cimage}
     \includegraphics[width=.4\textwidth]{assets/intro-autom-stati-finiti.png}
     \caption{Automa a stati finiti per un interruttore on/off}\label{fig:intro-autom-stati-finiti}
@@ -49,8 +54,48 @@ In un \ac{lm} è possibile fare \textbf{computazioni} tramite algoritmi:
 \end{itemize}
 In questo senso gli \ac{lm}, come tutti i \textbf{Generative Model}, sono \textbf{modelli computazionali}.
 \emptyln{}
-Ma anche i \textbf{Discriminative Model}, alternativi ai Generative Model, sono modelli computazionali.
+Ma anche i \textbf{Discriminative Model}, alternativi ai Generative Model, sono modelli computazionali specializzati in \textbf{classification}, \textbf{logic regression} e \textbf{Convolutional Neural Networks}.
 % subsubsection Modelli Computazionali (end)
+%
+\subsubsection{Logiche di base ed Estensioni}\label{sub:i_logiche_di_base_ed_estensioni} % (fold)
+\begin{description}
+    \item[Linear Time Logic] Sono utili per:
+        \begin{itemize}
+            \item rappresentare la \textbf{conoscenza negli agenti intelligenti} (fondamenti matematici);
+            \item rappresentare la \textbf{semantica dei linguaggi naturali};
+            \item rappresentare e verificare (\textit{model checking}) proprietà di \textbf{sistemi distribuiti};
+        \end{itemize}
+\end{description}
+% subsubsection Logiche di base ed Estensioni (end)
+%
+\subsubsection{Sistemi Distribuiti e Model Checking}\label{sub:i_sistemi_distribuiti_e_model_checking} % (fold)
+Per rappresentare i sistemi \textbf{distribuiti/concorrenti}, ovvero multipli programmi comunicanti tra loro:
+\begin{itemize}
+    \item \textbf{model checking}: stabilisce algoritmicamente se un sistema \textbf{soddisfa} o meno una data \textbf{proprietà} di logica temporale;
+    \item \textbf{modelli computazionali}: \ac{lts}, \textbf{Process Algebra} e \textbf{Petri Net};
+\end{itemize}
+\begin{example}{Commercio Elettronico}{}
+    Il protocollo \textbf{\ac{lts}} per ogni partecipante:
+    \begin{center}
+        \includegraphics[width=.6\textwidth]{assets/comm-elett-es.png}
+    \end{center}
+    \begin{center}
+        \includegraphics[width=.6\textwidth]{assets/autom-es.png}
+        \captionof{figure}{Esempio di automa generato automaticamente}\label{fig:autom-es}
+    \end{center}
+\end{example}
+% subsubsection Sistemi Distribuiti e Model Checking (end)
+%
+\begin{note}[Logiche Temporali]
+    Permettono di esprimere le \textbf{proprietà} del tipo: \textit{non è possibile raggiungere uno stato in cui:}
+    \begin{itemize}
+        \item \textit{il negozio ha spedito;}
+        \item \textit{non è possibile raggiungere il trasferimento del denaro;}
+    \end{itemize}
+    \begin{definition}{Model Checker}{}
+        Strumenti che verificano se \textbf{proprietà} espresse tramite \textbf{logiche temporali} valgono oppure no.
+    \end{definition}
+\end{note}
 % subsection Language Model (end)
 % section Linguaggi Naturali (end)
 % chapter Intro (end)
