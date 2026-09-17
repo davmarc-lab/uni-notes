@@ -8,6 +8,10 @@
         "path": "Magistrale/PrimoAnno/ML/"
     },
     {
+        "name": "lfmc_2026",
+        "path": "Magistrale/PrimoAnno/LFMC/"
+    },
+    {
         "name": "si_2026",
         "path": "Magistrale/PrimoAnno/SI/"
     }
