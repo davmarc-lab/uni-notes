@@ -140,7 +140,7 @@ Definition of multiple processes: $P = \pt{x\to Q},\, Q = \pt{y\to P}$;
 % paragraph Action Prefix (end)
 % subsection Modelling a Process (end)
 %
-\subsubsection{Modelling Atomic Actions and Events}\label{sub:md_modelling_atomic_actions_and_events} % (fold)
+\subsection{Modelling Atomic Actions and Events}\label{sub:md_modelling_atomic_actions_and_events} % (fold)
 \begin{definition}{Alphabet}{}
     The \textbf{alphabet} of a process is the set of actions in which it can engage: for example, the alphabet of the \hyperref[ex:switch-process]{\texttt{SWITCH}} is \texttt{\{on, off\}}.
 \end{definition}
@@ -176,6 +176,81 @@ The process $\pt{x\to P\, |\, x\to Q}$ is said to be \textbf{non-deterministic} 
            ).
 \end{codeblock}
 % paragraph Modelling Non Deterministic Choice (end)
-% subsubsection Modelling Atomic Actions and Events (end)
+%
+\subsubsection{Indexed Processes and Actions}\label{sub:md_indexed_processes_and_actions} % (fold)
+In \ac{fsp} both local processes and action label may be \textbf{indexed}, modelling processes and actions that can take \textit{multiple values}.
+\begin{note}
+    It greatly increases the expressive power of the notation
+\end{note}
+\begin{codeblock}{Buffer containing a single value}
+    BUFF = (in[i:0..3]->out[i]->BUFF).
+\end{codeblock}
+It inputs a value in the range $0$ to $3$ and then outputs that value.
+This is equivalent to:
+\begin{codeblock}{}
+    BUFF = (in[0]->out[0]->BUFF
+        |in[1]->out[1]->BUFF
+        |in[2]->out[2]->BUFF
+        |in[3]->out[3]->BUFF
+        ).
+\end{codeblock}
+\begin{warning}
+    Indices always have a finite range of values that they can take: this ensures that the models we describe in \ac{fsp} are finite and thus potentially mechanically analysable
+\end{warning}
+Corresponding \ac{lts}:
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/buf-lts-visual.png}
+\end{cimage}
+%
+\paragraph{Specifying a Range}\label{par:md_specifying_a_range} % (fold)
+\begin{codeblock}{}
+    range T = 0..3
+    BUFF = (in[i:T]->STORE[i]),
+    STORE[i:T] = (out[i]->BUFF).
+\end{codeblock}
+% paragraph Specifying a Range (end)
+%
+\paragraph{Process Parameters}\label{sub:md_process_parameters} % (fold)
+Processes may be parameterised so that they may be described in a general form and modelled for a particular parameter value.
+\emptyln{}
+For instance, the single-slot buffer described before can be described as a parameterised process for values in the range $0$ to $N$ as follows:
+\begin{codeblock}{}
+    BUFF(N=3) = (in[i:0..N]->out[i]->BUFF).
+\end{codeblock}
+using constants:
+\begin{codeblock}{}
+    const N = 3
+    BUFF = (in[i:0..N]->out[i]->BUFF).
+\end{codeblock}
+\begin{note}[FPS syntax details]
+    \begin{itemize}
+        \item parameters must be given a default value and must start with an uppercase letter;
+        \item the scope of the parameter is the process definition;
+        \item $N$ may be given a fixed constant value;
+    \end{itemize}
+\end{note}
+% paragraph Process Parameters (end)
+%
+\subsubsection{Guarded Actions}\label{sub:md_guarded_actions} % (fold)
+It is often useful to define particular actions as \textbf{conditional}, depending on the current state of the machine.
+We use \textbf{Boolean} guards to indicate that a particular action can only be selected if its guard is selected.
+\emptyln{}
+The choice \texttt{(when B x->P | y->Q)} means that when the guard \texttt{B}  is true then the actions \texttt{x} and \texttt{y} are both eligible to be chosen, otherwise if \texttt{B} is false then the action \texttt{x} cannot be chosen.
+\begin{example}{}{}
+    A \texttt{COUNT} process that encapsulated a count variable, that can be increased by \texttt{inc} operations and decreased by \texttt{dec} operations.
+    The count is not allowed to exceed \texttt{N} or be less than zero.
+    \begin{codeblock}{}
+    COUNT (N=3) = COUNT[0],
+    COUNT[i:0..N] = (when(i<N) inc->COUNT[i+1]
+        |when(i>0) dec->COUNT[i-1]
+    ).
+    \end{codeblock}
+    Corresponding \ac{lts}:
+    \begin{center}
+        \includegraphics[width=.4\textwidth]{assets/guard-actions-visaul.png}
+    \end{center}
+\end{example}
+% subsubsection Guarded Actions (end)
+% subsection Indexed Processes and Actions (end)
 % section Modelling Using LTS and FSP (end)
 % chapter Modelling Concurrent Systems (end)
