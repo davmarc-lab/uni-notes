@@ -621,7 +621,7 @@ Sequential composition can be used in a recursive context.
 \end{cimage}
 Process \texttt{R} is defined as the sequential composition of sequential processes \texttt{R(I)} for values of $I$ from $0$ to $2$ and the local process \texttt{END} when $I=3$.
 \begin{note}[If Construct]
-    The \texttt{P = if <cond> then Q else R} means that the process \texttt{P} is defined as \texttt{Q} if the boolean condistion is \texttt{true}, otherwise itis defined as \texttt{R}
+    The \texttt{P = if <cond> then Q else R} means that the process \texttt{P} is defined as \texttt{Q} if the boolean condition is \texttt{true}, otherwise it is defined as \texttt{R}
 \end{note}
 % paragraph Recursive Context (end)
 % subsubsection Sequential Composition (end)
@@ -643,7 +643,152 @@ The parallel composition \texttt{SP1 || SP2} of two sequential processes \texttt
 % subsection Parallel Composition and Sequential Processes (end)
 % section Modelling Using LTS and FSP (end)
 %
-\section{Modelling Using Petri Nets (UNTIL SLIDE 71)}\label{sec:md_modelling_using_petri_nets} % (fold)
+\section{Modelling Using Petri Nets}\label{sec:md_modelling_using_petri_nets} % (fold)
+A \textbf{\ac{pn}} is an abstract formal model of information flow.
+It describes and analyse the flow of information and control in systems, in particularly represent systems that may exhibit asynchronously and concurrent activities.
+\begin{note}[Major Use]
+    Modelling of systems of events in which it is possible for some events to occur concurrently, but there are constraints on the concurrence, precedence, or frequency of these occurrences
+\end{note}
+\subsection{Petri Net Graph}\label{sub:md_petri_net_graph} % (fold)
+Bi-partite graphs representing a \ac{pn} with two types of \textit{nodes}:
+\begin{itemize}
+    \item \textbf{places} represented with a circle;
+    \item \textbf{transitions} represented with a bar;
+\end{itemize}
+Each node can be connected by directed arcs, for example from node $i$ to node $j$ : $i$ is an \textbf{input} to $j$ and $i$ is an \textbf{output} of $i$.
+\begin{note}
+    It models the \textbf{static} properties of the system
+\end{note}
+% subsection Petri Net Graph (end)
+%
+\subsection{Token and Markings}\label{sub:md_token_and_markings} % (fold)
+In addition to the static properties represented by the graph, a \ac{pn} has \textbf{dynamic properties} that result from its \textbf{execution}: the execution is controlled by the position and movement of markers called \textbf{tokens} in the net.
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/20260921_133335.png}
+    \caption{Tokens are indicated by black dots}\label{fig:20260921_133335}
+\end{cimage}
+\begin{note}
+    A \ac{pn} with tokens is called \textbf{marked Petri Net}
+\end{note}
+% subsection Token and Markings (end)
+%
+\subsubsection{Execution Rules}\label{sub:md_execution_rules} % (fold)
+Tokens are moved by the \textit{firing} of transitions of the net.
+A \textbf{transition} must be enabled in order to fire: enabled when all of its input places have a tiken in them.
+The transition fires by removing the enabling tokens from their input places and generating new tokens which are deposited in the output place of the transition.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/20260921_134133.png}
+\end{cimage}
+% subsubsection Execution Rules (end)
+%
+\subsubsection{Markings}\label{sub:md_markings} % (fold)
+The distribution of tokens in a marked \ac{pn} defines the state of the net and is called \textbf{marking} (the marking may change as a result of firing transitions).
+Different transitions may fire, with different result markings (\textbf{non-determinism}).
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/20260921_134351.png}
+\end{cimage}
+% subsubsection Markings (end)
+%
+\subsection{Transition on the Boundary}\label{sub:md_transition_on_the_boundary} % (fold)
+\begin{description}
+    \item[Source Transition] Without any input place, it just produces tokens.
+        \begin{cimage}
+            \includegraphics[width=.1\textwidth]{assets/20260921_134835.png}
+        \end{cimage}
+    \item[Sink Transition] Without any output place, it just consumes tokens.
+        \begin{cimage}
+            \includegraphics[width=.1\textwidth]{assets/20260921_134920.png}
+        \end{cimage}
+\end{description}
+% subsection Transition on the Boundary (end)
+%
+\subsubsection{Weighted Arcs}\label{sub:md_weighted_arcs} % (fold)
+A variant consider also weights for arcs: a \textbf{transition $t$ is enabled} if each input place $p$ of $t$ is marked with at least $w\pt{p,t}$ tokens, where $w\pt{p,t}$ is the weight of the arc from $p$ to $t$.
+\emptyln{}
+A firing of an \textbf{enabled transition $t$ removes} $w\pt{p,t}$ tokens from each input place $p$ of $t$, and adds $w_1$ tokens to each output place $p$ of $t$, where $w\pt{p,t}$ is the weight of the arc from $t$ to $p$.
+\begin{example}{Reaction example}{}
+    \[
+        2H_2 + O_2 \to 2H_2O
+    \]
+    \begin{cimage}
+        \includegraphics[width=.8\textwidth]{assets/20260921_135454.png}
+    \end{cimage}
+\end{example}
+% subsubsection Weighted Arcs (end)
+%
+\subsection{Modelling with Petri Nets}\label{sub:md_modelling_with_petri_net} % (fold)
+\ac{pn} can be used to model quite naturally concurrent systems in terms of:
+\begin{itemize}
+    \item \textbf{events} and \textbf{conditions};
+    \item relationship among them;
+\end{itemize}
+\begin{description}
+    \item[Interpretation] In a system at any given time certain conditions will hold.
+        The fact that these conditions hold may cause the occurrence of certain events; this occurrence may change the state of the system causing:
+        \begin{itemize}
+            \item some of the previous conditions to cease holding;
+            \item other conditions to begin to hold;
+        \end{itemize}
+        \begin{note}
+            Firing a transition means the occurrence of an event considered instantaneous or better: \textbf{atomic change} of the system
+        \end{note}
+        Typical interpretations of places and transitions:
+        \begin{ctable}{|l|l|l|}
+            \hline
+            \textbf{Input places} & \textbf{Transition} & \textbf{Output places} \\
+            \hline
+            Pre-conditions & Event & Post-conditions \\
+            \hline
+            Input data & Computational step & Output data \\
+            \hline
+            Input signals & Signal processor & Output signal \\
+            \hline
+            Resource needed & Task or Job & Resource Released \\
+            \hline
+            Conditions & Clause in Logic & Conclusion \\
+            \hline
+            Buffers & Processor & Buffer \\
+            \hline
+        \end{ctable}
 
+\end{description}
+\begin{example}{Resource Allocation Petri Net}{}
+    \includegraphics[width=.6\textwidth]{assets/res-alloc-petri-net.png}
+\end{example}
+\begin{example}{Vending Machine Petri Net}{}
+    \includegraphics[width=.6\textwidth]{assets/vend-machine-petri-net.png}
+\end{example}
+%
+\subsubsection{Concurrency and Parallelism}\label{sub:md_concurrency_and_parallelism} % (fold)
+PN are ideal for modelling systems of distributed control with multiple processes occurring concurrently.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/20260921_145333.png}
+\end{cimage}
+On the left two parallel activities, meanwhile on the right two parallel activities synchronisation.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/20260921_145441.png}
+    \caption{Data flow computation}\label{fig:20260921_145441}
+\end{cimage}
+% subsubsection Concurrency and Parallelism (end)
+%
+\subsubsection{Modelling Conflicts}\label{sub:md_modelling_conflicts} % (fold)
+Representing conflicting or choice events:
+\begin{cimage}
+    \includegraphics[width=.2\textwidth]{assets/20260921_145604.png}
+\end{cimage}
+\begin{note}[Conflicting events vs Concurrent events]
+    Two events $e_1$ and $e_2$ are in \textbf{conflict} if either $e_1$ or $e_2$ can occur but not both.
+    Instead, they are \textbf{concurrent} if both events can occur in any order without conflicts.
+    \emptyln{}
+    A situation where conflict and concurrency are mixed is called a \textbf{confusion}.
+    \begin{center}
+        \includegraphics[width=.6\textwidth]{assets/20260921_145934.png}
+    \end{center}
+\end{note}
+% subsubsection Modelling Conflicts (end)
+%
+\subsubsection{Asynchrony and Locality}\label{sub:md_asynchrony_and_locality} % (fold)
+% subsubsection Asynchrony and Locality (end)
+% subsection Modelling with Petri Nets (end)
 % section Modelling Using Petri Nets (end)
 % chapter Modelling Concurrent Systems (end)
