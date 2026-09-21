@@ -252,5 +252,398 @@ The choice \texttt{(when B x->P | y->Q)} means that when the guard \texttt{B}  i
 \end{example}
 % subsubsection Guarded Actions (end)
 % subsection Indexed Processes and Actions (end)
+%
+\subsection{Modelling Concurrency}\label{sub:md_modelling_concurrency} % (fold)
+In \ac{fsp} a concurrent system can be modelled then as a composition of processes, using parallel operator:
+\begin{itemize}
+    \item if \texttt{P} and \texttt{Q} are processes then \texttt{(P || Q)} represents the \textbf{concurrent execution} of \texttt{P} and \texttt{Q};
+    \item the operator \texttt{||} is the \red{parallel composition operator};
+\end{itemize}
+Parallel composition is a process itself, which is represented as a \textbf{state machine} in the same way as any other process: the state machine representing the \textbf{composition generates all possible interleavings} of the traces of its constituent processes.
+\begin{note}[Primitive Processes]
+    \textbf{Primitive Processes} are defined using action prefix and choice while \textbf{composite} processes are defined using only parallel composition.
+    \begin{critical}
+        Maintaining this strict distinction between primitive and composite precesses is required to ensure that the models described by \ac{fsp} are \textbf{finite}
+    \end{critical}
+\end{note}
+\begin{example}{A process of two parallel processes}{}
+    The process:
+    \begin{codeblock}{}
+    ITCH = (scratch->STOP).
+    \end{codeblock}
+    has a singe trace consisting of the action: \texttt{scratch}
+    \emptyln{}
+    The process:
+    \begin{codeblock}{}
+    CONVERSE = (think->talk->STOP).
+    \end{codeblock}
+    has the single trace: \texttt{think->talk}
+    \emptyln{}
+    The composite process:
+    \begin{codeblock}{}
+    ||CONVERSE_ITCH = (ITCH || CONVERSE).
+    \end{codeblock}
+    has the following traces:
+    \begin{codeblock}{}
+    think->talk->scratch
+    think->scratch->talk
+    scratch->think->talk
+    \end{codeblock}
+    \begin{center}
+        \includegraphics[width=.6\textwidth]{assets/parallel-process-ex.png}
+    \end{center}
+    \begin{note}
+        The state machine represented is formed by the \textbf{product Cartesian} of its constituents
+    \end{note}
+\end{example}
+\begin{example}{Another Parallel Example}{}
+    The following processes model a clock radio which incorporates two independent activities: a clock which ticks and a radio which can be switched on and off.
+    \begin{codeblock}{}
+    CLOCK = (tick->CLOCK).
+    RADIO = (on->off->RADIO).
+    ||CLOCK_RADIO = (CLOCK || RADIO).
+    \end{codeblock}
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/clock-radio-parallel-ex.png}
+    \end{cimage}
+    Possible traces:
+    \begin{codeblock}{}
+    on->tick->tick->off->tick->tick->tick->on->off->...
+    tick->on->off->on->off->on->off->tick->on->tick->...
+    \end{codeblock}
+\end{example}
+\subsubsection{Parallel Algebra}\label{sub:md_parallel_algebra} % (fold)
+The parallel composition operator obeys some simple algebric laws:
+\begin{itemize}
+    \item \textbf{commutative}: \texttt{(P || Q) = (Q || P)}
+    \item \textbf{associative}: \texttt{P || (Q || R)) = ((P || Q) || R) = (P || Q || R)}
+\end{itemize}
+\begin{note}
+    Taken together these mean that the brackets can be dispensed with and the order that processes appear in the composition is \textbf{irrelevant}
+\end{note}
+% subsubsection Parallel Algebra (end)
+%
+\subsubsection{Concurrency by Interleaving}\label{sub:md_concurrency_by_interleaving} % (fold)
+The execution of a concurrent program consists of multiple processes active at the same time.
+\\
+Since we want to design concurrent programs which works \textbf{independently} of the number of processors and the scheduling strategy, we \textbf{choose not to model relative speed} but simply that processes \textbf{execute at arbitrary relative speeds}.
+\begin{note}
+    It means that a process can take an \textit{arbitrary long time} to proceed from one action to the next
+\end{note}
+\begin{warning}[Abstracting away from execution time]
+    \begin{itemize}
+        \item the disadvantage that we can say nothing about the real-time properties of programs but has the advantage that we can \textbf{verify} other properties \textbf{independently} of the particular configuration of the computer and its operating system;
+        \item this independence is clearly important for the portability of concurrent programs;
+    \end{itemize}
+\end{warning}
+A classic approach to model concurrency, abstracting from time, is using \textbf{interleaving}.
+\\
+\begin{definition}{Interleaving}{}
+    The execution of concurrent processes each represented by a sequence of actions is modelled by a single sequence of actions (a \textbf{scenario} or \textbf{trace}) obtained by interleaving the actions of each process.
+    The situation in which two actions \texttt{a} and \texttt{b} of two different processes are executed simultaneously is modelled in the scenario as a sequence either in the order \texttt{a->b} or \texttt{b->a}.
+\end{definition}
+\begin{critical}[Non Determinism]
+    Due to \textbf{interleaving}, we can have different possible scenarios resulting from the execution of concurrent processes: the number of possible scenarios could be even not finite
+\end{critical}
+% subsubsection Concurrency by Interleaving (end)
+%
+\subsubsection{Arbitrary Interleaving}\label{sub:md_arbitrary_interleaving} % (fold)
+\begin{definition}{Arbitrary Interleaving}{}
+    \textbf{Arbitrary Interleaving} is a good model of concurrent execution since it abstracts the way processors switch between processes as a result of external interrupts.
+    \emptyln{}
+    The timing of interrupts relative to process execution cannot be predetermined since actions in the real world cannot be predicted exactly.
+\end{definition}
+% subsubsection Arbitrary Interleaving (end)
+% subsection Modelling Concurrency (end)
+%
+\subsection{Modelling Interactions}\label{sub:md_modelling_interactions} % (fold)
+\begin{definition}{Interactions}{}
+    \textbf{Interactions} among processes is modelled through \textbf{shared actions}, that is processes having alphabets with actions in common.
+\end{definition}
+\begin{note}[Interaction Rule]
+    While unshared actions may be arbitrary interleaved, a shared action must be executed at the same time by all the processes that participate in that shared action
+\end{note}
+\begin{example}{\texttt{meet} action in \texttt{BILL} and \texttt{BEN} processes}{}
+    \begin{codeblock}{}
+    BILL = (play->meet->STOP).
+    BEN = (work->meet->STOP).
+    ||BILL_BEN = (BILL || BEN).
+    \end{codeblock}
+    In the example, \texttt{BILL} and \texttt{BEN} processes share the action \texttt{meet}, the possible execution traces of the composition are:
+    \begin{codeblock}{}
+    play->work->meet
+    work->play->meet
+    \end{codeblock}
+    The state machine for the composite process is:
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/bill-ben-meet-ex.png}
+    \end{cimage}
+\end{example}
+\begin{example}{User and Make}{user-maker}
+    This example consists of a process that manufactures an item and then signals that the item is ready for use by a shared action.
+    \begin{codeblock}{}
+    MAKER = (make->ready->MAKER).
+    USER = (ready->use->USER).
+    ||MAKER_USER = (MAKER || USER).
+    \end{codeblock}
+    Corresponding \ac{lts}:
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/user-maker-ex.png}
+    \end{cimage}
+    Possible execution traces:
+    \begin{codeblock}{}
+    make->ready->use->make->ready->...
+    make->ready->make->use->ready->...
+    \end{codeblock}
+    \begin{warning}
+        After the initial item is manufactured and becomes ready, manufacture and use can proceed in parallel since the actions make and use can occur in any order.
+        \emptyln{}
+        However, it is always the case that an item is made \textit{before} it is used since the first action is make in all traces.
+        The second trace shows that two items can be made before the first is used.
+    \end{warning}
+\end{example}
+%
+\subsubsection{Handshake}\label{sub:md_handshake} % (fold)
+Suppose that this is undesirable behaviour, and we don't wish the \hyperref[ex:user-maker]{\texttt{MAKER}} process to get ahead in this way.
+The solution is to modify the model so that the user indicates that the item is used: \texttt{used} action/event.
+\begin{codeblock}{}
+    MAKER2 = (make->ready->used->MAKER2).
+    USER2 = (ready->use->used->USER2).
+    || MAKER_USER2 = (MAKER2 || USER2).
+\end{codeblock}
+\begin{note}[Handshake]
+    The \texttt{used} action is called \textbf{handshake}, as an action which is acknowledged by another.
+    This \texttt{used} action is shared with the \texttt{MAKER} who now cannot proceed to manufacture another item until the first is used 
+\end{note}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/user-maker-handshake-ex.png}
+\end{cimage}
+% subsubsection Handshake (end)
+%
+\subsubsection{Multi Party Synchronisation}\label{sub:md_multi_party_synchhronisation} % (fold)
+Many processes can engage in a shared action:
+\begin{codeblock}{}
+    MAKE_A = (makeA->ready->used->MAKE_A).
+    MAKE_B = (makeB->ready->used->MAKE_B).
+    ASSEMBLE = (ready->assemble->used->ASSEMBLE).
+    ||FACTORY = (MAKE_A || MAKE_B || ASSEMBLE).
+\end{codeblock}
+\begin{itemize}
+    \item \texttt{assemble} cannot take place until both parts are ready:
+    \item \texttt{maker}s are not permitted to get ahead of users;
+\end{itemize}
+% subsubsection Multi Party Synchhronisation (end)
+% subsection Modelling Interactions (end)
+%
+\subsection{Parallel Composition of Composite Processes}\label{sub:md_parallel_composition_of_composite_processes} % (fold)
+Since a parallel composition of processes is itself a process, called a \textbf{composite process}, it can be used in the definition of further compositions.
+\begin{codeblock}{}
+    MAKE_A = (makeA->ready->used->MAKE_A).
+    MAKE_B = (makeB->ready->used->MAKE_B).
+    ||MAKERS = (MAKE_A || MAKE_B).
+\end{codeblock}
+The rest of the factory description now becomes:
+\begin{codeblock}{}
+    ASSEMBLE = (ready->assemble->used->ASSEMBLE).
+    ||FACTORY = (MAKERS || ASSEMBLE).
+\end{codeblock}
+\begin{warning}
+    Substituting the definition for \texttt{MAKERS} in \texttt{FACTORY} and applying the commutative and associative laws for parallel composition stated in the last section results in the original definition for \texttt{FACTORY} in terms of primitive processes
+\end{warning}
+% subsection Parallel Composition of Composite Processes (end)
+%
+\subsection{Parallel Composition of Multiple Instances}\label{sub:md_parallel_composition_of_multiple_instances} % (fold)
+Given the definition of a \hyperref[def:process]{process}, we often want to use more than one copy of that process in a program or system model.
+For example, given the definition for a switch:
+\begin{codeblock}{}
+    SWITCH = (on->off->SWITCH).
+\end{codeblock}
+We may wish to describe from a system that is the composition of two distinct switches.
+However, if we describe this system as:
+\begin{codeblock}{}
+    (SWITCH || SWITCH)
+\end{codeblock}
+the composition is indistinguishable from a single switch since the two switches processes synchronize on their shared actions \texttt{on} and \texttt{off}.
+\subsubsection{Process Labelling}\label{sub:md_process_labelling} % (fold)
+We must ensure that the \textbf{actions} of each \texttt{SWITCH} process are not shared: this is done by means of \textbf{process labelling}.
+\begin{codeblock}{}
+    ||TWO_SWITCH = (a:SWITCH || b:SWITCH).
+\end{codeblock}
+The state machine representation:
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/switch-switch-composition-ex.png}
+\end{cimage}
+The alphabets of the two processes are disjoint: \texttt{\{a.on, a.off\}} and \texttt{\{b.on, b.off\}}
+% subsubsection Process Labelling (end)
+% subsection Parallel Composition of Multiple Instances (end)
+%
+\subsection{Parametrised Composite Processes}\label{sub:md_parametrised_composite_processes} % (fold)
+Composite processes can be parameterised using the \textbf{\texttt{forall}} construct:
+\begin{codeblock}{}
+    forall [i:1..N] P(i)
+\end{codeblock}
+is the parallel composition:
+\begin{codeblock}{}
+    (P(1) || ... || P(N))
+\end{codeblock}
+\begin{example}{Array of \texttt{SWITCHES}}{}
+    \begin{codeblock}{}
+    ||SWITCHES(N=3) = (forall[i:1..N] s[i]:SWITCH).
+    \end{codeblock}
+\end{example}
+An equivalent but shorter definition is:
+\begin{codeblock}{}
+    ||SWITCHES(N=3) = (s[i:1..N]:SWITCH).
+\end{codeblock}
+% subsection Parametrised Composite Processes (end)
+%
+\subsection{Using Set of Prefix Labels}\label{sub:md_using_set_of_prefix_labels} % (fold)
+Labelling can be done using set of prefix labels using \texttt{\{a1,.., ax\}::P}:
+\begin{itemize}
+    \item replaces every action label $n$ in the alphabet of $P$ with the labels: \texttt{a1.n, ..., ax.n}
+    \item every transition \texttt{(n->Q)} in the definition of $P$ is replaced with the transitions: \texttt{(\{a1.n, ... , ax.n\}->Q}
+\end{itemize}
+This is useful when we have processes that can interact with other multiple processes:
+\begin{codeblock}{}
+    RESOURCE = (acquire->release->RESOURCE).
+    USER = (acquire->use->release->USER).
+    ||RESOURCE_SHARE = (a:USER || b:USER || {a,b}::RESOURCE)
+\end{codeblock}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/user-res-ex.png}
+\end{cimage}
+%
+\subsubsection{Binding Interactions Through Relabelling}\label{sub:md_binding_interactions_through_relabelling} % (fold)
+Individual processes can be designed with their own proper alphabet.
+When creating composite processes composing independent processes we may need to create a correspondence among the actions that should synchronise by means of \textbf{relabelling}.
+\emptyln{}
+\textbf{Relabelling functions} are applied to change the names of actions labels, the general form is:
+\begin{codeblock}{}
+    /\{newlabel_1/oldlabel_1,...newlabel_n/oldlabel_n\}
+\end{codeblock}
+\begin{example}{Client Server Example}{}
+    A server process that provides some service and a client process that invokes the service are described below:
+    \begin{codeblock}{}
+    CLIENT = (call->wait->continue->CLIENT).
+    SERVER = (request->service->reply->SERVER).
+    ||CLIENT_SERVER = (CLIENT || SERVER)/{call/request, reply/wait}.
+    \end{codeblock}
+\end{example}
+% subsubsection Binding Interactions Through Relabelling (end)
+% subsection Using Set of Prefix Labels (end)
+%
+\subsection{Hiding and Silent Actions}\label{sub:md_hiding_and_silent_actions} % (fold)
+Sometimes is useful to make process actions ``private'', that is not to be used for interacting with other processes.
+\emptyln{}
+When applied to a process $P$, the \textbf{hiding operator} removes the action names from the alphabet of $P$ and makes these concealed actions \textbf{silent}.
+In \ac{fsp}, and process calculi, this can be done by using: \texttt{\textbackslash\{a1..ax\}}
+\begin{note}
+    Silent actions are uniformly represented by the symbol $\tau$ (\textbf{tau})
+\end{note}
+In different processes silent actions are not shared, the hidden actions become unobservable in that they cannot be shared with another process and so cannot affect the execution of another process.
+\emptyln{}
+The dual operator \texttt{@\{a1..ax\}} ``expose'' actions: when applied to a process $P$, the interface operator \texttt{@\{a1..an\}} hides all actions in the alphabet of $P$ not labeled in the set \texttt{\{a1..\}}
+\begin{example}{}{}
+    In \texttt{USER} process definition, hiding the use action in two different approaches:
+    \begin{codeblock}{}
+    USER = (acquire->use->release->USER)\{use}.
+    USER = (acquire->use->release->USER)@{acquire,release}.
+    \end{codeblock}
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/user-hiding-ex.png}
+    \end{cimage}
+\end{example}
+%
+\subsubsection{Minimisation}\label{sub:md_minimisation} % (fold)
+In order to understand the behaviour of a process, to be composed with other processes, hidden actions can be removed, minimising the process: the observable behaviour is preserved.
+\begin{example}{Minimisation of \texttt{USER}}{}
+    Removes the hidden tau action to produce a state machine with equivalent observable behaviour, bu fewer states and transitions.
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/minimisation-user-ex.png}
+    \end{cimage}
+\end{example}
+\begin{note}
+    Hiding is essential in reducing the complexity of large systems for analysis purpose since, minimising the size of state machines after removing tau actions
+\end{note}
+% subsubsection Minimisation (end)
+% subsection Hiding and Silent Actions (end)
+%
+\subsection{Sequential Processes}\label{sub:sequential_processes} % (fold)
+Although abstractly a process always means the same thing, for pragmatic implementation reason \ac{fsp} divides processes into three types:
+\begin{itemize}
+    \item \textbf{local processes} that define a state within a primitive process;
+    \item \textbf{primitive processes} defined by a set of local processes;
+    \item \textbf{composite processes} that use parallel composition, relabelling and hiding to compose primitive processes;
+\end{itemize}
+A local process is defined using \texttt{STOP}, \texttt{ERROR}, action prefix and choice.
+We now extend our definition of \hyperref[def:process]{processes} to include \textbf{sequential processes}.
+\begin{definition}{Sequential Process}{seq-process}
+    A \textbf{sequential process} is a process that can \textbf{terminate}: a process can terminate if the local process \textbf{END} is reachable from its start state
+\end{definition}
+%
+\subsubsection{End Local Process}\label{sub:md_end_local_process} % (fold)
+The local process \texttt{END} denotes the state in which a process successfully terminates.
+A \hyperref[def:process]{process} engages in no further actions after \texttt{END}; same semantics as \texttt{STOP}, however \texttt{STOP} denotes a state in which a process has halted prematurely (usually due to communication deadlock).
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/bomb-end-ex.png}
+\end{cimage}
+% subsubsection End Local Process (end)
+%
+\subsubsection{Sequential Composition}\label{sub:md_sequential_composition} % (fold)
+The definition of \hyperref[def:seq-process]{sequential process} is useful for introducing a further kind of composition, useful for modularity: \textbf{sequential composition}.
+\emptyln{}
+If $P$ is a sequential process and $Q$ is a local process, then \texttt{P;Q} represents the sequential composition such that when $P$ terminates, \texttt{P;Q} becomes the process $Q$.
+If we define a process \texttt{SKIP = END} then \texttt{P;SKIP $\equiv$ P} and \texttt{SKIP;P $\equiv$ P}.
+\begin{codeblock}{}
+    SP(I=0) = (a[I]->END).
+    P123 = (start->SP(1);SP(2);SP(3);END).
+    LOOP = P123;LOOP.
+\end{codeblock}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/seq-comp-loop-visual.png}
+\end{cimage}
+A sequential composition in \ac{fsp} always take the form: \texttt{SP1;SP2;..SPn;LP} where \texttt{SP1,..,SPn} are seuqential processes and \texttt{LP} is a local process.
+\begin{note}
+    A sequential composition can appear anywhere in the definition of a primitive process that a local process reference can appear
+\end{note}
+%
+\paragraph{Recursive Context}\label{par:sc_recursive_context} % (fold)
+Sequential composition can be used in a recursive context.
+\begin{codeblock}{}
+    const N = 3
+    R(I=0) = if (I<N) then
+            (a[I]->R(I+1);END)
+        else
+            END.
+\end{codeblock}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/recursive-seq-comp-ex.png}
+\end{cimage}
+Process \texttt{R} is defined as the sequential composition of sequential processes \texttt{R(I)} for values of $I$ from $0$ to $2$ and the local process \texttt{END} when $I=3$.
+\begin{note}[If Construct]
+    The \texttt{P = if <cond> then Q else R} means that the process \texttt{P} is defined as \texttt{Q} if the boolean condistion is \texttt{true}, otherwise itis defined as \texttt{R}
+\end{note}
+% paragraph Recursive Context (end)
+% subsubsection Sequential Composition (end)
+% subsection Sequential Processes (end)
+%
+\subsection{Parallel Composition and Sequential Processes}\label{sub:md_parallel_composition_and_sequential_processes} % (fold)
+The parallel composition \texttt{SP1 || SP2} of two sequential processes \texttt{SP1} and \texttt{SP2} terminates when both of these processes terminate: if termination is reachable in \texttt{SP1 || SP2} then it is a sequential process.
+\begin{codeblock}{}
+    P = (x->END).
+    || S = (a:P || b:P).
+\end{codeblock}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/par-comp-seq-proce-visual.png}
+    \caption{Example of parallel composition of sequential processes}\label{fig:par-comp-seq-proce-visual}
+\end{cimage}
+\begin{note}
+    Composite process that terminates can appear in the definition of a primitive process
+\end{note}
+% subsection Parallel Composition and Sequential Processes (end)
 % section Modelling Using LTS and FSP (end)
+%
+\section{Modelling Using Petri Nets (UNTIL SLIDE 71)}\label{sec:md_modelling_using_petri_nets} % (fold)
+
+% section Modelling Using Petri Nets (end)
 % chapter Modelling Concurrent Systems (end)

@@ -205,4 +205,15 @@ return {
     make_math_block("example", "example", "Example tcolorbox"),
     make_math_block("remark", "remark", "Remark tcolorbox"),
     make_math_block("axiom", "axiom", "Axiom tcolorbox"),
+    -- codeblock
+    s({ trig = "codeblock", dscr = "Code Block", indet = true }, {
+        t("\\begin{codeblock}{"),
+        i(1),
+        t({"}", ""}),
+        f(function(_, snip)
+            return snip.env.TM_SELECTED_TEXT
+        end),
+        i(0),
+        t({ "", "\\end{codeblock}" }),
+    }),
 }
