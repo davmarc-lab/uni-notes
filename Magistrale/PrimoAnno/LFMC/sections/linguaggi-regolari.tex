@@ -1,7 +1,7 @@
 % ltex: language=it
 \chapter{Linguaggi Regolari}\label{chap:linguaggi_regolari} % (fold)
 \section{Concetti di Base}\label{sec:lr_concetti_di_base} % (fold)
-\begin{definition}{Alfabeto}{}
+\begin{definition}{Alfabeto}{alfabeto}
     Insieme finito e non vuoto di simboli.
     \begin{itemize}
         \item \textbf{binario}: $\Si = \pg{0,1}$
@@ -61,7 +61,7 @@
         \]
     \end{note}
 \end{definition}
-\begin{definition}{Linguaggi formali}{}
+\begin{definition}{Linguaggi formali}{linguaggio}
     Se $\Si$ è un alfabeto, e $L \subseteq \Si[*]$ allora $L$ è un \textbf{linguaggio formale}
     \begin{note}[Linguaggio Vuoto]
         \[
@@ -70,7 +70,6 @@
         Il linguaggio vuoto è diverso da $\pg{\eps}$
     \end{note}
 \end{definition}
-% section Concetti di Base (end)
 %
 \subsection{Automi a Stati Finiti Deterministici}\label{sub:lr_automi_a_stati_finiti_deterministici} % (fold)
 Un \ac{dfa} è una \textbf{quintupla}:
@@ -110,17 +109,19 @@ Un automa a stati finiti accetta una stringa $w = a_1a_2\cdots a_n$ se esiste un
     \item finisce in uno \textbf{stato finale};
     \item ha una \textbf{sequenza} di etichette $a_1a_2\cdots a_n$;
 \end{enumerate}
-\begin{note}[Estensione Funzioni di Transizione]
-    La \textbf{funzione d transizione} $\dt$ può essere estesa a $\hat\dt$ che opera su stati e stringhe, invece che su stati e simboli.
-    \begin{description}
-        \item[Base] $\hat\dt\pt{q,\eps} = q$
-        \item[Induzione] $\hat\dt\pt{q,xa} = \dt\pt{\hat\dt\pt{q,x}a}$
-    \end{description}
-    Formalmente \hyperref[def:ling-reg]{il linguaggio accettato da un automa} a stati finiti deterministico $A$ è:
-    \[
-        L\pt A = \pg{w : \hat\dt\pt{q-0,w} \in F}
-    \]
-\end{note}
+%
+\subsubsection{Funzione di Transizione Estesa}\label{sub:dfa_funzione_di_transizione_estesa} % (fold)
+La \textbf{funzione d transizione} $\dt$ può essere estesa a $\hat\dt$ che opera su stati e stringhe, invece che su stati e simboli.
+\begin{description}
+    \item[Base] $\hat\dt\pt{q,\eps} = q$
+    \item[Induzione] $\hat\dt\pt{q,xa} = \dt\pt{\hat\dt\pt{q,x}a}$
+\end{description}
+Formalmente \hyperref[def:ling-reg]{il linguaggio accettato da un automa} a stati finiti deterministico $A$ è:
+\[
+    L\pt A = \pg{w : \hat\dt\pt{q_0,w} \in F}
+\]
+% subsubsection Funzione di Transizione Estesa (end)
+%
 \begin{definition}{Linguaggi Regolari}{ling-reg}
     Tutti i linguaggi accettati da automi a stati finiti sono detti \textbf{linguaggi regolari}
 \end{definition}
@@ -144,4 +145,248 @@ Un automa a stati finiti accetta una stringa $w = a_1a_2\cdots a_n$ se esiste un
     \]
 \end{example}
 % subsection Automi a Stati Finiti Deterministici (end)
+%
+\subsection{Automi a Stati Finiti Non Deterministici}\label{sub:lr_automi_a_stati_finiti_non_deterministici} % (fold)
+Un \textbf{\ac{nfa}} accetta una stringa se, tra i tanti possibili, esiste un cammino che conduce a uno stato finale.
+\begin{example}{}{nfa}
+    Un automa accetta tutte e solo le stringhe che finiscono con \texttt{01}.
+    \begin{cimage}
+        \includegraphics[width=.8\textwidth]{assets/20260924_132157.png}
+    \end{cimage}
+    Ecco cosa succede quando l'automa elabora l'input \texttt{00101}:
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/20260924_132315.png}
+    \end{cimage}
+\end{example}
+\begin{definition}{NFA}{}
+    Formalmente, un \ac{nfa} è una quintupla
+    \[
+        A = \pt{Q,\Si,\dt,q_0,F}
+    \]
+    dove:
+    \begin{itemize}
+        \item $Q$ è un insieme finito di stati;
+        \item $\Si$ è un \hyperref[def:alfabeto]{alfabeto} finito;
+        \item $\dt$ è una \textbf{funzione di transizione} da $Q\times\Si$ all'insieme dei sottoinsiemi di $Q$, cioè: $\pt{q,a} \mapsto Q'$ con $Q' \subseteq Q$;
+        \item $q_0 \in Q$ è lo stato \textit{iniziale};
+        \item $F \subseteq Q$ è un insieme di stati \textit{finali};
+    \end{itemize}
+\end{definition}
+\begin{example}{L'\hyperref[ex:nfa]{NFA precedente}}{}
+   \[
+       \pt{\pg{q_0,q_1,q_2}, \pg{0,1}, \dt, q_0, \pg{q_2}}
+   \]
+   dove $\dt$ è la funzione di transizione:
+   \begin{ctable}{r||c|c}
+       & 0 & 1 \\
+       \midrule
+       \midrule
+       $\to q_0$ & $\pg{q_0,q_1}$ & $\pg{q_0}$ \\
+       $q_1$ & $\emptyset$ & $\pg{q_2}$ \\
+       $\star q_2$ & $\emptyset$ & $\emptyset$ \\
+   \end{ctable}
+\end{example}
+\begin{note}[Lo stato Pozzo]
+    Stato che durante un'esecuzione di un \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA}, non ha transizioni che cambiano stato.
+    \begin{critical}
+        All'interno dei \ac{nfa} lo stato pozzo viene rappresentato dall'assenza di transizioni
+    \end{critical}
+\end{note}
+\subsubsection{Funzione di Transizione Estesa}\label{sub:nfa_funzione_di_transizione_estesa} % (fold)
+La \textbf{funzione di transizione estesa} $\hat\dt$ opera su stati e stringhe (invece di stati e simboli).
+\begin{description}
+    \item[Base:] $\hat\dt\pt{q,\eps} = \pg{q}$
+    \item[Induzione:] $\hat\dt\pt{q,xa} = \displaystyle\bigcup_{p\in\hat\dt\pt{q,x}}{\dt\pt{p,a}}$
+\end{description}
+Più formalmente, il \textbf{linguaggio accettato} da un automa a stati finiti non deterministico $A$ è
+\[
+    L\pt A = \pg{w: \hat\dt\pt{q_0,w} \cap F \neq \emptyset}
+\]
+\begin{example}{Calcoliamo $\hat\dt\pt{q_0,0010}$}{}
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/20260924_132157.png}
+    \end{cimage}
+    \begin{description}
+        \item[Base:] $\hat\dt\pt{q,\eps} = \pg{q}$
+        \item[Induzione:] $\hat\dt\pt{q,xa} = \displaystyle\bigcup_{p\in\hat\dt\pt{q,x}}{\dt\pt{p,a}}$
+    \end{description}
+    \[
+        \begin{aligned}
+            &\hdt\pt{q_0,\eps} = q_0 \\
+            &\hdt\pt{q_0,\eps0} = \dt\pt{q_0,0} = q_0,q_1 \\ 
+            &\hdt\pt{q_0,\eps00} = \dt\pt{q_0,0} \cup \dt\pt{{q_0,0}} = q_0,q_1 \cup \emptyset = q_0,q_1 \\
+            &\hdt\pt{q_0,\eps001} = \dt\pt{q_0,1} \cup \dt\pt{q_1,1} = q_0 \cup q_2 = q_0,q_2 \\
+            &\hdt\pt{q_0,\eps0010} = \dt\pt{q_0,0} \cup \dt\pt{q_2,0} = q_0,q_1 \cup \emptyset = q_0,q_1
+        \end{aligned}
+    \]
+\end{example}
+% subsubsection Funzione di Transizione Estesa (end)
+% subsection Automi a Stati Finiti Non Deterministici (end)
+%
+\subsection{Equivalenza di DFA e NFA}\label{sub:lr_equivalenza_di_dfa_e_nfa} % (fold)
+Sorprendentemente, per ogni \ac{nfa} $N$ c'è un \ac{dfa} $D$, tale che $L\pt D = L\pt N$, e viceversa: questo comportamento comporta una \textit{costruzione a sottoinsiemi}.
+\begin{theorem}{}{}
+    Un automa $A$ può essere costruito da un altro automa $A$, dato un \hyperref[sub:lr_automi_a_stati_finiti_non_deterministici]{NFA}
+    \[
+        N = \pt{Q_N,\Si,\dt_N,q_0,F_N}
+    \]
+    costruiremo un \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA}
+    \[
+        D = \pt{Q_D,\Si,\dt_D,\pg{q_0},F_D}
+    \]
+    tali che
+    \[
+        L\pt D = L\pt N
+    \]
+    con:
+    \begin{itemize}
+        \item $Q_D = \pg{S:S\subseteq Q_N}$
+        \item $F_D = \pg{S \subseteq Q_N : S \cap F_N \neq \emptyset}$
+        \item Per ogni $S \subseteq Q_N$ e $a \in \Si$:
+            \[
+                \dt_D\pt{S,a} = \displaystyle\bigcup_{p\in S}\dt_N\pt{p,a}
+            \]
+    \end{itemize}
+\end{theorem}
+\begin{example}{Costruire un \ac{dfa} da un \ac{nfa}}{dfa-to-fna}
+    Costruiamo $\dt_D$ e (e $F_D$) dall'\hyperref[sub:lr_automi_a_stati_finiti_non_deterministici]{NFA}:
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/20260924_132157.png}
+    \end{cimage}
+    Costruiamo $\dt_D$ dall'\hyperref[sub:lr_automi_a_stati_finiti_non_deterministici]{NFA} già visto:
+    \begin{ctable}{r||c|c}
+        & 0 & 1 \\
+        \midrule
+        \midrule
+        $\emptyset$ & $\emptyset$ & $\emptyset$ \\
+        $\to\pg{q_0}$ & $\pg{q_0,q_1}$ & $\pg{q_0}$ \\
+        $\pg{q_1}$ & $\emptyset$ & $\pg{q_2}$ \\
+        $\star\pg{q_2}$ & $\emptyset$ & $\emptyset$ \\
+        $\pg{q_0, q_1}$ & $\pg{q_0,q_1}$ & $\pg{q_0, q_2}$ \\
+        $\star\pg{q_0, q_2}$ & $\pg{q_0,q_1}$ & $\pg{q_0}$ \\
+        $\star\pg{q_1, q_2}$ & $\emptyset$ & $\pg{q_2}$ \\
+        $\star\pg{q_0,q_1, q_2}$ & $\pg{q_0,q_1}$ & $\pg{q_0,q_2}$ \\
+    \end{ctable}
+    \begin{note}
+        Gli stati di $D$ corrispondono a sottoinsiemi di stati $N$, ma potevamo denotare gli stati di $D$ in un altro modo (per esempio $A-H$):
+        \begin{ctable}{r||c|c}
+            & 0 & 1 \\
+            \midrule
+            \midrule
+            $A$ & $A$ & $A$ \\
+            $\star B$ & $E$ & $B$ \\
+            $C$ & $A$ & $D$ \\
+            $\star D$ & $A$ & $A$ \\
+            $E$ & $E$ & $F$ \\
+            $\star F$ & $E$ & $B$ \\
+            $\star G$ & $A$ & $D$ \\
+            $\star H$ & $E$ & $F$ \\
+        \end{ctable}
+    \end{note}
+    Possiamo spesso evitare la crescita esponenziale degli stati costruendo la tabella di transizione per $D$ solo per stati accessibili $S$ come segue:
+    \begin{description}
+        \item[Base:] $S = \pg{q_0}$ è accessibile in $D$
+        \item[Induzione:] Se lo stato $S$ è accessibile, lo sono anche gli stati $\dt_D\pt{S,a}$ per ogni $a \in \Si$
+    \end{description}
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/20260924_170516.png}
+        \caption{Sottoinsieme \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA} solamente con stati accessibili}\label{fig:20260924_170516}
+    \end{cimage}
+\end{example}
+\begin{theorem}{}{}
+    Sia $D$ il \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA} ottenuto da un \hyperref[sub:lr_automi_a_stati_finiti_non_deterministici]{NFA} $N$ con la costruzione a sottoinsiemi, allora:
+    \[
+        L\pt D = L \pt N
+    \]
+\end{theorem}
+\begin{theorem}{}{}
+    Un \hyperref[def:linguaggio]{linguaggio} è accettato da un \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA} se e solo se $L$ è accettato da un \hyperref[sub:lr_automi_a_stati_finiti_non_deterministici]{NFA}
+\end{theorem}
+\begin{note}
+    Il numero di stati del \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA} equivalente a un \hyperref[sub:lr_automi_a_stati_finiti_non_deterministici]{NFA} con $n$ stati è, nel caso peggiore, pari a $2^n$ stati
+\end{note}
+% subsection Equivalenza di DFA e NFA (end)
+%
+\subsection{FA con Transizioni Epsilon}\label{sub:lr_fa_con_transizioni_epsilon} % (fold)
+Un $\eps$-\hyperref[sub:lr_automi_a_stati_finiti_non_deterministici]{NFA} che accetta numeri decimali consiste di:
+\begin{enumerate}[ref=(\arabic*)]
+    \item un segno $+$ o $-$, opzionale;
+    \item\label{tra-cifre} una stringa di cifre decimali;
+    \item un punto decimale;
+    \item\label{tra-stringa} un'altra stringa di cifre decimali;
+\end{enumerate}
+\begin{note}
+    Una delle stringhe \cref{tra-cifre} o \cref{tra-stringa} è opzionale
+\end{note}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/20260924_175200.png}
+\end{cimage}
+\begin{definition}{$\eps$-NFA}{}
+    Un $\eps$-NFA è una quintupla $\pt{Q,\Si,\dt,q_0,FF}$ dove $\dt$ è una funzione da $Q \times \pt{\Si \cup \pg{\eps}}$ all'insieme dei sottoinsiemi di $Q$
+\end{definition}
+\begin{example}{}{}
+    L'$\eps$-NFA \hyperref[ex:dfa-to-fna]{della pagina precedente} 
+    \[
+        E = \pt{\pg{\vc{q_0}{q_5}}, \pg{.,+,-,0,1,\dots,9},\dt,q_0,\pg{q_5}}
+    \]
+    dove la tabella delle transizioni per $\dt$ è:
+    \begin{ctable}{r||c|c|c|c}
+        & $\eps$ & $+,-$ & $.$ & $\vc{0}{9}$ \\
+        \midrule
+        \midrule
+        $\to q_0$ & $\pg{q_1}$ & $\pg{q_1}$ & $\emptyset$ & $\emptyset$ \\
+        $q_1$ & $\emptyset$ & $\emptyset$ & $\pg{q_2}$ & $\pg{q_1, q_4}$ \\
+        $q_2$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\pg{q_3}$ \\
+        $q_3$ & $\pg{q_5}$ & $\emptyset$ & $\emptyset$ & $\pg{q_3}$ \\
+        $q_4$ & $\emptyset$ & $\emptyset$ & $\pg{q_3}$ & $\emptyset$ \\
+        $\star q_5$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ \\
+    \end{ctable}
+\end{example}
+%
+\subsubsection{Epsilon-Chiusura}\label{sub:lr_epsilon_chiusura} % (fold)
+L'operatore \textbf{epsilon-chiusura} chiude uno stato aggiungendo tutti gli stati raggiungibili da lui tramite una sequenza di $\eps\eps\dots\eps$.
+\begin{definition}{$ECLOSE(q)$ Induttiva}{}
+    \begin{description}
+        \item[Base:] $q \in ECLOSE\pt q$
+        \item[Induzione:] $q \in ECLOSE\pt q$ e $r \in \dt\pt{p,\eps} \Rightarrow r \in ECLOSE\pt q$
+    \end{description}
+\end{definition}
+\begin{example}{$\eps$-chiusura}{}
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/20260924_181036.png}
+    \end{cimage}
+    \[
+        ECLOSE(1) = \pg{1,2,3,4,6}
+    \]
+\end{example}
+\begin{definition}{$\dt$ per $\eps$-NFA induttiva}{}
+    \begin{description}
+        \item[Base:] $\hdt\pt{q,\eps} = ECLOSE(q)$
+        \item[Induzione:] $\hdt\pt{q,xa} = \displaystyle\bigcup_{p\in\hdt\pt{q,x}}\pt{\bigcup_{t \in\dt\pt{p,a}}ECLOSE(t)}$
+    \end{description}
+    Il linguaggio $L$ accettato è ancora definito come:
+    \[
+        \pg{w:\hdt\pt{q_0,w} \cap F \neq \emptyset}
+    \]
+\end{definition}
+\begin{example}{}{}
+    Il seguente $\eps$-NFA $E$
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/20260924_183850.png}
+    \end{cimage}
+    corrisponde al \ac{dfa} $D$
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/20260924_184012.png}
+    \end{cimage}
+\end{example}
+\begin{theorem}{}{}
+    Un \hyperref[def:linguaggio]{linguaggio} $L$ è accettato da un \hyperref[sub:lr_fa_con_transizioni_epsilon]{$\eps$-NFA} $E$ se e solo se $L$ è accettato da un \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA}. 
+\end{theorem}
+% subsubsection Epsilon-Chiusura (end)
+% subsection FA con Transizioni Epsilon (end)
+%
+\subsection{Espressioni Regolari}\label{sub:lr_espressioni_regolari} % (fold)
+
+% subsection Espressioni Regolari (end)
+% section Concetti di Base (end)
 % chapter Linguaggi Regolari (end)
