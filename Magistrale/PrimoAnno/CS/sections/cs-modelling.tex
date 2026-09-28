@@ -788,7 +788,65 @@ Representing conflicting or choice events:
 % subsubsection Modelling Conflicts (end)
 %
 \subsubsection{Asynchrony and Locality}\label{sub:md_asynchrony_and_locality} % (fold)
+In a \hyperref[sec:md_modelling_using_petri_nets]{\ac{pn}} there is no inherent measure of time or the flow of time: the only important property of time, from a logical point of view, is in defining a \textbf{partial ordering} of the occurrence of events.
+Events which need not be constrained in terms of their relative order of occurrence are not constrained.
+\begin{description}
+    \item[Locality] In complex system composed by independent asynchronously operating subparts each part can be modelled by a \hyperref[sec:md_modelling_using_petri_nets]{Petri Net}.
+        The enabling and firing of transitions are then affected by, and in turn affect only, \textbf{local changes} in the marking of the \hyperref[sec:md_modelling_using_petri_nets]{Petri Net}.
+\end{description}
 % subsubsection Asynchrony and Locality (end)
+%
+\subsubsection{Non-Determinism}\label{sub:md_non_determinism} % (fold)
+A Petri Net naturally modelling \textbf{non-deterministic} behaviours: a \hyperref[sec:md_modelling_using_petri_nets]{\ac{pn}} is viewed as a sequence of discrete events whose order of occurrence is one of the possibly many allowed by the basic structure.
+If at any time more than one transition is enabled, then any of the several enabled transitions may fire.
+\begin{warning}
+    The choice as to which transition fires is mad in a non-deterministic manner: randomly or by forces that are not modelled
+\end{warning}
+% subsubsection Non-Determinism (end)
+%
+\subsubsection{Hierarchies}\label{sub:md_hierarchies} % (fold)
+An entire net may be replaced by a single place or transition for modelling at a more abstract level (\textbf{abstraction}); meanwhile places and transitions may be replaced by subnets to provide more detailed modelling (\textbf{refinement}).
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/20260928_175522.png}
+\end{cimage}
+%
+\paragraph{Application to Concurrent Design and Programming}\label{par:md_application_to_concurrent_design_and_programming} % (fold)
+\hyperref[sec:md_modelling_using_petri_nets]{\ac{pn}} can be naturally used to model software systems, concurrent software systems in particular.
+\\
+Representing problems:
+\begin{itemize}
+    \item critical sections and mutual exclusion problems;
+    \item synchronisation;
+\end{itemize}
+Representing mechanisms behaviour:
+\begin{itemize}
+    \item semaphores;
+    \item synchronisers;
+\end{itemize}
+Representing entire problems:
+\begin{itemize}
+    \item producers/consumers;
+    \item readers-writers;
+    \item dining philosophers;
+\end{itemize}
+% paragraph Application to Concurrent Design and Programming (end)
+% subsubsection Hierarchies (end)
+%
+\subsubsection{Extended Petri Nets with Inhibitor Arcs}\label{sub:md_extended_petri_nets_with_inhibitor_arcs} % (fold)
+Extending the basic \hyperref[sec:md_modelling_using_petri_nets]{\ac{pn}} with the possibility of firing a transition only if a certain place has zero tokens: \textbf{inhibitor arc} are represented by an arch with a small circle at the end.
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/20260928_180512.png}
+\end{cimage}
+\begin{note}
+    PN + inhibitor arc = Turing-equivalent
+\end{note}
+\begin{description}
+    \item[Timed Nets] Introducing time delays associated with transitions and/or places: useful for performance evaluation and scheduling problems.
+        They can be deterministic timed nets, where delays are deterministically given, or \textbf{stochastic nets} where delays are probabilistically specified.
+    \item[High-level Nets] Associate some kind of symbolic/numerical information to tokens and some computational rules to transition consuming and producing tokens.
+    \item[Coloured Petri Nets] Assigning typed values (``a color'') to each token
+\end{description}
+% subsubsection Extended Petri Nets with Inhibitor arcs (end)
 % subsection Modelling with Petri Nets (end)
 % section Modelling Using Petri Nets (end)
 % chapter Modelling Concurrent Systems (end)
