@@ -391,7 +391,7 @@ L'operatore \textbf{epsilon-chiusura} chiude uno stato aggiungendo tutti gli sta
 %
 \section{Espressioni Regolari}\label{sec:lr_espressioni_regolari} % (fold)
 Un FA (\hyperref[sub:lr_automi_a_stati_finiti_non_deterministici]{NFA} o \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA}) è un metodo per costruire una macchina che riconosce \hyperref[def:ling-reg]{linguaggi regolari}.
-\begin{definition}{Espressioni Regolari}{}
+\begin{definition}{Espressioni Regolari}{reg-exp}
     Un \textbf{espressione regolare} offre un modo dichiarativo di esprimere un \hyperref[def:ling-reg]{linguaggio regolare}, ovvero le \red{stringhe da accettare}.
 \end{definition}
 \begin{example}{}{}
@@ -446,7 +446,6 @@ Un FA (\hyperref[sub:lr_automi_a_stati_finiti_non_deterministici]{NFA} o \hyperr
             \]
         \end{critical}
 \end{description}
-% section Espressioni Regolari (end)
 %
 \subsection{Leggi Algebriche per i Linguaggi}\label{sub:lr_leggi_algebriche_per_i_linguaggi} % (fold)
 \begin{multicols}{2}
@@ -466,7 +465,12 @@ Un FA (\hyperref[sub:lr_automi_a_stati_finiti_non_deterministici]{NFA} o \hyperr
         \item $\emptyset \cup L = L \cup \emptyset = L$ $\emptyset$ è l'\textit{identità} per l'\red{unione};
         \item $\pg \eps L = L \pg\eps = L$ $\pg\eps$ è l'\textit{identità} sinistra e destra per la \red{concatenazione};
         \item $\emptyset L = L\emptyset = \emptyset$ $\emptyset$ è l'\textit{annichilatore} sinistro e destro per la \red{concatenazione};
-        \item FINISCI SLIDE 38
+        \item $L \pt{M \cup N} = LM \cup LN$, la \textit{concatenazione} è distributiva a sinistra sull'unione;
+        \item $\pt{M\cup N}L = ML \cup NL$, la \textit{concatenazione} è distributiva a destra sull'unione;
+        \item $L\cup L = L$, l'\textit{unione} è idempotente;
+        \item $\emptyset^* = \pg \eps,\,\pg\eps^* = \pg\eps$
+        \item $L^+ = LL^* = L^*L,\,L^* = L^+ \cup\pg\eps$
+        \item $\pt{L^*}^* = L^*$
     \end{itemize}
 \end{multicols}
 % subsection Leggi Algebriche per i Linguaggi (end)
@@ -528,11 +532,59 @@ Definizione in maniera ricorsiva delle espressioni regolari:
     \]
 \end{example}
 \begin{example}{Equivalenza di espressioni regolari}{}
-    \begin{critical}
-        QUADERNO E LIBRO PAGINA 106 (slide 40)
-    \end{critical}
+    Dato il seguente linguaggio:
+    \[
+        L = \pg{w \in \pg{0,1}^*: 0 \text{ e } 1 \text{ alternati in } w}
+    \]
+    \[
+        (01)^* + (10)^* + 0(10)^* + 1(01)^*
+    \]
+    In questa espressione vengono uniti 4 linguaggi differenti:
+    \begin{multicols}{2}
+        \begin{itemize}
+            \item $(01)^*$ comprende tutte le stringhe $01$ ripetute 0 o più volte;
+            \item $(10)^*$ comprende tutte le stringhe $10$ ripetute 0 o più volte;
+            \item $0(10)^*$ comprende tutte le stringhe che iniziano per 0, seguito da una (possibile) serie di $10$ (in pratica tutte le stringhe che iniziano e finiscono per 0);
+            \item $1(01)^*$ comprende tutte le stringhe che iniziano per 1, seguito da una (possibile) serie di $01$ (in pratica tutte le stringhe che iniziano e finiscono per 1);
+        \end{itemize}
+    \end{multicols}
+    \begin{note}
+        Grazie alla ``somma'' è possibile effettuare l'unione di tutti i linguaggi
+    \end{note}
+    Esiste un modo alternativo, che produce un'\hyperref[def:reg-exp]{espressione regolare} diversa e più concisa.
+    Effettuando una concatenazione a sinistra con l'espressione $\eps + 1$ possiamo aggiungere un $1$ facoltativo all'inizio.
+    Analogamente aggiungendo uno $0$ facoltativo alla fine, con l'espressione $\eps + 0$ è possibile ottenere il linguaggio sopraelencato.
+    \begin{note}
+        Ricorrendo alla definizione dell'operatore di somma $(+)$ (unione) si ottiene:
+        \[
+            L\pt{\inc\eps} = L\pt\eps\cup L\pt 1 = \pg\eps\cup\pg 1 = \pg{\eps,1}
+        \]
+        Se si concatena questo linguaggio con qualsiasi altro linguaggio $L$, la scelta $\eps$ dà tutte le stringhe in $L$, mentre la scelta $1$ dà $1w$ per ogni stringa $w$ in $L$
+    \end{note}
+    Detto ciò un'altra espressione per l'insieme di stringhe che alternano 0 e 1 è la seguente:
+    \[
+        \pt{\inc\eps}\pt{01}^*\pt{\eps + 0}
+    \]
+    \begin{warning}
+        Per garantire che gli operatori siano raggruppati opportunamente, sono necessarie le parentesi prima e dopo ogni espressione aggiunta
+    \end{warning}
 \end{example}
 % subsection Costruire le Espressioni Regolari (end)
+%
+\subsubsection{Precedenza degli Operatori}\label{sub:lr_precedenza_degli_operatori} % (fold)
+Anche l'\hyperref[sub:lr_leggi_algebriche_per_i_linguaggi]{algebra} delle \hyperref[def:reg-exp]{espressioni regolari} hanno un ordine di precedenza, come nelle altre algebre, il che significa che gli operatori sono associati ai loro operandi in un ordine particolare.
+\begin{example}{}{}
+    Sappiamo che $xy+z$ raggruppa il prodotto $xy$ prima della somma, dunque è equivalente all'espressione $(xy) + z$ e \textbf{non} all'espressione $x(y + z)$.
+\end{example}
+\begin{warning}[In aritmentica si raggruppa partendo da sinistra $x-y-z = (x-y)-z$]
+\end{warning}
+L'\textbf{ordine di precedenza} degli operatori è il seguente:
+\begin{enumerate}
+    \item l'operatore \textbf{star} ($^*$) o \textbf{chiusura di Kleene} ha il livello più alto di proprietà;
+    \item la concatenazione \textbf{punto} ($. \text{ o } \cdot$): dopo aver raggruppato tutti gli \textbf{star}, si effettua la concatenazione in qualsiasi ordine, essendo un'operazione \textit{associativa} non importa l'ordine di esecuzione (in caso di scelta è preferibile sempre da \red{sinistra});
+    \item l'ultimo operatore è l'\textbf{unione} ($+ \text{ o } \cup$: dato che anche l'unione è \textit{associativa}, non è importante in quale ordine vengono raggruppate le unioni consecutive (in ogni caso si assume che il raggruppamento è avvenuto partendo da sinistra);
+\end{enumerate}
+% subsubsection Precedenza degli Operatori (end)
 %
 \subsection{Equivalenza FA ed Espressioni Regolari}\label{sub:equivalenza_fa_ed_espressioni_regolari} % (fold)
 \begin{cimage}
@@ -574,6 +626,111 @@ Alla fine i cammini possono passare attraverso qualunque stato, in modo che le e
     \end{cimage}
     Per lo stato accettante $q$ eliminiamo dall'automa originale tutti gli stati eccetto $q_0$ e $q$.
 \end{example}
+\begin{example}{Da DFA a Espressione Regolare}{}
+    Dato un \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA}, che rappresenta tutte le stringhe che non terminano con ``$01$'':
+    \begin{cimage}
+        \includegraphics[width=.4\textwidth]{assets/20261001_170746.png}
+    \end{cimage}
+    si iniziano a eliminare tutti i nodi che non sono di \textbf{accettazione} (finali).
+    In questo caso si inizia a eliminare il nodo $q_2$, quindi si prendono \textbf{tutte le transizioni passanti per $q_2$ degli stati predecessori} e si ricavano i relativi \textbf{successori} (dopo $q_2$).
+    \begin{critical}
+        Si analizzano i possibili modi per andare dal predecessore al successore ``passando'' per lo stato da eliminare.
+        \\
+        Nel caso in cui il cammino non esiste si utilizza $\emptyset$ oppure $\emptyset^*$ in base ai casi
+    \end{critical}
+    \begin{description}
+        \item[Predecessori] $\pg{q_1}$
+        \item[Successori] $\pg{q_0,q_1}$
+    \end{description}
+    \begin{ctable}{c|c|l}
+        \textbf{PRED} & \textbf{SUCC} & \textbf{ESPRESSIONE} \\
+        \midrule
+        $q_1$ & $q_0$ & $\emptyset + 1\emptyset^* 1 = 11$ \\
+        $q_1$ & $q_1$ & $0 + 1\emptyset^*0 = 0+10$
+    \end{ctable}
+    \begin{critical}[Se non sono presenti coppie predecessori-successori si elimina il nodo]
+    \end{critical}
+    \begin{note}
+        Nella tabella vengono mostrate le espressioni regolari dell'unione delle transizioni tra predecessore e successore:
+        \begin{itemize}
+            \item $q_1\to q_0$
+                \begin{itemize}
+                    \item $q_1\to q_0 = \red{\emptyset}$ (perché non esiste la transizione);
+                    \item $q_1\to q_2\to q_0 = \underbrace{1\emptyset^*1}_{\text{possibile autociclo }q_2\to q_2} = \red{11}$
+                \end{itemize}
+            \item $q_1\to q_1$
+                \begin{itemize}
+                    \item $q_1\to q_1 = \red{0}$ (autociclo dal DFA originale);
+                    \item $q_1\to q_2\to q_1 = 1\emptyset^*0 = \red{10}$
+                \end{itemize}
+        \end{itemize}
+        Successivamente le espressioni regolari trovate per ogni coppia di predecessori-successori vengono sommate fra loro e si ottengono
+        \begin{itemize}
+            \item $q_1\to q_0 = \emptyset + 11 = \red{11}$
+            \item $q_1\to q_1 = 0 + 10 = \red{10}$
+        \end{itemize}
+    \end{note}
+    Sostituendo le espressioni regolari ottenute ed eliminando il nodo preso in considerazione ($q_2$), si ottiene:
+    \begin{cimage}
+        \includegraphics[width=.4\textwidth]{assets/20261001_173814.png}
+    \end{cimage}
+    A questo punto, non essendoci più stati di \textbf{non accettazione} ma soltanto stati finali, si ricavano tutte le espressioni regolari analizzate fissando un solo stato di accettazione ed eliminando gli altri.
+    In questo caso:
+    \begin{itemize}
+        \item \textbf{fisso $\mathbf{q_1}$} e lo chiamo $A_{q_1}$
+            \begin{cimage}
+                \includegraphics[width=.4\textwidth]{assets/20261001_174513.png}
+            \end{cimage}
+            Calcolo l'espressione regolare del seguente DFA:
+            \[
+                E_{q_1} = \pt{1 + 0\pt{0+10}^*11}^*\cdot 0\pt{0+10}^*
+            \]
+            dove:
+            \begin{itemize}
+                \item $1 \Rightarrow q_0\to q_0$
+                \item $0\pt{0+10}^* \Rightarrow q_0\to q_1\to q_1^*$
+                \item $11 \Rightarrow q_1\to q_0$
+                \item $0\pt{0+10}^* \Rightarrow q_0\to q_1\to q_1^*$
+            \end{itemize}
+            \begin{note}
+                $0\pt{0+10}^*11 \Rightarrow q_0\to q_1\to q_1^*\to q_0$
+            \end{note}
+        \item \textbf{fisso $\mathbf{q_0}$} e lo chiamo $A_{q_0}$
+            \begin{cimage}
+                \includegraphics[width=.4\textwidth]{assets/20261001_175330.png}
+            \end{cimage}
+            \begin{note}[In questo caso posso eliminare lo stato $q_1$ perchè lo stato iniziale e lo stato finale coincidono]
+            \end{note}
+            \begin{description}
+                \item[Predecessori] $\pg{q_0}$
+                \item[Successori] $\pg{q_0}$
+            \end{description}
+            \begin{ctable}{c|c|l}
+                \textbf{PRED} & \textbf{SUCC} & \textbf{ESPRESSIONE} \\
+                \midrule
+                $q_0$ & $q_0$ & $1 + 0(0+10)^*11$ \\
+            \end{ctable}
+            L'automa diventa:
+            \begin{cimage}
+                \includegraphics[width=.2\textwidth]{assets/20261001_175640.png}
+            \end{cimage}
+            Calcolo l'espressione regolare del DFA:
+            \[
+                E_{q_0} = \pt{1 + 0\pt{0+10}^*}^*
+            \]
+    \end{itemize}
+    Detto ciò l'\hyperref[def:reg-exp]{espressione regolare} equivalente è la seguente:
+    \[
+        E_{finale} = E_{q_0} + E_{q_1} = \pt{1 + 0\pt{0+10}^*}^* + \pt{1 + 0\pt{0+10}^*11}^*\cdot 0\pt{0+10}^*
+    \]
+    \begin{flushright}
+        $\qedsymbol$
+    \end{flushright}
+\end{example}
+\begin{note}
+    È possibile rappresentare un qualsiasi FA in un espressione regolare
+    ALTRO ESEMPIO CON NFA LIBRO PAGINA 119 (SLIDE 45)
+\end{note}
 % subsubsection Da DFA a Espressioni Regolari (end)
 %
 \subsubsection{Da Espressioni Regolari a $\eps$-NFA}\label{sub:lr_da_espressioni_regolari_a_eps_nfa} % (fold)
@@ -598,4 +755,5 @@ Alla fine i cammini possono passare attraverso qualunque stato, in modo che le e
     ESEMPIO SUL QUADERNO E LIBRO PAG 121 (SLIDE 50)
 \end{critical}
 % subsection Equivalenza FA ed Espressioni Regolari (end)
+% section Espressioni Regolari (end)
 % chapter Linguaggi Regolari (end)

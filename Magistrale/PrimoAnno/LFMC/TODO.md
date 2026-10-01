@@ -1,2 +1,2 @@
 # TODO
- - Finire `linguaggi-regolari`
+ - riga 732 `linguaggi regolari`
