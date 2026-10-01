@@ -387,9 +387,215 @@ L'operatore \textbf{epsilon-chiusura} chiude uno stato aggiungendo tutti gli sta
 \end{theorem}
 % subsubsection Epsilon-Chiusura (end)
 % subsection FA con Transizioni Epsilon (end)
-%
-\subsection{Espressioni Regolari}\label{sub:lr_espressioni_regolari} % (fold)
-
-% subsection Espressioni Regolari (end)
 % section Concetti di Base (end)
+%
+\section{Espressioni Regolari}\label{sec:lr_espressioni_regolari} % (fold)
+Un FA (\hyperref[sub:lr_automi_a_stati_finiti_non_deterministici]{NFA} o \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA}) è un metodo per costruire una macchina che riconosce \hyperref[def:ling-reg]{linguaggi regolari}.
+\begin{definition}{Espressioni Regolari}{}
+    Un \textbf{espressione regolare} offre un modo dichiarativo di esprimere un \hyperref[def:ling-reg]{linguaggio regolare}, ovvero le \red{stringhe da accettare}.
+\end{definition}
+\begin{example}{}{}
+    \[
+        01* + 10*
+    \]
+    Le espressioni regolari sono usate in:
+    \begin{itemize}
+        \item comandi di ricerca, come \texttt{grep} nei sistemi \textit{UNIX} o nei browser di ricerca;
+        \item strumenti per l'analisi lessicale di linguaggi, come \ac{lex}, \ac{flex} e \ac{antlr};
+    \end{itemize}
+\end{example}
+\begin{description}
+    \item[Unione] Si indica con $L \cup M$ e rappresenta l'insieme delle stringhe che sono in $L$ oppure in $M$.
+        \[
+            L \cup M = \pg{w:w\in L \text{ o } w \in L}
+        \]
+    \item[Concatenazione] È l'insieme delle stringhe che si possono formare prendendo una qualunque stringa in $L$ e concatenandola con qualsiasi stringa in $M$.
+        \[
+            LM = \pg{w:w = xy,\, x\in L,\,y \in M}
+        \]
+        \begin{example}{}{}
+            \[
+                \underbrace{\pg{ab, c}}_{L}\cdot \underbrace{\pg{d, ef}}_{M} = \underbrace{\pg{abd,\,abef,\,cd,\,cef}}_{L\cdot M}
+            \]
+        \end{example}
+    \item[Potenze] 
+        \[
+            L^0 = \pg{\eps},\,L^3 = L,L^{\inc k} = L \cdot L^k
+        \]
+        \begin{example}{}{}
+            \[
+                \pg{ab,\,c}^2 = \pg{ab,\,c} \cdot \pg{ab,\,c} = \pg{abab,\,abc,\,cab,\,cc}
+            \]
+        \end{example}
+    \item[Chiusura di Kleene (star)] $L^*$ rappresenta l'insieme delle stringhe che possono essere formate prendendo un numero qualsiasi da $L$, eventualmente con ripetizioni, e concatenandole tutte.
+        \[
+            L^* = L^0 \cup L^1 \cup L^2 \cup \cdots \cup L^n = \displaystyle\bigcup_{i\ge0}{L^i}
+        \]
+        \begin{example}{}{}
+            \[
+                \pg{ab,\,c}^* = \pg{\underbrace{\eps}_{L^0},\,\underbrace{ab,\,c}_{L^1},\,\underbrace{abab,\,abc,\,cab,\,cc}_{L^2},\,\underbrace{ababab,\,\dots}_{L^3}}
+            \]
+        \end{example}
+        \begin{critical}
+            \[
+                \emptyset^* = \displaystyle\bigcup_{i\ge0}{\emptyset^i} = \pg{\eps}
+            \]
+            con
+            \[
+                \emptyset^i = \emptyset \qquad \text{per ogni } i > 0
+            \]
+        \end{critical}
+\end{description}
+% section Espressioni Regolari (end)
+%
+\subsection{Leggi Algebriche per i Linguaggi}\label{sub:lr_leggi_algebriche_per_i_linguaggi} % (fold)
+\begin{multicols}{2}
+    \begin{itemize}
+        \item $L\cup M = M \cup L$ \textit{commutativa};
+        \item $\pt{L \cup M} \cup N = L \cup \pt{M \cup N}$ \textit{associativa};
+    \end{itemize}
+\end{multicols}
+\begin{itemize}
+    \item $\pt{LM}N = L\pt{MN}$ la concatenazione è \textit{associativa};
+        \begin{note}[La concatenazione non è commutativa]
+            Esistono $L$ e $M$ tali che $LM \ne ML$
+        \end{note}
+\end{itemize}
+\begin{multicols}{2}
+    \begin{itemize}
+        \item $\emptyset \cup L = L \cup \emptyset = L$ $\emptyset$ è l'\textit{identità} per l'\red{unione};
+        \item $\pg \eps L = L \pg\eps = L$ $\pg\eps$ è l'\textit{identità} sinistra e destra per la \red{concatenazione};
+        \item $\emptyset L = L\emptyset = \emptyset$ $\emptyset$ è l'\textit{annichilatore} sinistro e destro per la \red{concatenazione};
+        \item FINISCI SLIDE 38
+    \end{itemize}
+\end{multicols}
+% subsection Leggi Algebriche per i Linguaggi (end)
+%
+\subsection{Costruire le Espressioni Regolari}\label{sub:lr_costruire_le_espressioni_regolari} % (fold)
+L'algebra delle espressioni regolari usa costanti e variabili che indicano linguaggi e operatori per le operazioni di unione, punto e star.
+\\
+Definizione in maniera ricorsiva delle espressioni regolari:
+\begin{description}
+    \item[Base] Consiste di 3 parti:
+        \begin{itemize}
+            \item le costanti $\eps$ e $\emptyset$ sono espressioni regolari, indicanti i linguaggi $\pg\eps$ e $\emptyset$
+                \[
+                    L\pt\eps = \pg\eps \qquad L\pt\emptyset = \emptyset
+                \]
+            \item se $a$ è un simbolo qualsiasi, allora $a$ è un espressione regolare.
+                Tale espressione denota il linguaggio $\pg a$, cioè:
+                \[
+                    L\pt{\mathbf{a}} = \pg a
+                \]
+                \begin{note}
+                    Si usa il grassetto per indicare un'espressione corrispondente a un simbolo
+                \end{note}
+            \item una variabile, come $L$, rappresentante un linguaggio arbitrario
+        \end{itemize}
+    \item[Induzione] Il passo induttivo è formato da 4 parti, una per ognuno dei \red{tre operatori} e una per l'\red{introduzione delle parentesi}:
+        \begin{itemize}
+            \item se $E$ è un espressione regolare, allora $\pt E$ è un espressione regolare
+                \[
+                    L\pt{\pt E} = L\pt E
+                \]
+            \item se $E$ e $F$ sono espressioni regolari, allora $E+F$ è un espressione regolare
+                \[
+                    L\pt{E+F} = L\pt E \cup L\pt F
+                \]
+            \item se $E$ e $F$ sono espressioni regolari, allora $EF$ è un espressione regolare
+                \[
+                    L\pt{EF} = L\pt E \cdot L\pt F
+                \]
+                \begin{note}
+                    Il punto $\cdot$ è facoltativo in quanto nelle espressioni regolari $0\cdot1 = 01$ e rappresenta il linguaggio $\pg{01}$
+                \end{note}
+            \item Se $E$ è un espressione regolare, allora $E^*$ è un espressione regolare
+                \[
+                    L\pt{E^*} = \pt{L\pt E}^*
+                \]
+        \end{itemize}
+\end{description}
+\begin{example}{Costruire un espressione regolare}{}
+    \[
+        \begin{aligned}
+            &E = \pt{0+1}\cdot \pt{1^*} \\
+            &L\pt{0} = \pg{0} \\
+            &L\pt{1} = \pg{1} \\
+            &L\pt{1^*} = L\pt 1^* = \pg{1^*} = \bigcup_{i\ge0}{\pg{1}^i} = \pg{1^n | n\ge0}\,\,(1, 11, 111, ...) \\
+            &L\pt{(0+1)} = L\pt{0+1} = L\pt 0 \cup L\pt 1 = \pg 0 \cup \pg 1 = \pg{0,1} \\
+            &L\pt E = L\pt{(0+1)} \cdot L\pt{\pt{1^*}} = \pg{0,1} \cdot \pg{1^n | n \ge 0} = \pg{x1^n | x\in\pg{0,1} \text{con } n\ge 0}
+        \end{aligned}
+    \]
+\end{example}
+\begin{example}{Equivalenza di espressioni regolari}{}
+    \begin{critical}
+        QUADERNO E LIBRO PAGINA 106 (slide 40)
+    \end{critical}
+\end{example}
+% subsection Costruire le Espressioni Regolari (end)
+%
+\subsection{Equivalenza FA ed Espressioni Regolari}\label{sub:equivalenza_fa_ed_espressioni_regolari} % (fold)
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/20261001_103103.png}
+\end{cimage}
+Per mostrare che gli FA sono equivalenti alle \hyperref[sec:lr_espressioni_regolari]{espressioni regolari} dobbiamo mostrare che:
+\begin{itemize}
+    \item ogni linguaggio definito da uno degli automi è definito anche da un'espressione regolare
+        \[
+            L\pt R = L\pt A\qquad\text{dove } A = \textit{DFA}
+        \]
+    \item ogni lignaggio definito da un'espressione regolare è definito da uno degli automi, per semplicità \hyperref[sub:lr_fa_con_transizioni_epsilon]{$\eps$-NFA}
+        \[
+            L\pt A = L\pt R\qquad\text{dove } A = \eps\textit{-NFA}
+        \]
+\end{itemize}
+%
+\subsubsection{Da DFA a Espressioni Regolari}\label{sub:lr_da_dfa_a_espressioni_regolari} % (fold)
+Il procedimento è molto complesso, detto a grandi linee si devono formare espressioni che descrivano insiemi di stringhe che etichettano certi cammini nel \textbf{diagramma di transizione} del \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA}, considerando però solo cammini che attraversano un sottoinsieme limitato degli stati.
+\\
+Partendo da espressioni semplici, archi o nodi \textbf{singoli}, e via via per induzione si costruiscono le espressioni che fanno passare i cammini attraverso insiemi di stati via via più grandi.
+Alla fine i cammini possono passare attraverso qualunque stato, in modo che le espressioni generate rappresentino tutti i cammini possibili.
+\begin{note}
+    Preferibile iniziare dagli stati \textbf{non} di accettazione
+\end{note}
+\begin{theorem}{}{}
+    Per ogni \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA} $A = \pt{Q,\Si,\dt,q_0,F}$ esiste un'espressione regolare $R$ tale che:
+    \[
+        L\pt R = L\pt A
+    \]
+\end{theorem}
+\begin{example}{}{}
+    \begin{cimage}
+        \includegraphics[width=.3\textwidth]{assets/20261001_104223.png}
+    \end{cimage}
+    Eliminando lo stato $s$ e semplificando i cammini si ottiene:
+    \begin{cimage}
+        \includegraphics[width=.4\textwidth]{assets/20261001_104358.png}
+    \end{cimage}
+    Per lo stato accettante $q$ eliminiamo dall'automa originale tutti gli stati eccetto $q_0$ e $q$.
+\end{example}
+% subsubsection Da DFA a Espressioni Regolari (end)
+%
+\subsubsection{Da Espressioni Regolari a $\eps$-NFA}\label{sub:lr_da_espressioni_regolari_a_eps_nfa} % (fold)
+\begin{theorem}{}{}
+    Ogni linguaggio definito da un'espressione regolare \textbf{è definito anche} da un automa a stati finiti.
+\end{theorem}
+\begin{description}
+    \item[Base] Automa per $\eps$, $\emptyset$ e $a$
+        \begin{cimage}
+            \includegraphics[width=.2\textwidth]{assets/20261001_114000.png}
+        \end{cimage}
+    \item[Induzione] Automa per $R+S$, $RS$ e $R^*$
+        \begin{cimage}
+            \includegraphics[width=.3\textwidth]{assets/20261001_114056.png}
+        \end{cimage}
+        \begin{note}
+            Si aggiungono transizioni con $\eps$ e si spostano gli stati iniziali e finali
+        \end{note}
+\end{description}
+% subsubsection Da Espressioni Regolari a $\eps$-NFA (end)
+\begin{critical}
+    ESEMPIO SUL QUADERNO E LIBRO PAG 121 (SLIDE 50)
+\end{critical}
+% subsection Equivalenza FA ed Espressioni Regolari (end)
 % chapter Linguaggi Regolari (end)
