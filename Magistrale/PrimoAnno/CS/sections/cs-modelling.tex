@@ -713,6 +713,10 @@ A firing of an \textbf{enabled transition $t$ removes} $w\pt{p,t}$ tokens from e
     \begin{cimage}
         \includegraphics[width=.8\textwidth]{assets/20260921_135454.png}
     \end{cimage}
+    \begin{critical}[Total token count is not conserved in Petri nets]
+        Petri nets do not require the total number of tokens across the entire network to remain constant before and after a firing unless specifically designed as a conservative net.
+        Here, 3 tokens were consumed (2 from $H_2$, 1 from $O_2$) and 2 tokens were created (in $H_2O$)
+    \end{critical}
 \end{example}
 % subsubsection Weighted Arcs (end)
 %
