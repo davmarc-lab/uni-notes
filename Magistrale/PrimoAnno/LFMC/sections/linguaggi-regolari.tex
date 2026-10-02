@@ -624,12 +624,14 @@ Alla fine i cammini possono passare attraverso qualunque stato, in modo che le e
     \begin{cimage}
         \includegraphics[width=.4\textwidth]{assets/20261001_104358.png}
     \end{cimage}
-    Per lo stato accettante $q$ eliminiamo dall'automa originale tutti gli stati eccetto $q_0$ e $q$.
+    Per lo stato accettante $q$ eliminiamo dall'automa originale tutti gli stati eccetto $q_0$ (stato iniziale) e $q$.
 \end{example}
-\begin{example}{Da DFA a Espressione Regolare}{}
+\begin{example}{Da DFA a Espressione Regolare}{dfa-to-espr}
     Dato un \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA}, che rappresenta tutte le stringhe che non terminano con ``$01$'':
     \begin{cimage}
         \includegraphics[width=.4\textwidth]{assets/20261001_170746.png}
+        \caption{}\label{fig:dfa-to-espr-initial}
+
     \end{cimage}
     si iniziano a eliminare tutti i nodi che non sono di \textbf{accettazione} (finali).
     In questo caso si inizia a eliminare il nodo $q_2$, quindi si prendono \textbf{tutte le transizioni passanti per $q_2$ degli stati predecessori} e si ricavano i relativi \textbf{successori} (dopo $q_2$).
@@ -719,7 +721,7 @@ Alla fine i cammini possono passare attraverso qualunque stato, in modo che le e
                 E_{q_0} = \pt{1 + 0\pt{0+10}^*}^*
             \]
     \end{itemize}
-    Detto ciò l'\hyperref[def:reg-exp]{espressione regolare} equivalente è la seguente:
+    Detto ciò l'\hyperref[def:reg-exp]{espressione regolare} equivalente all'\hyperref[fig:dfa-to-espr-initial]{automa iniziale} è la seguente:
     \[
         E_{finale} = E_{q_0} + E_{q_1} = \pt{1 + 0\pt{0+10}^*}^* + \pt{1 + 0\pt{0+10}^*11}^*\cdot 0\pt{0+10}^*
     \]
@@ -729,8 +731,38 @@ Alla fine i cammini possono passare attraverso qualunque stato, in modo che le e
 \end{example}
 \begin{note}
     È possibile rappresentare un qualsiasi FA in un espressione regolare
-    ALTRO ESEMPIO CON NFA LIBRO PAGINA 119 (SLIDE 45)
 \end{note}
+\begin{example}{}{}
+    Altro esempio a slide 49 di \textit{Linguaggi Regolari} (oppure 119)
+\end{example}
+\paragraph{Procedimento}\label{par:nfa_espr_procedimento} % (fold)
+Si eliminano tutti gli stati non di accettazione (finale), come nell'\hyperref[ex:dfa-to-espr]{esempio precedente} per arrivare a produrre un automa equivalente con le etichette sugli archi costruite da espressioni regolari.
+\emptyln{}
+Alla fine del processo se lo stato rimanente è diverso dallo stato iniziale allora si ottiene un automa simile a:
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/20261002_194719.png}
+\end{cimage}
+\begin{note}
+    In questo caso l'\hyperref[def:reg-exp]{espressione regolare} equivalente è:
+    \[
+        (R+SU^*T)^*SU^*
+    \]
+    \begin{tip}
+        Esempio casa ($q_0$) e lago ($q_1$): un uomo vive a casa, può andare a lavoro ($R$) e tornare a casa, oppure andare in pensione ($S$) e rimanere a vivere al lago ($U$).
+        Oppure può decidere quando vuole di andare a fare una gita al lago, starci un po', per poi tornare a casa ($T$) per tornare a lavoro.
+    \end{tip}
+\end{note}
+Se invece lo stato iniziale è anche uno stato di accettazione, l'automa sarà del tipo:
+\begin{cimage}
+    \includegraphics[width=.2\textwidth]{assets/20261002_195506.png}
+\end{cimage}
+\begin{note}
+    In questo caso l'\hyperref[def:reg-exp]{espressione regolare} equivalente sarà:
+    \[
+        R^*
+    \]
+\end{note}
+% paragraph Procedimento (end)
 % subsubsection Da DFA a Espressioni Regolari (end)
 %
 \subsubsection{Da Espressioni Regolari a $\eps$-NFA}\label{sub:lr_da_espressioni_regolari_a_eps_nfa} % (fold)
@@ -751,9 +783,16 @@ Alla fine i cammini possono passare attraverso qualunque stato, in modo che le e
         \end{note}
 \end{description}
 % subsubsection Da Espressioni Regolari a $\eps$-NFA (end)
-\begin{critical}
-    ESEMPIO SUL QUADERNO E LIBRO PAG 121 (SLIDE 50)
-\end{critical}
+\begin{example}
+    Data la seguente \hyperref[def:reg-exp]{espressione regolare}:
+    \[
+        (01)^* + 0
+    \]
+    l'\hyperref[sub:lr_fa_con_transizioni_epsilon]{$\eps$-NFA} corrispondente si costruisce:
+    \begin{cimage}
+        \includegraphics[width=.8\textwidth]{assets/e-nfa-to-reg-exp.png}
+    \end{cimage}
+\end{example}
 % subsection Equivalenza FA ed Espressioni Regolari (end)
 % section Espressioni Regolari (end)
 % chapter Linguaggi Regolari (end)
