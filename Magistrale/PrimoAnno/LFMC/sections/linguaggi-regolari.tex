@@ -795,4 +795,190 @@ Se invece lo stato iniziale è anche uno stato di accettazione, l'automa sarà d
 \end{example}
 % subsection Equivalenza FA ed Espressioni Regolari (end)
 % section Espressioni Regolari (end)
+%
+\section{Proprietà dei Linguaggi Regolari}\label{sec:lr_propriet_dei_linguaggi_regolari} % (fold)
+\begin{remark}{Riassunto delle principali Proprietà dei \hyperref[def:ling-reg]{linguaggi regolari}}{}
+    \begin{tasks}(2)    
+        \task l'unione dei linguaggi regolari è regolare;
+        \task l'intersezione di due linguaggi regolari è regolare;
+        \task il complemento di due linguaggi regolari è regolare;
+        \task la differenza di due linguaggi regolari è regolare;
+        \task l'inversione di un linguaggio regolare è regolare;
+        \task la chiusura (\textbf{star}) di un linguaggio regolare è regolare;
+        \task la concatenazione di due linguaggi regolari è regolare;
+        \task l'omomorfismo inverso di un linguaggio regolare è regolare;
+        \task un \textit{omomorfismo} (sostituzione di simboli con stringhe) di un linguaggio regolare è regolare;
+    \end{tasks}
+\end{remark}
+\begin{note}
+    \begin{itemize}
+        \item proprietà di \textbf{chiusura}: come costruire automi da componenti usando delle operazioni e per quali operazioni è possibile farlo;
+        \item proprietà di \textbf{decisione}: analisi computazionale di automi;
+        \item tecniche di \textbf{minimizzazione}: possiamo risparmiare costruendo automi più piccoli;
+    \end{itemize}
+\end{note}
+%
+\subsection{Chiusura dei Linguaggi Regolari}\label{sub:lr_chiusura_dei_linguaggi_regolari} % (fold)
+\begin{theorem}{Chiusura rispetto all'unione}{lr-union}
+    Se $L$ e $M$ sono linguaggi regolari, allora è regolare anche $L\in M$
+    \begin{proof}
+        Poiché $L$ e $M$ sono regolari, essi sono descritti da espressioni regolari, poniamo $L = L(R)$ e $M = L(S)$.
+        Allora $L\in M = L(R+S)$ per la definizione dell'operatore $\mathbf{+}$ delle \hyperref[def:reg-exp]{espressioni regolari}.
+    \end{proof}
+\end{theorem}
+\begin{theorem}{Chiusura rispetto al complemento}{lr-complem}
+    Se $L$ è un linguaggio regolare sull'alfabeto $\Si$, allora anche $\overline L = \Si[*] - L$ è regolare
+    \begin{proof}
+        Sia $L = L(A)$ per un \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA} $A = \pt{Q,\Si,\dt,q_0,F}$.
+        Allora $\overline L = L(B)$, dove $B$ è il \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA} $\pt{Q,\Si,\dt,q_0,Q-F}$.
+        In altre parole $B$ è esattamente come $A$, ma gli stati accettati di $A$ sono diventati stati non accettanti di $B$, e viceversa.
+        Allora $w$ è in $L(B)$ se e solo se $\hat\dt\pt{q_0,w}$ è in $Q-F$, il che succede se e solo se $w$ non è in $L(A)$.
+    \end{proof}
+    \begin{warning}
+        È importante che $\hat\dt\pt{q_0,w}$ sia sempre definito; vale a dire che non ci siano transizioni mancanti in $A$
+        \begin{critical}
+            Nel caso in cui manchino delle transizioni, allora alcune stringhe potrebbero non condurre ad alcuno stato di $A$, né accettante né non accettante, e le stringhe verrebbero a mancare sia in $L(A)$ sia in $L(B)$
+        \end{critical}
+    \end{warning}
+\end{theorem}
+\begin{example}{Complemento}{}
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/20261008_104539.png}
+    \end{cimage}
+\end{example}
+\begin{theorem}{Chiusura rispetto all'intersezione}{lr-inters}
+    Se $L$ e $M$ sono linguaggi regolari, allora anche $L \cap M$
+    \begin{proof}[DImostrazione Banale]
+        Per la \textit{legge di DeMorgan}, si può dire che:
+        \[
+            L\cap M = \overline{\overline L \cup \overline M}
+        \]
+    \end{proof}
+    \begin{proof}
+        Siano $L$ e $M$ i linguaggi degli automi \\$A_L = \pt{Q_L,\Si,\dt_L,q_L,F_L}$ e $A_M = \pt{Q_M,\Si,\dt_M,q_M,F_M}$.
+        Inoltre per semplicità si assume che entrambi siano \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA}.
+        \emptyln{}
+        Per $L\cap M$ costruiremo un automa $A$ che simuli sia $A_L$ sia$A_M$.
+        Gli stati di $A$ sono coppie di stati, il primo di $A_L$ e il secondo di $A_M$.
+        Per stabilire le transizioni di $A$, si suppone che sia nello stato $\pt{p,q}$, dove $P$ è lo stato di $A_L$ e $q$ è lo stato di $A_M$.
+        \emptyln{}
+        Se $a$ è il simbolo dell'input, vediamo come si comporta $A_L$ a fronte dell'input $a$; poniamo che vada nello stato $s$.
+        Vediamo anche come si comporta $A_M$ a fronte dell'input $a$; poniamo che compia una transizione nello stato $t$.
+        Allora il prossimo stato di $A$ sarà $\pt{s,t}$.
+        In questo modo $A$ ha simulato l'effetto sia di $A_L$ sia di $A_M$.
+        \begin{cimage}
+            \includegraphics[width=.4\textwidth]{assets/20261008_105953.png}
+            \caption{}\label{fig:20261008_105953}
+        \end{cimage}
+        Poiché vogliamo che l'automa in \cref{fig:20261008_105953} accetti se e solo se entrambi gli automi accettano, selezioniamo come stati accettanti tutte quelle coppie $\pt{p,q}$ tali che $p$ sia uno stato accettante di $A_L$ e $q$ sia uno stato accettante di $A_M$:
+        \[
+            A = \pt{Q_L\times Q_M,\Si,\dt,\pt{q_L,q_M},F_L\times F_M}
+        \]
+        dove
+        \[
+            \dt_{L\cap M}\pt{\pt{p,q},a} = \pt{\dt_L\pt{p,a},\dt_M\pt{q,a}}
+        \]
+    \end{proof}
+\end{theorem}
+\begin{example}{Intersezione}{}
+    \begin{cimage}
+        \includegraphics[width=.4\textwidth]{assets/20261008_110712.png}
+    \end{cimage}
+\end{example}
+\begin{theorem}{Chiusura rispetto alla differenza}{lr-diff}
+    Se $L$ e $M$ sono linguaggi regolari, allora anche $L-M$ è regolare
+    \begin{proof}
+        Osserviamo che $L-M = L \setminus M = L\cap \overline M$.
+        Per il teorema \hyperref[th:lr-complem]{del complemento} $\overline M$ è regolare, e per il teorema \hyperref[th:lr-inters]{dell'intersezione} $L\cap \overline M$ è regolare.
+        Di conseguenza $L-M$ è regolare.
+    \end{proof}
+\end{theorem}
+% subsection Chiusura dei Linguaggi Regolari (end)
+%
+\subsection{Inversione}\label{sub:lr_inversione} % (fold)
+\begin{definition}{Inversione}{lr-inversione}
+    L'\textbf{inversione} di una stringa $a_1a_2\dots a_n$ è la stringa \red{scritta al contrario}, ossia
+    \[
+        a_na_{\dec n}\dots a_1
+    \]
+    \begin{note}[Si denota con $w^R$ l'inversione della stringa $w$]
+    \end{note}
+\end{definition}
+\begin{theorem}{}{}
+    Se $L$ è un linguaggio regolare, lo è anche $L^R$
+    \begin{proof}
+        Sia il linguaggio $L$ riconosciuto da un FA $A$.
+        Modifichiamo $A$ per renderlo un FA per $L^R$:
+        \begin{enumerate}
+            \item giriamo tutti gli archi;
+            \item rendiamo il vecchio stato iniziale l'unico stato finale;
+            \item creiamo un nuovo stato iniziale $p_0$ con $\dt(p_0,\eps) = F$ (i vecchi stati finali);
+        \end{enumerate}
+    \end{proof}
+\end{theorem}
+% subsection Inversione (end)
+% section Proprietà dei Linguaggi Regolari (end)
+%
+\section{Problemi di decisione per i Linguaggi Regolari}\label{sec:lr_problemi_di_decisione_per_i_linguaggi_regolari} % (fold)
+Lo studio degli algoritmi per questioni sui linguaggi regolari prende le mosse da un riepilogo dei modi per tradurre una rappresentazione in un'altra dello stesso linguaggio.
+\begin{note}
+    In particolare la complessità in tempo degli algoritmi di conversione
+\end{note}
+\begin{enumerate}
+    \item il linguaggio descritto è vuoto $L = \emptyset$?
+    \item una certa stringa $w$ appartiene al linguaggio descritto $w \in L$?
+    \item due descrizioni definiscono lo stesso linguaggio?
+\end{enumerate}
+%
+\subsection{Verificare se un Linguaggio Regolare è vuoto}\label{sub:lr_verificare_se_un_linguaggio_regolare_vuoto} % (fold)
+\begin{remark}{}{}
+    \begin{description}
+        \item[Base] Lo stato iniziale è sicuramente raggiungibile dallo stato iniziale
+        \item[Induzione] Se lo stato $q$ è raggiungibile dallo stato iniziale e c'è un arco da $q$ a $p$ con etichetta arbitraria, anche $p$ è raggiungibile
+    \end{description}
+\end{remark}
+In questo modo si determina l'insieme degli stati raggiungibili.
+Se fra loro c'è uno stato accettante, la risposta è ``no'' (il linguaggio dell'automa \red{non è vuoto}), altrimenti è ``si''.
+\emptyln{}
+Oppure un altro modo è quello di osservare un'espressione regolare $E$ di lunghezza $n$.
+\begin{remark}{}{}
+    \begin{description}
+        \item[Base] $\emptyset$ denota il linguaggio vuoto: $\eps$ e $a$ no, per qualsiasi simbolo di input di $a$
+        \item[Induzione] Sia $E$ un'espressione regolare, si devono considerare quattro casi, che corrispondono ai modi in cui si può costruire $E$:
+            \begin{enumerate}
+                \item $E = F + G$ In questo caso $L(E)$ è vuoto se e solo se sia $L(F)$ che $L(G)$ sono vuoti;
+                \item $E = FG$ In questo caso $L(E)$ è vuoto se e solo se $L(F)$ o $L(G)$ sono vuoti;
+                \item $E = F^*$ In questo caso $L(E)$ \textbf{non è mai vuoto} perché $\eps \in L(E)$;
+                \item $E = (F)$ In questo caso $L(E)$ è vuoto se e solo se $L(F)$ è vuoto, dato che sono lo stesso linguaggio;
+            \end{enumerate}
+    \end{description}
+\end{remark}
+% subsection Verificare se un Linguaggio Regolare è vuoto (end)
+% section Problemi di decisione per i Linguaggi Regolari (end)
+%
+\section{Equivalenza e Minimizzazione di Automi}\label{sec:lr_equivalenza_e_minimizzazione_di_automi} % (fold)
+\subsection{Equivalenza degli Stati}\label{sub:lr_equivalenza_degli_stati} % (fold)
+\begin{theorem}{}{}
+    Diciamo che due stati $p$ e $q$ sono \textbf{equivalenti} se per ogni stringa di \textit{input} $w$, $\hat\dt\pt{p,w}$ è uno stato accettante se e solo se $\hat\dt\pt{q,w}$ è uno stato accettante.
+\end{theorem}
+\begin{theorem}{}{}
+    Se due stati non sono equivalenti, diciamo che sono \textbf{distinguibili}.
+    In altre parole lo stato $p$ è distinguibile da $q$ se esiste almeno una stringa $w$ tale che uno fra $\hat\dt\pt{p,w}$ e $\hat\dt\pt{q,w}$ è accettante e l'altro no.
+\end{theorem}
+L'algoritmo, chiamato \textit{algoritmo riempi-tabella}, scopre ricorsivamente le coppie di stati distinguibili di un \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA} $A = \pt{Q;\Si,\dt,q_0,F}$.
+\begin{remark}{}{}
+    \begin{description}
+        \item[Base] Se $p$ è uno stato accettante e $q$ è non accettante, la coppia $\pg{p,q}$ è distinguibile.
+        \item[Induzione] Siano $p$ e $q$ due stati tali che, per un simbolo di input $a$, $r = \dt\pt{p,a}$ e $s = \dt(q,a)$ sono stati che sappiamo essere distinguibili.
+            Allora $\pg{p,q}$ è una coppia di stati distinguibili.
+            \emptyln{}
+            La regola vale perché dev'esserci una stringa $w$ che distingue $r$ da $s$; in altre parole uno solo tra $\hat\dt(r,w)$ e $\hat\dt(s,w)$ è accettante.
+            Ma allora la stringa $aw$ distingue $p$ da $q$ perché $\hat\dt(p,aw)$ e $\hat\dt(q,aw)$ coincidono rispettivamente con $\hat\dt(r,w)$ e $\hat\dt(s,w)$.
+    \end{description}
+\end{remark}
+\section{CONTINUA DA PAGINA 178 LIBRO (67 SLIDE)}\label{sec:continua_da_pagina_178_libro_67_slide} % (fold)
+
+% section CONTINUA DA PAGINA 178 LIBRO (67 SLIDE) (end)
+% subsection Equivalenza degli Stati (end)
+% section Equivalenza e Minimizzazione di Automi (end)
 % chapter Linguaggi Regolari (end)
