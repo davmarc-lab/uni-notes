@@ -958,7 +958,7 @@ Oppure un altro modo è quello di osservare un'espressione regolare $E$ di lungh
 %
 \section{Equivalenza e Minimizzazione di Automi}\label{sec:lr_equivalenza_e_minimizzazione_di_automi} % (fold)
 \subsection{Equivalenza degli Stati}\label{sub:lr_equivalenza_degli_stati} % (fold)
-\begin{theorem}{}{}
+\begin{theorem}{}{stati-equiv}
     Diciamo che due stati $p$ e $q$ sono \textbf{equivalenti} se per ogni stringa di \textit{input} $w$, $\hat\dt\pt{p,w}$ è uno stato accettante se e solo se $\hat\dt\pt{q,w}$ è uno stato accettante.
 \end{theorem}
 \begin{theorem}{}{}
@@ -976,9 +976,39 @@ L'algoritmo, chiamato \textit{algoritmo riempi-tabella}, scopre ricorsivamente l
             Ma allora la stringa $aw$ distingue $p$ da $q$ perché $\hat\dt(p,aw)$ e $\hat\dt(q,aw)$ coincidono rispettivamente con $\hat\dt(r,w)$ e $\hat\dt(s,w)$.
     \end{description}
 \end{remark}
-\section{CONTINUA DA PAGINA 178 LIBRO (67 SLIDE)}\label{sec:continua_da_pagina_178_libro_67_slide} % (fold)
+\begin{example}{Che cosa si può dire su $A$ e $E$?}{}
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/20261009_133731.png}
+    \end{cimage}
+    \[
+        \begin{aligned}
+            &\hdt\pt{A,\eps} = A \notin F,\qquad\hdt\pt{E,\eps} = E \notin F \\
+            &\hdt\pt{A,1} = F = \hdt\pt{E,1} \\
+            &\text{Quindi: } \hdt\pt{A,1x} = \hdt\pt{E,1x} = \hdt\pt{F,x} \\
+            &\hdt\pt{A,0} = B\notin F, \qquad \hdt\pt{E,0} = H \notin F \\
+            &\hdt\pt{A,00} = G = \hdt\pt{E,00}, \qquad \hdt\pt{A,01} = C = \hdt\pt{E,01} \\
+            &\text{Conclusione: } A \equiv E
+        \end{aligned}
+    \]
+    \begin{remark}{}{}
+        Considerando $A$ e $E$: non sono accettanti quindi $\eps$ non li distingue.
+        A fronte di input $1$ entrambi vanno in $F$.
+        Nessuna stringa che cominci per $1$ può quindi distinguerli perché, per ogni stringa $x$:
+        \[
+            \hdt\pt{A,1x} = \hdt\pt{E,1x}
+        \]
+        Per input che cominciano con $0$ $A$ va in $B$, $E$ in $H$.
+        Nessuno dei due nuovi stati è accettante, perciò la stringa $0$ da sola non distingue $A$ da $E$.
+        Anche $B$ e $H$ non sono d'aiuto: su input $1$ entrambi vanno in $C$ e su input $0$ entrambi vanno in $G$.
+        Quindi nessun input che cominci per $0$ può distinguerli.
+        \emptyln{}
+        Concludiamo che nessuna stringa di input distingue $A$ da $E$ quindi i due stati sono \hyperref[th:stati-equiv]{equivalenti}.
+    \end{remark}
+\end{example}
+%
+\subsection{Algoritmo riempi-tabella}\label{sub:lr_algoritmo_riempi_tabella} % (fold)
 
-% section CONTINUA DA PAGINA 178 LIBRO (67 SLIDE) (end)
+% subsection Algoritmo riempi-tabella (end)
 % subsection Equivalenza degli Stati (end)
 % section Equivalenza e Minimizzazione di Automi (end)
 % chapter Linguaggi Regolari (end)
