@@ -1,0 +1,271 @@
+\chapter{Modelling and Verification in Concurrent Programming}\label{chap:modelling_and_verification_in_concurrent_programming} % (fold)
+The importance of models and abstraction for computer science and engineering in particular:
+\begin{itemize}
+    \item model: rigorous description/representation of program structure and behaviour at a proper level of abstraction, including relevant information, abstracting from non-relevant aspects;
+    \item diagrammatical representations for program design;
+    \item formal models for program analysis and verification;
+\end{itemize}
+Defining proper models for \hyperref[def:conc-prog]{Concurrent Programming}:
+\begin{itemize}
+    \item defining models for the structure and behaviour of concurrent programs abstracting from the low-level details of their actual implementation and realization (\textbf{design});
+    \item enabling the possibility to reason about their dynamic behaviour of concurrent programs (\textbf{verification});
+\end{itemize}
+%
+\section{Modelling Concurrent Program Execution using FSP}\label{sec:cp_modelling_concurrent_program_execution_using_fsp} % (fold)
+When using \ac{fsp}, processes are the single modelling abstraction for modelling both threads and also shared memory abstractions and mechanisms:
+\begin{itemize}
+    \item modelling the execution of a sequential program as a \hyperref[def:process]{Process};
+    \item modelling the execution of a concurrent program as parallel composition of processes;
+    \item modelling shared memory variables as processes as well;
+\end{itemize}
+%
+\subsection{Modelling Using State Diagrams}\label{sub:cp_modelling_using_state_diagrams} % (fold)
+The execution of a concurrent program can be formally represented by \textbf{states} and \textbf{transitions} between states.
+\begin{definition}{State}{state}
+    A \textbf{state} is defined by a tuple consisting of:
+    \begin{itemize}
+        \item one element of each \hyperref[def:process]{Process} that is a label (\textbf{statement}) from that \hyperref[def:process]{Process};
+        \item one element for each global or local variable that is a value whose type is the same as the type of variable;
+    \end{itemize}
+    There is a transition between two states $s_1$ and $s_2$ if executing a statement in state $s_1$ changes the state of $s_2$: the statement executed must be one of those pointed to by a control pointer is $s_1$.
+\end{definition}
+\begin{definition}{State Diagram}{state-diagram}
+    The \textbf{state diagram} is a \textit{graph} containing all the \textit{reachable states} of the programs; scenarios are represented by directed paths through the state diagram from the initial state.
+    \begin{note}
+        Cycles represent the possibility of infinite computation in a finite graph
+    \end{note}
+\end{definition}
+\begin{example}{First Trivial Example}{}
+    \begin{cimage}
+        \includegraphics[width=.8\textwidth]{assets/20261013_104513.png}
+    \end{cimage}
+    \begin{itemize}
+        \item each labeled line represents an atomic statement;
+        \item each \hyperref[def:process]{Process} has private memory: local variables, such as $k1$ and $k2$;
+        \item \hyperref[def:process]{Processes} shares some memory: global variables, such as $n$; 
+        \item program execution with 2 scenarios:
+            \begin{itemize}
+                \item $p1,\,q1 \Rightarrow n$ finally is equal to $2$
+                \item $q1,\,p1 \Rightarrow n$ finally is equal to $1$
+            \end{itemize}
+    \end{itemize}
+    The \hyperref[def:state]{State} tuple is $<p,q,n,k1,k2>$ 
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/20261013_105048.png}
+        \caption{State diagram with 5 \hyperref[def:state]{States} and 2 scenarios}\label{fig:20261013_105048}
+    \end{cimage}
+\end{example}
+\begin{example}{}{}
+    \begin{quote}[State diagram? How many scenarios?]
+    \end{quote}
+    \begin{ctable}{|c|c|}
+        \hline
+        \textbf{p} & \textbf{q} \\
+        \hline
+        \textbf{p1:} \texttt{print("p1")} & \textbf{q1:} \texttt{print("q1")} \\
+        \textbf{p2:} \texttt{print("p2")} & \textbf{q2:} \texttt{print("q2")} \\
+        \hline
+    \end{ctable}
+    \begin{cimage}
+        \includegraphics[width=.3\textwidth]{assets/20261013_110029.png}
+        $\qquad$
+        \includegraphics[width=.2\textwidth]{assets/20261013_110052.png}
+    \end{cimage}
+\end{example}
+\subsubsection{Generalizing...}\label{sub:cp_generalizing} % (fold)
+The number of scenarios produced by $n$ processes, each having $m_i$ actions is:
+\[
+    n_s = \dfrac{\pt{\dsum_{i=1}^nm_i}!}{\dprod_{i=1}^n\pt{m_i!}}
+\]
+\begin{ctable}{r||r|r|r|r|r}
+    & $n = 2$ & $3$ & $4$ & $5$ & $6$ \\
+    \hline
+    \hline
+    $m_i$ = $2$ & $6$ & $90$ & $2520$ & $113400$ & $2^{22.8}$ \\
+    \hline
+    $3$ & $20$ & $1680$ & $2^{18.4}$ & $2^{27.3}$ & $2^{36.9}$ \\
+    \hline
+    $4$ & $70$ & $34650$ & $2^{25.9}$ & $2^{38.1}$ & $2^{51.5}$ \\
+    \hline
+    $5$ & $252$ & $2^{19.5}$ & $2^{33.4}$ & $2^{49.1}$ & $2^{66.2}$ \\
+    \hline
+    $6$ & $924$ & $2^{24.0}$ & $2^{41.0}$ & $2^{60.2}$ & $2^{81.1}$ \\
+    \hline
+\end{ctable}
+% subsubsection Generalizing... (end)
+%
+\subsubsection{The Importance of being Atomic}\label{sub:cp_the_importance_of_being_atomic} % (fold)
+With atomic increment:
+\begin{ctable}{|c|c|}
+    \hline
+    \multicolumn{2}{|l|}{\texttt{integer n := 0}} \\
+    \hline
+    \textbf{p} & \textbf{q} \\
+    \hline
+    \textbf{p1:} \texttt{n := n + 1} & \textbf{q1:} \texttt{n := n + 1} \\
+    \hline
+\end{ctable}
+Without an atomic increment:
+\begin{ctable}{|l|l|}
+    \hline
+    \multicolumn{2}{|l|}{\texttt{integer n := 0}} \\
+    \hline
+    \textbf{p} & \textbf{q} \\
+    \hline
+    \texttt{integer tmp;} & \texttt{integer tmp;} \\
+    \textbf{p1:} \texttt{tmp := n} & \textbf{q1:} \texttt{tmp := n} \\
+    \textbf{p2:} \texttt{n := tmp + 1} & \textbf{q2:} \texttt{n := tmp + 1} \\
+    \hline
+\end{ctable}
+\begin{warning}[In the second case, scenarios exist in which the final value of $n$ is $1$]
+\end{warning}
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/20261013_113712.png}
+    \caption{Diagram with 12 states, only 2 scenarios over 6 have final $n = 2$}\label{fig:20261013_113712}
+\end{cimage}
+% subsubsection The Importance of being Atomic (end)
+%
+\subsubsection{Non-Atomic Structures}\label{sub:cp_non_atomic_structures} % (fold)
+The notion of ``atomic'' can be referred not only to actions, but also to data structures.
+\begin{definition}{Atomic Data Object}{atomic-object}
+    A data object is defined \textbf{atomic} if it can be in a finite number of \hyperref[def:state]{States} equals to the number of values that it can assume, operations change atomically that state.
+\end{definition}
+\begin{quote}
+    Typically, primitive data type in concurrent languages are atomic
+    \begin{warning}[Not always]
+        Abstract data types composed by multiple simpler data objects are typically \textbf{non-atomic}
+    \end{warning}
+\end{quote}
+In that case for the ADT (or more generally data object) it is possible to identify two basic types of \hyperref[def:state]{States}: \textbf{internal} and \textbf{external}.
+\begin{definition}{Internal State}{int-state}
+    An \textbf{internal state} is meaningful for who defines the data object (class)
+\end{definition}
+\begin{definition}{External State}{ext-state}
+    An \textbf{external state} is meaningful for who uses the data object (class)
+\end{definition}
+The correspondence among internal and external states is \textit{partial}: there exists internal state which have no correspondent external state.
+\begin{definition}{Consistent State}{consistent-state}
+    Internal state which have a corresponded external state are defined \textbf{consistent}
+\end{definition}
+Then, the execution of an operation on an ADT can go through states that are \textbf{not \hyperref[def:consistent-state]{consistent}}
+\begin{note}
+    This is not a problem in the case of sequential programming, thanks to information hiding
+    \begin{critical}
+        Conversely, it is a problem in the case of concurrent programming: it can happen that a process would work on an object while the object is in an inconsistent state, since a \hyperref[def:process]{Process} that are operating on it.
+    \end{critical}
+\end{note}
+\begin{remark}{}{}
+    It is necessary to introduce proper mechanisms that would guarantee that processes work on data objects that are always in states that are \hyperref[def:consistent-state]{consistent}
+\end{remark}
+% subsubsection Non Atomic Structures (end)
+%
+\subsubsection{Cyclic Processes}\label{sub:cp_cyclic_processes} % (fold)
+$p$ and $q$ processes cycling on a condition:
+\begin{ctable}{|l|l|}
+    \hline
+    \multicolumn{2}{|l|}{\texttt{integer n := 1}} \\
+    \hline
+    \textbf{p} & \textbf{q} \\
+    \hline
+    \textbf{p1:} \texttt{while (n < 1)} & \textbf{q1:} \texttt{while (n >= 0)} \\
+    \textbf{p2:} \texttt{n := n + 1} & \textbf{q2:} \texttt{n := n - 1} \\
+    \hline
+\end{ctable}
+\begin{note}[Analysis]
+    \begin{itemize}
+        \item state diagram?
+        \item construct a scenario in which the loop in $p$ executes exactly one;
+        \item construct a scenario in which the loop in $p$ executes exactly three times;
+        \item construct a scenario in which both loops execute infinitely often;
+    \end{itemize}
+\end{note}
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/20261013_122811.png}
+    \caption{The state diagram}\label{fig:20261013_122811}
+\end{cimage}
+% subsubsection Cyclic Processes (end)
+% subsection Modelling Using State Diagrams (end)
+%
+% section Modelling Concurrent Program Execution using FSP (end)
+%
+\section{The Critical Section Problem}\label{sec:cp_the_critical_section_problem} % (fold)
+Introduced by Dijkstra, the \hyperref[sub:an_critical_sections]{Critical Section} problem can be considered one of the most important and well-studied problem in \hyperref[def:conc-prog]{Concurrent Programming}, in the context of \hyperref[def:process]{Process} competition.
+\begin{theorem}{Problem Definition}{cs-problem}
+    $N$ processes, each executing in an infinite loop as a sequence of statements that can be divided in $2$ subsequences: the \hyperref[sub:an_critical_sections]{Critical Section} and the \textit{non-critical} section.
+    \begin{codeblock}{}
+    P[1..n]:
+    loop {
+        <non-critical section>
+        entry (or pre-) protocol
+        <critical section>
+        exit (or post-) protocol
+        <non-critical section>
+    }
+    \end{codeblock}
+    \begin{note}
+        Each \hyperref[sub:an_critical_sections]{Critical Section} is typically a sequence of statements that access some shared object
+    \end{note}
+\end{theorem}
+The problem is intended to model a system that performs complex computation, but occasionally need to access data or resources that are shared by several \hyperref[def:process]{Processes}.
+\begin{example}{}{}
+    A check-in-kiosk at an airport, accessing to a central database of passengers
+\end{example}
+%
+\subsection{Critical Sections Properties}\label{sub:cp_critical_sections_properties} % (fold)
+Our task is to design \textit{entry and exit protocols} that satisfy the following properties:
+\begin{itemize}
+    \item \textbf{mutual exclusion}, statements from the \hyperref[def:crit-sec]{Critical Sections} of two or more \hyperref[def:process]{Processes} must not be interleaved;
+    \item \textbf{freedom from deadlock}, if some \hyperref[def:process]{Processes} are trying to enter their \hyperref[def:crit-sec]{Critical Sections}, then one of them must eventually succeed;
+    \item \textbf{freedom from individual starvation}, if any \hyperref[def:process]{Process} tries to enter their \hyperref[def:crit-sec]{Critical Section} then that \hyperref[def:process]{Process} must eventually succeed (\textbf{bounded waiting property});
+\end{itemize}
+\begin{note}
+    Any proposed solution must satisfy also the \textbf{progress property} for the  \hyperref[def:crit-sec]{Critical Section}: once a process starts to execute the statements of its critical section, it must eventually finish
+    \begin{critical}[The non-critical section need not to progress]
+    \end{critical}
+\end{note}
+% subsection Critical Sections Properties (end)
+%
+\subsection{Critical Section Solution}\label{sub:cp_critical_section_solution} % (fold)
+The \hyperref[th:cs-problem]{critical section problem} can be easily solved by using basic mechanisms such as \textit{semaphores} or \textit{locks}, that must be provided by the concurrent machine.
+\begin{note}
+    In this section we focus instead on a purely algorithmic solution without using high-level mechanism, but solely basic atomic statements (e.g. load and store)
+\end{note}
+%
+\subsubsection{CS for Two Processes}\label{sub:cp_cs_for_two_processes} % (fold)
+First we analyse the problem considering $2$ \hyperref[def:process]{Processes} $P$ and $Q$ sharing some global variables.
+% -- sample cs problems table ---
+\begin{ctable}{|l|l|}
+    \hline
+    \multicolumn{2}{|l|}{\textbf{Critical Section Problem}} \\
+    \hline
+    \multicolumn{2}{|l|}{Global Variables} \\
+    \hline
+    \multicolumn{2}{|l|}{} \\
+    \multicolumn{2}{|c|}{
+        \begin{ntable}{|l|l|}
+            \hline
+            \textbf{p} & \textbf{q} \\
+            \hline
+            \texttt{Local Variables} & \texttt{Local Variables} \\
+            & \\
+            \texttt{loop forever} & \texttt{loop forever} \\
+            \texttt{    non-critical section} & \texttt{    non-critical section} \\
+            \texttt{    pre-protocol} & \texttt{    pre-protocol} \\
+            \texttt{    critical section} & \texttt{    critical section} \\
+            \texttt{    post-protocol} & \texttt{    post-protocol} \\
+            \hline
+        \end{ntable}
+    } \\
+    \multicolumn{2}{|l|}{} \\
+    \hline
+\end{ctable}
+% -- sample cs problems table ---
+\begin{note}
+    The protocols may require local or global variables, we assume that no variables used in the \hyperref[def:crit-sec]{Critical Section} and non-critical section \red{are used} in the protocols
+\end{note}
+% subsubsection CS for Two Processes (end)
+% subsection Critical Section Solution (end)
+% section The Critical Section Problem (end)
+\section{FINO A SLIDE 29}\label{sec:fino_a_slide_29} % (fold)
+% section FINO A SLIDE 29 (end)
+% chapter Modelling and Verification in Concurrent Programming (end)

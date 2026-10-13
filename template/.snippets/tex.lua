@@ -154,6 +154,9 @@ return {
 
     s({ trig = "ieq", dscr = "Inline equation" }, {
         t("$"),
+        f(function(_, snip)
+            return snip.env.TM_SELECTED_TEXT
+        end),
         i(1),
         t("$"),
     }),
