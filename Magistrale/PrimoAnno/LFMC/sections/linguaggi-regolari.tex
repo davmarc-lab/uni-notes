@@ -958,27 +958,18 @@ Oppure un altro modo è quello di osservare un'espressione regolare $E$ di lungh
 %
 \section{Equivalenza e Minimizzazione di Automi}\label{sec:lr_equivalenza_e_minimizzazione_di_automi} % (fold)
 \subsection{Equivalenza degli Stati}\label{sub:lr_equivalenza_degli_stati} % (fold)
-\begin{theorem}{}{stati-equiv}
+\begin{theorem}{Stati Equivalenti}{stati-equiv}
     Diciamo che due stati $p$ e $q$ sono \textbf{equivalenti} se per ogni stringa di \textit{input} $w$, $\hat\dt\pt{p,w}$ è uno stato accettante se e solo se $\hat\dt\pt{q,w}$ è uno stato accettante.
 \end{theorem}
-\begin{theorem}{}{}
+\begin{theorem}{Stati Distinguibili}{stati-distin}
     Se due stati non sono equivalenti, diciamo che sono \textbf{distinguibili}.
     In altre parole lo stato $p$ è distinguibile da $q$ se esiste almeno una stringa $w$ tale che uno fra $\hat\dt\pt{p,w}$ e $\hat\dt\pt{q,w}$ è accettante e l'altro no.
 \end{theorem}
 L'algoritmo, chiamato \textit{algoritmo riempi-tabella}, scopre ricorsivamente le coppie di stati distinguibili di un \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA} $A = \pt{Q;\Si,\dt,q_0,F}$.
-\begin{remark}{}{}
-    \begin{description}
-        \item[Base] Se $p$ è uno stato accettante e $q$ è non accettante, la coppia $\pg{p,q}$ è distinguibile.
-        \item[Induzione] Siano $p$ e $q$ due stati tali che, per un simbolo di input $a$, $r = \dt\pt{p,a}$ e $s = \dt(q,a)$ sono stati che sappiamo essere distinguibili.
-            Allora $\pg{p,q}$ è una coppia di stati distinguibili.
-            \emptyln{}
-            La regola vale perché dev'esserci una stringa $w$ che distingue $r$ da $s$; in altre parole uno solo tra $\hat\dt(r,w)$ e $\hat\dt(s,w)$ è accettante.
-            Ma allora la stringa $aw$ distingue $p$ da $q$ perché $\hat\dt(p,aw)$ e $\hat\dt(q,aw)$ coincidono rispettivamente con $\hat\dt(r,w)$ e $\hat\dt(s,w)$.
-    \end{description}
-\end{remark}
 \begin{example}{Che cosa si può dire su $A$ e $E$?}{}
     \begin{cimage}
         \includegraphics[width=.6\textwidth]{assets/20261009_133731.png}
+        \caption{}\label{fig:20261009_133731}
     \end{cimage}
     \[
         \begin{aligned}
@@ -1006,9 +997,39 @@ L'algoritmo, chiamato \textit{algoritmo riempi-tabella}, scopre ricorsivamente l
     \end{remark}
 \end{example}
 %
-\subsection{Algoritmo riempi-tabella}\label{sub:lr_algoritmo_riempi_tabella} % (fold)
-
-% subsection Algoritmo riempi-tabella (end)
+\subsubsection{Algoritmo riempi-tabella}\label{sub:lr_algoritmo_riempi_tabella} % (fold)
+\begin{remark}{Riempi-Tabella}{}
+    \begin{description}
+        \item[Base] Se $p$ è uno stato accettante e $q$ è non accettante, la coppia $\pg{p,q}$ è .
+        \item[Induzione] Siano $p$ e $q$ due stati tali che, per un simbolo di input $a$, $r = \dt\pt{p,a}$ e $s = \dt(q,a)$ sono stati che sappiamo essere distinguibili.
+            Allora $\pg{p,q}$ è una coppia di stati distinguibili.
+            \emptyln{}
+            La regola vale perché dev'esserci una stringa $w$ che distingue $r$ da $s$; in altre parole uno solo tra $\hat\dt(r,w)$ e $\hat\dt(s,w)$ è accettante.
+            Ma allora la stringa $aw$ distingue $p$ da $q$ perché $\hat\dt(p,aw)$ e $\hat\dt(q,aw)$ coincidono rispettivamente con $\hat\dt(r,w)$ e $\hat\dt(s,w)$.
+    \end{description}
+\end{remark}
+Prendendo in considerazione l'automa in \cref{fig:20261009_133731}, si costruisce la seguente tabella vuota:
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/20261013_172553.png}
+\end{cimage}
+Partendo dall'unico stato accettante $C$, si scrivono delle $x$ in ogni casella relativa a $c$ (passo \textbf{Base} dell'algoritmo).
+\emptyln{}
+Si analizzano tutte le coppie di stati, seguendo il passo \textbf{Induttivo}, e si inseriscono le $x$ in ogni \textbf{coppia di \hyperref[th:stati-distin]{Stati Distinguibili}}.
+Per esempio la coppia $\pg{C,H}$ è distinguibile e gli stati $E$ e $F$ vanno rispettivamente in $H$ e $C$ su input $0$, si deduce che anche $\pg{E,F}$ è una coppia distinguibile.
+\begin{note}[Se una coppia termina in un altra coppia i cui stati non sono stati identificati come distinti, la valutazione viene saltata e rieseguita al passo induttivo successivo]
+\end{note}
+Al termine dell'algoritmo, ovvero quando non è più possibile distinguere ulteriori stati, si ottiene la seguente tabella:
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/20261013_174544.png}
+\end{cimage}
+\begin{theorem}{}{}
+    Se due stati non sono distinti dell'algoritmo, allora sono \hyperref[th:stati-equiv]{Equivalenti}.
+\end{theorem}
+% subsubsection Algoritmo riempi-tabella (end)
 % subsection Equivalenza degli Stati (end)
+%
+\subsection{Equivalenza di Linguaggi Regolari}\label{sub:lr_equivalenza_di_linguaggi_regolari} % (fold)
+
+% subsection Equivalenza di Linguaggi Regolari (end)
 % section Equivalenza e Minimizzazione di Automi (end)
 % chapter Linguaggi Regolari (end)
