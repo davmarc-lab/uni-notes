@@ -71,7 +71,7 @@
     \end{note}
 \end{definition}
 %
-\subsection{Automi a Stati Finiti Deterministici}\label{sub:lr_automi_a_stati_finiti_deterministici} % (fold)
+\subsection{Automi a Stati Finiti Deterministici}\label{sub:lr_dfa} % (fold)
 Un \ac{dfa} è una \textbf{quintupla}:
 \[
     A = \pt{Q,\Si,\dt, q_0, F}
@@ -187,7 +187,7 @@ Un \textbf{\ac{nfa}} accetta una stringa se, tra i tanti possibili, esiste un ca
    \end{ctable}
 \end{example}
 \begin{note}[Lo stato Pozzo]
-    Stato che durante un'esecuzione di un \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA}, non ha transizioni che cambiano stato.
+    Stato che durante un'esecuzione di un \hyperref[sub:lr_dfa]{DFA}, non ha transizioni che cambiano stato.
     \begin{critical}
         All'interno dei \ac{nfa} lo stato pozzo viene rappresentato dall'assenza di transizioni
     \end{critical}
@@ -230,7 +230,7 @@ Sorprendentemente, per ogni \ac{nfa} $N$ c'è un \ac{dfa} $D$, tale che $L\pt D 
     \[
         N = \pt{Q_N,\Si,\dt_N,q_0,F_N}
     \]
-    costruiremo un \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA}
+    costruiremo un \hyperref[sub:lr_dfa]{DFA}
     \[
         D = \pt{Q_D,\Si,\dt_D,\pg{q_0},F_D}
     \]
@@ -290,20 +290,20 @@ Sorprendentemente, per ogni \ac{nfa} $N$ c'è un \ac{dfa} $D$, tale che $L\pt D 
     \end{description}
     \begin{cimage}
         \includegraphics[width=.6\textwidth]{assets/20260924_170516.png}
-        \caption{Sottoinsieme \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA} solamente con stati accessibili}\label{fig:20260924_170516}
+        \caption{Sottoinsieme \hyperref[sub:lr_dfa]{DFA} solamente con stati accessibili}\label{fig:20260924_170516}
     \end{cimage}
 \end{example}
 \begin{theorem}{}{}
-    Sia $D$ il \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA} ottenuto da un \hyperref[sub:lr_automi_a_stati_finiti_non_deterministici]{NFA} $N$ con la costruzione a sottoinsiemi, allora:
+    Sia $D$ il \hyperref[sub:lr_dfa]{DFA} ottenuto da un \hyperref[sub:lr_automi_a_stati_finiti_non_deterministici]{NFA} $N$ con la costruzione a sottoinsiemi, allora:
     \[
         L\pt D = L \pt N
     \]
 \end{theorem}
 \begin{theorem}{}{}
-    Un \hyperref[def:linguaggio]{linguaggio} è accettato da un \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA} se e solo se $L$ è accettato da un \hyperref[sub:lr_automi_a_stati_finiti_non_deterministici]{NFA}
+    Un \hyperref[def:linguaggio]{linguaggio} è accettato da un \hyperref[sub:lr_dfa]{DFA} se e solo se $L$ è accettato da un \hyperref[sub:lr_automi_a_stati_finiti_non_deterministici]{NFA}
 \end{theorem}
 \begin{note}
-    Il numero di stati del \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA} equivalente a un \hyperref[sub:lr_automi_a_stati_finiti_non_deterministici]{NFA} con $n$ stati è, nel caso peggiore, pari a $2^n$ stati
+    Il numero di stati del \hyperref[sub:lr_dfa]{DFA} equivalente a un \hyperref[sub:lr_automi_a_stati_finiti_non_deterministici]{NFA} con $n$ stati è, nel caso peggiore, pari a $2^n$ stati
 \end{note}
 % subsection Equivalenza di DFA e NFA (end)
 %
@@ -383,14 +383,14 @@ L'operatore \textbf{epsilon-chiusura} chiude uno stato aggiungendo tutti gli sta
     \end{cimage}
 \end{example}
 \begin{theorem}{}{}
-    Un \hyperref[def:linguaggio]{linguaggio} $L$ è accettato da un \hyperref[sub:lr_fa_con_transizioni_epsilon]{$\eps$-NFA} $E$ se e solo se $L$ è accettato da un \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA}. 
+    Un \hyperref[def:linguaggio]{linguaggio} $L$ è accettato da un \hyperref[sub:lr_fa_con_transizioni_epsilon]{$\eps$-NFA} $E$ se e solo se $L$ è accettato da un \hyperref[sub:lr_dfa]{DFA}. 
 \end{theorem}
 % subsubsection Epsilon-Chiusura (end)
 % subsection FA con Transizioni Epsilon (end)
 % section Concetti di Base (end)
 %
 \section{Espressioni Regolari}\label{sec:lr_espressioni_regolari} % (fold)
-Un FA (\hyperref[sub:lr_automi_a_stati_finiti_non_deterministici]{NFA} o \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA}) è un metodo per costruire una macchina che riconosce \hyperref[def:ling-reg]{linguaggi regolari}.
+Un FA (\hyperref[sub:lr_automi_a_stati_finiti_non_deterministici]{NFA} o \hyperref[sub:lr_dfa]{DFA}) è un metodo per costruire una macchina che riconosce \hyperref[def:ling-reg]{linguaggi regolari}.
 \begin{definition}{Espressioni Regolari}{reg-exp}
     Un \textbf{espressione regolare} offre un modo dichiarativo di esprimere un \hyperref[def:ling-reg]{linguaggio regolare}, ovvero le \red{stringhe da accettare}.
 \end{definition}
@@ -603,7 +603,7 @@ Per mostrare che gli FA sono equivalenti alle \hyperref[sec:lr_espressioni_regol
 \end{itemize}
 %
 \subsubsection{Da DFA a Espressioni Regolari}\label{sub:lr_da_dfa_a_espressioni_regolari} % (fold)
-Il procedimento è molto complesso, detto a grandi linee si devono formare espressioni che descrivano insiemi di stringhe che etichettano certi cammini nel \textbf{diagramma di transizione} del \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA}, considerando però solo cammini che attraversano un sottoinsieme limitato degli stati.
+Il procedimento è molto complesso, detto a grandi linee si devono formare espressioni che descrivano insiemi di stringhe che etichettano certi cammini nel \textbf{diagramma di transizione} del \hyperref[sub:lr_dfa]{DFA}, considerando però solo cammini che attraversano un sottoinsieme limitato degli stati.
 \\
 Partendo da espressioni semplici, archi o nodi \textbf{singoli}, e via via per induzione si costruiscono le espressioni che fanno passare i cammini attraverso insiemi di stati via via più grandi.
 Alla fine i cammini possono passare attraverso qualunque stato, in modo che le espressioni generate rappresentino tutti i cammini possibili.
@@ -611,7 +611,7 @@ Alla fine i cammini possono passare attraverso qualunque stato, in modo che le e
     Preferibile iniziare dagli stati \textbf{non} di accettazione
 \end{note}
 \begin{theorem}{}{}
-    Per ogni \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA} $A = \pt{Q,\Si,\dt,q_0,F}$ esiste un'espressione regolare $R$ tale che:
+    Per ogni \hyperref[sub:lr_dfa]{DFA} $A = \pt{Q,\Si,\dt,q_0,F}$ esiste un'espressione regolare $R$ tale che:
     \[
         L\pt R = L\pt A
     \]
@@ -627,7 +627,7 @@ Alla fine i cammini possono passare attraverso qualunque stato, in modo che le e
     Per lo stato accettante $q$ eliminiamo dall'automa originale tutti gli stati eccetto $q_0$ (stato iniziale) e $q$.
 \end{example}
 \begin{example}{Da DFA a Espressione Regolare}{dfa-to-espr}
-    Dato un \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA}, che rappresenta tutte le stringhe che non terminano con ``$01$'':
+    Dato un \hyperref[sub:lr_dfa]{DFA}, che rappresenta tutte le stringhe che non terminano con ``$01$'':
     \begin{cimage}
         \includegraphics[width=.4\textwidth]{assets/20261001_170746.png}
         \caption{}\label{fig:dfa-to-espr-initial}
@@ -829,8 +829,8 @@ Se invece lo stato iniziale è anche uno stato di accettazione, l'automa sarà d
 \begin{theorem}{Chiusura rispetto al complemento}{lr-complem}
     Se $L$ è un linguaggio regolare sull'alfabeto $\Si$, allora anche $\overline L = \Si[*] - L$ è regolare
     \begin{proof}
-        Sia $L = L(A)$ per un \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA} $A = \pt{Q,\Si,\dt,q_0,F}$.
-        Allora $\overline L = L(B)$, dove $B$ è il \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA} $\pt{Q,\Si,\dt,q_0,Q-F}$.
+        Sia $L = L(A)$ per un \hyperref[sub:lr_dfa]{DFA} $A = \pt{Q,\Si,\dt,q_0,F}$.
+        Allora $\overline L = L(B)$, dove $B$ è il \hyperref[sub:lr_dfa]{DFA} $\pt{Q,\Si,\dt,q_0,Q-F}$.
         In altre parole $B$ è esattamente come $A$, ma gli stati accettati di $A$ sono diventati stati non accettanti di $B$, e viceversa.
         Allora $w$ è in $L(B)$ se e solo se $\hat\dt\pt{q_0,w}$ è in $Q-F$, il che succede se e solo se $w$ non è in $L(A)$.
     \end{proof}
@@ -856,7 +856,7 @@ Se invece lo stato iniziale è anche uno stato di accettazione, l'automa sarà d
     \end{proof}
     \begin{proof}
         Siano $L$ e $M$ i linguaggi degli automi \\$A_L = \pt{Q_L,\Si,\dt_L,q_L,F_L}$ e $A_M = \pt{Q_M,\Si,\dt_M,q_M,F_M}$.
-        Inoltre per semplicità si assume che entrambi siano \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA}.
+        Inoltre per semplicità si assume che entrambi siano \hyperref[sub:lr_dfa]{DFA}.
         \emptyln{}
         Per $L\cap M$ costruiremo un automa $A$ che simuli sia $A_L$ sia$A_M$.
         Gli stati di $A$ sono coppie di stati, il primo di $A_L$ e il secondo di $A_M$.
@@ -965,7 +965,7 @@ Oppure un altro modo è quello di osservare un'espressione regolare $E$ di lungh
     Se due stati non sono equivalenti, diciamo che sono \textbf{distinguibili}.
     In altre parole lo stato $p$ è distinguibile da $q$ se esiste almeno una stringa $w$ tale che uno fra $\hat\dt\pt{p,w}$ e $\hat\dt\pt{q,w}$ è accettante e l'altro no.
 \end{theorem}
-L'algoritmo, chiamato \textit{algoritmo riempi-tabella}, scopre ricorsivamente le coppie di stati distinguibili di un \hyperref[sub:lr_automi_a_stati_finiti_deterministici]{DFA} $A = \pt{Q;\Si,\dt,q_0,F}$.
+L'algoritmo, chiamato \textit{algoritmo riempi-tabella}, scopre ricorsivamente le coppie di stati distinguibili di un \hyperref[sub:lr_dfa]{DFA} $A = \pt{Q;\Si,\dt,q_0,F}$.
 \begin{example}{Che cosa si può dire su $A$ e $E$?}{}
     \begin{cimage}
         \includegraphics[width=.6\textwidth]{assets/20261009_133731.png}
@@ -1021,6 +1021,7 @@ Per esempio la coppia $\pg{C,H}$ è distinguibile e gli stati $E$ e $F$ vanno ri
 Al termine dell'algoritmo, ovvero quando non è più possibile distinguere ulteriori stati, si ottiene la seguente tabella:
 \begin{cimage}
     \includegraphics[width=.4\textwidth]{assets/20261013_174544.png}
+    \caption{}\label{fig:20261013_174544}
 \end{cimage}
 \begin{theorem}{}{}
     Se due stati non sono distinti dell'algoritmo, allora sono \hyperref[th:stati-equiv]{Equivalenti}.
@@ -1029,7 +1030,86 @@ Al termine dell'algoritmo, ovvero quando non è più possibile distinguere ulter
 % subsection Equivalenza degli Stati (end)
 %
 \subsection{Equivalenza di Linguaggi Regolari}\label{sub:lr_equivalenza_di_linguaggi_regolari} % (fold)
-
+L'\hyperref[sub:lr_algoritmo_riempi_tabella]{Algoritmo riempi-tabella} fornisce un modo semplice per stabilire se due \hyperref[def:ling-reg]{Linguaggi Regolari} coincidono.
+\emptyln{}
+Siano $L$ e $M$ due \hyperref[def:ling-reg]{Linguaggi Regolari} descritti in qualche forma, si convertono le due rappresentazioni in \hyperref[sub:lr_dfa]{DFA}.
+A questo punto si considera un \hyperref[sub:lr_dfa]{DFA} i cui stati siano l'unione degli stati dei \hyperref[sub:lr_dfa]{DFA} di $L$ e $M$.
+Il risultato avrebbe due stati iniziali, ma per quanto concerne la verifica di equivalenza \textbf{lo stato iniziale è irrilevante}.
+\begin{remark}{}{}
+    Se i due stati iniziali sono \hyperref[th:stati-equiv]{Equivalenti} allora $L = M$
+\end{remark}
+\begin{example}{Equivalenza di Linguaggi Regolari}{}
+    \begin{cimage}
+        \includegraphics[width=.2\textwidth]{assets/20261014_102623.png}
+        \caption{}\label{fig:20261014_102623}
+    \end{cimage}
+    Entrambi gli automi accettano la stringa vuota e tutte le stringhe che terminano per $0$, cioè:
+    \[
+        L = \eps + (0+1)^*0
+    \]
+    Si considera l'unione dei due automi, avente gli stati da $A$ fino a $E$, e si applica l'\hyperref[sub:lr_algoritmo_riempi_tabella]{Algoritmo riempi-tabella}.
+    Partendo dal passo \textbf{Base}, quindi riempiendo la tabella con delle $x$ partendo dalle coppie di stati con almeno uno stato \textbf{iniziale}, si nota che non ci sono ulteriori iterazioni da fare, ottenendo così la seguente tabella:
+    \begin{cimage}
+        \includegraphics[width=.2\textwidth]{assets/20261014_103045.png}
+        \caption{}\label{fig:20261014_103045}
+    \end{cimage}
+    \begin{note}
+        Le quattro coppie residue $\pg{A,C}$, $\pg{A,D}$, $\pg{C,D}$ e $\pg{B,E}$ sono \hyperref[th:stati-equiv]{Equivalenti}.
+    \end{note}
+    Dal momento che l'algoritmo stabilisce l'\hyperref[th:stati-equiv]{Equivalenza} di $A$ e $C$, che sono gli stati iniziali, concludiamo che questi accettano lo stesso linguaggio.
+\end{example}
 % subsection Equivalenza di Linguaggi Regolari (end)
+%
+\subsection{Minimizzazione di DFA}\label{sub:lr_minimizzazione_di_dfa} % (fold)
+La soluzione al problema dell'\hyperref[sub:lr_equivalenza_degli_stati]{Equivalenza degli Stati} ha un'altra conseguenza importante: è possibile \textbf{minimizzare} un \hyperref[sub:lr_dfa]{DFA}, cioè trovarne uno equivalente con il numero minimo di stati fra i \hyperref[sub:lr_dfa]{DFA} che accettano lo stesso linguaggio.
+\begin{note}
+    Il \hyperref[sub:lr_dfa]{DFA} minimo rispetto agli stati è unico
+\end{note}
+L'algoritmo proposto considera due fasi:
+\begin{enumerate}
+    \item si \textbf{eliminano} gli stati \textbf{irraggiungibili} dallo stato iniziale;
+    \item gli stati rimanenti vengono poi ripartiti in \textbf{blocchi} in modo che gli stati in uno stesso blocco siano tutti \hyperref[th:stati-equiv]{Equivalenti} e due stati in blocchi diversi non lo siano mai.
+\end{enumerate}
+\begin{example}{}{}
+    Dalla figura \hyperref[fig:20261009_133731]{precedente}, e dalla sua rispettiva \hyperref[fig:20261013_174544]{tabella}, si ottengono i seguenti \textbf{blocchi di equivalenza}: $\pt{\pg{A,E}, \pg{B,H}, \pg{C}, \pg{D,F}, \pg{G}}$.
+    \begin{note}
+        Tra le coppie di \hyperref[th:stati-equiv]{Stati Equivalenti} si trovano ciascuna in un blocco, mentre gli \hyperref[th:stati-distin]{Stati Distinguibili} da ogni altro stato se ne stanno da soli, ciascuno in un blocco
+    \end{note}
+\end{example}
+\begin{theorem}{}{}
+    L'\hyperref[th:stati-equiv]{Equivalenza} degli stati è \textbf{transitiva}, ovvero se due stati $p$ e $q$ di un \hyperref[sub:lr_dfa]{DFA} $A = \pt{Q,\Si,\dt,q_0,F}$ sono \hyperref[th:stati-equiv]{Equivalenti}, e scopriamo che anche $q$ e $r$ lo sono, allora anche $p$ e $r$ saranno \hyperref[th:stati-equiv]{Equivalenti}.
+\end{theorem}
+\begin{remark}{Algoritmo di Minimizzazione}{alg-minim}
+    Per minimizzare un \hyperref[sub:lr_dfa]{DFA} $A = \pt{Q,\Si,\dt,q_0,F}$ si seguono i seguenti passi:
+    \begin{enumerate}
+        \item si determinano le coppie di \hyperref[th:stati-equiv]{Stati Equivalenti} con l'\hyperref[sub:lr_algoritmo_riempi_tabella]{Algoritmo riempi-tabella};
+        \item si partiziona l'insieme $Q$ degli stati in blocchi di stati a due a due \red{equivalenti};
+        \item si costruisce il \hyperref[sub:lr_dfa]{DFA} minimo equivalente $B$, prendendo i blocchi come stati.
+            Sia $\gm$ la funzione di transizione di $B$, sia $S$ un insieme di \hyperref[th:stati-equiv]{Stati Equivalenti} di $A$, e $a$ un simbolo di input.
+            \\
+            Deve esistere allora un blocco $T$ tale che, per ogni stato $q$ in $S$:
+            \[
+                \dt\pt{p,a} \in T
+            \]
+            In caso contrario il simbolo $a$ porterebbe due stati di $S$.
+            \begin{note}
+                $p$ e $q$, in blocchi diversi, sono \hyperref[th:stati-distin]{Distinguibili}
+            \end{note}
+            Concludendo, $p$ e $q$ non sono \hyperref[th:stati-equiv]{Equivalenti} e non appartengono \textbf{entrambi} a $S$.
+            \emptyln{}
+            Di conseguenza possiamo porre $\gm\pt{S,a} = T$, inoltre:
+            \begin{itemize}
+                \item lo stato iniziale di $B$ è il blocco contenente lo stato iniziale di $A$;
+                \item l'insieme degli stati accettanti di $B$ è l'insieme dei blocchi che contengono stati accettanti di $A$.
+                    \begin{note}
+                        Se uno stato è accettante, tutti gli stati nel suo blocco devono essere accettanti
+                    \end{note}
+                    Infatti uno stato accettante è distinguibile da ogni stato non accettante; quindi un blocco di \hyperref[th:stati-equiv]{Stati Equivalenti} non può contenere \textbf{stati accettanti} e \textbf{stati non accettanti}.
+            \end{itemize}
+    \end{enumerate}
+\end{remark}
+\section{TODO: Esempio minimizzazione e Finire Slide}\label{sec:todo_esempio_minimizzazione_e_finire_slide} % (fold)
+% section TODO: Esempio minimizzazione e Finire Slide (end)
+% subsection Minimizzazione di DFA (end)
 % section Equivalenza e Minimizzazione di Automi (end)
 % chapter Linguaggi Regolari (end)
