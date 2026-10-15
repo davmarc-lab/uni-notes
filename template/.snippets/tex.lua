@@ -219,4 +219,16 @@ return {
         i(0),
         t({ "", "\\end{codeblock}" }),
     }),
+
+    -- symbol to derive grammars
+    s({ trig = "drt", dscr = "Derivative Grammar", indet = false }, {
+        t("\\overset{*}{\\implies}")
+    }),
+    s({ trig = "ldrt", dscr = "Left Derivative Grammar", indet = false }, {
+        t("\\underset{lm}{\\implies}")
+    }),
+    s({ trig = "rdrt", dscr = "Right Derivative Grammar", indet = false }, {
+        t("\\underset{rm}{\\implies}")
+    }),
+
 }

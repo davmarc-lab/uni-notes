@@ -1,0 +1,324 @@
+% ltex: language=it
+\chapter{Linguaggi Liberi dal Contesto}\label{chap:ll_linguaggi_liberi_dal_contesto} % (fold)
+Visto che molti linguaggi non sono \hyperref[def:ling-reg]{Regolari}, allora è necessario considerare una classe più estesa dei linguaggi:
+\begin{itemize}
+    \item \ac{cfl}, \textit{linguaggi liberi dal contesto}, usati nello studio dei \hyperref[sec:i_linguaggi_naturali]{Linguaggi Naturali} dal 1950;
+    \item \ac{cfg}, \textit{grammatiche libere dal contesto}, sono la base della sintassi \ac{bnf}, usate per i linguaggi di programmazione;
+\end{itemize}
+%
+\section{Grammatiche Libere dal Contesto}\label{sec:ll_grammatiche_libere_dal_contesto} % (fold)
+\begin{example}{Esempio Informale di CFG}{}
+    \begin{definition}{Palindromo}{palindromo}
+        Una stringa $w$ è \textbf{palindroma} se e solo se:
+        \[
+            w = w^R
+        \]
+    \end{definition}
+    Si considera il \hyperref[def:ling-reg]{Linguaggio Regolare} dei \textit{palindromi} $L_{pal} = \pg{w\in\Si[*]:w = w^R}$, sia $\Si = \pg{0,1}$.
+    Sia $n$ il numero di stati di un ipotetico \hyperref[sub:lr_dfa]{DFA} $A$ tale che $L(A) = L_{pal}$.
+    Si ha che
+    \[
+        0^n10^n \in L_{pal}
+    \]
+    \begin{note}[Contraddizione]
+        Nel leggere lo $0^n$ iniziale $A$ deve passere per un \textbf{loop}.
+        Se omettiamo il loop, $A$ accetta una stringa $0^m10^n$ con $m < n$.
+    \end{note}
+    Si definisce $L_{pal}$ induttivamente:
+    \begin{description}
+        \item[Base] $\eps$, $0$ e $1$ sono \hyperref[def:palindromo]{Palindromi}.
+        \item[Induzione] Se $w$ è una \hyperref[def:palindromo]{Palindrome}, anche $0w0$ e $1w1$ lo sono.
+    \end{description}
+\end{example}
+Le \ac{cfg}, invece, sono un modo \textbf{formale} per definizione come quella per $L_{pal}$:
+\[
+    \begin{aligned}
+        & 1.\quad S \to \eps \\
+        & 2.\quad S \to 0 \\
+        & 3.\quad S \to 1 \\
+        & 4.\quad S \to 0S0 \\
+        & 5.\quad S \to 1S1 \\
+    \end{aligned}
+\]
+\begin{itemize}
+    \item $0$ e $1$ sono \textbf{terminali};
+    \item $S$ è una \textbf{categoria sintattica}, o più tecnicamente \textbf{variabile};
+    \item $S$ è in questa grammatica anche la categoria sintattica \textit{iniziale};
+    \item $1-5$ sono \textbf{produzioni} o \textbf{regole};
+\end{itemize}
+\begin{definition}{Grammatica Libera dal Contesto}{cfg}
+    Una \textbf{grammatica libera dal contesto} è una quadrupla:
+    \[
+        G = \pt{V,T,P,S}
+    \]
+    dove:
+    \begin{itemize}
+        \item $V$ è un insieme finito di simboli che formano le stringhe del linguaggio da definire (\textbf{terminali} o \textbf{simboli terminali});
+        \item $T$ è un insieme finito di \textbf{variabili}: ogni variabile rappresenta un linguaggio, ossia un insieme di stringhe;
+        \item $P$ è un insieme finito di \textbf{produzioni} o \textbf{regole}, che rappresentano la definizione ricorsiva del linguaggio.
+            Ogni produzione consiste di tre parti:
+            \begin{itemize}
+                \item una variabile definita (parzialmente) dalla produzione ed è spesso detta la \textbf{testa} della produzione;
+                \item il simbolo di produzione $\to$
+                \item una stringa di zero o più terminali e variabili, detta il \textbf{corpo della produzione}: rappresenta un modo di formare le stringhe nel linguaggio della variabile di testa;
+            \end{itemize}
+        \item $S$ è una variabile, chiamata \textbf{simbolo iniziale} o \textbf{variabile iniziale}, che rappresenta il linguaggio da definire;
+    \end{itemize}
+\end{definition}
+\begin{example}{}{}
+    La grammatica $G_{pal}$ per le palindrome è rappresentata da:
+    \[
+        G_{pal} = \pt{\pg{S},\pg{0,1},P,S}
+    \]
+    dove $P = \pg{S\to\eps,S\to0,S\to1,S\to0S0,S\to1S1}$
+    \begin{note}[A volte si raggruppano le produzioni con la stessa testa]
+        \[
+            \pg{S \to \eps|0|1|0S0|1S1}
+        \]
+    \end{note}
+\end{example}
+\begin{example}{Espressioni di un tipico linguaggio di programmazione}{}
+    Gli operatori sono $+$ e $*$, e gli operandi sono identificatori, cioè stringhe in
+    \[
+        L\pt{\pt{a+b}(a+b+0+1)^*}
+    \]
+    Le espressioni sono definite dalla grammatica:
+    \[
+        G = \pt{\pg{E,I},T,P,E}
+    \]
+    dove $T = \pg{+,*,(,),a,b,0,1}$ e $P$ è il seguente insieme di produzioni:
+    \[
+        \begin{aligned}
+            1.\quad E &\to I \\
+            2.\quad E &\to E+E\\
+            3.\quad E &\to E*E\\
+            4.\quad E &\to (E)\\
+            5.\quad I &\to a\\
+            6.\quad I &\to b\\
+            7.\quad I &\to Ia\\
+            8.\quad I &\to Ib\\
+            9.\quad I &\to I0\\
+            10.\quad I &\to I1\\
+        \end{aligned}
+    \]
+\end{example}
+%
+% section Grammatiche Libere dal Contesto (end)
+\section{Derivazioni per mezzo di una Grammatica}\label{sec:ll_derivazioni_per_mezzo_di_una_grammatica} % (fold)
+Le \textbf{produzioni} di una \hyperref[def:cfg]{CFG} si applicano per dedurre che determinate stringhe appartengono al linguaggio di una certa variabile.
+La deduzione può seguire due strade:
+\begin{description}
+    \item[Inferenza Ricorsiva] Si serve delle regole utilizzando il corpo per passare alla testa.
+        Ovvero si prendono stringhe di cui si conoscono l'appartenenza al linguaggio di ognuna delle variabili del corpo, si concatenano nell'ordine adeguato con i termini che compaiono nel corpo e si deduce che la stringa risultante è nel linguaggio della variabile che compare in testa. 
+    \item[Derivazione] Si applicano le \textbf{produzioni} dalla testa al corpo.
+        Si espande il simbolo iniziale usando una delle sue produzioni, cioè usando una produzione la cui testa sia il simbolo iniziale.
+        Successivamente si espande nuovamente la stringa risultante sostituendo una delle variabili con il corpo di una delle sue produzioni, e così via, fino a derivare una stringa fatta interamente di \textbf{terminali}.
+        \begin{note}
+            Il linguaggio della grammatica è l'insieme di tutte le stringhe di terminali ottenute con questa procedura
+        \end{note}
+\end{description}
+\begin{remark}{Derivazione}{gram-derivazione}
+    Si definisce $\overset{*}{\implies}$ la \textbf{chiusura riflessiva} e \textbf{transitiva} dell'operatore $\implies$.
+    \begin{description}
+        \item[Base] Per qualsiasi stringa $\al$ di terminali e variabili, $\al\overset{*}{\implies}\al$, in altri termini qualunque stringa deriva se stessa
+        \item[Induzione] Se $\al\overset{*}{\implies}\bt$ e $\bt\overset{*}{\implies}\gm$, allora $\al\overset{*}{\implies}\gm$.
+            Ossia se $\al$ può diventare $\beta$ in zero o più passi, e un passo ulteriore trasforma $\beta$ in $\gm$, allora $\alpha$ può diventare $\gamma$.
+            \\
+            Detto in altri termini, $\alpha\overset{*}{\implies}\beta$ significa che esiste una sequenza di stringhe $\vc{\gm_1}{\gm_n}$ con $n\ge1$ tale che:
+            \begin{enumerate}
+                \item $al = \gm_1$
+                \item $\beta = \gm_n$
+                \item per $\for[][][n-1]$ abbiamo $\gm_i \implies \gm_{\inc i}$
+            \end{enumerate}
+    \end{description}
+\end{remark}
+\begin{example}{Derivazione di una stringa nella grammatica delle espressioni}{}
+    Data la stringa $a*(a+b00)$ si può derivare $E$ in questo modo:
+    \[
+        \begin{aligned}
+            &E \imp E*E\imp I*E\imp a*E\imp a*(E)\imp a*(E+E)\imp \\
+            &a*(I+E)\imp a*(a+E)\imp a*(a+I)\imp a*(a+I0)\imp \\
+            &a*(a+I00)\imp a*(a+b00)
+        \end{aligned}
+    \]
+    \begin{note}
+        A ogni passo potremmo avere varie regole tra cui scegliere, ad esempio:
+        \[
+            \begin{aligned}
+                &I*E\imp a*E\imp a*(E) \text{ oppure} \\
+                &I*E\imp I*(E)\imp a*(E)
+            \end{aligned}
+        \]
+        \begin{critical}[Non tutte le scelte portano a derivazioni di una particolare stringa]
+            Ad esempio non è possibile derivare $a*(a+b00)$ utilizzando:
+            \[
+                E\imp E+E
+            \]
+        \end{critical}
+    \end{note}
+\end{example}
+\subsection{Derivazioni a Sinistra e a Destra}\label{sub:ll_derivazioni_a_sinistra_e_a_destra} % (fold)
+\begin{description}
+    \item[Derivazione a Sinistra $\underset{lm}{\imp}$] Rimpiazza sempre la variabile più a sinistra con il corpo di una delle sue regole.
+    \item[Derivazione a Destra $\underset{rm}{\imp}$] Rimpiazza sempre la variabile più a destra con il corpo di una delle sue regole.
+\end{description}
+\begin{example}{SLIDE 9}{}
+\end{example}
+% subsection Derivazioni a Sinistra e a Destra (end)
+%
+\subsection{Il Linguaggio della Grammatica}\label{sub:ll_il_linguaggio_della_grammatica} % (fold)
+Se $G=\pt{V,T,P,S}$ è un \hyperref[def:cfg]{CFG}, allora il \textbf{linguaggio} di $G$ è
+\[
+    L(G) = \pg{w\in T^*:S \overset{*}{\implies}w}
+\]
+\begin{note}
+    Cioè l'insieme delle stringhe su $T^*$ \hyperref[rem:gram-derivazione]{Derivabili} dal simbolo iniziale.
+\end{note}
+% subsection Il Linguaggio della Grammatica (end)
+% section Derivazioni per mezzo di una Grammatica (end)
+%
+\section{Alberi Sintattici}\label{sec:ll_alberi_sintattici} % (fold)
+\begin{definition}{Albero Sintattico}{alb-sint}
+    Un \textbf{albero sintattico} mostra in modo chiaro come i simboli di una stringa terminale sono raccolti in sottostringhe, ciascuno appartenente al linguaggio di una delle variabili della grammatica.
+    \begin{note}
+        Se $w \in L(G)$, per una \hyperref[def:cfg]{CFG}, allora $w$ ha un \textit{albero sintattico} che rappresenta la \textbf{struttura sintattica} di $w$.
+        \begin{tip}
+            Gli alberi sintattici sono una \textbf{rappresentazione alternativa delle derivazioni}
+        \end{tip}
+    \end{note}
+    \begin{critical}[Non esiste un solo albero sintattico per un linguaggio]
+    \end{critical}
+\end{definition}
+%
+\subsection{Costruzione di Alberi Sintattici}\label{sub:ll_costruzione_di_alberi_sintattici} % (fold)
+Fissata una grammatica $G = (V,T,P,S)$, gli \textbf{alberi sintattici} di $G$ sono alberi che soddisfano le seguenti condizioni:
+\begin{enumerate}
+    \item ciascun \textbf{nodo interno} è etichettato da una \textbf{variabile} $V$;
+    \item ciascuna \textbf{foglia} è etichettata da una \textbf{variabile} (simbolo in $V\cup T\cup\pg\eps$);
+        \begin{note}
+            Se una foglia è etichettata con $\eps$, deve essere l'unico figlio del suo genitore
+        \end{note}
+    \item Se un \textbf{nodo interno} è etichettato $A$, e i suoi figli, a partire da sinistra, sono \textbf{etichettati}: siano $\vc{X_1}{X_2}$ allora $A$ è una \textbf{produzione} in $P$
+        \[
+            A \to \vc{X_1}{X_2} \in P
+        \]
+        \begin{note}
+            Un $X$ può essere $\epsilon$ solo nel caso in cui è l'\textbf{etichetta} di un figlio unico, e quindi $A\to\eps$ è una produzione di $G$
+        \end{note}
+\end{enumerate}
+\begin{example}{}{}
+    La grammatica:
+    \[
+        \begin{aligned}
+            1.\quad E &\to I \\
+            2.\quad E &\to E+E\\
+            3.\quad E &\to E*E\\
+            4.\quad E &\to (E)\\
+                      &\vdots
+        \end{aligned}
+    \]
+    può essere rappresentata nel seguente albero sintattico
+    \begin{cimage}
+        \includegraphics[width=.4\textwidth]{assets/20261015_120304.png}
+        \caption{Si mostra la derivazione $E \overset{*}{\implies}I+E$}
+    \end{cimage}
+    \begin{note}
+        La radice è etichettata dalla variabile$E$.
+        \\
+        La produzione applicata alla radice è $E\to E+E$: i tre figli della radice hanno, a partire da sinistra, le etichette $E$, $+$ e $E$.
+        \\
+        Per il figlio più a sinistra della radice si applica la produzione $E\to I$: il nodo ha un solo figlio, etichettato $I$.
+    \end{note}
+\end{example}
+% subsection Costruzione di Alberi Sintattici (end)
+%
+\subsection{Prodotto di un Albero Sintattico}\label{sub:ll_prodotto_di_un_albero_sintattico} % (fold)
+\begin{definition}{Prodotto}{alb-prodotto}
+    Il \textbf{prodotto} di un albero sintattico è la \textbf{stringa di foglie da sinistra a destra} concatenate fra loro
+    \begin{note}[È sempre una stringa derivata dalla variabile della radice]
+    \end{note}
+\end{definition}
+Di particolare importanza sono gli alberi sintattici che soddisfano queste condizioni:
+\begin{itemize}
+    \item il \hyperref[def:alb-prodotto]{Prodotto} è una \textbf{stringa terminale}, in questo caso tutte le foglie sono etichettate da un \textbf{terminale} o da $\eps$;
+    \item la radice è etichettata dal \textbf{simbolo iniziale};
+\end{itemize}
+\begin{note}
+    L'insieme di prodotti di questi \hyperref[def:alb-sint]{Alberi Sintattici} rappresenta \hyperref[sub:ll_il_linguaggio_di_una_grammatica]{Il Linguaggio della Grammatica}
+\end{note}
+\begin{example}{}{}
+    \begin{cimage}
+        \includegraphics[width=.2\textwidth]{assets/20261015_122710.png}
+    \end{cimage}
+    Il prodotto è pari a: $a*(a*b00)$
+\end{example}
+%
+\paragraph{Inferenza, Derivazioni e Alberi Sintattici}\label{par:ll_inferenza_derivazioni_e_alberi_sintattici} % (fold)
+Data una \hyperref[def:cfg]{Grammatica} $G=(V,T,P,S)$, e $A\in V$, i seguenti enunciati sono equivalenti:
+\begin{itemize}
+    \item[$\to$] la procedura di \textbf{inferenza ricorsiva} stabilisce che la stringa terminale $w$ è nel linguaggio della variabile $A$;
+    \item $A\overset{*}{\implies}w$
+    \item $A\overset{*}{\underset{lm}{\implies}}w$ e $A\overset{*}{\underset{rm}{\implies}}w$
+    \item esiste un albero sintattico $G$ con radice $A$ e prodotto $w$;
+\end{itemize}
+\begin{note}
+    Se escludiamo l'inferenza ricorsiva, definita solo per stringhe terminali, le altre condizioni --- l'esistenza di derivazioni generiche, a sinistra o a destra, e di alberi sintattici --- sono \textbf{equivalenti} anche se $w$ contiene \textbf{variabili}
+\end{note}
+\begin{warning}[Dimostrazioni]
+    Per provare l'equivalenza si procede seguendo il seguente piano:
+    \begin{itemize}
+        \item dagli alberi alle derivazioni a sinistra (destra): visto l'albero da sinistra a destra (da destra a sinistra);
+        \item una derivazione sinistra (o destra) è anche una derivazione;
+        \item leggendo la derivazione costruisco l'albero;
+    \end{itemize}
+\end{warning}
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/20261015_123514.png}
+    \caption{Derivazione dell'equivalenza di alcuni enunciati}\label{fig:20261015_123514}
+\end{cimage}
+\begin{example}{Costruire la derivazione a sinistra di un albero}{}
+    Dato il seguente \hyperref[def:alb-sint]{Albero Sintattico}
+    \begin{cimage}
+        \includegraphics[width=.3\textwidth]{assets/20261015_122710.png}
+    \end{cimage}
+    Prendendo tutti i sottoalberi della radice (sinistra $E\to I\to a$ e destra $E\to E^*\to +^*$):
+    \begin{description}
+        \item[Sinistra] Si suppone di aver costruito induttivamente l'albero in questo modo:
+            \[
+                E \underset{lm}{\implies}I \underset{lm}{\implies}a
+            \]
+        \item[Destra] Si suppone di aver costruito induttivamente l'albero in questo modo:
+            \[
+                \begin{aligned}
+                    &E \underset{lm}{\implies}(E) \underset{lm}{\implies}(E+E) \underset{lm}{\implies}(I+E) \underset{lm}{\implies}(a+E)\underset{lm}{\implies} \\
+                    &(a+I)\underset{lm}{\implies}(a+I0)\underset{lm}{\implies}(a+I00)\underset{lm}{\implies}(a+b00)
+                \end{aligned}
+            \]
+    \end{description}
+    Per la derivazione corrispondente all'intero albero, iniziamo con $E \underset{lm}{\implies}E*E$ e si espande la prima $E$ (perché si deriva a sinistra in questo caso) con la prima derivazione e la seconda $E$ con la seconda derivazione:
+    \[
+        \begin{aligned}
+            &E \underset{lm}{\implies}E*E \\
+            &\underset{lm}{\implies} I*E \\
+            &\underset{lm}{\implies}a*E \\
+            &\underset{lm}{\implies}a*(E) \\
+            &\underset{lm}{\implies}a*(E+E) \\
+            &\underset{lm}{\implies}a*(I+E) \\
+            &\underset{lm}{\implies}a*(a+E) \\
+            &\underset{lm}{\implies}a*(a+I) \\
+            &\underset{lm}{\implies}a*(a+I0) \\
+            &\underset{lm}{\implies}a*(a+I00) \\
+            &\underset{lm}{\implies}a*(a+b00) \\
+        \end{aligned}
+    \]
+\end{example}
+% paragraph Inferenza, Derivazioni e Alberi Sintattici (end)
+% subsection Prodotto di un Albero Sintattico (end)
+% section Alberi Sintattici (end)
+%
+\section{Ambiguità nelle Grammatiche e nei Linguaggi}\label{sec:ll_ambiguit_nelle_grammatiche_e_nei_linguaggi} % (fold)
+\subsection{FINO A SLIDE 28}\label{sub:fino_a_slide_28} % (fold)
+
+% subsection FINO A SLIDE 28 (end)
+% section Ambiguità nelle Grammatiche e nei Linguaggi (end)
+% chapter Linguaggi Liberi dal Contesto(end)

@@ -823,7 +823,7 @@ Se invece lo stato iniziale è anche uno stato di accettazione, l'automa sarà d
     Se $L$ e $M$ sono linguaggi regolari, allora è regolare anche $L\in M$
     \begin{proof}
         Poiché $L$ e $M$ sono regolari, essi sono descritti da espressioni regolari, poniamo $L = L(R)$ e $M = L(S)$.
-        Allora $L\in M = L(R+S)$ per la definizione dell'operatore $\mathbf{+}$ delle \hyperref[def:reg-exp]{espressioni regolari}.
+        Allora $L\cup M = L(R+S)$ per la definizione dell'operatore $\mathbf{+}$ delle \hyperref[def:reg-exp]{espressioni regolari}.
     \end{proof}
 \end{theorem}
 \begin{theorem}{Chiusura rispetto al complemento}{lr-complem}
