@@ -317,8 +317,147 @@ Data una \hyperref[def:cfg]{Grammatica} $G=(V,T,P,S)$, e $A\in V$, i seguenti en
 % section Alberi Sintattici (end)
 %
 \section{Ambiguità nelle Grammatiche e nei Linguaggi}\label{sec:ll_ambiguit_nelle_grammatiche_e_nei_linguaggi} % (fold)
-\subsection{FINO A SLIDE 28}\label{sub:fino_a_slide_28} % (fold)
-
-% subsection FINO A SLIDE 28 (end)
+Nella grammatica:
+\[
+    \begin{aligned}
+        1.\quad E &\to I \\
+        2.\quad E &\to E+E \\
+        3.\quad E &\to E*E \\
+        4.\quad E &\to (E) \\
+        &\vdots
+    \end{aligned}
+\]
+$E+E*E$ ha due derivazioni:
+\begin{multicols}{2}
+    \begin{itemize}
+        \item $E\imp E+E\imp E+E*E$
+        \item $E\imp E*E\imp E+E*E$
+    \end{itemize}
+\end{multicols}
+Questo ci dà due alberi sintattici:
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/20261015_132527.png}
+\end{cimage}
+\begin{warning}[L'esistenza di varie \textit{derivazioni} di per se non è pericolosa, ma l'esistenza di vari alberi sintattici \textit{rovina} la {\hyperref[def:cfg]{Grammatica}}]
+\end{warning}
+\begin{definition}{Ambiguità}{ambiguita}
+    Sia $G=(V,T,P,S)$ una \hyperref[def:cfg]{CFG}, diciamo che $G$ è \textbf{ambigua} se esiste una stringa in $T^*$ che ha più di un \hyperref[def:alb-sint]{Albero Sintattico}.
+    \emptyln{}
+    Se ogni stringa in $L(G)$ ha un \textit{unico} \hyperref[def:alb-sint]{Albero Sintattico}, $G$ è detta \textbf{non ambigua}.
+\end{definition}
+\begin{example}{}{}
+    La stringa terminale $a+a*a$ ha due alberi sintattici:
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/20261015_133845.png}
+    \end{cimage}
+\end{example}
+\begin{note}[In generale]
+    \begin{itemize}
+        \item A un \hyperref[def:alb-sint]{Albero Sintattico} corrispondono molte \hyperref[rem:gram-derivazione]{Derivazioni};
+        \item A ogni diverso \hyperref[def:alb-sint]{Albero Sintattico} corrisponde un'unica diversa \hyperref[rem:gram-derivazione]{Derivazione} a sinistra;
+        \item A ogni diverso \hyperref[def:alb-sint]{Albero Sintattico} corrisponde un'unica diversa \hyperref[rem:gram-derivazione]{Derivazione} a destra;
+    \end{itemize}
+\end{note}
+\begin{theorem}{}{}
+    Data una \hyperref[acro:cfg]{CFG} $G$, una \textbf{stringa terminale} $w$ ha due distinti \hyperref[def:alb-sint]{Alberi Sintattici} se e solo se $w$ ha due distinte \hyperref[rem:gram-derivazione]{Derivazioni} a sinistra dal \textbf{simbolo iniziale}
+\end{theorem}
+%
+\subsection{Rimuovere l'Ambiguità dalle Grammatiche}\label{sub:ll_rimuovere_l_ambiguit_dalle_grammatiche} % (fold)
+Non è esiste un algoritmo specifico per poter riconoscere le ambiguità e oltretutto non è sempre possibile rimuoverle.
+\begin{example}{}{}
+    Data la grammatica:
+    \[
+        \begin{aligned}
+            &E\to I|E+E|E*E|(E) \\
+            &I\to a|b|Ia|Ib|I0|I1
+        \end{aligned}
+    \]
+    si vuole modificarla in maniera tale da stabilire:
+    \begin{itemize}
+        \item la precedenza tra $*$ e $+$;
+        \item il raggruppamento di sequenze di uno stesso stato operatore: $E+E+E$ è inteso come $E+(E+E)$ oppure come $(E+E)+E$?
+    \end{itemize}
+\end{example}
+Per risolvere il problema dell'esempio precedente, si introduce una \textbf{gerarchia di variabili} che stabilisca un ordine di precedenza tra gli operatori:
+\begin{enumerate}
+    \item \textit{espressioni} $E$: composizioni di uno o più \textit{termini} $T$ tramite $+$
+    \item \textit{termini} $T$: composizioni di uno o più \textit{fattori} $F$ tramite $*$
+    \item \textit{fattori} $F$: \textit{identificatori} $I$ ed \textit{espressioni} $E$ racchiuse tra parentesi
+\end{enumerate}
+\begin{note}
+    I termini $T$ non possono generare $+$ che siano fuori da parentesi: questa gerarchia stabilisce che $*$ \textbf{ha precedenza rispetto a} $+$
+\end{note}
+Ad esempio l'unico modo di generare $a+a*a$ è considerando $a*a$ come un termine $T$, formalmente:
+\[
+    \begin{aligned}
+        1.\ E&\to T|E+E \\
+        2.\ T&\to F|T*T \\
+        3.\ F&\to I|(E) \\
+        4.\ I&\to a|b|Ia|Ib|I0|I1
+    \end{aligned}
+\]
+\begin{note}[Questa grammatica è \textit{non ambigua}?]
+    No, bisogna anche imporre un ordine per raggruppamento degli operatori allo stesso livello
+\end{note}
+Quindi la grammatica diventa:
+\[
+    \begin{aligned}
+        1.\ E&\to T|E+T \\
+        2.\ T&\to F|T*F \\
+        3.\ F&\to I|(E) \\
+        4.\ I&\to a|b|Ia|Ib|I0|I1
+    \end{aligned}
+\]
+e come unico \hyperref[def:alb-sint]{Albero Sintattico} non ambiguo si ottiene:
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/20261015_162029.png}
+\end{cimage}
+% subsection Rimuovere l'Ambiguità dalle Grammatiche (end)
+%
+\subsection{Ambiguità Inerente}\label{sub:ll_ambiguit_inerente} % (fold)
+\begin{definition}{Inerentemente Ambiguo}{ambig-inerente}
+    Un \ac{cfl} $L$ è \textbf{inerentemente ambiguo} se tutte le grammatiche per $L$ sono ambigue
+\end{definition}
+\begin{example}{}{}
+    Considerando:
+    \[
+        L = \pg{a^nb^nc^md^m:n\ge 1,m\ge 1}\cup\pg{a^nb^mc^md^n:n\ge 1, m\ge 1}
+    \]
+    una possibile \hyperref[def:cfg]{Grammatica} per $L$ è:
+    \[
+        \begin{aligned}
+            S &\to AB|C \\
+            A &\to aAb|ab \\
+            B &\to cBd|cd \\
+            C &\to aCd|aDd \\
+            D &\to bDc|bc \\
+        \end{aligned}
+    \]
+    \begin{note}
+        Stesso numero di $ab$ e $cd$ oppure stesso numero di $ad$ e $bc$
+    \end{note}
+    La struttura sintattica della stringa $aabbccdd$ può essere:
+    \begin{cimage}
+        \includegraphics[width=.4\textwidth]{assets/20261015_162614.png}
+    \end{cimage}
+    \begin{note}
+        Sono possibili due \hyperref[rem:gram-derivazione]{Derivazioni} a sinistra:
+        \[
+            S \underset{lm}{\implies}AB \underset{lm}{\implies}aAbB \underset{lm}{\implies}aabbB \underset{lm}{\implies}aaaabbcBd \underset{lm}{\implies}aabbccdd
+        \]
+        e
+        \[
+            S \underset{lm}{\implies}C \underset{lm}{\implies} aCd \underset{lm}{\implies}aaDdd \underset{lm}{\implies}aabDcdd \underset{lm}{\implies}aabbccdd
+        \]
+        \begin{warning}
+            Può essere provato che ogni \hyperref[def:cfg]{Grammatica} per $L$ si comporta come questa, quindi il linguaggio $L$ è \hyperref[def:ambig-inerente]{Inerentemente Ambiguo}
+        \end{warning}
+    \end{note}
+\end{example}
+% subsection Ambiguità Inerente (end)
 % section Ambiguità nelle Grammatiche e nei Linguaggi (end)
+%
+\section{Automi a Pila}\label{sec:ll_automi_a_pila} % (fold)
+
+% section Automi a Pila (end)
 % chapter Linguaggi Liberi dal Contesto(end)
