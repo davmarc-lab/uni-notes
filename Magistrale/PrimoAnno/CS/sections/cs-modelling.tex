@@ -338,7 +338,7 @@ Since we want to design concurrent programs which works \textbf{independently} o
 \end{warning}
 A classic approach to model concurrency, abstracting from time, is using \textbf{interleaving}.
 \\
-\begin{definition}{Interleaving}{}
+\begin{definition}{Interleaving}{interleaving}
     The execution of concurrent processes each represented by a sequence of actions is modelled by a single sequence of actions (a \textbf{scenario} or \textbf{trace}) obtained by interleaving the actions of each process.
     The situation in which two actions \texttt{a} and \texttt{b} of two different processes are executed simultaneously is modelled in the scenario as a sequence either in the order \texttt{a->b} or \texttt{b->a}.
 \end{definition}
