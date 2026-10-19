@@ -1,0 +1,49 @@
+\chapter{Process Interaction --- Mechanisms \& Problems}\label{chap:pi_process_interaction_mechanisms_problems} % (fold)
+The algorithm for \hyperref[sec:cp_the_critical_section_problem]{The Critical Section Problem} described in the previous chapter can be run on a \textit{bare machine}.
+They only use machine language instructions that the computer provides, too low level to be used efficiently and reliably.
+\emptyln{}
+Introduction of basic \textbf{mechanisms} and \textbf{abstractions} for \hyperref[def:process]{Process} coordination: provided directly by the \hyperref[def:conc-machine]{Concurrent Machine} and used in concurrent languages.
+\begin{note}
+    Main concepts:
+    \begin{itemize}
+        \item \textbf{semaphores};
+        \item \textbf{monitors};
+    \end{itemize}
+\end{note}
+%
+\section{Semaphores}\label{sec:cp_semaphores} % (fold)
+\begin{note}[Introduced by Dijkstra in 1968]
+\end{note}
+\begin{definition}{Semaphore}{semaphore}
+    \textbf{Semaphores} are a very simple but powerful general-purpose construct which make it possible to solve almost any mutual exclusion and synchronization problems.
+    Semaphore as a primitive data type provided by the \hyperref[def:conc-machine]{Concurrent Machine}
+\end{definition}
+\begin{quote}
+    Informally, a semaphore functions as street semaphore, \textit{blocking} and \textit{unblocking} \hyperref[def:process]{Process} execution according to the need
+\end{quote}
+%
+\subsection{Semaphore Data Type}\label{sub:cp_semaphore_data_type} % (fold)
+A semaphore $S$ is a compound data type with two fields:
+\begin{itemize}
+    \item $S.V$ is an integer $\ge 0$;
+    \item $S.L$ is a \textbf{set} of \hyperref[def:process]{Process} id;
+\end{itemize}
+It can be initialized with
+\begin{itemize}
+    \item a value $k \ge 0$ for $S.V$
+    \item the empty set $\pg{}$ for $S.L$
+\end{itemize}
+\begin{note}
+    It provides two basic \textit{atomic} operations:
+    \begin{itemize}
+        \item \textbf{wait(S)}: also called $P(S)$ from Dijkstra original choice;
+        \item \textbf{signal(S)}: also called $V(S)$ from Dijkstra original choice;
+    \end{itemize}
+\end{note}
+%
+\subsubsection{Wait Operation}\label{sub:cp_wait_operation} % (fold)
+
+% subsubsection Wait Operation (end)
+% subsection Semaphore Data Type (end)
+% section Semaphores (end)
+% chapter Process Interaction --- Mechanisms \& Problems (end)
