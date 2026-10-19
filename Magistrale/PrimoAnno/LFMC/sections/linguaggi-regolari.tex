@@ -1070,12 +1070,15 @@ L'algoritmo proposto considera due fasi:
     \item si \textbf{eliminano} gli stati \textbf{irraggiungibili} dallo stato iniziale;
     \item gli stati rimanenti vengono poi ripartiti in \textbf{blocchi} in modo che gli stati in uno stesso blocco siano tutti \hyperref[th:stati-equiv]{Equivalenti} e due stati in blocchi diversi non lo siano mai.
 \end{enumerate}
-\begin{example}{}{}
+\begin{example}{}{minimim-dfa}
     Dalla figura \hyperref[fig:20261009_133731]{precedente}, e dalla sua rispettiva \hyperref[fig:20261013_174544]{tabella}, si ottengono i seguenti \textbf{blocchi di equivalenza}: $\pt{\pg{A,E}, \pg{B,H}, \pg{C}, \pg{D,F}, \pg{G}}$.
     \begin{note}
         Tra le coppie di \hyperref[th:stati-equiv]{Stati Equivalenti} si trovano ciascuna in un blocco, mentre gli \hyperref[th:stati-distin]{Stati Distinguibili} da ogni altro stato se ne stanno da soli, ciascuno in un blocco
     \end{note}
 \end{example}
+\begin{definition}{Blocchi di Equivalenza}{block-equiv}
+    Un \textbf{blocco di equivalenza} è un insieme di uno o più \hyperref[th:stati-equiv]{Stati Equivalenti}.
+\end{definition}
 \begin{theorem}{}{}
     L'\hyperref[th:stati-equiv]{Equivalenza} degli stati è \textbf{transitiva}, ovvero se due stati $p$ e $q$ di un \hyperref[sub:lr_dfa]{DFA} $A = \pt{Q,\Si,\dt,q_0,F}$ sono \hyperref[th:stati-equiv]{Equivalenti}, e scopriamo che anche $q$ e $r$ lo sono, allora anche $p$ e $r$ saranno \hyperref[th:stati-equiv]{Equivalenti}.
 \end{theorem}
@@ -1108,6 +1111,24 @@ L'algoritmo proposto considera due fasi:
             \end{itemize}
     \end{enumerate}
 \end{remark}
+\begin{critical}[Non è possibile applicare l'algoritmo a {\hyperref[sub:lr_automi_a_stati_finiti_non_deterministici]{NFA}}]
+    \begin{cimage}
+        \includegraphics[width=.4\textwidth]{assets/20261019_091534.png}
+    \end{cimage}
+    Per poter minimizzare l'automa è necessario rimuovere lo stato $C$, ma $A \not\equiv C$.
+    Quindi non è possibile \textbf{minimizzare}.
+\end{critical}
+\begin{example}{Minimizzazione di un DFA}{}
+    Dall'\hyperref[ex:minimim-dfa]{esempio precedente}, una volta ottenuti i \hyperref[def:block-equiv]{Blocchi di Equivalenza}, ogni blocco rappresenta uno stato del \hyperref[sub:lr_dfa]{DFA} \textbf{minimo}.
+    \begin{note}
+        Poiché $A$ è lo stato iniziale dell'automa da minimizzare, allora lo stato iniziale dell'automa minimizzato è $\pg{A,E}$.
+        \emptyln{}
+        Per lo stesso ragionamento, poiché $C$ è l'unico stato accettante dell'automa iniziale, allora $\pg{C}$ sarà l'unico stato accettante dell'automa minimizzato.
+    \end{note}
+    \begin{cimage}
+        \includegraphics[width=.4\textwidth]{assets/20261019_091146.png}
+    \end{cimage}
+\end{example}
 \section{TODO: Esempio minimizzazione e Finire Slide}\label{sec:todo_esempio_minimizzazione_e_finire_slide} % (fold)
 % section TODO: Esempio minimizzazione e Finire Slide (end)
 % subsection Minimizzazione di DFA (end)

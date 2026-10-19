@@ -230,5 +230,4 @@ return {
     s({ trig = "rdrt", dscr = "Right Derivative Grammar", indet = false }, {
         t("\\underset{rm}{\\implies}")
     }),
-
 }
