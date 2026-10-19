@@ -263,9 +263,344 @@ First we analyse the problem considering $2$ \hyperref[def:process]{Processes} $
 \begin{note}
     The protocols may require local or global variables, we assume that no variables used in the \hyperref[def:crit-sec]{Critical Section} and non-critical section \red{are used} in the protocols
 \end{note}
+\begin{remark}{First Attempt}{first-algo}
+    Let's consider a first possible solution
+    \begin{ctable}{|l|l|}
+        \hline
+        \multicolumn{2}{|l|}{\textbf{First Attempt}} \\
+        \hline
+        \multicolumn{2}{|l|}{Integer turn $\leftarrow 1$} \\
+        \hline
+        \multicolumn{2}{|l|}{} \\
+        \multicolumn{2}{|c|}{
+            \begin{ntable}{|l|l|}
+                \hline
+                \textbf{p} & \textbf{q} \\
+                \hline
+                & \\
+                \texttt{loop forever} & \texttt{loop forever} \\
+                \textbf{p1:} \texttt{non-critical section} & \textbf{q1:} \texttt{non-critical section} \\
+                \textbf{p2:} \texttt{await turn = 1} & \textbf{q2:} \texttt{await turn = 2} \\
+                \textbf{p3:} \texttt{critical section} & \textbf{q3:} \texttt{critical section} \\
+                \textbf{p4:} \texttt{turn $\leftarrow 2$} & \textbf{q4:} \texttt{turn $\leftarrow 1$} \\
+                \hline
+            \end{ntable}
+        } \\
+        \multicolumn{2}{|l|}{} \\
+        \hline
+    \end{ctable}
+    The statement \texttt{\textbf{await} turn $\leftarrow 1$} is an implementation independent notation for a statement that waits until the \textit{condition} \texttt{turn = 1} becomes true.
+    \begin{note}
+        This can be implemented by a busy-wait loop that does nothing until the condition is true
+        \begin{warning}[Inefficient]
+        \end{warning}
+    \end{note}
+    \begin{outerproof}{Checking Correctness}{}
+        In order to prove the \textbf{correctness} of the solution we construct the state diagram of the \hyperref[def:conc-prog]{Concurrent Program}: the algorithm must satisfy the \hyperref[sub:cp_critical_sections_properties]{Critical Sections Properties}.
+        \emptyln{}
+        To check correctness properties is only necessary to examine the set of reachable states and the transitions among them.
+        States are a triple $<p_i,q_j,\texttt{turn}>$ where:
+        \begin{itemize}
+            \item $p_i$ is the current control pointer for process $P$;
+            \item $q_j$ is the current control pointer for process $Q$;
+            \item \texttt{turn} is the content of the variable;
+        \end{itemize}
+        The diagram is constructed incrementally starting from the initial state and considering what the potential states are.
+        \emptyln{}
+        Describing the mutual exclusion property is important to check if it holds the set of all accessible states does not contain a state of the form:
+        \[
+            <p_3,q_3,\_>
+        \]
+        Next we express properties in \hyperref[sub:an_ltl_temporal_operators]{LTL}:
+        \begin{itemize}
+            \item \textit{mutual exclusion property}: $\cbox \neg\pt{p_3 \wedge q_3}$
+            \item \textit{freedom of starvation properties}:
+                \begin{itemize}
+                    \item $\cbox\pt{p_3\to\dm p_4}$
+                    \item $\cbox\pt{q_3\to\dm q_4}$
+                \end{itemize}
+        \end{itemize}
+    \end{outerproof}
+    \begin{note}[Are properties satisfied?]
+        \begin{itemize}
+            \item the \textbf{mutual exclusion} is satisfied: there are no scenarios including states of the kind $<p_2,q_2,\_$;
+            \item the \textbf{freedom of deadlock} is satisfied: if some processes are trying to enter the \hyperref[def:crit-sec]{CS} (executing the $\texttt{await}$), then one eventually succeeds;
+            \item the \textbf{freedom of starvation} is \textbf{not satisfied}: a process that wants to enter in \hyperref[def:crit-sec]{CS} (pre-protocol) can starve while waiting a process which engaged an infinite loop inside its non-critical section (where there is no progress property);
+                \begin{note}
+                    Turn function as permission resource to enter the \hyperref[def:crit-sec]{Critical Section}, if the process holding the permission remains indefinitely in its non-critical section, the other \hyperref[def:process]{Process} will never receive the resource and will never enter its \hyperref[def:crit-sec]{Critical Section}: both processes sets and tests a single global variable, if one process dies the other is blocked
+                \end{note}
+        \end{itemize}
+    \end{note}
+\end{remark}
+\begin{remark}{Second Attempt}{}
+    We introduce separate \texttt{want} variables whose purpose is to make it explicit and observable the intention of a \hyperref[def:process]{Process} to enter in its \hyperref[def:crit-sec]{Critical Section}.
+    \begin{ctable}{|l|l|}
+        \hline
+        \multicolumn{2}{|l|}{\textbf{Second Attempt}} \\
+        \hline
+        \multicolumn{2}{|l|}{\texttt{boolean wantp $\leftarrow$false}} \\
+        \multicolumn{2}{|l|}{\texttt{boolean wantq $\leftarrow$false}} \\
+        \hline
+        \multicolumn{2}{|l|}{} \\
+        \multicolumn{2}{|c|}{
+            \begin{ntable}{|l|l|}
+                \hline
+                \textbf{p} & \textbf{q} \\
+                \hline
+                & \\
+                \texttt{loop forever} & \texttt{loop forever} \\
+                \textbf{p1:} \texttt{non-critical section} & \textbf{q1:} \texttt{non-critical section} \\
+                \textbf{p2:} \texttt{await wantq = false} & \textbf{q2:} \texttt{await wantp = false} \\
+                \textbf{p3:} \texttt{wantp = true} & \textbf{q3:} \texttt{wantq = true} \\
+                \textbf{p4:} \texttt{critical section} & \textbf{q4:} \texttt{critical section} \\
+                \textbf{p5:} \texttt{wantp $\leftarrow$false} & \textbf{q5:} \texttt{wantq $\leftarrow$false} \\
+                \hline
+            \end{ntable}
+        } \\
+        \multicolumn{2}{|l|}{} \\
+        \hline
+    \end{ctable}
+    \begin{itemize}
+        \item \textbf{mutual exclusion}: $\cbox\neg\pt{p_4\wedge q_4}$
+        \item \textbf{freedom from starvation}: $\cbox\pt{\pt{p_1\to\dm p_2} \wedge \pt{q_1\to\dm q_2}}$
+    \end{itemize}
+    \begin{outerproof}{Checking Correctness}{}
+        By constructing the \hyperref[def:state-diagram]{State Diagram} it is simple to see that the mutual exclusion property is not satisfied: the state $<p_3,p_3,\texttt{true}, \texttt{true}>$ is reachable.
+        \begin{note}
+            The problem is due to the non-atomicity of the pre-protocol and post-protocol
+        \end{note}
+        \emptyln{}
+    \end{outerproof}
+\end{remark}
+\begin{remark}{Third Attempt}{}
+    Previous problem can be solved by considering the await statement part of the \hyperref[def:crit-sec]{Critical Section} and moving the assignment before the await.
+    \begin{ctable}{|l|l|}
+        \hline
+        \multicolumn{2}{|l|}{\textbf{Third Attempt}} \\
+        \hline
+        \multicolumn{2}{|l|}{\texttt{boolean wantp $\leftarrow$false}} \\
+        \multicolumn{2}{|l|}{\texttt{boolean wantq $\leftarrow$false}} \\
+        \hline
+        \multicolumn{2}{|l|}{} \\
+        \multicolumn{2}{|c|}{
+            \begin{ntable}{|l|l|}
+                \hline
+                \textbf{p} & \textbf{q} \\
+                \hline
+                & \\
+                \texttt{loop forever} & \texttt{loop forever} \\
+                \textbf{p1:} \texttt{non-critical section} & \textbf{q1:} \texttt{non-critical section} \\
+                \textbf{p2:} \texttt{wantp $\leftarrow$ true} & \textbf{q2:} \texttt{wantq $\leftarrow$ true} \\
+                \textbf{p3:} \texttt{await lwantq} & \textbf{q3:} \texttt{await lwantp} \\
+                \textbf{p4:} \texttt{critical section} & \textbf{q4:} \texttt{critical section} \\
+                \textbf{p5:} \texttt{wantp $\leftarrow$false} & \textbf{q5:} \texttt{wantq $\leftarrow$false} \\
+                \hline
+            \end{ntable}
+        } \\
+        \multicolumn{2}{|l|}{} \\
+        \hline
+    \end{ctable}
+    \begin{outerproof}{Correctness}{}
+        The mutual exclusion problem is \textbf{solved}, however the solution suffer of \textbf{livelocks}: there are scenarios in which both \hyperref[def:process]{Processes} are trying to enter in their \hyperref[def:crit-sec]{Critical Section}, but neither will ever do.
+    \end{outerproof}
+\end{remark}
+\begin{remark}{Fourth Attempt}{fourth-algo}
+    \hyperref[def:deadlock]{Deadlock} occurs when both \hyperref[def:process]{Processes} simultaneously insist on entering their \hyperref[def:crit-sec]{Critical Section}: the next step to solve the problem is requiring a \hyperref[def:process]{Process} to give up its intention to enter its \hyperref[def:crit-sec]{Critical Section} if it discovers that it is contending with the other \hyperref[def:process]{Process}.
+    \begin{ctable}{|l|l|}
+        \hline
+        \multicolumn{2}{|l|}{\textbf{Fourth Attempt}} \\
+        \hline
+        \multicolumn{2}{|l|}{\texttt{boolean wantp $\leftarrow$false}} \\
+        \multicolumn{2}{|l|}{\texttt{boolean wantq $\leftarrow$false}} \\
+        \hline
+        \multicolumn{2}{|l|}{} \\
+        \multicolumn{2}{|c|}{
+            \begin{ntable}{|l|l|}
+                \hline
+                \textbf{p} & \textbf{q} \\
+                \hline
+                & \\
+                \texttt{loop forever} & \texttt{loop forever} \\
+                \textbf{p1:} \texttt{non-critical section} & \textbf{q1:} \texttt{non-critical section} \\
+                \textbf{p2:} \texttt{wantp $\leftarrow$ true} & \textbf{q2:} \texttt{wantq $\leftarrow$ true} \\
+                \textbf{p3:} \texttt{while wantq} & \textbf{q3:} \texttt{while wantp} \\
+                \textbf{p4:} \texttt{   wantp $\leftarrow$false} & \textbf{q4:} \texttt{   wantq $\leftarrow$false} \\
+                \textbf{p5:} \texttt{   wantp $\leftarrow$true} & \textbf{q5:} \texttt{   wantq $\leftarrow$true} \\
+                \textbf{p6:} \texttt{critical section} & \textbf{q6:} \texttt{critical section} \\
+                \textbf{p7:} \texttt{wantp $\leftarrow$false} & \textbf{q7:} \texttt{wantq $\leftarrow$false} \\
+                \hline
+            \end{ntable}
+        } \\
+        \multicolumn{2}{|l|}{} \\
+        \hline
+    \end{ctable}
+    \begin{note}[But livelock can also occur in this case]
+    \end{note}
+\end{remark}
 % subsubsection CS for Two Processes (end)
 % subsection Critical Section Solution (end)
+%
+\subsection{Dekker's Algorithm}\label{sub:cp_dekker_s_algorithm} % (fold)
+The problem can be solved with a simple variation of the \hyperref[rem:fourth-algo]{Fourth Attempt} requiring the \textit{right to insist} on entering -- instead of the right to enter -- is explicitly passed between the \hyperref[def:process]{Processes} by means of the variable \texttt{turn}.
+\begin{note}
+    Dekker's algorithm for solving \hyperref[sec:cp_the_critical_section_problem]{The Critical Section Problem} can be then considered a \textbf{combination} of the \hyperref[rem:first-algo]{First Attempt} and the \hyperref[rem:fourth-algo]{Fourth Attempt}
+\end{note}
+\begin{ctable}{|l|l|}
+    \hline
+    \multicolumn{2}{|l|}{\textbf{Dekker's Algorithm}} \\
+    \hline
+    \multicolumn{2}{|l|}{\texttt{boolean wantp $\leftarrow$false}} \\
+    \multicolumn{2}{|l|}{\texttt{boolean wantq $\leftarrow$false}} \\
+    \multicolumn{2}{|l|}{\texttt{integer turn $\leftarrow 1$}} \\
+    \hline
+    \multicolumn{2}{|l|}{} \\
+    \multicolumn{2}{|c|}{
+        \begin{ntable}{|l|l|}
+            \hline
+            \textbf{p} & \textbf{q} \\
+            \hline
+            & \\
+            \texttt{loop forever} & \texttt{loop forever} \\
+            \textbf{p1:} \texttt{non-critical section} & \textbf{q1:} \texttt{non-critical section} \\
+            \textbf{p2:} \texttt{wantp $\leftarrow$ true} & \textbf{q2:} \texttt{wantq $\leftarrow$ true} \\
+            \textbf{p3:} \texttt{while wantq} & \textbf{q3:} \texttt{while wantp} \\
+            \textbf{p4:} \texttt{   if turn = 2} & \textbf{q4:} \texttt{   if turn = 1} \\
+            \textbf{p5:} \texttt{   wantp $\leftarrow$false} & \textbf{q5:} \texttt{     wantq $\leftarrow$false} \\
+            \textbf{p6:} \texttt{   await turn = 1} & \textbf{q6:} \texttt{     await turn = 1} \\
+            \textbf{p7:} \texttt{   wantp $\leftarrow$true} & \textbf{q7:} \texttt{      wantq $\leftarrow$true} \\
+            \textbf{p8:} \texttt{critical section} & \textbf{q8:} \texttt{critical section} \\
+            \textbf{p8:} \texttt{turn $\leftarrow2$} & \textbf{q9:} \texttt{turn $\leftarrow1$} \\
+            \textbf{p10:} \texttt{wantp $\leftarrow$false} & \textbf{q10:} \texttt{wantq $\leftarrow$false} \\
+            \hline
+        \end{ntable}
+    } \\
+    \multicolumn{2}{|l|}{} \\
+    \hline
+\end{ctable}
+\begin{itemize}
+    \item \textbf{mutual exclusion}: $\cbox\neg\pt{p_8 \wedge q_8}$
+    \item \textbf{freedom from starvation}: $\cbox\pt{\pt{p_2\to\dm p_8} \wedge \pt{q_2\to\dm q_8}}$
+\end{itemize}
+%
+\subsubsection{Peterson's Algorithm}\label{sub:cp_peterson_s_algorithm} % (fold)
+Other solutions have been proposed through time, improving \hyperref[sub:cp_dekker_s_algorithm]{Dekker's Algorithm}.
+Peterson's solution is more concise, by collapsing the two await statements into one with a compound condition.
+\begin{ctable}{|l|l|}
+    \hline
+    \multicolumn{2}{|l|}{\texttt{boolean wantp := false}} \\
+    \multicolumn{2}{|l|}{\texttt{boolean wantq := false}} \\
+    \multicolumn{2}{|l|}{\texttt{integer turn := 1}} \\
+    \hline
+    \multicolumn{2}{|l|}{} \\
+    \multicolumn{2}{|c|}{
+        \begin{ntable}{|l|l|}
+            \hline
+            \textbf{p} & \textbf{q} \\
+            \hline
+            & \\
+            \texttt{loop forever} & \texttt{loop forever} \\
+            \textbf{p1:} \texttt{non-critical section} & \textbf{q1:} \texttt{non-critical section} \\
+            \textbf{p2:} \texttt{wantp := true} & \textbf{q2:} \texttt{wantq := true} \\
+            \textbf{p3:} \texttt{turn := 2} & \textbf{q3:} \texttt{turn := 1} \\
+            \textbf{p4:} \texttt{await !wantq || turn = 1} & \textbf{q4:} \texttt{await !wantp || turn = 2} \\
+            \textbf{p5:} \texttt{critical section} & \textbf{q5:} \texttt{critical section} \\
+            \textbf{p6:} \texttt{wantp := false} & \textbf{q6:} \texttt{wantq := false} \\
+            \hline
+        \end{ntable}
+    } \\
+    \multicolumn{2}{|l|}{} \\
+    \hline
+\end{ctable}
+% subsubsection Peterson's Algorithm (end)
+%
+\subsubsection{Bakery Algorithm (Tie-Breaker)}\label{sub:cp_bakery_algorithm_tie_breaker} % (fold)
+An alternative solution to \hyperref[def:crit-sec]{Critical Section} problem for $N$-\hyperref[def:process]{Process} accounts for introducing a \textit{ticket} to establish the turn of a \hyperref[def:process]{Process}.
+\begin{ctable}{|l|}
+    \hline
+    $N$-process solution for CS with tickets \\
+    \hline
+    \texttt{int num := 1} \\
+    \texttt{int next := 1} \\
+    \texttt{turn[1:n] := [0,0,0,...]} \\
+    \hline
+    \textbf{p[i]} \\
+    \hline
+    \texttt{loop forever} \\
+    \textbf{p1:} \texttt{NCS} \\
+    \textbf{p2:} \texttt{< turn[i] := num; num := num + 1 >} \\
+    \textbf{p3:} \texttt{await turn[i] = next} \\
+    \textbf{p4:} \texttt{CS} \\
+    \textbf{p5:} \texttt{next := next + 1} \\
+    \hline
+\end{ctable}
+\begin{note}[Potential shortcomings]
+    Arithmetic overflow for \texttt{turn} and \texttt{num}: monotonically growing
+\end{note}
+% subsubsection Bakery Algorithm (Tie-Breaker) (end)
+% subsection Dekker's Algorithm (end)
+%
+\subsection{Compound Atomic Statements}\label{sub:cp_compound_atomic_statements} % (fold)
+\hyperref[sub:cp_dekker_s_algorithm]{Dekker's Algorithm} works on any architecture, providing just load and store as atomic statements.
+Actually, the algorithm and -- more generally -- \hyperref[sec:cp_the_critical_section_problem]{The Critical Section Problem} and mutual exclusion problems can be greatly simplified if we can exploit more complex atomic statements: directly provided by the \hyperref[def:conc-machine]{Concurrent Machine}.
+\begin{note}
+    Main examples are \texttt{test-and-set}, \texttt{exchange}, \texttt{fetch-and-add}, \texttt{compare-and-swap}
+    \begin{warning}
+        \texttt{test-and-set} is an atomic statement defined as the execution of the two following statements with no possibility of interleaving
+        \begin{codeblock}{}
+        test-and-set (x,r):
+        < r := x, x := 1 >
+        \end{codeblock}
+    \end{warning}
+    \begin{note}[A commonly used notation for specifying atomicity is to put angled bracket around the group of statements]
+    \end{note}
+\end{note}
+\begin{example}{Critical Section with Test-and-Set}{}
+    \begin{ctable}{|l|l|}
+        \hline
+        \multicolumn{2}{|l|}{\texttt{integer lock := 0}} \\
+        \hline
+        \textbf{p} & \textbf{q} \\
+        \hline
+        \texttt{integer was\_locked} & \texttt{integer was\_locked} \\
+                                     & \\
+        \texttt{loop forever} & \texttt{loop forever} \\
+        \textbf{p1:} \texttt{NCS} & \textbf{q1:} \texttt{NCS}  \\
+        \texttt{    repeat} & \texttt{    repeat} \\
+        \textbf{p2:} \texttt{test\_and\_set(lock, was\_locked)} & \textbf{q2:} \texttt{test\_and\_set(lock, was\_locked)} \\
+        \textbf{p3:} \texttt{until was\_locked} & \textbf{q3:} \texttt{until was\_locked} \\
+        \textbf{p4:} \texttt{CS} & \textbf{q4:} \texttt{CS} \\
+        \textbf{p5:} \texttt{lock := 0} & \textbf{q5:} \texttt{lock := 0} \\
+        \hline
+    \end{ctable}
+\end{example}
+%
+\subsubsection{Locks}\label{sub:cp_locks} % (fold)
+By exploiting \hyperref[sub:cp_compound_atomic_statements]{Compound Atomic Statements} we can easily realize basic \textbf{lock} mechanism:
+\begin{itemize}
+    \item simple solution for \hyperref[sec:cp_the_critical_section_problem]{The Critical Section Problem};
+    \item protecting \hyperref[def:crit-sec]{Critical Section} of code;
+\end{itemize}
+\begin{note}
+    Two stages/atomic operations:
+    \begin{itemize}
+        \item \textbf{acquiring} the lock;
+        \item \textbf{releasing} the lock;
+    \end{itemize}
+\end{note}
+\begin{ctable}{|l|l|}
+    \hline
+    \multicolumn{2}{|l|}{\texttt{lock sharedlock;}} \\
+    \hline
+    \textbf{p} & \textbf{q} \\
+    \hline
+    \texttt{loop forever} & \texttt{loop forever} \\
+    \textbf{p1:} \texttt{NCS} & \textbf{q1:} \texttt{NCS}  \\
+    \textbf{p2:} \texttt{acquire(sharedlock)} & \textbf{q2:} \texttt{acquire(sharedlock)} \\
+    \textbf{p3:} \texttt{CS} & \textbf{q3:} \texttt{CS} \\
+    \textbf{p4:} \texttt{release(sharedlock)} & \textbf{q4:} \texttt{release(sharedlock)} \\
+    \hline
+\end{ctable}
+% subsubsection Locks (end)
+% subsection Compound Atomic Statements (end)
 % section The Critical Section Problem (end)
-\section{FINO A SLIDE 29}\label{sec:fino_a_slide_29} % (fold)
-% section FINO A SLIDE 29 (end)
 % chapter Modelling and Verification in Concurrent Programming (end)
