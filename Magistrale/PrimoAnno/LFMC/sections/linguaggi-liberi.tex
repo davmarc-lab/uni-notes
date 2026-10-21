@@ -162,7 +162,14 @@ La deduzione può seguire due strade:
     \item[Derivazione a Sinistra $\underset{lm}{\imp}$] Rimpiazza sempre la variabile più a sinistra con il corpo di una delle sue regole.
     \item[Derivazione a Destra $\underset{rm}{\imp}$] Rimpiazza sempre la variabile più a destra con il corpo di una delle sue regole.
 \end{description}
-\begin{example}{SLIDE 9}{}
+\begin{example}{Derivazione a Destra}{}
+    \[
+        \begin{aligned}
+            E &\underset{rm}{\implies}E*E \underset{rm}{\implies} E*(E) \underset{rm}{\implies} E*(E+E) \underset{rm}{\implies} E*(E+I) \\
+            &\underset{rm}{\implies}E*(E+I0) \underset{rm}{\implies}E*(E+I00) \underset{rm}{\implies}E*(E+b00) \\
+            &\underset{rm}{\implies} E*(I+b00) \underset{rm}{\implies}E*(a+b00) \underset{rm}{\implies}I * (a+b00) \underset{rm}{\implies} a * (a+b00)
+        \end{aligned}
+    \]
 \end{example}
 % subsection Derivazioni a Sinistra e a Destra (end)
 %
