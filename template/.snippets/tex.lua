@@ -151,6 +151,11 @@ return {
         i(0, ""),
         t({ "", "\\end{description}" }),
     }),
+    s({ trig = "cimage", dscr = "Center Image", indet = true }, {
+        t({ "\\begin{cimage}", fake_indent }),
+        i(0),
+        t({ "", "\\end{cimage}", "" }),
+    }),
 
     s({ trig = "ieq", dscr = "Inline equation" }, {
         t("$"),
@@ -212,7 +217,7 @@ return {
     s({ trig = "codeblock", dscr = "Code Block", indet = true }, {
         t("\\begin{codeblock}{"),
         i(1),
-        t({"}", ""}),
+        t({ "}", "" }),
         f(function(_, snip)
             return snip.env.TM_SELECTED_TEXT
         end),
@@ -220,14 +225,17 @@ return {
         t({ "", "\\end{codeblock}" }),
     }),
 
-    -- symbol to derive grammars
+    -- LaTeX symbols
+    make_wrappable("pt", "pt", "Left Right Round Brackets"),
+    make_wrappable("ps", "ps", "Left Right Square Brackets"),
+    make_wrappable("pg", "pg", "Left Right Curly Brackets"),
     s({ trig = "drt", dscr = "Derivative Grammar", indet = false }, {
-        t("\\overset{*}{\\implies}")
+        t("\\overset{*}{\\implies}"),
     }),
     s({ trig = "ldrt", dscr = "Left Derivative Grammar", indet = false }, {
-        t("\\underset{lm}{\\implies}")
+        t("\\underset{lm}{\\implies}"),
     }),
     s({ trig = "rdrt", dscr = "Right Derivative Grammar", indet = false }, {
-        t("\\underset{rm}{\\implies}")
+        t("\\underset{rm}{\\implies}"),
     }),
 }

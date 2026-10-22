@@ -465,6 +465,309 @@ e come unico \hyperref[def:alb-sint]{Albero Sintattico} non ambiguo si ottiene:
 % section Ambiguità nelle Grammatiche e nei Linguaggi (end)
 %
 \section{Automi a Pila}\label{sec:ll_automi_a_pila} % (fold)
-
+Un \textbf{automa a pila} è in sostanza un \hyperref[def:enfa]{Automa a Stati Finiti Non Deterministico con $\eps$-Transizioni} e una capacità aggiuntiva, ovvero uno \textbf{stack} in cui può memorizzare una stringa di simboli.
+\begin{note}
+    A differenza degli automi a stati finiti, grazie allo stack l'automa a pila può ricordare una quantità illimitata di informazioni
+    \begin{warning}[Modalità di accesso LIFO]
+    \end{warning}
+\end{note}
+Una transizione nell'automa a pila si può basare sullo stato corrente, sul simbolo di input e sul simbolo alla sommità dello stack; il tutto suddiviso in tre operazioni
+\begin{enumerate}
+    \item consuma il simbolo che usa nella transizione oppure in caso di $\eps$ non si consuma alcun simbolo;
+    \item passa a un nuovo stato, che può essere o no uguale al precedente;
+    \item sostituisce il simbolo in cima allo stack con una stringa che può essere:
+        \begin{itemize}
+            \item $\eps$ che corrisponde a togliere dallo stack;
+            \item lo stesso simbolo che c'era prima alla sommità dello stack (lo stack non cambia);
+            \item un altro simbolo che modifica la sommità dello stack (\red{senza inserire o rimuovere} valori dallo stack);
+        \end{itemize}
+\end{enumerate}
+\begin{example}{}{}
+    Consideriamo il linguaggio:
+    \[
+        L_{wwr} = \pg{ww^R : w\in\pg{0,1}^*}
+    \]
+    che corrisponde al linguaggio delle \hyperref[def:palindromo]{Palindrome} di lunghezza pari sull'alfabeto $\pg{0,1}$.
+    È un \hyperref[chap:ll_linguaggi_liberi_dal_contesto]{Linguaggi Libero dal Contesto} generato dalla \hyperref[def:cfg]{Grammatica}:
+    \[
+        \begin{aligned}
+            &P\to 0P0 \\
+            &P\to 1P1 \\
+            &P\to \eps \\
+        \end{aligned}
+    \]
+    Un \hyperref[sec:pda]{PDA} per $L_{wwr}$ ha \textbf{tre stati}, e funziona come segue:
+    \begin{enumerate}
+        \item legge $w$ un simbolo alla volta, rimanendo nello stato $q_0$ aggiungendo i simboli alla pila;
+        \item decide non deterministicamente che sta nel mezzo di $ww^R$ e va nello stato $q_1$;
+        \item legge $w^R$ un simbolo alla volta e lo paragona con il simbolo in cima alla pila:
+            \begin{itemize}
+                \item se sono uguali, fa un pop della pila e rimane nello stato $q_1$;
+                \item se sono diversi si blocca;
+            \end{itemize}
+        \item se la pila non ha più simboli ($0$ o $1$), va nello stato $q_2$ e accetta;
+    \end{enumerate}
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/20261022_152001.png}
+        \caption{}\label{fig:20261022_152001}
+    \end{cimage}
+\end{example}
+\begin{definition}{Automa a Pila}{pda}
+    Un \textbf{PDA} è una tupla di $7$ elementi:
+    \[
+        P = (Q,\Si, \Gm, \dt, q_0, Z_0,F)
+    \]
+    dove:
+    \begin{multicols}{2}
+        \begin{itemize}
+            \item $Q$ è un insieme finito di stati;
+            \item $\Si$ è un alfabeto finito di input;
+            \item $\Gm$ è un alfabeto finito di pila;
+            \item $\dt$ è una funzione di transizione da $Q\times \pt{\Si \cup \pg \eps}\times \Gm$ a sottoinsiemi di $Q\times\Gm[*]$;
+            \item $q_0$ è lo stato iniziale;
+            \item $Z_0 \in $ è il simbolo iniziale per la pila;
+            \item $F \subseteq Q$ è l'insieme di stati di accettazione;
+        \end{itemize}
+    \end{multicols}
+\end{definition}
+\begin{example}{}{}
+    Il \hyperref[def:pda]{PDA} in \cref{fig:20261022_152001} è identificato dalla tupla:
+    \[
+        P = \pt{\pg{q_0,q_1,q_2}, \pg{0,1}, \pg{0,1,Z_0},\dt,q_0,Z_0,\pg{q_2}}
+    \]
+    dove $\dt$ è data dalla tabella:
+    \begin{cimage}
+        \includegraphics[width=\textwidth]{assets/20261022_154649.png}
+    \end{cimage}
+\end{example}
+%
+\subsection{Descrizioni Istantanee}\label{sub:ll_descrizioni_istantanee} % (fold)
+Un \hyperref[def:pda]{Automa a Pila} passa da una configurazione a un'altra reagendo ai simboli di input (o $\eps$), ma diversamente dagli automi a stati finiti, la configurazione di un \hyperref[def:pda]{Automa a Pila} comprende sia lo \textbf{stato} sia il \textbf{contenuto dello stack}.
+\emptyln{}
+Di conseguenza una configurazione si rappresenta come una tripla $(q,w,\gm)$ dove:
+\begin{itemize}
+    \item $q$ è lo stato;
+    \item $w$ è l'input residuo;
+    \item $\gm$ è il contenuto dello stack;
+\end{itemize}
+\begin{definition}{Descrizione Istantanea}{desc-inst}
+    La tripla $(q,w,\gm)$ viene chiamata \textbf{descrizione istantanea} (ID) dell'automa a pila.
+\end{definition}
+\begin{quote}
+    Per gli automi a stati finiti la notazione $\hat\dt$ è sufficiente a rappresentare sequenze di descrizioni istantanee attraverso le quali un automa si muove (la \hyperref[def:desc-inst]{ID} coincide con lo stato)
+\end{quote}
+Per i \hyperref[def:pda]{PDA} occorre una notazione che descriva le trasformazioni di stato (input e stack).
+Per connettere le coppie di \hyperref[def:desc-inst]{ID} che rappresentano una o più mosse di un \hyperref[def:pda]{Automa a Pila} si adotta la seguente notazione.
+\begin{definition}{Chiusura PDA}{chiusura-pda}
+    Sia $P = (Q,\Si, \Gm, \dt, q_0, Z_0,F)$ un \hyperref[def:pda]{Automa a Pila}.
+    Supponiamo che $\dt\pt{q,\alpha,X}$ contenga $(p,\alpha)$, allora per tutte le stringhe $w$ in $\Si[*]$ e $\bt$ in $\Gm[*]$ definiamo $\underset{P}{\vdash}$, o $\vdash$ quando $P$ è sottinteso, come:
+    \[
+        \pt{q,\al w,X\bt} \vdash \pt{p,w,\al\bt}
+    \]
+    \begin{note}
+        Si riflette l'idea che, consumando $\al$ dall'input e sostituendo $X$ alla sommità dello stack con $\al$, si può andare dallo stato $q$ allo stato $p$.
+        \emptyln{}
+        Inoltre quando rimane in input, $w$, e quando si trova sotto la cima dello stack, $\bt$, non influenza l'azione del \hyperref[def:pda]{PDA}, ma viene conservato e ha la possibilità di influenzare in seguito
+    \end{note}
+    Inoltre si utilizza il simbolo $\underset{P}{\vdash}^*$, o $\vdash^*$ quando $P$ è sottinteso, per rappresentare $0$ o più mosse del \hyperref[def:pda]{PDA}.
+\end{definition}
+\begin{example}{}{}
+    Considerando l'azione del \hyperref[def:pda]{PDA} in \cref{fig:20261022_152001} su input $1111$, siccome $q_0$ è lo stato iniziale e $Z_0$ è il \textbf{simbolo iniziale}, la \hyperref[def:desc-inst]{ID} iniziale è $(q_0, 1111,Z_0)$.
+    Su questo input il \hyperref[def:pda]{PDA} ha la possibilità di fare diverse congetture sbagliate.
+    L'intera sequenza di \hyperref[def:desc-inst]{ID} che il \hyperref[def:pda]{PDA} può raggiungere dalla \hyperref[def:desc-inst]{ID} iniziale è rappresentata in \cref{fig:20261022_165743}.
+    \begin{note}[Le frecce indicano la relazione $\vdash$]
+    \end{note}
+    \begin{cimage}
+        \includegraphics[width=.4\textwidth]{assets/20261022_165743.png}
+        \caption{}\label{fig:20261022_165743}
+    \end{cimage}
+    A partire dalla \hyperref[def:desc-inst]{Descrizione Istantanea} iniziale ci sono due mosse possibili:
+    \begin{itemize}
+        \item la prima metà non sia stata vista e conduce alla \hyperref[def:desc-inst]{Descrizione Istantanea} $(q_0,111,1Z_0)$: un $1$ è stato rimosso dall'input e inserito nello stack;
+        \item la prima metà sia stata raggiunta, quindi il \hyperref[def:pda]{PDA} va nello stato $q_1$ portando alla \hyperref[def:desc-inst]{Descrizione Istantanea} $(q_1, 1111,Z_0)$ senza consumo di input.
+            Poiché accetta se si trova nello stato $q_1$ con $Z_0$ alla sommità dello stack, il \hyperref[def:pda]{PDA} passa alla \hyperref[def:desc-inst]{Descrizione Istantanea} $(q_2, 1111, Z_0)$, che non è accettante perché l'input non è stato interamente consumato.
+    \end{itemize}
+    \begin{note}
+        Se l'input fosse stato $\eps$ invece di $1111$, la stessa sequenza di mosse avrebbe condotto alla \hyperref[def:desc-inst]{Descrizione Istantanea} $(q_2,\eps,Z_0)$ da cui sarebbe risultato chiaro che $\eps$ è accettata
+    \end{note}
+    Il \hyperref[def:pda]{PDA} può anche ipotizzare di aver visto la prima metà dopo aver letto un solo $1$, cioé quando si trova nella \hyperref[def:desc-inst]{Descrizione Istantanea} $(q_0,111,1Z_0)$.
+    Dal momento che non si può consumare tutto l'input, anche questa scelta porta al fallimento.
+    \emptyln{}
+    La scelta corretta, cioè aver raggiunto la prima metà dopo aver letto $11$, fornisce la sequenza di \hyperref[def:desc-inst]{ID}:
+    \[
+        \begin{aligned}
+            (q_0,1111,Z_0) &\vdash (q_0,111,1Z_0) \vdash (q_0,11,11Z_0) \vdash (q_1,11,11Z_0) \\
+                           &\vdash (q_1,1,1Z_0) \vdash (q_1,\eps,Z_0) \vdash (q_2,\eps,Z_0)
+        \end{aligned}
+    \]
+\end{example}
+\begin{note}
+    Nello studio dei \hyperref[def:pda]{PDA} hanno particolare importanza tre principi relativi alle \hyperref[def:desc-inst]{ID} e alle transizioni:
+    \begin{itemize}
+        \item se una sequenza di \hyperref[def:desc-inst]{ID}, chiamata \textbf{composizione}, è lecita per un \hyperref[def:pda]{PDA} $P$, allora è lecita anche la computazione formata accodando una stringa all'input in ogni \hyperref[def:desc-inst]{ID};
+        \item se una computazione è lecita per un \hyperref[def:pda]{PDA} $P$, allora è lecita anche la computazione formata aggiungendo gli stessi simboli sotto quelli nello stack in ogni \hyperref[def:desc-inst]{ID};
+        \item se una computazione è lecita per un \hyperref[def:pda]{PDA} $P$, e resta una coda di input non consumata, possiamo rimuovere il residuo dall'input in ogni \hyperref[def:desc-inst]{ID} e ottenere una computazione lecita;
+    \end{itemize}
+\end{note}
+% subsection Descrizioni Istantanee (end)
+%
+\subsection{Accettazione per Stato Finale}\label{sub:ll_accettazione_per_stato_finale} % (fold)
+Sia $P = (Q,\Si,\Gm,\dt,q_0,Z_0,F)$ un \hyperref[def:pda]{Automa a Pila}, allora $L(P)$, il \textbf{linguaggio accettato da $P$ per stato finale}, è:
+\[
+    \pg{w\,|\,\pt{q_0,w,Z_0} \underset{P}{\vdash}^* (q,\eps,\al)}
+\]
+per uno stato $q$ in $F$.
+\begin{note}[In altre parole...]
+    A partire dalla \hyperref[def:desc-inst]{Descrizione Istantanea} iniziale con $w$ in input, $P$ consuma $w$ ed entra in uno stato accettante.
+    A questo punto il contenuto dello stack è irrilevante.
+\end{note}
+% subsection Accettazione per Stato Finale (end)
+%
+\subsection{Accettazione per Pila Vuota}\label{sub:ll_accettazione_per_pila_vuota} % (fold)
+Per ogni \hyperref[def:pda]{PDA} $P = (Q,\Si,\Gm,\dt,q_0,Z_0,F)$ definiamo:
+\[
+    N(P) = \pg{w\,|\,(q_0,w,Z_0)\vdash* (q,\eps,\eps)}
+\]
+per qualsiasi stato $q$.
+\begin{note}
+    Quindi $N(P)$ è l'insieme degli input $w$ che $P$ può consumare, svuotando nel contempo lo stack
+\end{note}
+% subsection Accettazione per Pila Vuota (end)
+%
+\subsection{Da Stack Vuoto a Stato Finale}\label{sub:ll_da_stack_vuoto_a_stato_finale} % (fold)
+\begin{theorem}{}{}
+    Se $L = N(P_N)$ per un \hyperref[def:pda]{PDA} $P_N = (Q,\Si,\Gm,\dt_N,q_0,Z_0)$ allora esiste un \hyperref[def:pda]{PDA} $P_F$ tale che:
+    \[
+        L = L(P_F)
+    \]
+\end{theorem}
+\begin{outerproof}{}
+    Ci serviamo di un nuovo simbolo $X_0 \notin\Gm$ che rappresenta sia il simbolo iniziale di $P_F$ sia un segnale che indica quando $P_N$ ha svuotato lo stack.
+    Quando $P_F$ vede $X_0$ alla sommità del proprio stack, sa che $P_N$ vuoterebbe lo stack sullo stesso input.
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/20261022_183536.png}
+    \end{cimage}
+    Abbiamo inoltre bisogno di un nuovo stato iniziale $p_0$, la cui unica funzione è \red{inserire $Z_0$}, il simbolo iniziale di $P_N$, in cima allo stack ed entrare nello stato $q_0$, lo stato iniziale di $P_N$.
+    \emptyln{}
+    A questo punto $P_F$ simula $P_N$ finché lo stack di $P_N$ è vuoto: $P_F$ se ne accorge perché vede $X_0$ alla sommità dello stack.
+    Infine occorre un altro nuovo stato $p_f$, che è lo stato accettante di $P_F$.
+    \begin{note}
+        Questo \hyperref[def:pda]{PDA} entra nello stato $p_f$ quando scopre che $P_N$ avrebbe svuotato il proprio stack
+    \end{note}
+    Quindi sia
+    \[
+        P_F = \pt{Q\cup\pg{p_0,p_f}, \Si,\Gm\cup\pg{X_0},\dt_F,p_0,X_0,\pg{p_f}}
+    \]
+    dove:
+    \begin{itemize}
+        \item $\dt_F\pt{p_0,\eps,X_0} = \pg{\pt{q_0,Z_0,X_0}}$, nel suo stato iniziale $P_F$ compie una transizione spontanea allo stato iniziale di $P_N$, inserendone il simbolo iniziale $Z_0$ sullo stack;
+        \item per tutti gli stati $q \in Q$, gli input $a \in \Si\cup\pg\eps$, e i simboli di stack $Y \in\Gm$, $\dt_F\pt{q,a,Y}$ contiene tutte le coppie in $\dt_N\pt{q,a,Y}$;
+        \item $\dt_F\pt{q,\eps,X_0}$ contiene $(p_f,\eps)$ per ogni stato $q\in Q$;
+    \end{itemize}
+\end{outerproof}
+\begin{example}{}{}
+    Il seguente \hyperref[def:pda]{PDA} elabora sequenze di \texttt{if} e \texttt{else} in un programma dove $i$ sta per \texttt{if} e $e$ sta per \texttt{else}.
+    \begin{warning}
+        C'è un problema ogni volta che il numero di \texttt{else} in un prefisso eccede il numero di \texttt{if}, perché in quel caso non si possono abbinare ogni \texttt{else} al \texttt{if} che lo precede.
+        \begin{tip}
+            Si utilizza il simbolo di stack $Z$ per contare la differenza tra il numero di $i$ e il numero di $e$ letti
+        \end{tip}
+    \end{warning}
+    \begin{cimage}
+        \includegraphics[width=.2\textwidth]{assets/20261022_192132.png}
+        \caption{}\label{fig:20261022_192132}
+    \end{cimage}
+    Inseriamo una $Z$ quando leggiamo una $i$ e la eliminiamo quando leggiamo una $e$.
+    Poiché partiamo con una $Z$ nello stack, allora il numero di $i$ letti supera quello degli $e$ e di $\dec n$.
+    \begin{note}
+        In particolare lo stack è vuoto se abbiamo letto una $e$ in più rispetto alle $i$, e l'input letto fino a questo punto è diventato illecito per la prima volta
+    \end{note}
+    Formalmente $P_N$ può essere scritto come:
+    \[
+        P_N = \pt{\pg q, \pg{i,e}, \pg Z,\dt_N,q,Z}
+    \]
+    dove $\dt_N$ è definita come:
+    \begin{itemize}
+        \item $\dt_N\pt{q,i,Z} = \pg{\pt{q,ZZ}}$, inserisce una $Z$ quando leggiamo una $i$;
+        \item $\dt_N\pt{q,e,Z} = \pg{\pt{q,\eps}}$, elimina una $Z$ quando leggiamo una $e$;
+    \end{itemize}
+    \begin{note}
+        A partire da $P_N$ si costruisce un \hyperref[def:pda]{PDA} $P_F$ che accetta lo stesso linguaggio, \textbf{ma} \hyperref[sub:ll_accettazione_per_stato_finale]{Stato Finale}
+    \end{note}
+    Viene introdotto un nuovo stato iniziale $p$ e uno accettante $r$, usando $X_0$ come segnale di fondo dello stack.
+    Formalmente si definisce:
+    \[
+        P_F = \pt{\pg{p,q,r},\pg{i,e},\pg{Z,X_0},\dt_F,p,X_0,\pg r}
+    \]
+    dove $\dt_F$ consiste delle seguenti regole:
+    \begin{itemize}
+        \item $\dt_F\pt{q,\eps,X_0} = \pg{\pt{q,ZX_0}}$, fa partire $P_F$ simulando $P_N$ con $X_0$ come indicatore di fondo dello stack;
+        \item $\dt_F\pt{q,i,Z} = \pg{\pt{q,ZZ}}$, inserisce una $Z$ quando leggiamo una $i$;
+        \item $\dt_F\pt{q,e,Z} = \pg{\pt{q,\eps}}$, elimina una $Z$ quando leggiamo una $e$;
+        \item $\dt_F\pt{q,\eps,X_0} = \pg{\pt{r,\eps}}$, $P_F$ accetta nei casi in cui $P_N$ svuota il proprio stack;
+    \end{itemize}
+    Il diagramma per $P_F$ è il seguente:
+    \begin{cimage}
+            \includegraphics[width=.6\textwidth]{assets/20261022_194714.png}
+    \end{cimage}
+\end{example}
+% subsection Da Stack Vuoto a Stato Finale (end)
+%
+\subsection{Da Stato Finale a Stack Vuoto}\label{sub:ll_da_stato_finale_a_stack_vuoto} % (fold)
+\begin{theorem}{}{}
+    Sia $L=L(P_F)$ per un \hyperref[def:pda]{PDA} $P_F = (Q,\Si,\Gm,\dt_F,q_0,Z_0,F)$, allora esiste un \hyperref[def:pda]{PDA} tale che:
+    \[
+        L = N(P_N)
+    \]
+\end{theorem}
+\begin{outerproof}{}{}
+    \begin{cimage}
+        \includegraphics[width=.8\textwidth]{assets/20261022_200043.png}
+        \caption{}\label{fig:20261022_200043}
+    \end{cimage}
+    La costruzione è quella seguita in \cref{fig:20261022_200043}, sia:
+    \[
+        P_N = \pt{Q\cup \pg{p_0,p},\Si,\Gm\cup \pg{X_0},\dt_N,p_0,X_0}
+    \]
+    dove $\dt_N$ è definita come:
+    \begin{itemize}
+        \item $\dt_N \pt{p_0,\eps,X_0} = \pg{\pt{q_0,Z_0,X_0}}$, si inserisce il simbolo iniziale di $P_F$ nello stack e andando nello stato iniziale di $P_F$;
+        \item per ogni stato $q\in Q$, ogni simbolo di input $a\in\Si\cup \pg{\eps}$ e ogni $Y\in\Gm$, $\dt_N \pt{q,a,Y}$;
+            \begin{note}
+                In altre parole $P_N$ simula $P_F$
+            \end{note}
+        \item per tutti gli stati accettanti in $q\in F$ e i simboli di stack $Y\in \Gm\cup \pg{X_0}$, $\dt_N \pt{q,\eps,Y}$ contiene $\pt{p,\eps}$;
+            \begin{note}
+                Per questa regola, ogni volta che $P_F$ accetta $P_N$ può cominciare a vuotare il suo stack senza consumare ulteriori input
+            \end{note}
+        \item per tutti i simboli di stack $Y \in \Gm \cup \pg{X_0}$, $\dt_N \pt{p,\eps,Y} = \pg{\pt{p,\eps}}$;
+            Giunto nello stato $p$, il che è possibile solo quando $P_F$ ha accettato, $P_N$ elimina ogni simbolo nel suo stack fino a vuotarlo (senza consumare altri input).
+    \end{itemize}
+\end{outerproof}
+% subsection Da Stato Finale a Stack Vuoto (end)
 % section Automi a Pila (end)
+%
+\section{Equivalenza di PDA e CFG}\label{sec:ll_equivalenza_di_pda_e_cfg} % (fold)
+\begin{remark}{}{}
+    Un \hyperref[def:linguaggio]{Linguaggio} è generato da una \hyperref[def:cfg]{Grammatica Libera dal Contesto} \textbf{se e solo se} è accettato da un \hyperref[def:pda]{Automa a Pila} per \hyperref[sub:ll_accettazione_per_pila_vuota]{Pila Vuota} \textbf{se e solo se} è accettato da un \hyperref[def:pda]{Automa a Pila} per \hyperref[sub:ll_accettazione_per_stato_finale]{Stato Finale}
+\end{remark}
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/20261022_201732.png}
+\end{cimage}
+%
+\subsection{Dalle Grammatiche agli Automi a Pila}\label{sub:ll_dalle_grammatiche_agli_automi_a_pila} % (fold)
+Data una \hyperref[sec:ll_grammatiche_libere_dal_contesto]{Grammatica Libera dal Contesto} $G$, si costruisce un \hyperref[def:pda]{PDA} che ne simula la derivazione a sinistra $\pt{\overset{*}{\underset{lm}{\implies}}}$.
+\\
+Ogni forma sentenziale sinistra, che non sia una stringa terminale, si può scrivere nella forma:
+\[
+    xA\al
+\]
+dove $A$ è la variabile \textbf{più a sinistra}, $x$ è la stringa di terminali alla sua sinistra, e $\al$ è la stringa di terminali e variabili alla destra di $A$.
+\begin{example}{}{}
+    \[
+        \underbrace{(\al + }_{x}\underbrace{\underbrace{E}_{A}\underbrace{)}_{\al}}_{tali}
+    \]
+\end{example}
+% subsection Dalle Grammatiche agli Automi a Pila (end)
+% section Equivalenza di PDA e CFG (end)
 % chapter Linguaggi Liberi dal Contesto(end)
