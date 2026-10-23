@@ -110,13 +110,13 @@ The definition of a new process: $Q = \pt{x\to P}$: a process can be defined in 
 \end{note}
 Definition of multiple processes: $P = \pt{x\to Q},\, Q = \pt{y\to P}$;
 \begin{example}{Light Switch}{switch-process}
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     SWITCH = OFF,
     OFF = (on->ON),
     ON = (off->OFF).
     \end{codeblock}
     Equivalent description (applying \textbf{substitution}):
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     SWITCH = (on->off->SWITCH).
     \end{codeblock}
     Corresponding \ac{lts}:
@@ -126,7 +126,7 @@ Definition of multiple processes: $P = \pt{x\to Q},\, Q = \pt{y\to P}$;
 \end{example}
 \begin{example}{Stop Process}{}
     The following example illustrates a process that engages in the action once and then stops:
-    \begin{codeblock}
+    \begin{codeblock}[fsp]
     ONESHOT = (once->STOP).
     \end{codeblock}
     \begin{note}
@@ -156,7 +156,7 @@ In \ac{fsp}:
 \end{description}
 \begin{example}{Drink Dispencer Machine}{}
     \ac{fsp} specification:
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     DRINKS = (red->coffee->DRINKS
              |blue->tea->DRINKS
              ).
@@ -170,7 +170,7 @@ In \ac{fsp}:
 %
 \paragraph{Modelling Non-Deterministic Choice}\label{par:alph_modelling_non_deterministic_choice} % (fold)
 The process $\pt{x\to P\, |\, x\to Q}$ is said to be \textbf{non-deterministic} since after the action $x$, it may behave as either $P$ or $Q$.
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     COIN = (toss->heads->COIN
            |toss->tails->COIN
            ).
@@ -182,12 +182,12 @@ In \ac{fsp} both local processes and action label may be \textbf{indexed}, model
 \begin{note}
     It greatly increases the expressive power of the notation
 \end{note}
-\begin{codeblock}{Buffer containing a single value}
+\begin{codeblock}[fsp]{Buffer containing a single value}
     BUFF = (in[i:0..3]->out[i]->BUFF).
 \end{codeblock}
 It inputs a value in the range $0$ to $3$ and then outputs that value.
 This is equivalent to:
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     BUFF = (in[0]->out[0]->BUFF
         |in[1]->out[1]->BUFF
         |in[2]->out[2]->BUFF
@@ -203,7 +203,7 @@ Corresponding \ac{lts}:
 \end{cimage}
 %
 \paragraph{Specifying a Range}\label{par:md_specifying_a_range} % (fold)
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     range T = 0..3
     BUFF = (in[i:T]->STORE[i]),
     STORE[i:T] = (out[i]->BUFF).
@@ -214,11 +214,11 @@ Corresponding \ac{lts}:
 Processes may be parameterised so that they may be described in a general form and modelled for a particular parameter value.
 \emptyln{}
 For instance, the single-slot buffer described before can be described as a parameterised process for values in the range $0$ to $N$ as follows:
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     BUFF(N=3) = (in[i:0..N]->out[i]->BUFF).
 \end{codeblock}
 using constants:
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     const N = 3
     BUFF = (in[i:0..N]->out[i]->BUFF).
 \end{codeblock}
@@ -239,7 +239,7 @@ The choice \texttt{(when B x->P | y->Q)} means that when the guard \texttt{B}  i
 \begin{example}{}{}
     A \texttt{COUNT} process that encapsulated a count variable, that can be increased by \texttt{inc} operations and decreased by \texttt{dec} operations.
     The count is not allowed to exceed \texttt{N} or be less than zero.
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     COUNT (N=3) = COUNT[0],
     COUNT[i:0..N] = (when(i<N) inc->COUNT[i+1]
         |when(i>0) dec->COUNT[i-1]
@@ -268,23 +268,23 @@ Parallel composition is a process itself, which is represented as a \textbf{stat
 \end{note}
 \begin{example}{A process of two parallel processes}{}
     The process:
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     ITCH = (scratch->STOP).
     \end{codeblock}
     has a singe trace consisting of the action: \texttt{scratch}
     \emptyln{}
     The process:
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     CONVERSE = (think->talk->STOP).
     \end{codeblock}
     has the single trace: \texttt{think->talk}
     \emptyln{}
     The composite process:
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     ||CONVERSE_ITCH = (ITCH || CONVERSE).
     \end{codeblock}
     has the following traces:
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     think->talk->scratch
     think->scratch->talk
     scratch->think->talk
@@ -298,7 +298,7 @@ Parallel composition is a process itself, which is represented as a \textbf{stat
 \end{example}
 \begin{example}{Another Parallel Example}{}
     The following processes model a clock radio which incorporates two independent activities: a clock which ticks and a radio which can be switched on and off.
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     CLOCK = (tick->CLOCK).
     RADIO = (on->off->RADIO).
     ||CLOCK_RADIO = (CLOCK || RADIO).
@@ -307,7 +307,7 @@ Parallel composition is a process itself, which is represented as a \textbf{stat
         \includegraphics[width=.6\textwidth]{assets/clock-radio-parallel-ex.png}
     \end{cimage}
     Possible traces:
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     on->tick->tick->off->tick->tick->tick->on->off->...
     tick->on->off->on->off->on->off->tick->on->tick->...
     \end{codeblock}
@@ -364,13 +364,13 @@ A classic approach to model concurrency, abstracting from time, is using \textbf
     While unshared actions may be arbitrary interleaved, a shared action must be executed at the same time by all the processes that participate in that shared action
 \end{note}
 \begin{example}{\texttt{meet} action in \texttt{BILL} and \texttt{BEN} processes}{}
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     BILL = (play->meet->STOP).
     BEN = (work->meet->STOP).
     ||BILL_BEN = (BILL || BEN).
     \end{codeblock}
     In the example, \texttt{BILL} and \texttt{BEN} processes share the action \texttt{meet}, the possible execution traces of the composition are:
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     play->work->meet
     work->play->meet
     \end{codeblock}
@@ -381,7 +381,7 @@ A classic approach to model concurrency, abstracting from time, is using \textbf
 \end{example}
 \begin{example}{User and Make}{user-maker}
     This example consists of a process that manufactures an item and then signals that the item is ready for use by a shared action.
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     MAKER = (make->ready->MAKER).
     USER = (ready->use->USER).
     ||MAKER_USER = (MAKER || USER).
@@ -391,7 +391,7 @@ A classic approach to model concurrency, abstracting from time, is using \textbf
         \includegraphics[width=.6\textwidth]{assets/user-maker-ex.png}
     \end{cimage}
     Possible execution traces:
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     make->ready->use->make->ready->...
     make->ready->make->use->ready->...
     \end{codeblock}
@@ -406,7 +406,7 @@ A classic approach to model concurrency, abstracting from time, is using \textbf
 \subsubsection{Handshake}\label{sub:md_handshake} % (fold)
 Suppose that this is undesirable behaviour, and we don't wish the \hyperref[ex:user-maker]{\texttt{MAKER}} process to get ahead in this way.
 The solution is to modify the model so that the user indicates that the item is used: \texttt{used} action/event.
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     MAKER2 = (make->ready->used->MAKER2).
     USER2 = (ready->use->used->USER2).
     || MAKER_USER2 = (MAKER2 || USER2).
@@ -422,7 +422,7 @@ The solution is to modify the model so that the user indicates that the item is 
 %
 \subsubsection{Multi Party Synchronisation}\label{sub:md_multi_party_synchhronisation} % (fold)
 Many processes can engage in a shared action:
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     MAKE_A = (makeA->ready->used->MAKE_A).
     MAKE_B = (makeB->ready->used->MAKE_B).
     ASSEMBLE = (ready->assemble->used->ASSEMBLE).
@@ -437,13 +437,13 @@ Many processes can engage in a shared action:
 %
 \subsection{Parallel Composition of Composite Processes}\label{sub:md_parallel_composition_of_composite_processes} % (fold)
 Since a parallel composition of processes is itself a process, called a \textbf{composite process}, it can be used in the definition of further compositions.
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     MAKE_A = (makeA->ready->used->MAKE_A).
     MAKE_B = (makeB->ready->used->MAKE_B).
     ||MAKERS = (MAKE_A || MAKE_B).
 \end{codeblock}
 The rest of the factory description now becomes:
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     ASSEMBLE = (ready->assemble->used->ASSEMBLE).
     ||FACTORY = (MAKERS || ASSEMBLE).
 \end{codeblock}
@@ -455,18 +455,18 @@ The rest of the factory description now becomes:
 \subsection{Parallel Composition of Multiple Instances}\label{sub:md_parallel_composition_of_multiple_instances} % (fold)
 Given the definition of a \hyperref[def:process]{process}, we often want to use more than one copy of that process in a program or system model.
 For example, given the definition for a switch:
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     SWITCH = (on->off->SWITCH).
 \end{codeblock}
 We may wish to describe from a system that is the composition of two distinct switches.
 However, if we describe this system as:
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     (SWITCH || SWITCH)
 \end{codeblock}
 the composition is indistinguishable from a single switch since the two switches processes synchronize on their shared actions \texttt{on} and \texttt{off}.
 \subsubsection{Process Labelling}\label{sub:md_process_labelling} % (fold)
 We must ensure that the \textbf{actions} of each \texttt{SWITCH} process are not shared: this is done by means of \textbf{process labelling}.
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     ||TWO_SWITCH = (a:SWITCH || b:SWITCH).
 \end{codeblock}
 The state machine representation:
@@ -479,20 +479,20 @@ The alphabets of the two processes are disjoint: \texttt{\{a.on, a.off\}} and \t
 %
 \subsection{Parametrised Composite Processes}\label{sub:md_parametrised_composite_processes} % (fold)
 Composite processes can be parameterised using the \textbf{\texttt{forall}} construct:
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     forall [i:1..N] P(i)
 \end{codeblock}
 is the parallel composition:
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     (P(1) || ... || P(N))
 \end{codeblock}
 \begin{example}{Array of \texttt{SWITCHES}}{}
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     ||SWITCHES(N=3) = (forall[i:1..N] s[i]:SWITCH).
     \end{codeblock}
 \end{example}
 An equivalent but shorter definition is:
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     ||SWITCHES(N=3) = (s[i:1..N]:SWITCH).
 \end{codeblock}
 % subsection Parametrised Composite Processes (end)
@@ -504,7 +504,7 @@ Labelling can be done using set of prefix labels using \texttt{\{a1,.., ax\}::P}
     \item every transition \texttt{(n->Q)} in the definition of $P$ is replaced with the transitions: \texttt{(\{a1.n, ... , ax.n\}->Q}
 \end{itemize}
 This is useful when we have processes that can interact with other multiple processes:
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     RESOURCE = (acquire->release->RESOURCE).
     USER = (acquire->use->release->USER).
     ||RESOURCE_SHARE = (a:USER || b:USER || {a,b}::RESOURCE)
@@ -523,7 +523,7 @@ When creating composite processes composing independent processes we may need to
 \end{codeblock}
 \begin{example}{Client Server Example}{}
     A server process that provides some service and a client process that invokes the service are described below:
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     CLIENT = (call->wait->continue->CLIENT).
     SERVER = (request->service->reply->SERVER).
     ||CLIENT_SERVER = (CLIENT || SERVER)/{call/request, reply/wait}.
@@ -545,7 +545,7 @@ In different processes silent actions are not shared, the hidden actions become 
 The dual operator \texttt{@\{a1..ax\}} ``expose'' actions: when applied to a process $P$, the interface operator \texttt{@\{a1..an\}} hides all actions in the alphabet of $P$ not labeled in the set \texttt{\{a1..\}}
 \begin{example}{}{}
     In \texttt{USER} process definition, hiding the use action in two different approaches:
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     USER = (acquire->use->release->USER)\{use}.
     USER = (acquire->use->release->USER)@{acquire,release}.
     \end{codeblock}
@@ -597,7 +597,7 @@ The definition of \hyperref[def:seq-process]{sequential process} is useful for i
 \emptyln{}
 If $P$ is a sequential process and $Q$ is a local process, then \texttt{P;Q} represents the sequential composition such that when $P$ terminates, \texttt{P;Q} becomes the process $Q$.
 If we define a process \texttt{SKIP = END} then \texttt{P;SKIP $\equiv$ P} and \texttt{SKIP;P $\equiv$ P}.
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     SP(I=0) = (a[I]->END).
     P123 = (start->SP(1);SP(2);SP(3);END).
     LOOP = P123;LOOP.
@@ -612,7 +612,7 @@ A sequential composition in \ac{fsp} always take the form: \texttt{SP1;SP2;..SPn
 %
 \paragraph{Recursive Context}\label{par:sc_recursive_context} % (fold)
 Sequential composition can be used in a recursive context.
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     const N = 3
     R(I=0) = if (I<N) then
             (a[I]->R(I+1);END)
@@ -632,7 +632,7 @@ Process \texttt{R} is defined as the sequential composition of sequential proces
 %
 \subsection{Parallel Composition and Sequential Processes}\label{sub:md_parallel_composition_and_sequential_processes} % (fold)
 The parallel composition \texttt{SP1 || SP2} of two sequential processes \texttt{SP1} and \texttt{SP2} terminates when both of these processes terminate: if termination is reachable in \texttt{SP1 || SP2} then it is a sequential process.
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     P = (x->END).
     || S = (a:P || b:P).
 \end{codeblock}

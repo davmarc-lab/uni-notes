@@ -1,0 +1,85 @@
+\documentclass{article}
+
+% Shared preamble from project root
+\usepackage{lecture}
+
+\begin{document}
+
+% \begingroup
+%     \hypersetup{linkbordercolor=white, linkcolor=black} 
+%     \tableofcontents
+%     \newpage
+% \endgroup
+
+\section{Thread Safety}\label{sec:ts_thread_safety} % (fold)
+\begin{definition}{Thread Safe}{tsafe}
+    A class is \textbf{thread safe} if continues to behave correctly when accessed from multiple threads, regardless of the scheduling or interleaving of the execution of those threads by the runtime environment.
+    \begin{note}
+        Without additional synchronization or other coordination on the part of the calling code
+    \end{note}
+\end{definition}
+Correctness means that a class conforms to its specification, a good specification defines:
+\begin{itemize}
+    \item \textbf{invariants} constraining an object's state;
+    \item \textbf{post-conditions} describing the effects if its operations;
+\end{itemize}
+\begin{note}
+    Thread-safe classes encapsulate any needed synchronization, so the clients don't need to provide their own
+\end{note}
+%
+\subsection{Shared Mutable State}\label{sub:ts_shared_mutable_state} % (fold)
+Writing thread-safe code is -- at its core -- about \textit{managing access to state} and in particular to \textbf{shared} and \textbf{mutable state}:
+\begin{definition}{Shared}{shared}
+    A variable or object could be accessed by multiple threads.
+\end{definition}
+\begin{definition}{Mutable}{mutable}
+    Its value could change during its lifetime.
+\end{definition}
+\begin{critical}[Race Conditions]
+    If multiple threads access the same \hyperref[def:mutable]{Mutable} state variable without appropriate synchronization, the program is broken
+\end{critical}
+There are three ways to fix it:
+\begin{itemize}
+    \item don't save state variable across threads;
+    \item make the state variable across threads;
+    \item use synchronization whenever accessing the state variable;
+\end{itemize}
+% subsection Shared Mutable State (end)
+%
+\subsubsection{Stateless \& Stateful Object}\label{sub:stateless_stateful_object} % (fold)
+\textbf{Stateless} objects are always \hyperref[def:tsafe]{Thread Safe}: actions of a thread accessing a stateless object cannot affect the correctness of operations in other threads.
+\begin{note}
+    Thread safety is undermined as soon as we share and access in R/W \textbf{stateful} objects: \hyperref[def:mutable]{Mutable} state-full objects in particular
+\end{note}
+% subsubsection Stateless \& Stateful Object (end)
+%
+\subsection{Race Conditions}\label{sub:race_conditions} % (fold)
+The concurrent execution of non-atomic sequence of statements that should be considered atomic, generate \textbf{race condition}.
+\begin{note}
+    It occurs when the \textbf{correctness of a computation} depends on the relative timing or interleaving of multiple threads by the runtime
+\end{note}
+%
+\subsubsection{Lost Updates \& Check-and-Act}\label{sub:lost_updates_check_and_act} % (fold)
+\begin{definition}{Lost Updates}{lost-update}
+    When executing concurrently non-atomic read-modify-write operations (\texttt{count++}).
+\end{definition}
+\begin{definition}{Check-and-Act}{check-act}
+    When a potentially state observation is used to make a decision on what to do next.
+    \begin{note}
+        Since check and act are not atomic, the state can change after check and before act
+    \end{note}
+    \begin{example}{}{}
+        \begin{codeblock}[txt]{}
+        if (file X doesn't exists)  -- check
+            then create file X      -- act
+        \end{codeblock}
+    \end{example}
+\end{definition}
+\begin{note}[Compound Atomic Actions]
+    \hyperref[def:check-act]{Check-and-Act} and read-modify-write are examples of compound actions: the sequence of operation that must be executed atomically in order to remain \hyperref[def:tsafe]{Thread Safe}
+\end{note}
+% subsubsection Lost Updates \& Check-and-Act (end)
+% subsection Race Conditions (end)
+% section Thread Safety (end)
+\end{document}
+

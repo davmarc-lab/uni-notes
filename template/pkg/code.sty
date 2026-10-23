@@ -1,9 +1,23 @@
 \usepackage{textcomp}
+\usepackage{xcolor}
 \usepackage[most]{tcolorbox}
 \tcbuselibrary{listings, breakable, skins}
 
 \lstalias{py}{Python}
 \lstalias{cpp}{C++}
+
+\lstset{
+    showstringspaces=false,
+    basicstyle=\scriptsize\ttfamily,
+    commentstyle={\color{olive}},
+    identifierstyle=\color{black},
+    ndkeywordstyle={\color{blue}},
+    stringstyle={\color{magenta}},
+    emphstyle={},
+    keywordstyle={\color{blue}},
+    breaklines=true,
+    tabsize=2,
+}
 
 % shorthand command for the prompt to save typing
 \newcommand{\prompt}{\textcolor{green}{user@linux:~\$} }
@@ -95,3 +109,34 @@
     }
 }
 
+\lstdefinelanguage{txt}{}
+
+\lstdefinelanguage{fsp}{
+    comment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    keywords={if, then, else, when, property, const, range, progress, forall},
+    otherkeywords={STOP, ERROR, END},
+    sensitive=true,
+    morestring=[b]",
+    morestring=[b]',
+    alsoletter={-, >, |, :, ., @, \{, \}, [, ]},
+    literate=
+        {->}{{$\to\,$}}2
+        {||}{{$\parallel\,$}}2
+        {::}{{$::\,$}}2
+        {..}{{$\dots\,$}}2
+        {...}{{$\dots\,$}}2
+        {=}{{$=\,$}}1
+        {|}{{|}}1,
+}[keywords, comments, strings]
+
+\lstdefinelanguage{Kotlin}{
+    comment=[l]{//},
+    emph={delegate, filter, first, firstOrNull, forEach, lazy, map, mapNotNull, println, return@},
+    keywords={abstract, actual, as, as?, break, by, class, companion, continue, data, do, dynamic, else, enum, expect, false, final, for, fun, get, if, import, in, interface, internal, is, null, object, override, package, private, public, return, set, super, suspend, this, throw, true, try, typealias, val, var, vararg, when, where, while},
+    morecomment=[s]{/*}{*/},
+    morestring=[b]",
+    morestring=[s]{"""*}{*"""},
+    ndkeywords={@Deprecated, @JvmField, @JvmName, @JvmOverloads, @JvmStatic, @JvmSynthetic, Array, Byte, Double, Float, Int, Integer, Iterable, Long, Runnable, Short, String, Unit, it},
+    sensitive=true
+}

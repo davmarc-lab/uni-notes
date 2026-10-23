@@ -108,7 +108,7 @@ Two main approaches:
 \hyperref[def:safety-prop]{Safety properties} are specified in \ac{fsp} by \textbf{property processes}: simply \ac{fsp} processes prefixed by the keyword \texttt{property}.
 They are composed with a target system to ensure that the specified property holds for that system.
 \begin{example}{\texttt{POLITE} property example}{polit-prop}
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
         property POLITE = (knock->enter->POLITE).
     \end{codeblock}
     \begin{cimage}
@@ -149,22 +149,22 @@ Progress is the opposite of \textbf{starvation}, that is: the situation in which
 %
 \subsubsection{Progress Property in FSP}\label{sub:an_progress_property_in_fsp} % (fold)
 The definition of a progress property in \ac{fsp}:
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     progress P = {a1,a2..an}
 \end{codeblock}
 The property asserts that in an \textbf{infinite} execution of a target system, at least one of the actions \texttt{a1,a2..an} will be executed \textbf{infinitely often}: in other words, a progress property asserts that at any stage of execution one of the actions in the progress set will eventually occur.
 \begin{example}{Progress and the \texttt{COIN} system}{}
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     COIN = (toss->heads->COIN | toss->tails->COIN).
     \end{codeblock}
     The liveness requirement for coin tossing can now be expressed as:
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     progress HEADS = {heads}
     progress TAILS = {tails}
     \end{codeblock}
 \end{example}
 \begin{example}{Variation of the \texttt{COIN} system violating the progress property}{}
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     TWOCOIN = (pick -> COIN | pick -> TRICK).
     COIN = (toss->heads->COIN | toss->tails->COIN).
     TRICK = (toss->heads->TRICK).
@@ -265,7 +265,7 @@ A system execution is essentially a sequence of states and so a system specifica
     They are used in different contexts and can be expressed in different ways depending on the context.
     \emptyln{}
     In \ac{fsp} a fluent is defined as:
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     fluent FL = <{s1,...sn},{e1..en}> initially B
     \end{codeblock}
     It represents a fluent $FL$ that is initially true if the expression $B$ is true and initially false if the expression $B$ is false
@@ -283,7 +283,7 @@ A system execution is essentially a sequence of states and so a system specifica
 \end{quote}
 \begin{example}{Fluent Example}{}
     The following fragment defines a fluent \texttt{LIGHT} which becomes true when the action \texttt{on} occurs and false when the action \texttt{off} or \texttt{power\_cut} occurs.
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     const False = 0
     const True = 1
     fluent LIGHT = <{on}, {off, power_cut}> initially False
@@ -291,11 +291,11 @@ A system execution is essentially a sequence of states and so a system specifica
     This captures the state of a light so that when the light is on, the fluent \texttt{LIGHT} is true and when the light is off, the fluent is false.
     \\
     We can define indexed families of fluents in the same way that we define \hyperref[sub:md_indexed_processes_and_actions]{indexed families of processes}:
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     fluent LIGHT[i:1..2] = <{on[i]}, {off[i], power_cut}>
     \end{codeblock}
     This is equivalent to defining two fluents:
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     fluent LIGHT_1 = <{on[1]}, {off[1], power_cut}>
     fluent LIGHT_2 = <{on[2]}, {off[2], power_cut}>
     \end{codeblock}
@@ -336,12 +336,12 @@ Fluent expressions can be formed using the following logical operators:
 \end{note}
 \begin{example}{}{}
     Given the fluents:
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     fluent POWER = <power_on, power_off>
     fluent LIGHT = <on, off>
     \end{codeblock}
     the expression:
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     LIGHT->POWER
     \end{codeblock}
     states our expectation that, for the light to be on, the power must also be on
@@ -377,7 +377,7 @@ To express propositions with respect to an execution of a model, we will use \ac
     A \textbf{critical section} is a sequence of actions that a process has which satisfies the \textit{mutual exclusion} property so that is only one process at a time should be inside its critical section.
 \end{definition}
 \begin{example}{Two \texttt{USER} processes in critical section}{crit-sec-problem}
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     USER = (ncs->enterCS->cs->exitCS->USER).
     ||USERS = (a:USER || b:USER).
     \end{codeblock}
@@ -385,7 +385,7 @@ To express propositions with respect to an execution of a model, we will use \ac
     \emptyln{}
     The abstract states of interest here are when each \texttt{USER} processes enters its critical section.
     We express these states with \hyperref[sub:an_fluents]{fluents}:
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     fluent USER_A_IN_CS = <a.enter, a.exit>
     fluent USER_B_IN_CS = <b.enter, b.exit>
     \end{codeblock}
@@ -397,13 +397,13 @@ To express propositions with respect to an execution of a model, we will use \ac
         That is: the condition \texttt{!(USER\_A\_IN\_CS \&\& USER\_B\_IN\_CS)} must be true in every state
     \end{note}
     In \ac{fsp} the property can be specified using assert:
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     assert MUTEX = []!(USER_A_IN_CS && USER_B_IN_CS)
     \end{codeblock}
 \end{example}
 \paragraph{Solving the Problem with a Lock}\label{par:an_solving_the_problem_with_a_lock} % (fold)
 The \hyperref[ex:crit-sec-problem]{critical section problem} can be solved by introducing a shared \texttt{LOCK} process, functioning as a lock that each user process has to acquire to before entering in \texttt{CS} and releases before exiting:
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     USER = (ncs -> acquire->enterCS -> cs -> exitCS -> release->USER).
     LOCK = (acquire -> release -> LOCK).
     ||USERS =
@@ -423,7 +423,7 @@ In this case the property is verified.
     Critical section problem case study: \textit{if a user requests to enter in its \texttt{CS}, then eventually he/she will enter}
 \end{note}
 We can express this property using the temporal formula:
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     assert NO_STARV =[](a.acquire -> <> a.enterCS)
 \end{codeblock}
 % subsection Liveness Properties using Eventually Operator (end)
@@ -442,7 +442,7 @@ Beside the \textbf{always} operator $\cbox$ and eventually operator $<>$, some o
 \begin{example}{}{}
     Let's suppose we wish to assert the \hyperref[ex:polit-prop]{politeness property} that we should not enter a room before knocking.
     We can assert:
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     assert POLITE = (!enter U knock)
     \end{codeblock}
     This asserts both the safety property that we cannot have an enter action before a knock action, and also that a knock action should eventually happen.
@@ -450,7 +450,7 @@ Beside the \textbf{always} operator $\cbox$ and eventually operator $<>$, some o
 %
 \paragraph{\texttt{MUTEX} Using \texttt{UNTIL}}\label{par:an_texttt_mutex_using_texttt_until} % (fold)
 Given the \hyperref[sub:an_until_operator]{until operator}, we can state the mutual exclusion property seen for the critical section problem using only \hyperref[sub:an_action_fluents]{action fluents}:
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     assert MUTEX_U =
         []((a.enterCS -> (!b.enterCS U a.exitCS)) &&
         (b.enterCS -> (!a.enterCS U b.exitCS)))
@@ -466,7 +466,7 @@ This expresses the required mutual exclusion safety property and, in addition, t
     The difference with the previous definition of until is that this definition does not insist that $q$ eventually happens. The formula also holds if $p$ is true indefinitely.
 \end{definition}
 \begin{example}{Using weak until for the \hyperref[ex:polit-prop]{\texttt{POLITE} property}}{}
-    \begin{codeblock}{}
+    \begin{codeblock}[fsp]{}
     assert POLITE_W = (!enter W knock)
     \end{codeblock}
     \begin{warning}
@@ -489,7 +489,7 @@ Actually FLTL does not have the explicit constants True and False, instead it pe
 These expressions are termed \textit{rigid}, since, unlike \hyperref[def:fault]{faults} propositions, they do not change truth value with the passage of time as measured by the occurrence of events.
 \\
 Thus, we can define:
-\begin{codeblock}{}
+\begin{codeblock}[fsp]{}
     assert True = rigid(1)
     assert False = rigid(0)
 \end{codeblock}
