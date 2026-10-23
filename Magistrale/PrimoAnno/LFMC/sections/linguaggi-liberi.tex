@@ -768,6 +768,63 @@ dove $A$ è la variabile \textbf{più a sinistra}, $x$ è la stringa di terminal
         \underbrace{(\al + }_{x}\underbrace{\underbrace{E}_{A}\underbrace{)}_{\al}}_{tali}
     \]
 \end{example}
+\begin{tip}
+    La costruzione di un \hyperref[def:pda]{Automa a Pila} da una \hyperref[def:cfg]{Grammatica} poggia sull'idea di far simulare al \hyperref[def:pda]{PDA} la serie di \textbf{forme sentenziali sinistre} usate dalla \hyperref[def:cfg]{Grammatica} per generare una stringa terminale data $w$
+\end{tip}
+La coda di ogni forma $xA\al$ compare sullo stack con $A$ in cima.
+In quel momento $x$ è rappresentata dall'aver consumato $x$ in input, lasciando ciò che in $w$ segue $x$.
+\begin{note}[Quindi se $w = xy$ allora in input rimane $y$]
+\end{note}
+\begin{remark}{}{}
+    Supponiamo che il \hyperref[def:pda]{PDA} si trovi nella \hyperref[def:desc-inst]{ID} $(q,y,A\al)$, che rappresenta la forma sentenziale sinistra $xA\al$, l'automa sceglie arbitrariamente una produzione per espandere $A$.
+    Poniamo $A\to \bt$, la sua mossa consiste nel sostituire $A$ con $\bt$ in cima allo stack, entrando nella \hyperref[def:desc-inst]{ID} $(q,y,\bt\al)$.
+    \begin{note}
+        Il \hyperref[def:pda]{PDA} ha un solo stato $q$
+    \end{note}
+    La \hyperref[def:desc-inst]{Descrizione Istantanea} $(q,y,\bt\al)$ potrebbe non rappresentare la successiva forma sentenziale sinistra, perché $\bt$ può avere un prefisso formato da \textbf{terminali}.
+    Di fatto può darsi che $\bt$ non contenga affatto variabili e che $\al$ abbia un prefisso composto di \textbf{terminali}.
+    \emptyln{}
+    Per esporre in cima allo stack la prossima variabile, dobbiamo eliminare gli eventuali terminali all'inizio di $\bt\al$.
+    Questi terminali vanno confrontati con i successivi simboli di input per verificare che le scelte per \hyperref[rem:gram-derivazione]{Derivazione} a sinistra della stringa di input $w$ siano corrette; in caso contrario la diramazione del \hyperref[def:pda]{PDA} muore.
+\end{remark}
+Se in questo modo si determina una \hyperref[rem:gram-derivazione]{Derivazione} a sinistra di $w$, alla fine si raggiunge la forma sentenziale sinistra $w$.
+A quel punto ogni simbolo sullo stack o è stato espanso (\red{caso delle variabili}) o abbinato a un simbolo di input (\red{caso dei terminali}), quindi lo \textbf{stack è vuoto} e \textbf{l'automa accetta}.  
+\emptyln{}
+A questo punto è possibile definire la seguente costruzione: sia $G = (V,T,Q,S)$ una \hyperref[def:cfg]{Grammatica Libera dal Contesto}, costruiamo il \hyperref[def:pda]{PDA} $P$ che accetta $L(G)$ per stack vuoto:
+\[
+    P = \pt{\pg{q},T,V\cup T,\dt,q,S}
+\]
+La funzione di transizione $\dt$ è definita come:
+\begin{itemize}
+    \item per ogni variabile $A$:
+        \[
+            \dt \pt{q,\eps,A} = \pg{\pt{q,\bt}\,|\, A\to\bt\text{ è una produzione di }G}
+        \]
+    \item per ogni terminale $a$, $\dt \pt{q,a,a} = \pg{\pt{q,\eps}}$
+\end{itemize}
+\begin{example}{}{}
+    Considerando l'alfabeto $\pg{i,e}$ e la seguente grammatica:
+    \[
+        S \to\eps|SS|iS|iSe
+    \]
+    Determiniamo la funzione di transizione:
+    \begin{itemize}
+        \item $\dt \pt{q,\eps,S} = \pg{\pt{q,\eps}, \pt{q,SS}, \pt{q,iS}, \pt{q,iSe}}$
+        \item $\dt \pt{q,i,i} = \pg{\pt{q,\eps}}$
+        \item $\dt \pt{q,e,e} = \pg{\pt{q,e}}$
+    \end{itemize}
+    Quindi il \hyperref[def:pda]{PDA} corrispondente si può esprimere come:
+    \[
+        P = \pt{\pg{q}, \pg{i,e}, \pg{S,i,e}, \dt, q, S}
+    \]
+    \begin{flushright}
+        \qedsymbol
+    \end{flushright}
+\end{example}
 % subsection Dalle Grammatiche agli Automi a Pila (end)
+%
+\subsection{Da Automa a Pila a Grammatica}\label{sub:ll_da_automa_a_pila_a_grammatica} % (fold)
+
+% subsection Da Automa a Pila a Grammatica (end)
 % section Equivalenza di PDA e CFG (end)
 % chapter Linguaggi Liberi dal Contesto(end)
