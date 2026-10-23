@@ -79,7 +79,72 @@ The concurrent execution of non-atomic sequence of statements that should be con
     \hyperref[def:check-act]{Check-and-Act} and read-modify-write are examples of compound actions: the sequence of operation that must be executed atomically in order to remain \hyperref[def:tsafe]{Thread Safe}
 \end{note}
 % subsubsection Lost Updates \& Check-and-Act (end)
+%
+\subsubsection{Atomic Compound Actions in Java}\label{sub:atomic_compound_actions_in_java} % (fold)
+Compound actions and atomic statements blocks in Java can be realized by means of synchronized blocks or methods.
+\begin{codeblock}[java]{}
+    synchronized(lock) {
+        statement
+        statement
+        statement
+    }
+\end{codeblock}
+A synchronized block has two parts:
+\begin{itemize}
+    \item a reference to an object that will serve as the \textbf{lock};
+    \item block of code to be guarded by the \textbf{lock};
+\end{itemize}
+\begin{note}
+    Mostly used at a \textit{method} level: synchronized attributes.
+\end{note}
+\paragraph{Intrinsic Lock and Entry Set}\label{par:intrinsic_lock_and_entry_set} % (fold)
+Atomic blocks work by exploiting the \textbf{lock} embedded in each Java object called \textbf{intrinsic lock} or monitor lock.
+\begin{note}[Functioning as a guard for the block]
+\end{note}
+The lock is automatically acquired and then released by a thread respectively when entering and exiting the block, if the lock is already acquired the thread is blocked (suspended) and added to the entry set.
+When a thread exited the block, one thread of the entry set is selected and re-activated.
+\begin{warning}
+    If the lock is not released by the thread inside the block, threads in the entry set are blocked forever (\textbf{starvation})
+\end{warning}
+\begin{note}[For static methods and fields, the lock is associated to the related \texttt{Class} object]
+    For \textbf{synchronized methods} the object serving as lock is \texttt{this}
+\end{note}
+% paragraph Intrinsic Lock and Entry Set (end)
+% subsubsection Atomic Compound Actions in Java (end)
 % subsection Race Conditions (end)
+%
+\subsection{Lock Reentrancy}\label{sub:lock_reentrancy} % (fold)
+\begin{definition}{Look Reentrancy}{}
+    When \textbf{locks} are acquired on a \textit{per-thread} basis, \textit{per-invocation} basis is adopted as default locking behaviour for Pthreads mutex-es instead.
+\end{definition}
+\begin{note}
+    Java intrinsic locks are \textbf{reentrant}: if a thread tries to acquire a lock that it already holds,  the request succeeds
+\end{note}
+Reentrancy facilitates encapsulation of locking behaviour and thus simplify the development of Object-Oriented concurrent code.
+\begin{codeblock}[java]{}
+    public class Widget {
+        public synchronized doSomething() {...}
+    }
+
+    public class LoggingWidget extends Widget {
+        public synchronized void doSomething() {
+            System.out.println(toString() + ": calling doSomething");
+            super.doSomething();
+        }
+    }
+\end{codeblock}
+\begin{critical}[Without reentrancy the code above would lead to a deadlock]
+\end{critical}
+%
+\subsubsection{Performance: Poor Concurrency Problem}\label{sub:performance_poor_concurrency_problem} % (fold)
+The misuse of atomic blocks can lead to performance problems: sequentializations $\Rightarrow$ strong impact on \textbf{speed-up} (poor performance).
+\emptyln{}
+From a performance perspective, it is important to do a careful choice of what parts must be designed and implemented as critical sections.
+\begin{tip}[Practial Rule]
+    Minimize the time in which a lock is retained, \textbf{but} don't trade performance with safety
+\end{tip}
+% subsubsection Performance: Poor Concurrency Problem (end)
+% subsection Lock Reentrancy (end)
 % section Thread Safety (end)
 \end{document}
 
