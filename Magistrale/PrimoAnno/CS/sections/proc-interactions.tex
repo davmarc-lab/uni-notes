@@ -1,4 +1,42 @@
 \chapter{Process Interaction --- Mechanisms \& Problems}\label{chap:pi_process_interaction_mechanisms_problems} % (fold)
+\section{Deadlocks}\label{sec:pi_deadlocks} % (fold)
+A situation wherein two or more competing actions are waiting for the other to finish, and thus neither ever does.
+Coffman necessary conditions for a \hyperref[def:deadlock]{Deadlock} occur:
+\begin{itemize}
+    \item \textbf{mutual exclusion condition}, a resource that cannot be used by more than one \hyperref[def:process]{Process} at a time;
+    \item \textbf{hold and wait condition}, \hyperref[def:process]{Processes} already holding resources may request new resources;
+    \item \textbf{no preemption condition}, no resource can be removed from a \hyperref[def:process]{Process} holding it, resources can be released only by the explicit action of the \hyperref[def:process]{Process};
+    \item \textbf{circular wait condition}, two or more \hyperref[def:process]{Processes} from a circular chain where each process waits for a resource that the next \hyperref[def:process]{Process} in the chain holds;
+\end{itemize}
+\begin{warning}[Deadlock can only occur in systems where all $4$ conditions hold true]
+\end{warning}
+%
+\paragraph{Deadlocks with Locks}\label{par:pi_deadlocks_with_locks} % (fold)
+It happens when multiple threads wait forever due to cyclic looking dependency, or in a simpler case: when thread $A$ holds lock $L$ and tries to acquire lock $M$, but at the same time thread $B$ holds $M$ and tries to acquire $L$, both thread will wait forever (\textbf{deadly embrace}).
+% paragraph Deadlocks with Locks (end)
+%
+\paragraph{Deadlocks Detection and Recovery}\label{par:pi_deadlocks_detection_and_recovery} % (fold)
+Deadlocks \textbf{detection} and \textbf{recovery} are adopted in databases: they are designed to detect and recover from them using transactions, typically acquiring many locks, until they commit.
+Identifying the set of transactions that are deadlocked by analysing is-waiting dependecy graph: looking for cycles and if one is found, a victim is selected and the transaction is aborted.
+\begin{warning}[No automated deadlock detection/recovery in JVM]
+\end{warning}
+% paragraph Deadlocks Detection and Recovery (end)
+%
+\subsection{General Rule for Deadlock Avoidance}\label{sub:pi_general_rule_for_deadlock_avoidance} % (fold)
+\begin{note}[General Settings]
+    $N$ \hyperref[def:process]{Processes} sharing and acquiring multiple \hyperref[sub:cp_locks]{Locks}
+\end{note}
+\begin{note}
+    General rules to avoid \hyperref[def:deadlock]{Deadlock}:
+    \begin{itemize}
+        \item assign a total order to \hyperref[sub:cp_locks]{Locks};
+        \item acquire the \hyperref[sub:cp_locks]{Locks} \textit{always in the same order};
+    \end{itemize}
+\end{note}
+This works because it makes it impossible to have circular \hyperref[par:dp_second_solution_no_wait_for_chain]{Wait-For} dependency among \hyperref[def:process]{Processes} (necessary condition for \hyperref[def:deadlock]{Deadlock}).
+% subsection General Rule for Deadlock Avoidance (end)
+% section Deadlocks (end)
+%
 The algorithm for \hyperref[sec:cp_the_critical_section_problem]{The Critical Section Problem} described in the previous chapter can be run on a \textit{bare machine}.
 They only use machine language instructions that the computer provides, too low level to be used efficiently and reliably.
 \emptyln{}
@@ -192,7 +230,325 @@ Using a \hyperref[def:semaphore]{Semaphore}, the solution of \hyperref[sec:cp_th
 % subsection Critical Section With Semaphores (end)
 %
 \subsection{Critical Section for $N$ Processes}\label{sub:pi_critical_section_for_n_processes} % (fold)
-
+The same solution applies also for $N$ processes
+\begin{ctable}{|l|l|}
+    \hline
+    \multicolumn{2}{|l|}{\textbf{CS with semaphores: $N$ processes}} \\
+    \hline
+    \multicolumn{2}{|l|}{\texttt{binary semaphore $S\leftarrow\pt{1,\pg{}}$}} \\
+    \hline
+    \multicolumn{2}{|l|}{\textbf{Any process}} \\
+    \hline
+    \multicolumn{2}{|l|}{\texttt{loop forever}} \\
+    \multicolumn{2}{|l|}{\textbf{p1:} \texttt{NCS}} \\
+    \multicolumn{2}{|l|}{\textbf{p2:} \texttt{wait(S)}} \\
+    \multicolumn{2}{|l|}{\textbf{p3:} \texttt{CS}} \\
+    \multicolumn{2}{|l|}{\textbf{p4:} \texttt{signal(S)}} \\
+    \hline
+\end{ctable}
+\begin{warning}
+    But there is no more freedom from starvation
+\end{warning}
 % subsection Critical Section for $N$ Processes (end)
+%
+\subsection{Using Semaphores for Synchronization}\label{sub:pi_using_semaphores_for_synchronization} % (fold)
+\hyperref[def:semaphore]{Semaphores} provide a basic mechanism also to synchronize \hyperref[def:process]{Processes}: solving order of execution problems.
+\begin{note}[Event Semaphores]
+    Used to send/receive a temporal signal, initialized to $(0,\pg{})$
+\end{note}
+\begin{example}{Merge Sort}{}
+    \begin{ctable}{|l|l|l|}
+        \hline
+        \multicolumn{3}{|l|}{\textbf{Merge Sort}} \\
+        \hline
+        \multicolumn{3}{|l|}{\texttt{binary semaphore $S1\leftarrow\pt{0,\pg{}}$}} \\
+        \multicolumn{3}{|l|}{\texttt{binary semaphore $S2\leftarrow\pt{0,\pg{}}$}} \\
+        \multicolumn{3}{|l|}{\texttt{integer array A}} \\
+        \hline
+        \textbf{sort1} & \textbf{sort2} & \textbf{merge} \\
+        \hline
+        \textbf{p1:} \texttt{sort lst half of A} & \textbf{q1:} \texttt{sort 2nd half of A} & \textbf{r1:} \texttt{wait(S1)} \\
+        \textbf{p2:} \texttt{signal(S1)} & \textbf{q2:} \texttt{signal(S2)} & \textbf{r2:} \texttt{wait(S2)} \\
+        & & \textbf{r3:} \texttt{merge halves of A} \\
+        \hline
+    \end{ctable}
+\end{example}
+%
+\subsubsection{Producer-Consumer (P/C) Problem}\label{sub:cp_producer_consumer_p_c_problem} % (fold)
+The producer-consumer problem is an example of an \textit{order-of-execution problem}.
+There are two types of processes:
+\begin{itemize}
+    \item \textbf{producers}: a producer process executes a statement \textit{produce} to create a data element and then sends this element to the consumer process;
+    \item \textbf{consumers}: upon receipt of a data element from a producer process, a consumer process executes a statement \textit{consume} with the data element as a parameter;
+\end{itemize}
+%
+\paragraph{P/C with a Buffer}\label{par:pi_p_c_with_a_buffer} % (fold)
+When a data element must be set from one process to another, the communication can be:
+\begin{itemize}
+    \item \textbf{synchronous}: communication cannot take place until both the producer and consumer are ready to do so;
+    \item \textbf{asynchronous}: the communication channel itself has some capacity for storing data elements, uncoupling very useful for dynamic/open systems:
+        \begin{itemize}
+            \item temporal uncoupling among participants;
+            \item dynamic set of processes;
+        \end{itemize}
+        \begin{note}
+            Useful also when producers and consumers have different speed
+        \end{note}
+\end{itemize}
+\begin{warning}
+    The asynchronous case needs the introduction of a proper \textbf{buffer} where to store and retrieve data: shared data structures with a mutable state, read by consumers and written by producers
+\end{warning}
+% paragraph P/C with a Buffer (end)
+%
+\paragraph{P/C with Infinite Buffer}\label{par:pi_p_c_with_infinite_buffer} % (fold)
+If there is an infinite buffer, there is only one interaction that must be synchronized, the consumer must not attempt a take operation from an empty buffer.
+\begin{ctable}{|l|l|}
+    \hline
+    \multicolumn{2}{|l|}{\textbf{P/C with Infinite Buffer}} \\
+    \hline
+    \multicolumn{2}{|l|}{\texttt{UnboundedQueue<Item> buffer $\leftarrow$ empty queue}} \\
+    \multicolumn{2}{|l|}{\texttt{semaphore availItems $\leftarrow \pt{0,\pg{}}$}} \\
+    \hline
+    \textbf{producer} & \textbf{consumer} \\
+    \hline
+    \texttt{loop forever} & \texttt{loop forever} \\
+    \textbf{p1:} \texttt{Item e1 $\leftarrow$ produce} & \textbf{q1:} \texttt{wait(availItems)} \\
+    \textbf{p2:} \texttt{append(buffer, e1)} & \textbf{q2:} \texttt{Item e1 $\leftarrow$ take(buffer)} \\
+    \textbf{p3:} \texttt{signal(availItems)} & \textbf{q3:} \texttt{consume(e1)} \\
+    \hline
+\end{ctable}
+Invariant: \texttt{nAvailItems.V = \#buffer}
+\begin{warning}
+    Actually true only if \texttt{p2+p3} and \texttt{q1+q2} are considered atomic
+\end{warning}
+\begin{note}
+    In this example \texttt{append} and \texttt{take} are meant to be atomic: \texttt{nAvailItems} is called \textbf{resource semaphore}
+\end{note}
+% paragraph P/C with Infinite Buffer (end)
+%
+\paragraph{P/C with Bounded Buffer}\label{par:pi_p_c_with_bounded_buffer} % (fold)
+In this case there is also another interaction that must be synchronized: the producer must not attempt an append operation on a buffer which is full.
+\begin{ctable}{|l|l|}
+    \hline
+    \multicolumn{2}{|l|}{\textbf{P/C with Bounded Buffer}} \\
+    \hline
+    \multicolumn{2}{|l|}{\texttt{BoundedQueue<Item> buffer $\leftarrow$ empty queue}} \\
+    \multicolumn{2}{|l|}{\texttt{semaphore availItems $\leftarrow \pt{0,\pg{}}$}} \\
+    \multicolumn{2}{|l|}{\texttt{semaphore availPlaces $\leftarrow \pt{N,\pg{}}$}} \\
+    \hline
+    \textbf{producer} & \textbf{consumer} \\
+    \hline
+    \texttt{loop forever} & \texttt{loop forever} \\
+    \textbf{p1:} \texttt{Item e1 $\leftarrow$ produce} & \textbf{q1:} \texttt{wait(availItems)} \\
+    \textbf{p2:} \texttt{wait(availPlaces)} & \textbf{q2:} \texttt{Item e1 $\leftarrow$ take(buffer)} \\
+    \textbf{p3:} \texttt{append(buffer, e1)} & \textbf{q3:} \texttt{signal(availPLaces)} \\
+    \textbf{p4:} \texttt{signal(availItems)} & \textbf{q4:} \texttt{consume(e1)} \\
+    \hline
+\end{ctable}
+\begin{note}
+    \texttt{nAvailItems} and \texttt{nAvailPlaces} are an example of \textbf{split semaphores}
+\end{note}
+% paragraph P/C with Bounded Buffer (end)
+%
+\paragraph{Combining Mutex and Synch Semaphores}\label{par:pi_combining_mutex_synch_semaphores} % (fold)
+As a generalization of previous case, we consider the shared use of a \textit{non-atomic} data structure, a buffer in this case, so with non-atomic operations: introducing a mutex for guaranteeing also mutual exclusion.
+\begin{ctable}{|l|l|}
+    \hline
+    \multicolumn{2}{|l|}{\textbf{P/C with Bounded Buffer with Multiple Producers and Consumers}} \\
+    \hline
+    \multicolumn{2}{|l|}{\texttt{BoundedQueue<Item> buffer $\leftarrow$ empty queue}} \\
+    \multicolumn{2}{|l|}{\texttt{semaphore availItems $\leftarrow \pt{0,\pg{}}$}} \\
+    \multicolumn{2}{|l|}{\texttt{semaphore availPlaces $\leftarrow \pt{N,\pg{}}$}} \\
+    \multicolumn{2}{|l|}{\texttt{binary semaphores mutex $\leftarrow \pt{1,\pg{}}$}} \\
+    \hline
+    \textbf{producer} & \textbf{consumer} \\
+    \hline
+    \texttt{loop forever} & \texttt{loop forever} \\
+    \textbf{p1:} \texttt{Item e1 $\leftarrow$ produce} & \textbf{q1:} \texttt{wait(availItems)} \\
+    \textbf{p2:} \texttt{wait(availPlaces)} & \textbf{q2:} \texttt{wait(mutex)} \\
+    \textbf{p3:} \texttt{wait(mutex)} & \textbf{q3:} \texttt{Item e1 $\leftarrow$ take(buffer)} \\
+    \textbf{p4:} \texttt{append(buffer, e1)} & \textbf{q4:} \texttt{signal(mutex)} \\
+    \textbf{p5:} \texttt{signal(mutex)} & \textbf{q5:} \texttt{signal(availPlaces)} \\
+    \textbf{p6:} \texttt{signal(availItems)} & \textbf{q6:} \texttt{consume(e1)} \\
+    \hline
+\end{ctable}
+% paragraph Combining Mutex+Synch Semaphores (end)
+% subsubsection Producer-Consumer (P/C) Problem (end)
+%
+\subsubsection{Dining Philosophers}\label{sub:pi_dining_philosophers} % (fold)
+There is a secluded community of five philosophers who engage in only two activities: \textit{thinking} and \textit{eating}.
+\\
+Meals are taken communally at a table set with $5$ plates and $5$ forks, in the center of the table there is a bowl of spaghetti that is endlessly replenished.
+\\
+The spaghetti is hopelessly tangled and a philosopher needs \textit{two} forks in order to eat, each philosopher may pick up the forks on his left and on his right, but \textit{only one fork at a time}.
+\begin{ctable}{|l|}
+    \hline
+    \textbf{Philosopher} \\
+    \hline
+    \texttt{loop forever} \\
+    \textbf{p1:} \texttt{think}\\
+    \textbf{p2:} \texttt{<pre-protocol>}\\
+    \textbf{p3:} \texttt{eat}\\
+    \textbf{p4:} \texttt{<post-protocol>}\\
+    \hline
+\end{ctable}
+The problem is to design pre- and post-protocols to ensure the following properties:
+\begin{itemize}
+    \item a philosopher can eat only if he/she has two forks;
+    \item \textbf{mutual exclusion}, no two philosophers may hold the same fork simultaneously;
+    \item \textbf{freedom from deadlock};
+    \item \textbf{freedom from starvation};
+    \item efficient behaviour in the absence of contention;
+\end{itemize}
+%
+\paragraph{First Attempt}\label{par:dp_first_attempt} % (fold)
+Each fork is modelled as a semaphore:
+\begin{itemize}
+    \item wait $\Rightarrow$ taking a fork;
+    \item signal $\Rightarrow$ putting down the fork;
+\end{itemize}
+\begin{ctable}{|l|}
+    \hline
+    \textbf{Dining Philosophers (first attempt)} \\
+    \hline
+    \texttt{semaphore array[0..4] fork $\leftarrow$ [1, 1, 1, 1, 1]} \\
+    \hline
+    \texttt{loop forever} \\
+    \textbf{p1:} \texttt{think} \\
+    \textbf{p2:} \texttt{wait(fork[i])} \\
+    \textbf{p3:} \texttt{wait(fork[(i+1) \% N])} \\
+    \textbf{p4:} \texttt{eat} \\
+    \textbf{p5:} \texttt{signal(fork[i])} \\
+    \textbf{p6:} \texttt{signal(fork[(i+1) \% N])} \\
+    \hline
+\end{ctable}
+\begin{critical}[It can be proven taht no fork is ever held by two philosophers]
+    Unfortunately this solution has \textbf{deadlocks}: under an \hyperref[def:interleaving]{Interleaving} that has all philosophers pick up their left
+\end{critical}
+To ensure liveness we can limit the number of philosophers eating simultaneously, or entering the dining room:
+\begin{itemize}
+    \item introducing meal, or room, tickets;
+    \item $\dec N$ tickets for $N$ philosophers;
+\end{itemize}
+\begin{ctable}{|l|}
+    \hline
+    \textbf{Dining Philosophers (solution)} \\
+    \hline
+    \texttt{semaphore array[0..4] fork $\leftarrow$ [1, 1, 1, 1, 1]} \\
+    \texttt{semaphore ticket $\leftarrow \pt{4,\pg{}}$} \\
+    \hline
+    \texttt{loop forever} \\
+    \textbf{p1:} \texttt{think} \\
+    \textbf{p2:} \texttt{wait(ticket)} \\
+    \textbf{p3:} \texttt{wait(fork[i])} \\
+    \textbf{p4:} \texttt{wait(fork[(i+1) \% N])} \\
+    \textbf{p5:} \texttt{eat} \\
+    \textbf{p6:} \texttt{signal(fork[i])} \\
+    \textbf{p7:} \texttt{signal(fork[(i+1) \% N])} \\
+    \textbf{p8:} \texttt{signal(ticket)} \\
+    \hline
+\end{ctable}
+\begin{note}[It can be proved that this solution satisfies all the properties]
+\end{note}
+% paragraph First Attempt (end)
+%
+\paragraph{Second Solution: No Wait-For Chain}\label{par:dp_second_solution_no_wait_for_chain} % (fold)
+It can be observed that there is no more deadlock if the last philosopher picks up first the right fork and then left one (breaking the wait-for chain).
+\begin{remark}{}{}
+    Given the total order among the identifiers of the forks, the last philosopher was picking the forks in the opposite order with respect to the other philosophers (first the $\dec N$ fork and then the $0$ fork).
+\end{remark}
+\begin{ctable}{|l|}
+    \hline
+    \textbf{Dining Philosophers ($2^{nd}$ solution)} \\
+    \hline
+    \texttt{semaphore array[0..4] fork $\leftarrow$ [1, 1, 1, 1, 1]} \\
+    \hline
+    \texttt{integer first = min(i, (i+1) \% N)} \\
+    \texttt{integer second = max(i, (i+1) \% N)} \\
+    \\
+    \texttt{loop forever} \\
+    \textbf{p1:} \texttt{think} \\
+    \textbf{p2:} \texttt{wait(fork[first])} \\
+    \textbf{p3:} \texttt{wait(fork[second])} \\
+    \textbf{p4:} \texttt{eat} \\
+    \textbf{p5:} \texttt{signal(fork[first])} \\
+    \textbf{p6:} \texttt{signal(fork[second])} \\
+    \hline
+\end{ctable}
+% paragraph Second Solution: No Wait-For Chain (end)
+% subsubsection Dining Philosophers (end)
+%
+\subsubsection{Readers and Writers Problem}\label{sub:pi_readers_and_writers_problem} % (fold)
+The problem of readers and writers is similar to the mutual exclusion problem in that several \hyperref[def:process]{Processes} are competing for access to a \hyperref[def:crit-sec]{Critical Section}.
+In this problem we divide the \hyperref[def:process]{Processes} into two classes:
+\begin{itemize}
+    \item \textbf{readers}, which are required to exclude writers but not other readers;
+    \item \textbf{writers}, which are required to exclude both readers and other writers;
+\end{itemize}
+The problem is an abstraction of \textit{access to databases}: no danger in having \hyperref[def:process]{Process} reading data concurrently, also writing or modifying data must be done under mutual exclusion to ensure consistency of the data.
+\begin{critical}[Solutions must satisfy these \textit{invariants}]
+    \[
+        \begin{aligned}
+            &nR \ge 0 \\
+            &nW = 0 || nW = 1 \\
+            &(nR > 0 \to nW = 0) \wedge (nW = 1 \to nR = 0)
+        \end{aligned}
+    \]
+\end{critical}
+Using a single \hyperref[def:semaphore]{Semaphore} functioning as a \hyperref[sub:cp_locks]{Lock}
+\begin{ctable}{|l|l|}
+    \hline
+    \multicolumn{2}{|l|}{\textbf{Readers and Writers: First Attempt}} \\
+    \hline
+    \multicolumn{2}{|l|}{\texttt{binary semaphore rw $S\leftarrow\pt{1,\pg{}}$}} \\
+    \multicolumn{2}{|l|}{\texttt{DataBase dbase;}} \\
+    \hline
+    \textbf{reader} & \textbf{writer} \\
+    \hline
+    \texttt{loop forever} & \texttt{loop forever} \\
+    \textbf{p1:} \texttt{wait(rw)} & \textbf{q1:} \texttt{wait(rw)} \\
+    \textbf{p2:} \texttt{Item e1 $\leftarrow$ read(dbase)} & \textbf{q2:} \texttt{Item e1 $\leftarrow$ create\_record;} \\
+    \textbf{p3:} \texttt{signal(rw)} & \textbf{q3:} \texttt{write(dbase, e1)} \\
+                                     & \textbf{q4:} \texttt{signal(rw)} \\
+    \hline
+\end{ctable}
+\begin{note}
+    Each reader and writer has exclusive access to the \texttt{dbase}
+\end{note}
+%
+\paragraph{Solution}\label{par:rw_solution} % (fold)
+Readers don't use the same \hyperref[sub:cp_locks]{Lock} of writers: \texttt{mutexR} lock for readers for updating common data structure (\texttt{nr}).
+\begin{ctable}{|l|l|}
+    \hline
+    \multicolumn{2}{|l|}{\textbf{Readers and Writers: Solution}} \\
+    \hline
+    \multicolumn{2}{|l|}{\texttt{binary semaphore mutexR $S\leftarrow\pt{1,\pg{}}$}} \\
+    \multicolumn{2}{|l|}{\texttt{int nr $\leftarrow$ 0}} \\
+    \multicolumn{2}{|l|}{\texttt{binary semaphore rw $S\leftarrow\pt{1,\pg{}}$}} \\
+    \multicolumn{2}{|l|}{\texttt{DataBase dbase;}} \\
+    \hline
+    \textbf{reader} & \textbf{writer} \\
+    \hline
+    \texttt{loop forever} & \texttt{loop forever} \\
+    \textbf{p1:} \texttt{wait(mutexR)} & \textbf{q1:} \texttt{wait(rw)} \\
+    \textbf{p2:} \texttt{if (nr == 0)} & \textbf{q2:} \texttt{Item e1 $\leftarrow$ create\_record;} \\
+    \textbf{p3:} \texttt{ signal(rw)} & \textbf{q3:} \texttt{write(dbase, e1)} \\
+    \textbf{p4:} \texttt{nr $\leftarrow$ nr + 1} & \textbf{q4:} \texttt{signal(rw)} \\
+    \textbf{p5:} \texttt{signal(mutexR)} & \\
+    \textbf{p6:} \texttt{Item e1 $\leftarrow$ read(dbase)} & \\
+    \textbf{p7:} \texttt{wait(mutexR)} & \\
+    \textbf{p8:} \texttt{nr $\leftarrow$ nr + 1} & \\
+    \textbf{p9:} \texttt{if (nr == 0)} & \\
+    \textbf{p10:} \texttt{ signal(rw)} & \\
+    \textbf{p11:} \texttt{signal(mutexR)} & \\
+    \hline
+\end{ctable}
+% paragraph Solution (end)
+% subsubsection Readers and Writers Problem (end)
+% subsection Using Semaphores for Synchronization (end)
 % section Semaphores (end)
+%
+\section{Monitors}\label{sec:pi_monitors} % (fold)
+
+% section Monitors (end)
 % chapter Process Interaction --- Mechanisms \& Problems (end)
