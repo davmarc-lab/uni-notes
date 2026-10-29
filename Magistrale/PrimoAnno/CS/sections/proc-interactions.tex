@@ -545,10 +545,73 @@ Readers don't use the same \hyperref[sub:cp_locks]{Lock} of writers: \texttt{mut
 \end{ctable}
 % paragraph Solution (end)
 % subsubsection Readers and Writers Problem (end)
+%
+\subsubsection{The Cigarette Smoker's Problem}\label{sub:pi_the_cigarette_smoker_s_problem} % (fold)
+Assume that there is a group of four people: $3$ smokers and $1$ agent.
+To roll and smoke a cigarette three ingredients are needed: paper, tobacco and matches.
+One of the smokers has an infinite supply of papers, another has an infinite supply of tobacco, and another has an infinite supply of all three ingredients.
+\\
+The four participants repeatedly perform the following operations: the agent puts two ingredients on the table; the smoker who has the remaining ingredient takes the two ingredients, rolls a cigarette, smokes it, and notifies the agent on completion.
+Then the agent puts another two ingredients on the table, and so on.
+\begin{note}
+    The problem is to write a program to synchronize the agent and the smokers
+\end{note}
+%
+\paragraph{Patil's Argument}\label{par:patil_s_argument} % (fold)
+Patil's argument was that Dijkstra's \hyperref[def:semaphore]{Semaphore} primitives were limited: he used a cigarette smokers problem to illustrate this point by saying that it cannot be solved with \hyperref[def:semaphore]{Semaphores}.
+However, Patil placed heavy constraints on his arguments: the \hyperref[def:process]{Process} code is the following (and not modifiable).
+\begin{codeblock}{}
+    shared: S array[1..3] binary semaphores, initially all 0
+    agent: binary semaphore, initially 1
+
+    local i,j: range over [1,2,3]
+    loop
+        set i and j (at random) from [1,2,3]
+        wait(agent)
+        signal(S[i])
+        signal(S[j])
+    end_loop
+\end{codeblock}
+\begin{note}
+    The solution is not allowed to use conditional statements or an array of semaphores
+\end{note}
+\begin{warning}
+    with these two constraints, a semaphore-based solution to the cigarette smokers problem is impossible
+\end{warning}
+% paragraph Patil's Argument (end)
+% subsubsection The Cigarette Smoker's Problem (end)
 % subsection Using Semaphores for Synchronization (end)
 % section Semaphores (end)
 %
 \section{Monitors}\label{sec:pi_monitors} % (fold)
-
+\begin{definition}{Monitor}{monitor}
+    A \hyperref[def:conc-prog]{Concurrent Programming} data abstraction encapsulating the synchronization and mutual exclusion policy accessing it: state, operations and concurrency policy.
+\end{definition}
+Generalization of the \textit{kernel} or supervisor concept in operating systems, where critical sections such as the allocation of memory are centralized in a privileged program.
+Application programs request services which are performed by the kernel, kernels are run in a HW mode that ensures that they cannot be interfered by application programs.
+\begin{note}
+    Monitors as decentralized versions of the monolithic kernel
+\end{note}
+Monitors are declared and created in different ways according to the specific language, an abstract representation:
+\begin{codeblock}{}
+    monitor MonitorName {
+        declaration of permanent variables
+        initialization statements
+        procedures (or entries)
+    }
+\end{codeblock}
+%
+\subsection{Monitor Properties}\label{sub:pi_monitor_properties} % (fold)
+Monitors as instances of abstract data type, only operations name are visible outside the monitor:
+\begin{itemize}
+    \item they are the interface;
+    \item they provide the only gates through the ``wall'' defined by the monitor declaration;
+    \item call to monitor procedures:
+        \begin{codeblock}{}
+    call MonitorName.OpName(params)
+        \end{codeblock}
+\end{itemize}
+Statements within the monitor cannot access variables declared \textit{outside} the monitor, permanent variables are initialized before any procedures is called.
+% subsection Monitor Properties (end)
 % section Monitors (end)
 % chapter Process Interaction --- Mechanisms \& Problems (end)

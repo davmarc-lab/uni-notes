@@ -811,7 +811,7 @@ La funzione di transizione $\dt$ è definita come:
     \begin{itemize}
         \item $\dt \pt{q,\eps,S} = \pg{\pt{q,\eps}, \pt{q,SS}, \pt{q,iS}, \pt{q,iSe}}$
         \item $\dt \pt{q,i,i} = \pg{\pt{q,\eps}}$
-        \item $\dt \pt{q,e,e} = \pg{\pt{q,e}}$
+        \item $\dt \pt{q,e,e} = \pg{\pt{q,\eps}}$
     \end{itemize}
     Quindi il \hyperref[def:pda]{PDA} corrispondente si può esprimere come:
     \[
@@ -824,7 +824,399 @@ La funzione di transizione $\dt$ è definita come:
 % subsection Dalle Grammatiche agli Automi a Pila (end)
 %
 \subsection{Da Automa a Pila a Grammatica}\label{sub:ll_da_automa_a_pila_a_grammatica} % (fold)
-
+Per ogni \hyperref[def:pda]{PDA} è possibile definire una \hyperref[def:cfg]{CFG} il cui linguaggio coincide con quello accettato da $P$ per \hyperref[sub:ll_accettazione_per_pila_vuota]{Pila Vuota}.
+\emptyln{}
+La dimostrazione si basa sul prendere atto che l'evento cruciale nel processo di elaborazione di un input da parte di un \hyperref[def:pda]{PDA} è l'eliminazione netta di un simbolo dallo stack, conseguente alla \red{lettura di una parte di input}.
+Nell'eliminare un simbolo dallo stack, un \hyperref[def:pda]{PDA} può cambiare stato: dobbiamo quindi tenere traccia dello stato in cui entra quando scende di un livello nello stack.
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/20261029_102514.png}
+    \caption{Il grafico illustra la ``grandezza'' della pila durante le transizioni}\label{fig:20261029_102514}
+\end{cimage}
+Dati $\vc{Y_1}{Y_k}$ una serie di simboli dallo stack, l'eliminazione di $Y_1$ coincide con la lettura di $x_1$ dall'input.
+\begin{note}
+    $x_1$ è l'input (cammino) necessario per eliminare $Y_1$ dalla pila
+\end{note}
+In \cref{fig:20261029_102514} viene illustrato anche il mutamento di stato: supponiamo che il \hyperref[def:pda]{PDA} parta dallo stato $p_0$, con $Y_1$ in cima allo stack.
+Dopo le mosse il cui effetto è l'eliminazione di $Y_1$, il \hyperref[def:pda]{PDA} è nello stato $p_1$.
+\begin{note}[L'elaborazione prosegue fino a eliminare dallo stack tutti i simboli $\vc{Y_1}{Y_k}$]
+\end{note}
+\begin{remark}{}{}
+    La costruzione di una \hyperref[def:cfg]{Grammatica} equivalente impiega variabili che rappresentano ciascuna un ``evento'', con due componenti:
+    \begin{itemize}
+        \item l'eliminazione effettiva di un simbolo $X$ dallo stack;
+        \item il passaggio dallo stato $p$ allo stato $q$, dopo la sostituzione di $X$ con $\eps$ sullo stack;
+    \end{itemize}
+    Questa variabile viene rappresentata con il simbolo $\ps{pXq}$.
+    \begin{example}{\Cref{fig:20261029_102514}}{}
+        Supponiamo di avare la seguente transizione:
+        \[
+            q \overset{a,\,Y\,/\vc{Y_1}{Y_k}}{\longrightarrow} P_0
+        \]
+        si può ottenere la seguente produzione:
+        \[
+            \ps{qYP_k}\to a \ps{P_0Y_1P_1}\ps{P_1Y_2P_2}\dots \ps{P_{\dec k}Y_kP_k}
+        \]
+        \begin{note}[Si legge:]
+            Partendo dallo stato $q$, per arrivare allo stato $P_k$ eliminando dallo stack $Y$ bisogna: leggere $a$ e usare parte dell'input ($x_1$) per eliminare $Y_1$ dallo stack, passando allo stato $P_1$, quindi dallo stato $P_1$ leggere un altra parte dell'input ($x_2$) per eliminare $Y_2$ dallo stack e così via fino ad arrivare allo stato $P_k$
+        \end{note}
+    \end{example}
+\end{remark}
+\begin{note}[GUARDA QUADERNO]
+\end{note}
 % subsection Da Automa a Pila a Grammatica (end)
 % section Equivalenza di PDA e CFG (end)
+%
+\section{Proprietà dei Linguaggi Liberi dal Contesto}\label{sec:ll_propriet_dei_linguaggi_liberi_dal_contesto} % (fold)
+Si mostrano alcune proprietà dei linguaggi liberi dal contesto:
+\begin{itemize}
+    \item semplificazione di una \hyperref[def:cfg]{CFG}: se un linguaggio è un \acf{cfl}, ha una grammatica in una possibile forma speciale;
+    \item proprietà di decisione: è possibile controllare l'appartenenza e l'essere vuoto, ma l'equivalenza di \ac{cfl} è non verificabile tramite un algoritmo;
+    \item proprietà di chiusura: solo alcune proprietà di chiusura dei \hyperref[def:ling-reg]{Linguaggi Regolari} valgono anche per i \ac{cfl};
+\end{itemize}
+%
+\subsection{Forma Normale di Chomsky}\label{sub:ll_forma_normale_di_chomsky} % (fold)
+\begin{definition}{Forma Normale di Chomsky}{cnf}
+    Ogni \ac{cfl}, senza $\eps$, è generato da una \hyperref[def:cfg]{CFG} dove tutte le produzioni sono della forma:
+    \[
+        A\to BC\qquad \text{ o } A\to\al
+    \]
+    dove $A$, $B$ e $C$ sono \textbf{variabili}, e $\al$ è un \textbf{simbolo terminale}.
+    Questa forma viene chiamata \textbf{\ac{cnf}}.
+\end{definition}
+Per ottenerla è necessario applicare diverse semplificazioni sulla \hyperref[def:cfg]{CFG}:
+\begin{itemize}
+    \item eliminazione dei \textbf{simboli inutili}: variabili o terminali che non compaiono in nessuna derivazione di una stringa di terminali dal simbolo iniziale;
+    \item eliminazione delle \textbf{$\eps$-produzioni}, cioè della forma $A\to\eps$ per una variabile $A$;
+    \item eliminazione delle \textbf{produzioni unitarie}, cioè della forma $A\to B$, con $A$ e $B$ variabili;
+\end{itemize}
+%
+\subsubsection{Eliminazione dei Simboli Inutili}\label{sub:ll_eliminazione_dei_simboli_inutili} % (fold)
+Diciamo che un simbolo $X$ è \textbf{utile} per una \hyperref[def:cfg]{Grammatica} $G = (V,T,P,S)$ se esiste una derivazione della forma $S \overset{*}{\implies}\al X\bt \overset{*}{\implies} w$ con $w \in T^*$.
+\begin{note}
+    $X$ può provenire da $V$ o da $T$, la forma sentenziale $\al X\bt$ può essere la prima o l'ultima della derivazione.
+\end{note}
+\begin{definition}{Generatore}{simb-generante}
+    Diciamo che $X$ è un \textbf{generatore} se esiste una stringa terminale $w$ tale che $X \overset{*}{\implies}w$.
+    \begin{note}
+        Ogni terminale è un generatore perché genera se stesso tramite una derivazione di \textbf{zero} passi
+    \end{note}
+\end{definition}
+\begin{definition}{Raggiungibile}{simb-raggiungibile}
+    Diciamo che $X$ è \textbf{raggiungibile} se esiste una derivazione $S \overset{*}{\implies}\al X\bt$ con $\pg{\al,\bt} \subseteq \pt{V\cup T}^*$
+\end{definition}
+\begin{note}
+    Se eliminiamo prima i simboli non \hyperref[def:simb-generante]{Generatori} e poi, dalla grammatica risultante, i simboli non \hyperref[def:simb-raggiungibile]{Raggiungibili}, rimarranno soltanto i simboli \red{utili}.
+\end{note}
+\begin{example}{}{}
+    Sia la \hyperref[def:cfg]{Grammatica}
+    \[
+        S\to AB|a,\,A\to b
+    \]
+    Tutti i simboli tranne $B$, quindi $S$ e $A$, sono \hyperref[def:simb-generante]{Generatori}: $a$ e $b$ generano se stessi; $S$ genera $a$ e $A$ genera $b$.
+    \emptyln{}
+    Se eliminiamo $B$, dobbiamo eliminare anche la produzione $S\to AB$, ne risulta la \hyperref[def:cfg]{Grammatica}:
+    \[
+        \begin{aligned}
+            &S\to a \\
+            &A\to b \\
+        \end{aligned}
+    \]
+    Ora soltanto la variabile $S$ è raggiungibile, quindi è possibile eliminare $A$; in questo modo rimane solo
+    \[
+        S\to a
+    \]
+    il linguaggio della grammatica è $\pg{a}$, che coincide con quello della grammatica di partenza.
+    \begin{note}
+        Nel caso in cui si eliminano prima i simboli non \hyperref[def:simb-raggiungibile]{Raggiungibili}, si ha che tutti i simboli sono \hyperref[def:simb-raggiungibile]{Raggiungibili} da:
+        \[
+            \begin{aligned}
+                &S\to AB|a \\
+                &A \to b                
+            \end{aligned}
+        \]
+        A questo punto eliminiamo $B$ in quanto non \hyperref[def:simb-generante]{Generante}, e rimane la \hyperref[def:cfg]{Grammatica}:
+        \[
+            \begin{aligned}
+                &S\to a \\
+                &A\to b
+            \end{aligned}
+        \]
+        che contiene ancora simboli \textbf{inutili}
+    \end{note}
+\end{example}
+% subsubsection Eliminazione dei Simboli Inutili (end)
+%
+\subsubsection{Eliminazione Produzioni $\eps$}\label{sub:ll_eliminazione_produzioni_eps} % (fold)
+Data una \ac{cfl} $L$, allora $L - \pg{\eps}$ ha una \hyperref[def:cfg]{Grammatica} priva di produzioni $\eps$.
+\begin{definition}{Annullabile}{var-annullabile}
+    Una variabile si dice \textbf{annullabile} se $A \overset{*}{\implies}\eps$.
+\end{definition}
+\begin{note}
+    Definiamo $n(G)$ come l'insieme dei simboli annullabili di una \hyperref[def:cfg]{Grammatica} $G$
+\end{note}
+\begin{example}{}{}
+    Sia $G$ la grammatica:
+    \[
+        \begin{aligned}
+            &S\to AB \\
+            &A\to aAA|\eps \\
+            &B\to bBB|\eps
+        \end{aligned}
+    \]
+    Abbiamo $n(G) = \pg{A,B,S}$ la prima regola diventa:
+    \[
+        S\to AB|A|B
+    \]
+    la seconda:
+    \[
+        A\to aAA|aA|a
+    \]
+    e la terza
+    \[
+        B\to bBB|bB|b
+    \]
+    Alla fine si ottiene la seguente \hyperref[def:cfg]{Grammatica} $G_1$:
+    \[
+        \begin{aligned}
+            &S\to AB|A|B \\
+            &A\to aAA|aA|a \\
+            &B\to bBB|bB|b
+        \end{aligned}
+    \]
+\end{example}
+% subsubsection Eliminazione Produzioni $\eps$ (end)
+%
+\subsubsection{Eliminazione Produzioni Unitarie}\label{sub:ll_eliminazione_produzioni_unitarie} % (fold)
+\begin{definition}{Produzione Unitaria}{prod-unit}
+    Una \textbf{produzione unitaria} è una produzione della forma $A\to B$, dove sia $A$ sia $B$ sono variabili.
+    \begin{note}
+        Queste produzioni possono essere \textbf{utili}
+    \end{note}
+\end{definition}
+Tutte le produzioni unitarie possono essere eliminate, si consideri la grammatica:
+\[
+    \begin{aligned}
+        &E\to T|E+T \\
+        &T\to F|T*F \\
+        &F\to I|(E) \\
+        &I\to a|b|Ia|Ib|I0|I1
+    \end{aligned}
+\]
+ha le seguenti produzioni unitarie:
+\begin{multicols}{2}
+    \begin{itemize}
+        \item $E\to T$
+        \item $T\to F$
+        \item $F\to I$
+    \end{itemize}
+\end{multicols}
+Considerando la \hyperref[def:prod-unit]{Produzione Unitaria} $E\to T$, è possibile trasformarla seguendo l'\textbf{espansione}:
+\[
+    \begin{aligned}
+        &E\to F \\
+        &E\to T*F
+    \end{aligned}
+\]
+Successivamente espandendo $E\to F$ si ottiene:
+\[
+    E\to I|(E)|T*F
+\]
+Infine espandendo $E\to I$ si ottiene:
+\[
+    E\to a|b|Ia|Ib|I0|I1|(E)|T*F
+\]
+\begin{note}
+    Si applica poi lo stesso processo per $T\to F$ e $F\to I$
+\end{note}
+La \hyperref[def:cfg]{Grammatica} iniziale:
+\[
+    \begin{aligned}
+        &E\to T|E+T \\
+        &T\to F|T*F \\
+        &F\to I|(E) \\
+        &I\to a|b|Ia|Ib|I0|I1
+    \end{aligned}
+\]
+viene quindi modificata trasformando:
+\begin{itemize}
+    \item $E\to T$ in:
+        \[
+            E \to a|b|Ia|Ib|I0|I1|(E)|T*F
+        \]
+    \item $T\to F$ in:
+        \[
+            T \to a|b|Ia|Ib|I0|I1|(E)
+        \]
+    \item $F\to I$ in:
+        \[
+            F \to a|b|Ia|Ib|I0|I1
+        \]
+\end{itemize}
+Quindi, eliminando le \hyperref[def:prod-unit]{Produzioni Unitarie}, la grammatica diventa:
+\begin{ceq}
+    E \to a|b|Ia|Ib|I0|I1|(E)|T*F|E+T \\
+    T \to a|b|Ia|Ib|I0|I1|(E)|T*F \\
+    F \to a|b|Ia|Ib|I0|I1|(E) \\
+    I \to a|b|Ia|Ib|I0|I1 \\
+\end{ceq}
+\begin{critical}[Presenza di cicli]
+    Se sono presenti dei \textbf{cicli}, ad esempio $A\to B,\,B\to C,\,C\to A$, il procedimento di \textit{espansione} visto non consente di giungere alla rimozione delle \hyperref[def:prod-unit]{Produzioni Unitarie} che via via vengono generate
+    \begin{tip}[Soluzione]
+        Se durante un'espansione si genera una \hyperref[def:prod-unit]{Produzione Unitaria} che già è stata \textbf{espansa} la si può semplicemente \textbf{eliminare}
+    \end{tip}
+\end{critical}
+\begin{example}{Esempio con la presenza di cicli}{}
+    Si consideri la grammatica:
+    \begin{ceq}
+        A\to B|a \\
+        B\to C|b \\
+        C\to A|c
+    \end{ceq}
+    Espando la produzione $A\to B$:
+    \begin{ceq}
+        A\to C|b
+    \end{ceq}
+    espando $A\to C$:
+    \begin{ceq}
+        A\to A|c|b
+    \end{ceq}
+    infine espando $A\to A$ ottenendo:
+    \begin{ceq}
+        A\to B|a|c|b
+    \end{ceq}
+    A questo punto dovrei espandere, nuovamente, la produzione $A\to B$, quindi posso fermare ed \red{eliminare} $A\to B$
+    \begin{note}
+        Quindi la \hyperref[def:prod-unit]{Produzione Unitaria} $A\to B$ diventa:
+        \begin{ceq}
+            A\to a|c|b
+        \end{ceq}
+    \end{note}
+    Detto ciò, la grammatica iniziale viene modificata in questo modo:
+    \begin{itemize}
+        \item $A\to B$ in:
+            \begin{ceq}
+                A\to a|c|b
+            \end{ceq}
+        \item $B\to C$ in:
+            \begin{ceq}
+                B\to b|a|c
+            \end{ceq}
+        \item $C\to A$ in:
+            \begin{ceq}
+                C\to c|b|a
+            \end{ceq}
+    \end{itemize}
+    Concludendo, si ottiene la seguente grammatica finale:
+    \begin{ceq}
+        A\to a|b|c \\
+        B\to a|b|c \\
+        C\to a|b|c \\
+    \end{ceq}
+\end{example}
+% subsubsection Eliminazione Produzioni Unitarie (end)
+%
+\subsubsection{Riassunto}\label{sub:ll_elim_riassunto} % (fold)
+Riassumendo, per convertire una \hyperref[def:cfg]{CFG} arbitraria in una equivalente che non abbia simboli inutili, $\eps$-produzioni o produzioni unitarie bisogna effettuare le operazioni nel seguente ordine:
+\begin{itemize}
+    \item \hyperref[sub:ll_eliminazione_dei_simboli_inutili]{Eliminazione dei Simboli Inutili};
+    \item \hyperref[sub:ll_eliminazione_produzioni_unitarie]{Eliminazione Produzioni Unitarie};
+    \item \hyperref[sub:ll_eliminazione_produzioni_eps]{Eliminazione Produzioni $\eps$};
+\end{itemize}
+% subsubsection Riassunto (end)
+%
+\subsubsection{Trasformazione in Forma Normale di Chomsky}\label{sub:ll_trasformazione_in_forma_normale_di_chomsky} % (fold)
+Ogni \ac{cfl} non vuoto, quindi che non contiene $\eps$, ha una grammatica $G$ \textbf{priva di simboli inutili} e in \hyperref[def:cnf]{Forma Normale di Chomsky}, cioè:
+\begin{itemize}
+    \item $A\to BC$, dove $A$, $B$ e $C$ sono variabili;
+    \item $A\to a$, dove $A$ è una variabile e $a$ un terminale;
+\end{itemize}
+\begin{theorem}{}{}
+    Per ottenere una \hyperref[def:cfg]{Grammatica} in \hyperref[def:cnf]{CNF} è necessario:
+    \begin{enumerate}
+        \item \hyperref[sub:ll_eliminazione_produzioni_eps]{Eliminare le Produzioni $\eps $}, \hyperref[sub:ll_eliminazione_produzioni_unitarie]{Eliminare le Produzioni Unitarie} ed \hyperref[sub:ll_eliminazione_dei_simboli_inutili]{Eliminare i Simboli Inutili};
+        \item\label{th:cnl-passo-2} modificare le produzioni che hanno 2 o più simboli in modo tale da avere tutte variabili;
+        \item\label{th:cnl-passo-3} scomporre i corpi di lunghezza 3 o più in una cascata di produzioni, ciascuna con un corpo fatto \textbf{da due variabili};
+    \end{enumerate}
+\end{theorem}
+Per ogni terminale $a$ che compare in un corpo di lunghezza 2 o più si crea una nuova variabile $A$, avente una sola produzione $A\to a$.
+\begin{note}
+    Viene sostituita $a$ con $A$ in tutti i corpi successivi
+\end{note}
+Invece per ogni produzione del tipo $A\to \vc{B_1}{B_k}$ con $k\ge 3$ si applica una scomposizione fino a ottenere delle produzioni di lunghezza $2$.
+Vengono definite $k-2$ nuove variabili, $\vc{C_1}{C_{k-2}}$, e si modifica la produzione originale in questo modo:
+\begin{ceq}
+    \begin{aligned}
+        A&\to B_1C_1 \\
+        C_1&\to B_2C_2 \\
+        C_2&\to B_3C_3 \\
+            &\dots \\
+        C_{k-3}&\to B_{k-2}C_{k-2} \\
+        C_{k-2}&\to B_{k-1}B_{k} \\
+    \end{aligned}
+\end{ceq}
+\begin{example}{}{}
+    Data la grammatica:
+    \begin{ceq}
+        \begin{aligned}
+            &E\to E+T|T*F|(E)|a|b|Ia|Ib|I0|I1 \\
+            &T\to T*F|(E)|a|b|Ia|Ib|I0|I1 \\
+            &F\to (E)|a|b|Ia|Ib|I0|I1 \\
+            &I\to a|b|Ia|Ib|I0|I1
+        \end{aligned}
+    \end{ceq}
+    Per il \hyperref[th:cnl-passo-2]{passo 2} usiamo le regole:
+    \begin{ceq}
+        A\to a \\
+        B\to b \\
+        Z\to 0 \\
+        O\to 1 \\
+        \\
+        P\to + \\
+        M\to * \\
+        L\to ( \\
+        R\to )
+    \end{ceq}
+    ottenendo così la grammatica:
+    \begin{ceq}
+        \begin{aligned}
+            &E\to EPT|TMF|LER|a|b|IA|IB|IZ|IO \\
+            &T\to TMF|LER|a|b|IA|IB|IZ|IO \\
+            &F\to LER|a|b|IA|IB|IZ|IO \\
+            &I\to a|b|IA|IB|IZ|IO \\
+            &A\to a,\,B\to b,\,Z\to0,\,O\to1 \\
+            &P\to+,\,M\to*,\,L\to(,\,R\to)
+        \end{aligned}
+    \end{ceq}
+    A questo punto applichiamo il \hyperref[th:cnl-passo-3]{passo 3}, rimpiazzando:
+    \begin{ceq}
+        E\to EPT\red{\text{ con }} E \to EC_1,\,C_1\to PT \\
+        \\
+        E\to TMF,\,T\to TMF\red{\text{ con }} E \to TC_2,\,T\to TC_2,\,C_2\to MF \\
+        \\
+        E\to LER,\,T\to LER,\,F\to LER\red{\text{ con }} E \to LC_3,\,T\to LC_3,\,LC_3\to ER \\
+    \end{ceq}
+    La grammatica \hyperref[def:cnf]{CNF} finale sarà:
+    \begin{ceq}
+        \begin{aligned}
+            &E\to EC_1|TC_2|LC_3|a|b|IA|IB|IZ|IO \\
+            &T\to TC_2|LC_3|a|b|IA|IB|IZ|IO \\
+            &F\to LC_3|a|b|IA|IB|IZ|IO \\
+            &I\to a|b|IA|IB|IZ|IO \\
+            &C_1\to PT,\,C_2\to MF,\,C_3\to ER \\
+            &A\to a,\,B\to b,\,Z\to0,\,O\to1 \\
+            &P\to+,\,M\to*,\,L\to(,\,R\to)
+        \end{aligned}
+    \end{ceq}
+\end{example}
+% subsubsection Trasformazione in Forma Normale di Chomsky (end)
+% subsection Forma Normale di Chomsky (end)
+%
+\subsection{Proprietà di Decisione per i CFL}\label{sub:ll_propriet_di_decisione_per_i_cfl} % (fold)
+Analizzeremo i seguenti problemi decidibili:
+\begin{itemize}
+    \item verificare sei $w\in L(G)$, per una stringa $w$ e una \hyperref[def:cfg]{CFG} $G$;
+    \item verificare se $L(G) \notin \emptyset$, per una \hyperref[def:cfg]{CFG} $G$;
+\end{itemize}
+% subsection Proprietà di Decisione per i CFL (end)
+% section Proprietà dei Linguaggi Liberi dal Contesto (end)
 % chapter Linguaggi Liberi dal Contesto(end)

@@ -166,9 +166,9 @@ return {
         t("$"),
     }),
     s({ trig = "eq", dscr = "Equation block", indet = true }, {
-        t({ "\\[", fake_indent }),
-        i(0),
-        t({ "", "\\]" }),
+        t({ "\\begin{ceq}", fake_indent }),
+        i(1),
+        t({ "", "\\end{ceq}", "" }),
     }),
     s({ trig = "beq", dscr = "Numbered equation block", indet = true }, {
         t({ "\\begin{equation}", fake_indent }),
@@ -237,5 +237,18 @@ return {
     }),
     s({ trig = "rdrt", dscr = "Right Derivative Grammar", indet = false }, {
         t("\\underset{rm}{\\implies}"),
+    }),
+    s({ trig = "aligned", dscr = "Aligned Block in Equations", indet = true }, {
+        t({ "\\begin{aligned}", fake_indent .. "&" }),
+        i(0),
+        t({ "", "\\end{aligned}", "" }),
+    }),
+    s({ trig = "vc", dscr = "From a1, ..., an", indet = false }, {
+        t("\\vc{"),
+        i(1),
+        t("}{"),
+        i(2),
+        t("}"),
+        i(0)
     }),
 }
