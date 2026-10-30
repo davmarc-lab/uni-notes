@@ -861,8 +861,95 @@ Dopo le mosse il cui effetto è l'eliminazione di $Y_1$, il \hyperref[def:pda]{P
         \end{note}
     \end{example}
 \end{remark}
-\begin{note}[GUARDA QUADERNO]
-\end{note}
+\begin{example}{}{}
+    Si considera il \hyperref[def:pda]{PDA} $P = \pt{\pg{p,q},\pg{0,1},\pg{X,Z_0},\dt,q,Z_0}$ con $\dt$:
+    \begin{multicols}{2}
+        \begin{itemize}
+            \item $\dt \pt{q,1,Z_0} = \pg{\pt{q,XZ_0}}$
+            \item $\dt \pt{q,1,X} = \pg{\pt{q,XX}}$
+            \item $\dt \pt{q,0,X} = \pg{\pt{p,X}}$
+            \item $\dt \pt{q,\eps,X} = \pg{\pt{q,\eps}}$
+            \item $\dt \pt{p,1,X} = \pg{\pt{p,\eps}}$
+            \item $\dt \pt{p,0,Z_0} = \pg{\pt{q,Z_0}}$
+        \end{itemize}
+    \end{multicols}
+    Si vuole calcolare la \hyperref[def:cfg]{Grammatica} corrispondente.
+    \emptyln{}
+    Si analizza $\dt \pt{q,1,Z_0} = \pg{\pt{q,XZ_0}}$, per $k = 2$ ($XZ_0$):
+    \begin{cimage}
+        \includegraphics[width=.1\textwidth]{assets/20261030_154950.png}
+        \begin{ceq}
+            \ps{qZ_0 \red{P_2}}\to1 \ps{qX \red{P_1}}\ps{\red{P_1}Z_0 \red{P_2}} \qquad \forall \red{P_1},\red{P_2} \in Q
+        \end{ceq}
+    \end{cimage}
+    Si calcolano tutte le combinazioni possibili sostituendo $p$ e $q$ a $P_1$ e $P_2$:
+    \begin{ctable}{c|cc}
+        $\mathbf{P_1}$ & $\mathbf{P_2}$ \\
+        \hline
+        $p$ & $p$ & $\Rightarrow \ps{qZ_0 \red{p}}\to 1\ps{qX \red{p}}\ps{\red{p}Z_0\red{p}}$ \\
+        $p$ & $q$ & $\Rightarrow \ps{qZ_0 \red{q}}\to 1\ps{qX \red{p}}\ps{\red{p}Z_0\red{q}}$ \\
+        $q$ & $p$ & $\Rightarrow \ps{qZ_0 \red{p}}\to 1\ps{qX \red{q}}\ps{\red{q}Z_0\red{p}}$ \\
+        $q$ & $q$ & $\Rightarrow \ps{qZ_0 \red{q}}\to 1\ps{qX \red{q}}\ps{\red{q}Z_0\red{q}}$
+    \end{ctable}
+    Si analizza $\dt \pt{q,1,X} = \pg{\pt{q,XX}}$, per $k = 2$ ($XX$):
+    \begin{cimage}
+        \includegraphics[width=.1\textwidth]{assets/20261030_163854.png}
+        \begin{ceq}
+            \ps{qX \red{P_2}}\to1 \ps{qX \red{P_1}}\ps{\red{P_1}X \red{P_2}} \qquad \forall \red{P_1},\red{P_2} \in Q
+        \end{ceq}
+    \end{cimage}
+    Si calcolano tutte le combinazioni possibili sostituendo $p$ e $q$ a $P_1$ e $P_2$:
+    \begin{ctable}{c|cc}
+        $\mathbf{P_1}$ & $\mathbf{P_2}$ \\
+        \hline
+        $p$ & $p$ & $\Rightarrow \ps{qX \red{p}}\to 1\ps{qX \red{p}}\ps{\red{p}X\red{p}}$ \\
+        $p$ & $q$ & $\Rightarrow \ps{qX \red{q}}\to 1\ps{qX \red{p}}\ps{\red{p}X\red{q}}$ \\
+        $q$ & $p$ & $\Rightarrow \ps{qX \red{p}}\to 1\ps{qX \red{q}}\ps{\red{q}X\red{p}}$ \\
+        $q$ & $q$ & $\Rightarrow \ps{qX \red{q}}\to 1\ps{qX \red{q}}\ps{\red{q}X\red{q}}$
+    \end{ctable}
+    Si analizza $\dt \pt{q,0,X} = \pg{\pt{p,X}}$, per $k = 1$ ($X$):
+    \begin{cimage}
+        \includegraphics[width=.4\textwidth]{assets/20261030_164415.png}
+        \begin{ceq}
+            \ps{qX \red{P_1}}\to0 \ps{pX \red{P_1}} \qquad \forall \red{P_1} \in Q
+        \end{ceq}
+    \end{cimage}
+    Si calcolano tutte le combinazioni possibili sostituendo $p$ e $q$ a $P_1$:
+    \begin{ctable}{cc}
+        $\mathbf{P_1}$ \\
+        \hline
+        $p$ & $\Rightarrow \ps{qX \red{p}}\to 0\ps{pX \red{p}}$ \\
+        $q$ & $\Rightarrow \ps{qX \red{q}}\to 0\ps{pX \red{q}}$
+    \end{ctable}
+    Si analizza $\dt \pt{q,\eps,X} = \pg{\pt{q,\eps}}$, per $k = 0$ ($\eps$):
+    \begin{cimage}
+        \includegraphics[width=.1\textwidth]{assets/20261030_164754.png}
+        \begin{ceq}
+            \ps{qXq}\to\eps
+        \end{ceq}
+    \end{cimage}
+    Si analizza $\dt \pt{p,1,X} = \pg{\pt{p,\eps}}$, per $k = 0$ ($\eps$):
+    \begin{cimage}
+        \includegraphics[width=.1\textwidth]{assets/20261030_164959.png}
+        \begin{ceq}
+            \ps{pXp}\to1
+        \end{ceq}
+    \end{cimage}
+    Si analizza $\dt \pt{p,0,Z} = \pg{\pt{q,Z}}$, per $k = 1$ ($Z$):
+    \begin{cimage}
+        \includegraphics[width=.4\textwidth]{assets/20261030_165427.png}
+        \begin{ceq}
+            \ps{pX \red{P_1}}\to0 \ps{qX \red{P_1}} \qquad \forall \red{P_1} \in Q
+        \end{ceq}
+    \end{cimage}
+    Si calcolano tutte le combinazioni possibili sostituendo $p$ e $q$ a $P_1$:
+    \begin{ctable}{cc}
+        $\mathbf{P_1}$ \\
+        \hline
+        $p$ & $\Rightarrow \ps{pZ \red{p}}\to 0\ps{qX \red{p}}$ \\
+        $q$ & $\Rightarrow \ps{pZ \red{q}}\to 0\ps{qX \red{q}}$
+    \end{ctable}
+\end{example}
 % subsection Da Automa a Pila a Grammatica (end)
 % section Equivalenza di PDA e CFG (end)
 %
@@ -1210,13 +1297,114 @@ Vengono definite $k-2$ nuove variabili, $\vc{C_1}{C_{k-2}}$, e si modifica la pr
 \end{example}
 % subsubsection Trasformazione in Forma Normale di Chomsky (end)
 % subsection Forma Normale di Chomsky (end)
+% section Proprietà dei Linguaggi Liberi dal Contesto (end)
 %
-\subsection{Proprietà di Decisione per i CFL}\label{sub:ll_propriet_di_decisione_per_i_cfl} % (fold)
+\section{Proprietà di Decisione per i CFL}\label{sec:ll_propriet_di_decisione_per_i_cfl} % (fold)
 Analizzeremo i seguenti problemi decidibili:
 \begin{itemize}
     \item verificare sei $w\in L(G)$, per una stringa $w$ e una \hyperref[def:cfg]{CFG} $G$;
     \item verificare se $L(G) \notin \emptyset$, per una \hyperref[def:cfg]{CFG} $G$;
 \end{itemize}
-% subsection Proprietà di Decisione per i CFL (end)
-% section Proprietà dei Linguaggi Liberi dal Contesto (end)
+%
+\subsection{Appartenenza a un CFL}\label{sub:ll_appartenenza_a_un_cfl} % (fold)
+Supponiamo di avere una \hyperref[def:cfg]{Grammatica} o un \hyperref[def:pda]{PDA} per $L$, la cui dimensione si possa considerare costante e indipendente da $w$, esistono diversi modi per farlo in tempo esponenziale rispetto a $|w|$, cioè inefficienti.
+\begin{note}
+    Convertendo la rappresentazione di $L$ in una grammatica \hyperref[def:cnf]{CNF} equivalente.
+    Poiché gli alberi sintattici di una grammatica \hyperref[def:cnf]{CNF} sono binari, se $w$ è lunga $n$, nell'albero ci sono esattamente $2\dec n$ nodi etichettati da variabili.
+    \emptyln{}
+    Il numero di alberi ed etichette possibili è quindi esponenziale in $n$: in linea di principio possiamo scriverli tutti e osservare se uno di essi ha per prodotto $w$.
+\end{note}
+%
+\subsubsection{Algoritmo CYK}\label{sub:ll_algoritmo_cyk} % (fold)
+\begin{note}
+    Tecnica molto più efficace basata sulla \textit{programmazione dinamica} 
+\end{note}
+Parte da una \hyperref[def:cfg]{Grammatica} \hyperref[def:cnf]{CNF} $G=(V,T,P,S)$ per un linguaggio $L$.
+L'input dell'algoritmo è una stringa $w = a_1a_2\dots a_n \in T^*$.
+\begin{note}
+    In tempo $O(n^3)$ l'algoritmo costruisce una tabella che dice se $w \in L$
+\end{note}
+Si costruisce una tabella triangolare: l'asse orizzontale corrisponde alle posizioni della stringa $w = a_1a_2\dots a_n$ di lunghezza $n$.
+La voce $X_{ij}$ della tabella è l'insieme delle variabili $A$ tali che $A \overset{*}{\implies}a_ia_{\inc i}\dots a_j$.
+\begin{warning}
+    In particolare ci interessa sapere se $S$ è nell'insieme $X_{1n}$ perché ciò equivale a dire $S \overset{*}{\implies}w$, ossia $w \in L$
+\end{warning}
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/20261030_131310.png}
+\end{cimage}
+Per riempire la tabella procediamo verso l'alto, riga per riga, dove ogni riga corrisponde a un valore di lunghezza delle sottostringhe: la più bassa è per le stringhe di lunghezza $1$, la seconda dal basso per quelle di lunghezza $2$, e così via, fino alla riga in alto che corrisponde all'unica sottostringa lunga $n$, cioè $w$.
+\begin{remark}{}{}
+    \begin{description}
+        \item[Base] La stringa che comincia e finisce nella posizione $i$ è il terminale $a_i$; poiché la \hyperref[def:cfg]{Grammatica} è in  \hyperref[def:cnf]{CNF}, c'è un solo modo di derivare la stringa $a_i$: una produzione della forma $A\to a_i$.
+            Dunque $X_{ii}$ è l'insieme delle variabili $A$ tali che $A\to a$ è una produzione di $G$.
+        \item[Induzione] Si calcola $X_{ij}$, che si trova sulla riga $j-i+1$, dopo aver calcolato tutti gli $X$ nelle righe sottostanti.
+            Supponiamo di conoscere la situazione relativa a tutte le stringhe più corte di $a_ia_{\inc i}\dots a_j$, e in particolare tutti i suoi prefissi e suffissi propri.
+            \emptyln{}
+            Possiamo assumere $j-1 > 0$ perché il caso $i=j$ forma la base; quindi sappiamo che ogni derivazione $A \overset{*}{\implies}a_ia_{\inc i}\dots a_j$, deve cominciare da un passo $A\to BC$.
+            Quindi da $B$ deriva un prefisso di $a_ia_{\inc i}\dots a_j$, diciamo $B \overset{*}{\implies}a_ia_{\inc i}\dots a_k$ per un $k < j$.
+            Invece da $C$ deve derivare il resto di $a_ia_{\inc i}\dots a_j$, cioè $C \overset{*}{\implies}a_{\inc k}a_{k+2}\dots a_j$.
+            \emptyln{}
+            Concludiamo che per porre $A$ in $X_{ij}$ dobbiamo trovare due variabili $B$ e $C$, e un intero $k$ tali che:
+            \begin{multicols}{2}
+                \begin{itemize}
+                    \item $i\le k < j$
+                    \item $B \in X_{ik}$
+                    \item $C \in X_{k+1j}$
+                    \item $A\to BC$ è una produzione di $G$
+                \end{itemize}
+            \end{multicols}
+            Per trovare queste variabili dobbiamo confrontare al massimo $n$ coppie di insiemi già calcolati:
+            \begin{ceq}
+                \pt{X_{i,i}, X_{i+1,j}},\pt{X_{i,i+1},X_{i+2,j}},\dots,\pt{X_{i,j-1},C_{j,j}}
+            \end{ceq}
+            \begin{cimage}
+                \includegraphics[width=.4\textwidth]{assets/20261030_132938.png}
+            \end{cimage}
+    \end{description}
+\end{remark}
+\begin{example}{}{}
+    La  \hyperref[def:cfg]{Grammatica} $G$ ha le seguenti produzioni:
+    \begin{ceq}
+        \begin{aligned}
+            S&\to AB|BC \\
+            A&\to BA|a \\
+            B&\to CC|b \\
+            C&\to AB|a
+        \end{aligned}
+    \end{ceq}
+    Vogliamo verificare se la stringa $baaba$ appartiene a $L(G)$.
+    \emptyln{}
+    Per costruire la prima riga dal basso ci serviamo della regola \textbf{Base}: consideriamo solamente le variabili con una produzione il cui corpo sia $a$ ($A$ e $C$) o $b$ (solo $B$).
+    Perciò sopra le posizioni occupate da $a$ vediamo l'elemento $\pg{A,C}$, e sopra quelle occupate da $b$ vediamo $\pg{B}$.
+    In altre parole:
+    \begin{ceq}
+        X_{11} = X_{44} = \pg{B} \\
+        X_{22} = x_{33} = X_{55} = \pg{A,C}
+    \end{ceq}
+    Nella seconda riga vediamo i valori di $X_{12}$, $X_{23}$, $X_{34}$ e $X_{45}$.
+    \\
+    Analizzando $X_{12}$, c'è un solo modo di spezzare la stringa dalla posizione $1$ alla $2$, cioè $ba$, in due sottostringhe non vuote.
+    Per generare $ba$, una variabile deve avere un corpo la cui prima variabile sia in $X_{11} = \pg{B}$ (deve generare $b$) e la seconda sia in $X_{22} = \pg{A,C}$ (per generare $a$): questo corpo può essere soltanto $BA$ o $BC$.
+    L'esame della grammatica rivela che le produzioni $A\to BA$ e $S\to BC$ sono le uniche con questa caratteristica, perciò le due teste, $A$ e $S$, formano $X_{12}$.
+    Perciò dobbiamo esaminare tutti i corpi $X_{22}X_{34}$ ($a$ e $ab$) e $X_{23}X_{44}$ ($aa$ e $b$):
+    Per $X_{24}$, invece, possiamo spezzare la stringa $aab$, che occupa da $2$ a $4$, terminando la prima stringa dopo la posizione $2$ o dopo la $3$.
+    \begin{ceq}
+        X_{22}X_{34} \cup X_{23}X_{44}
+    \end{ceq}
+    Questo insieme di stringhe è:
+    \begin{ceq}
+        \pg{A,C}\pg{S,C}\cup \pg{B}\pg{B} = \pg{AS,AC,CS,CC,BB}
+    \end{ceq}
+    Dei suoi cinque elementi solo $CC$ è un corpo avente come testa $B$, quindi:
+    \begin{ceq}
+        X_{24} = \pg{B}
+    \end{ceq}
+\end{example}
+%
+\paragraph{Generare gli Alberi Sintattici tramite Backpointers}\label{par:ll_generare_gli_alberi_sintattici_tramite_backpointers} % (fold)
+
+% paragraph Generare gli Alberi Sintattici tramite Backpointers (end)
+% subsubsection Algoritmo CYK (end)
+% subsection Appartenenza a un CFL (end)
+% section Proprietà di Decisione per i CFL (end)
 % chapter Linguaggi Liberi dal Contesto(end)

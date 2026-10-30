@@ -7,4 +7,7 @@ return {
     cfg_grams = { cmd = "\\hyperref[def:cfg]{Grammatiche}", desc = "" },
     cnf = { cmd = "\\hyperref[def:cnf]{CNF}", desc = "" },
     cnf_full = { cmd = "\\hyperref[def:cnf]{Forma Normale di Chomsky}", desc = "" },
+    pda = { cmd = "\\hyperref[def:pda]{PDA}", desc = "" },
+    pda_full = { cmd = "\\hyperref[def:pda]{Automa a Pila}", desc = "" },
+    pda_fulls = { cmd = "\\hyperref[def:pda]{Automi a Pila}", desc = "" },
 }
