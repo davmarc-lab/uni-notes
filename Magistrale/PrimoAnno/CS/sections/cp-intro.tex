@@ -1,16 +1,5 @@
 \chapter{Digging into Concurrent Programming}\label{chap:cp_digging_into_concurrent_programming} % (fold)
 \paragraph{Recalling Terminology}\label{par:cp_recalling_terminology} % (fold)
-\begin{definition}{Concurrent Programming}{conc-prog}
-    \textbf{Concurrent programming} consist of building programs in which multiple computational activities \textit{overlap} in time and typically interact in some way, without necessarily running on separate physical processors.
-    It's placed at logical/abstract/programming level focusing on program organization.
-\end{definition}
-\begin{definition}{Parallel Programming}{para-prog}
-    When the execution of programs overlaps in time by running on \textit{separate physical processes} is called \textbf{parallel programming}.
-    It's placed at physical level focusing on performance.
-\end{definition}
-\begin{definition}{Distributed Programming}{distr-prog}
-    \textbf{Distributed programming} occurs when processors are distributed over a network with no shared memory.
-\end{definition}
 \begin{description}
     \item[Multi-threaded programming] They have a shared state using synchronisation mechanisms (like semaphores, monitors, etc.)
     \item[Message-based programming] No shared state with interaction by means of message exchange (asynchronous vs synchronous)

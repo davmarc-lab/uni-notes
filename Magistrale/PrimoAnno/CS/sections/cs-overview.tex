@@ -1,5 +1,5 @@
 \chapter{Overview}\label{chap:overview} % (fold)
-\begin{definition}{Concyrrency - 1}{}
+\begin{definition}{Concyrrency - 1}{concurrency}
     In computer science, \textbf{concurrency} is a property of systems in which several computational processes are executing \textbf{at the same time}, and potentially interacting with each other.
 \end{definition}
 \begin{definition}{Concurrency - 2}{}
@@ -10,19 +10,25 @@ Common aspects:
     \item systems with multiple activities or \textbf{processors} whose execution \textbf{overlaps in time};
     \item activities can have some kind of \textit{dependencies}, therefore can \textbf{interact}.
 \end{itemize}
-\begin{description}
-    \item[Concurrent Programming] Building programs in which multiple computational activities overlap in time and typically interact in some way.
-        It focuses on program organisation working on logical/abstract level.
-    \item[Concurrent Program] A finite set of \textit{sequential} programs that can be executed in parallel:
-        \begin{itemize}
-            \item a sequential program specifies sequential execution of a list of statements;
-            \item the execution of a sequential program is called \textbf{process};
-            \item a concurrent program specifies two or more sequential programs that may be executed concurrently as \textit{parallel processes};
-        \end{itemize}
-        The execution of a concurrent program is called \textbf{concurrent computation or elaboration}.
-        \item[Parallel Programming] The execution of programs overlaps in time by running on separate \textit{physical processors}
-        \item[Distributed Programming] When processors are distributed over a network without shared memory, shared lock and independent failures.
-\end{description}
+\begin{definition}{Concurrent Programming}{conc-prog}
+    \textbf{Concurrent programming} consist of building programs in which multiple computational activities \textit{overlap} in time and typically interact in some way, without necessarily running on separate physical processors.
+    It's placed at logical/abstract/programming level focusing on program organization.
+\end{definition}
+\begin{definition}{Concurrent Program}{conc-program}
+    A finite set of \textit{sequential} programs that can be executed in parallel:
+    \begin{itemize}
+        \item a sequential program specifies sequential execution of a list of statements;
+        \item the execution of a sequential program is called \textbf{process};
+        \item a concurrent program specifies two or more sequential programs that may be executed concurrently as \textit{parallel processes};
+    \end{itemize}
+    The execution of a concurrent program is called \textbf{concurrent computation or elaboration}.
+\end{definition}
+\begin{definition}{Parallel Programming}{par-prog}
+    The execution of programs overlaps in time by running on separate \textit{physical processors}.
+\end{definition}
+\begin{definition}{Distributed Programming}{distr-prog}
+    When processors are distributed over a network without shared memory, shared lock and independent failures.
+\end{definition}
 \begin{cimage}
     \includegraphics[width=.8\textwidth]{assets/parall-arch-timeline.png}
 \end{cimage}

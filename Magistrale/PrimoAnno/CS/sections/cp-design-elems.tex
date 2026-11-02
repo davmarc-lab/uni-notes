@@ -1,0 +1,187 @@
+\chapter{Elements of Concurrent Program Design}\label{chap:ed_elements_of_concurrent_program_design} % (fold)
+Designing \textbf{concurrent programs} consists of two macro steps:
+\begin{itemize}
+    \item \textbf{step 1 - analysis}: identifying tasks;
+    \item \textbf{step 2 - design}: concurrent architectures;
+\end{itemize}
+%
+\begin{definition}{Analysis}{cp-analysis}
+   Analyzing the problem to identify exploitable concurrency: identifying \textbf{task \& data} decomposition and their \textbf{dependencies}.
+    \begin{definition}{Task}{task}
+        A sequence of instructions that \red{operate together as a group}, corresponding to some logical part of an algorithm or a program.
+        Also, it can be considered as a specific piece of work required to be done as a duty or responsibility of some agent: more abstract/design-oriented definition.
+    \end{definition}
+\end{definition}
+\begin{definition}{Design}{cp-design}
+    Choosing a suitable \textbf{concurrent architecture}, assigning tasks to ``agents'':
+    \begin{itemize}
+        \item \textit{active components} responsible for performing \hyperref[def:task]{Tasks};
+        \item encapsulate login \& control of \hyperref[def:task]{Task} execution;
+    \end{itemize}
+    In order to work together, agents share and use some \textit{passive components}:
+    \begin{itemize}
+        \item \textit{shared resources} encapsulating result of agent work;
+        \item \textit{coordination media/resources} to shape agent interaction and manage \hyperref[def:task]{Task} dependencies;
+    \end{itemize}
+\end{definition}
+\begin{note}[Active vs Passive Component Discipline]
+    Strong partition:
+    \begin{itemize}
+        \item \textbf{active components} (``agents''):
+            \begin{itemize}
+                \item encapsulating a thread of control;
+                \item no public interface;
+                \item every interaction enabled and mediated by shared passive components;
+            \end{itemize}
+        \item \textbf{passive components}, designed as \hyperref[def:monitor]{Monitors};
+    \end{itemize}
+    \begin{warning}[No hybrid entities]
+        An \textbf{hybrid entity} can be designed as a set of one or more active and passive components
+    \end{warning}
+\end{note}
+%
+\section{Problem Analysis}\label{sec:ed_problem_analysis} % (fold)
+\begin{note}[Objective]
+    Identifying \hyperref[def:task]{Task}/data decomposition and their dependencies
+\end{note}
+Usually performed in two steps:
+\begin{itemize}
+    \item \hyperref[def:task]{Task} and \textbf{data decomposition} analysis;
+    \item Dependency Analysis;
+\end{itemize}
+%
+\subsection{Task Decomposition Pattern}\label{sub:ed_task_decomposition_pattern} % (fold)
+Following a \textit{divide-et-impera} principle, the problem can be naturally decomposed into a collection of independent or nearly independent \hyperref[def:task]{Tasks}.
+\begin{note}
+    \hyperref[def:task]{Tasks} must be sufficiently independent so as that managing dependencies takes only a small fraction of the program's overall execution time
+\end{note}
+First \hyperref[def:task]{Tasks} are identified, then how data can be decomposed given the task decomposition: in this case, \hyperref[sub:ed_data_decomposition_pattern]{Data Decomposition} follows \hyperref[sub:ed_task_decomposition_pattern]{Task Decomposition}.
+\begin{example}{}{}
+    \hyperref[sub:cp_producer_consumer_p_c_problem]{Producer-Consumer} systems.
+\end{example}
+% subsection Task Decomposition Pattern (end)
+%
+\subsection{Data Decomposition Pattern}\label{sub:ed_data_decomposition_pattern} % (fold)
+Problem's data can be easily decomposed into units that can be operated on relatively independently.
+First data units are identified, then \hyperref[def:task]{Task} related to that units can be identified: in this case, \hyperref[sub:ed_task_decomposition_pattern]{Task Decomposition} follows \textbf{data decomposition}.
+\begin{note}
+    Scale well with the available number of processors
+\end{note}
+\begin{example}{}{}
+    Matrix Multiplication.
+\end{example}
+% subsection Data Decomposition Pattern (end)
+%
+\subsection{Dependency Analysis}\label{sub:ed_dependency_analysis} % (fold)
+Analyzing dependencies among the \hyperref[def:task]{Tasks} within a problem's decomposition to \textbf{group} and \textbf{order} \hyperref[def:task]{Tasks} according to the type of dependencies, in order to maximize \textbf{performance}.
+Two possible kind of dependencies:
+\begin{itemize}
+    \item \textbf{temporal} dependencies;
+    \item \textbf{data/resource} dependencies;
+\end{itemize}
+% subsection Dependency Analysis (end)
+% section Problem Analysis (end)
+%
+\section{Design Level}\label{sec:ed_design_level} % (fold)
+From analysis to design:
+\begin{itemize}
+    \item \textbf{result parallelism}: envisioning parallelism in terms of program's result;
+    \item \textbf{specialist parallelism}: envisioning parallelism in terms of an ensemble of \textit{specialists} that collectively constitute the programs;
+    \item \textbf{agenda parallelism}: envisioning parallelism in terms of program's \textit{agenda} of \hyperref[def:task]{Tasks};
+\end{itemize}
+%
+\subsection{Conceptual Classes}\label{sub:ed_conceptual_classes} % (fold)
+\subsubsection{Result Parallelism}\label{sub:ed_result_parallelism} % (fold)
+Designing the system \textit{around the data structure or resource yielded} as the ultimate result: we get parallelism by computing all the elements of the result simultaneously.
+\begin{note}
+    Strictly related to the \hyperref[sub:ed_data_decomposition_pattern]{Data Decomposition Pattern}
+\end{note}
+Each agent is assigned to produce one piece of the result: they all work in parallel up to the natural restriction imposed by the problem.
+Proper \textbf{shared data structures} are designed to wrap the result under construction, encapsulating mutex and synchronization issues.
+\begin{example}{Result Parallelism: Building a House}{}
+    Think about the components of the house: front, rear, side walls, interior walls, foundations, roof, etc.
+    Proceed by building all the components simultaneously, assembling them as they are completed.
+    \emptyln{}
+    Using separate agents (\textit{workers}) on the different parts, proceeding in parallel up to the point where work on one component can't proceed until another is finished.
+\end{example}
+% subsubsection Result Parallelism (end)
+%
+\subsubsection{Specialist Parallelism}\label{sub:ed_specialist_parallelism} % (fold)
+Designing the system \textit{around an ensemble of specialists} connected into a logical network of some kind, parallelism results from all the \textit{nodes} of the logical network being active simultaneously.
+\emptyln{}
+Each agent is assigned to perform one specified kind of \hyperref[def:task]{Task}: they all work in parallel up to the natural restriction imposed by the problem.
+\\
+Coordination means (communication protocols, shared data structures) are used to support specialists communication and coordination.
+\begin{note}
+    Opposite approach with respect to result parallelism
+\end{note}
+\begin{example}{Specialist Parallelism: Building a House}{}
+    Identify the separate skills required to build the house: surveyors, excavators, foundation builders, carpenters, roofers, etc.
+    \begin{note}[Different kind of tasks]
+    \end{note}
+    Then assemble a constructor \textit{crew} in which each skill is represented by a separated specialist worker.
+    \emptyln{}
+    They all start simultaneously, but initially most \textbf{workers} will have to wait around.
+    Only when the project is well underway, many \textit{workers} will be called to play simultaneously.
+    \begin{warning}
+        Strong role of worker interaction and coordination: different kind of strategies (e.g. pipelined jobs)
+    \end{warning}
+\end{example}
+% subsubsection Specialist Parallelism (end)
+%
+\subsubsection{Agenda Parallelism}\label{sub:ed_agenda_parallelism} % (fold)
+Designing the system around a particular \textbf{agenda of \hyperref[def:task]{Tasks}} and then assign many workers to each step, and also possibly carry on different steps in parallel (\textit{workflow}).
+Each agent is assigned to help out with the current item on the agenda, by working in parallel up to the natural restriction imposed by the problem.
+\emptyln{}
+Shared data structures are designed to manage data consumed and produced by agenda activities (e.g. \textit{bounded-buffers}).
+\begin{example}{Agenda Parallelism: Building a House}{}
+    We write out a sequential agenda and carry it in order, but at each stage we assign mny workers to the current activity: doing the foundation, doing the frame, doing the roof, etc.
+    \\
+    We assemble a work team of \textbf{generalists}, each one capable of performing any construction step.
+    \begin{note}
+        The team is set to work stage by stage following the agenda
+    \end{note}
+\end{example}
+% subsubsection Agenda Parallelism (end)
+%
+\paragraph{Remarks}\label{par:ed_cc_remarks} % (fold)
+The boundaries between the three classes are not rigid, we will often mix elements of several approaches in getting a particular job done.
+\begin{example}{}{}
+    A \hyperref[sub:ed_specialist_parallelism]{Specialist Parallelism} approach might take secondary use of \hyperref[sub:ed_agenda_parallelism]{Agenda Parallelism}, for example by assigning a team of workers to some specialty.
+\end{example}
+However, the three approaches represent \textit{three clearly} separate ways of thinking about the problem:
+\begin{itemize}
+    \item \hyperref[sub:ed_result_parallelism]{Result Parallelism} focuses on the shape of the finished product;
+    \item \hyperref[sub:ed_specialist_parallelism]{Specialist Parallelism} focuses on the makeup of the work crew;
+    \item \hyperref[sub:ed_agenda_parallelism]{Agenda Parallelism} focuses on the list of \hyperref[def:task]{Tasks} to be performed;
+\end{itemize}
+\begin{note}
+    The approach can be recursively applied, following \hyperref[sub:ed_task_decomposition_pattern]{Task Decomposition} and \hyperref[sub:ed_data_decomposition_pattern]{Data Decomposition} patterns
+\end{note}
+% paragraph Remarks (end)
+%
+\subsection{Using Conceptual Classes}\label{sub:ed_using_conceptual_classes} % (fold)
+To write a \hyperref[def:conc-program]{Concurrent Program}:
+\begin{itemize}
+    \item choose the \hyperref[sub:ed_conceptual_classes]{Conceptual Class} that is most natural for the problem;
+    \item write a program using the method that is most natural for that \hyperref[sub:ed_conceptual_classes]{Conceptual Class};
+    \item if the resulting program is not acceptably efficient, transform it methodically into a more efficient version by switching from a more-natural method to a more-efficient one;
+\end{itemize}
+% subsection Using Conceptual Classes (end)
+% subsection Conceptual Classes (end)
+%
+\subsection{Concurrent Architectures}\label{sub:ed_concurrent_architectures} % (fold)
+Some specific architectures can help to bridge the gap between the \hyperref[sub:ed_conceptual_classes]{Conceptual Classes} and the implementation:
+\begin{itemize}
+    \item \textbf{Master-Workers}: \hyperref[def:task]{Task}-oriented frameworks, fork-join variants;
+    \item \textbf{Filter-Pipeline}: stream-based patterns;
+    \item \textbf{Shared-Space/Blackboard}: space-based coordination patterns;
+    \item \textbf{Announcer-Listeners}: event-based coordination patterns;
+\end{itemize}
+%
+\subsubsection{Master-Workers}\label{sub:ed_master_workers} % (fold)
+
+% subsubsection Master-Workers (end)
+% subsection Concurrent Architectures (end)
+% section Design Level (end)
+% chapter Elements of Concurrent Program Design (end)

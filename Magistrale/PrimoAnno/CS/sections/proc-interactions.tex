@@ -613,5 +613,413 @@ Monitors as instances of abstract data type, only operations name are visible ou
 \end{itemize}
 Statements within the monitor cannot access variables declared \textit{outside} the monitor, permanent variables are initialized before any procedures is called.
 % subsection Monitor Properties (end)
+%
+\subsection{Monitor Features}\label{sub:pi_monitor_features} % (fold)
+\subsubsection{Mutual Exclusion}\label{sub:pi_mn_mutual_exclusion} % (fold)
+The mutual exclusion is implicit, procedures by \textit{definition} execute with mutual exclusion:
+\begin{itemize}
+    \item a \hyperref[def:monitor]{Monitor} procedure is called by an external process;
+    \item a procedure is active if some \hyperref[def:process]{Process} is executing a statement in the procedure;
+    \item at most one instance of one \hyperref[def:monitor]{Monitor} procedure may be active at a time;
+    \item \hyperref[def:process]{Processes} that find the \hyperref[def:monitor]{Monitor} `busy' are \textbf{suspended};
+\end{itemize}
+\begin{example}{Monitor: classic counter}{}
+    \textbf{Thread safe} thanks to \hyperref[def:monitor]{Monitor} properties:
+    \begin{codeblock}{}
+    monitor Counter {
+        int count;
+
+        procedure inc() {
+            count := count + 1
+        }
+
+        procedure getValue(): int {
+            return count;
+        }
+    }
+    \end{codeblock}
+\end{example}
+\begin{remark}{}{}
+    The mutual exclusion is \textbf{implicit} and does not require the programmers to use any other mechanism, such as \texttt{wait} and \texttt{signal}: if operations of the same \hyperref[def:monitor]{Monitor} are called by more than one \hyperref[def:process]{Process}, the implementation ensures that these are executed under mutual exclusion.
+    \begin{note}
+        Operations are executed \textbf{atomically}, with respect to each other
+    \end{note}
+    If operations of different \hyperref[def:monitor]{Monitors} are called, their execution can be \hyperref[def:interleaving]{Interleaved}.
+    \begin{note}
+        There is no explicit queue associated with the \hyperref[def:monitor]{Monitor} procedure: \hyperref[def:starvation]{Starvation} problem
+    \end{note}
+\end{remark}
+% subsubsection Mutual Exclusion (end)
+%
+\subsubsection{Synchronization}\label{sub:pi_mf_synchronization} % (fold)
+The \textbf{synchronization} is supported explicitly through \textbf{condition variables}.
+They are used inside the \hyperref[def:monitor]{Monitors} by the programmers to delay a \hyperref[def:process]{Process} that cannot safely continue executing until the \hyperref[def:monitor]{Monitor}'s state satisfies some \textbf{boolean condition}.
+\begin{note}
+    Used also to awake a delayed \hyperref[def:process]{Process} when the condition becomes true
+\end{note}
+\begin{definition}{Condition Variables}{cond-vars}
+    Primitive data types that can be used to suspend (\texttt{wait}) and resume (\texttt{signal}) \hyperref[def:process]{Processes} inside a \hyperref[def:monitor]{Monitor}.
+    They represent \textit{conditions} (events) on the \hyperref[def:monitor]{Monitor} state that \texttt{wait} to be satisfied and that becomes satisfied.
+    \begin{note}
+        Two basic atomic operations, \textit{waitC} and \textit{signalC}, sometimes written simply \textit{wait} and \textit{signal}
+    \end{note}
+    \begin{warning}
+        Each condition variable is associated with a FIFO queue of blocked \hyperref[def:process]{Processes}
+    \end{warning}
+\end{definition}
+\begin{description}
+    \item[waitC] Suspends the execution of the \hyperref[def:process]{Process} and releases \hyperref[sub:cp_locks]{Lock} of the \hyperref[def:monitor]{Monitor}.
+        \begin{codeblock}{Abstract Implementation}
+    waitC(cond) =
+        < append p to cond.queue
+            p.state := blocked
+            monitor.lock := release >
+        \end{codeblock}
+    \item[signalC] Unblocks a \hyperref[def:process]{Process} waiting on a \textit{condition}.
+        \begin{codeblock}{Abstract Implementation}
+    signalC(cond) =
+        < if cond.queue != empty
+            q := remove head of cond.queue
+            q.state := ready >
+        \end{codeblock}
+\end{description}
+\begin{example}{Simple Synchronization}{}
+    \begin{codeblock}{}
+    monitor SynchCell {
+        int value;
+        boolean available := false;
+        cond isAvail;
+
+        procedure set(int v) {
+            value := v
+            available := true
+            signalC(isAvail)
+        }
+
+        procedure get(): int {
+            if (!available)
+                waitC(isAvailable)
+            return value
+        }
+    }
+    \end{codeblock}
+\end{example}
+\begin{remark}{}{}
+    There is an explicit link between \hyperref[def:cond-vars]{Condition Variables} and their encapsulating \hyperref[def:monitor]{Monitor}: \textbf{wait operation releases the \hyperref[def:monitor]{Monitor} \hyperref[sub:cp_locks]{Lock}}
+    \\
+    This is essential to avoid that a \hyperref[def:process]{Process} executing \texttt{waitC} would block the access to the \hyperref[def:monitor]{Monitor}.
+\end{remark}
+%
+\paragraph{Other primitives}\label{par:pi_cv_other_primitives} % (fold)
+\begin{itemize}
+    \item \textbf{emptyC(cond)}: checks if the queue is empty.
+    \item \textbf{signalAllC(cond)}: like signal, but all the \hyperref[def:process]{Processes} waiting on the \hyperref[def:cond-vars]{Condition} are resumed.
+    \item \textbf{waitC(cond)}: wait in order of increasing value of \textbf{rank}.
+    \item \textbf{minrank(cond)}: returns the value of \textbf{rank} of \hyperref[def:process]{Processes} at front of the wait queue.
+\end{itemize}
+\begin{example}{Synchronized Cell Revisited 2}{}
+    Using \texttt{signalAllC} to wake up every \hyperref[def:process]{Process} in the queue.
+    \begin{codeblock}{}
+    monitor ImprovedSynchCell {
+        int value;
+        boolean available;
+        cond isAvail;
+
+        procedure set(int v) {
+            value := v
+            available := true
+            signalAllC(isAvail)
+        }
+
+        procedure get(): int {
+            if (!available)
+                waitC(isAvail)
+            return value
+        }
+    }
+    \end{codeblock}
+\end{example}
+\begin{example}{Synchronized Cell Revisited 3}{}
+    The same behaviour can be obtained without \texttt{signalAllC}: signalling as soon as a suspended \hyperref[def:process]{Process} is awakened.
+    \begin{codeblock}{}
+    monitor ImprovedSynchCell {
+        int value;
+        boolean available;
+        cond isAvail;
+
+        procedure set(int v) {
+            value := v
+            available := true
+            signalC(isAvail)
+        }
+
+        procedure get(): int {
+            if (!available) {
+                waitC(isAvail)
+                signalC(isAvail)
+            }
+            return value
+        }
+    }
+    \end{codeblock}
+\end{example}
+% paragraph Other primitives (end)
+% subsubsection Synchronization (end)
+% subsection Monitor Features (end)
+%
+\subsection{Implementing a Semaphore}\label{sub:pi_mo_implementing_a_semaphore} % (fold)
+Two implementation of a \hyperref[def:semaphore]{Semaphore} using \hyperref[def:monitor]{Monitors}: there is an explicit link between \hyperref[def:cond-vars]{Condition Variables} and their encapsulating \hyperref[def:monitor]{Monitor}.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/20261102_171214.png}
+\end{cimage}
+%
+\subsubsection{Semaphores vs Condition Variables in Monitors}\label{sub:pi_semaphores_vs_condition_variables_in_monitors} % (fold)
+\begin{ctable}{|p{.5\textwidth}|p{.5\textwidth}|}
+    \hline
+    \textbf{Semaphore} & \textbf{Monitor} \\
+    \hline
+    Wait may or may not block & \texttt{waitC} always blocks \\
+    \hline
+    \texttt{signal} always has an effect & \texttt{signalC} has no effect if queue is empty \\
+    \hline
+    \texttt{signal} unblocks an arbitrary blocked \hyperref[def:process]{Process} & \texttt{signalC} unblocks the \hyperref[def:process]{Process} at the head of the queue \\
+    \hline
+    a \hyperref[def:process]{Process} unblocked by \texttt{signal} can resume execution immediately & depending on the specific signaling semantics, a \hyperref[def:process]{Process} unblocked by \texttt{signalC} must wait for the signalling \hyperref[def:process]{Process} to leave the monitor \\
+    \hline
+\end{ctable}
+% subsubsection Semaphores vs Condition Variables in Monitors (end)
+% subsection Implementing a Semaphore (end)
 % section Monitors (end)
+%
+\section{Signaling Discipline}\label{sec:pi_signaling_discipline} % (fold)
+When a \hyperref[def:process]{Process} executes a signal, even if there could be multiple \hyperref[def:process]{Processes} ready to execute within the monitor, only one \hyperref[def:process]{Process} can have exclusive access: because of the basic semantics of \hyperref[def:monitor]{Monitors}, only one \hyperref[def:process]{Process} is chosen to keep active.
+\begin{critical}
+    Either the signalling or the waiting \hyperref[def:process]{Process} can be resumed, not both: classic solution for \hyperref[def:monitor]{Monitors}
+\end{critical}
+%
+\subsection{Signaling Semantics}\label{sub:pi_signaling_semantics} % (fold)
+Given:
+\begin{itemize}
+    \item $S$ the precedence of the signalling \hyperref[def:process]{Processes};
+    \item $W$ the precedence of the waiting \hyperref[def:process]{Processes};
+    \item $E$ the precedence of \hyperref[def:process]{Processes} blocked on a procedure;
+\end{itemize}
+\begin{description}
+    \item[Signal and Continue] The signaller continues and the signalled \hyperref[def:process]{Process} executes at some later time (\textbf{non-preemptive}).
+        \[
+            E < W < S
+        \]
+        \begin{codeblock}{}
+    while (!B)
+        wait(cond)
+    <access>
+        \end{codeblock}
+    \item[Signal and Wait] The signalled \hyperref[def:process]{Process} executes now and the signaller waits, eventually competing with other \hyperref[def:process]{Processes} waiting for entering the \hyperref[def:monitor]{Monitor} (\textbf{preemptive}).
+        \[
+            E = S < W
+        \]
+        \begin{codeblock}{}
+    if (!B)
+        wait(cond)
+    <access>
+        \end{codeblock}
+    \item[Signal and Urgent Wait] Also called \textbf{Immediate Resumption Requirement}, like signal and wait, but the signaller has priority over  \hyperref[def:process]{Processes} waiting for the \hyperref[sub:cp_locks]{Lock} (classic solution for \hyperref[def:monitor]{Monitors}).
+        \[
+            E < S < W
+        \]
+        \begin{codeblock}{}
+    if (!B)
+        wait(cond)
+    <access>
+        \end{codeblock}
+\end{description}
+% subsection Signaling Semantics (end)
+%
+\subsection{Using Monitors}\label{sub:pi_using_monitors} % (fold)
+\hyperref[def:monitor]{Monitors} can be used to implement any resource or data structure which is used \textbf{concurrently} by multiple \hyperref[def:process]{Processes} and in which we want to encapsulate the synchronization policies.
+%
+\subsubsection{Producers and Consumers}\label{sub:pi_mn_producers_and_consumers} % (fold)
+\begin{codeblock}{}
+    monitor BoundedBuffer {
+        ElemType buffer := <EmptyBuffer>
+        cond notFull, notEmpty;
+        procedure put(ElemType elem){
+            if (buffer is full)
+            waitC(notFull)
+            append(buffer,elem)
+            signalC(notEmpty)
+        }
+        procedure take(): ElemType {
+            if (buffer is empty)
+            waitC(notEmpty)
+            ElemType el := head(buffer)
+            signalC(notFull)
+            return el
+        }
+    }
+\end{codeblock}
+\begin{remark}{}{}
+    Using a \textbf{circular array} for implementing the \textbf{buffer data structure}: see \hyperref[sub:cp_producer_consumer_p_c_problem]{Producer-Consumer}.
+    \begin{codeblock}{}
+    monitor BoundedBuffer {
+        int[] elems := new int[MAX_ELEMS]
+        int first := 0, last := 0
+        cond notFull, notEmpty
+        procedure put(int elem){
+            if ((last + 1) % MAX_ELEMS) = first
+            waitC(notFull)
+            elems[last] = elem
+            last := (last + 1) % MAX_ELEMS
+            signalC(notEmpty)
+        }
+        procedure take(): int {
+            if (first = last)
+            waitC(notEmpty)
+            int elem = elems[first]
+            first = (first + 1) % MAX_ELEMS
+            signalC(notFull)
+            return elem
+        }
+    }
+    \end{codeblock}
+\end{remark}
+% subsubsection Producers and Consumers (end)
+%
+\subsubsection{Readers and Writers}\label{sub:pi_mn_readers_and_writers} % (fold)
+\begin{codeblock}{}
+    monitor RWLock {
+        int nr, nw = 0;
+        cond okToRead,okToWrite;
+        procedure void request_read(){
+            while (nw > 0)
+            waitC(okToRead);
+            nr := nr + 1;
+        }
+        procedure void release_read(){
+            nr := nr - 1;
+            if (nr = 0)
+            signalC(okToWrite)
+        }
+        procedure void request_write(){
+            while (nr > 0 or nw > 0)
+            waitC(okToWrite)
+            nw := nw + 1;
+        }
+        procedure void release_write(){
+            nw := nw - 1;
+            signalC(okToWrite);
+            signalAllC(okToRead);
+        }
+    }
+\end{codeblock}
+\begin{note}
+    See \hyperref[sub:pi_readers_and_writers_problem]{Readers and Writers Problem}
+\end{note}
+\begin{remark}{}{}
+    \begin{codeblock}{}
+    monitor RWLock {
+        integer readers := 0
+        integer writers := 0
+        cond okToRead,okToWrite;
+        procedure startRead(){
+            if writers != 0
+            waitC(okToRead)
+            readers := readers + 1
+            signalC(okToRead)
+        }
+        procedure endRead(){
+            readers := readers - 1
+            if readers = 0
+            signalC(okToWrite)
+        }
+        procedure startWrite(){
+            if writers != 0 or readers != 0
+            waitC(okToWrite)
+            writers := writers + 1
+        }
+        procedure endWrite(){
+            writers := writers - 1
+            if !emptyC(okToRead)
+            then signalAllC(okToRead)
+            else signalC(okToWrite)
+        }
+    }
+    \end{codeblock}
+\end{remark}
+% subsubsection Readers and Writers (end)
+%
+\subsubsection{Resource Allocation}\label{sub:pi_resource_allocation} % (fold)
+\hyperref[def:monitor]{Monitors} are typically used to function as \textbf{resource allocator}, enforcing some policy in allocating resources to \hyperref[def:process]{Processes} requesting resource access.
+\begin{codeblock}{}
+    monitor ResourceAllocator {
+        procedure request(<Params>){
+            < block the request
+            until the resource or a resource
+            is available, according to some policy >
+        }
+        procedure release(<Params>){
+            < possibly unblock some pending request >
+        }
+    }
+\end{codeblock}
+%
+\paragraph{Monitor Implementation}\label{par:pi_resalloc_monitor_implementation} % (fold)
+\hyperref[def:monitor]{Monitor} can be realized using \hyperref[def:semaphore]{Semaphores}, in particular:
+\begin{itemize}
+    \item one \hyperref[def:semaphore]{Semaphore} \texttt{mutex} for mutual exclusion;
+    \item for each \hyperref[def:cond-vars]{Condition Variable}, a \hyperref[def:semaphore]{Semaphore} \texttt{condsem} and a counter \texttt{condcount} keeping track of the number of \hyperref[def:process]{Processes} suspended on the \hyperref[def:cond-vars]{Variable} 
+\end{itemize}
+\begin{codeblock}{Signal and Continue semantics}
+    Prologue for each operation:
+        wait(mutex)
+    Epilogue for each operation:
+        signal(mutex)
+
+    waitC(cond) =
+        condcount++;
+        signal(mutex);
+        wait(condsem);
+        wait(mutex);
+
+    signalC(cond) =
+        if (condcount > 0){
+            condcount--;
+            signal(condsem)
+        }
+\end{codeblock}
+\begin{codeblock}{Signal and Wait semantics}
+    Prologue for each operation:
+        wait(mutex)
+    Epilogue for each operation:
+        signal(mutex)
+
+    waitC(cond) =
+        condcount++;
+        signal(mutex);
+        wait(condsem);
+
+    signalC(cond) =
+        if (condcount > 0){
+            condcount--;
+            signal(condsem);
+            wait(mutex);
+        }
+\end{codeblock}
+\begin{note}
+    Exploiting \hyperref[def:monitor]{Monitors} to realize reusable synchronization/coordination components:
+    \begin{multicols}{2}
+        \begin{itemize}
+            \item latches;
+            \item barriers;
+            \item rendezvous;
+            \item message boxes;
+            \item blackboards;
+            \item event services;
+        \end{itemize}
+    \end{multicols}
+\end{note}
+% paragraph Monitor Implementation (end)
+% subsubsection Resource Allocation (end)
+% subsection Using Monitors (end)
+% section Signaling Discipline (end)
 % chapter Process Interaction --- Mechanisms \& Problems (end)
