@@ -1,0 +1,71 @@
+% ltex: language=it
+\documentclass{article}
+
+% Shared preamble from project root
+\usepackage{lecture}
+
+\begin{document}
+\section{Expectation Maximization}\label{sec:em_expectation_maximization} % (fold)
+\subsection{EM e Speaker Recognition}\label{sub:em_e_speaker_recognition} % (fold)
+GMM (Gaussian Mixture Model) è stato, prima del deep learning, uno degli approcci più usati per riconoscere una persona dalle caratteristiche della voce: \textbf{speaker recognition}.
+\emptyln{}
+Le feature più utilizzate sono le \textbf{MFCC (Mel Frequency Cepstral Coefficients)}, che estraggono le informazioni del seguente audio in modo simile al sistema uditivo umano.
+\\
+Si parte dallo \textbf{spettrogramma} di ciascun file audio grezzo, ovvero un diagramma 2D dove nella dimensione orizzontale troviamo il \textbf{tempo} e in quella verticale le \textbf{frequenze}.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/20261102_153026.png}
+    \caption{}\label{fig:20261102_153026}
+\end{cimage}
+Dallo \hyperref[fig:20261102_1533026]{spettrogramma} si ottengono le MFCC, passando a scala \red{logaritmica} in $y$ e applicando un'ulteriore trasformazione per \textbf{decorrelare} le frequenze.
+\emptyln{}
+Normalmente per ogni finestra temporale, che chiamiamo \textbf{frame}, si usano $20$ coefficienti primari e a questi si aggiungono altri $20$ valori per la \textbf{derivata prima} e $20$ per la \textbf{derivata seconda}, che indicano come una determinata frequenza varia nel tempo.
+%
+\subsubsection{Addestramento del Modello di uno Speaker}\label{sub:em_addestramento_del_modello_di_uno_speaker} % (fold)
+Supponiamo di disporre di un \textbf{Training Set} con $n_a$ file audio per ognuno degli $n_k$ speaker.
+Per l'audio $j$-esimo dello speaker $i$-esimo estraiamo le MFCC ottenendo una rappresentazione $,fcc_{i,j}$ a lunghezza variabile $t_{i,j}\times 60$.
+\emptyln{}
+Ai fini del riconoscimento dello speaker \textbf{non è importante l'ordine} dei $t_{i,j}$ frame in $mfcc_{i,j}$.
+\begin{note}
+    Per certi versi neanche cosa viene pronunciato se si garantisce una buona variabilità nel parlato
+\end{note}
+Le caratteristiche del tratto vocale, che discriminano gli speaker, dipendono infatti dalla distribuzione statistica dei frame.
+\begin{note}[Perché il clustering?]
+    L'idea è quella di descrivere uno speaker identificando dei cluster di frame simili che ne descrivono la distribuzione.
+    \begin{itemize}
+        \item \textbf{K-Means} li può identificare ma non ci fornisce un criterio diretto per l'assegnazione probabilistica;
+        \item \textbf{EM} è più potente e ci permette di operare direttamente con le probabilità;
+    \end{itemize}
+\end{note}
+Per ogni speaker $i$-esimo possiamo concatenare (orizzontalmente) tutti i frame ottenendo una singola rappresentazione $mfcc_{i}$ con $t_i = \sum_jt_{i,j}$ frame.
+\emptyln{}
+Per modellare la distribuzione statistica dei frame di ciascun speaker possiamo effettuare un \textit{fitting} con un mix di gaussiane attraverso EM, imponendo un numero $s$ di componenti (iperparametro fisso per i diversi speaker).
+\begin{note}
+    In questo modo otteniamo $n_k$ modelli $Gmm_i$, uno per ogni speaker
+\end{note}
+% subsubsection Addestramento del Modello di uno Speaker (end)
+%
+\subsubsection{Classificazione di un Nuovo Audio}\label{sub:em_classificazione_di_un_nuovo_audio} % (fold)
+Dato un frammento audio di uno speaker ignoto, per classificarlo, ovvero per ricondurlo a uno degli $n_k$ speaker del training set: si estrae la rappresentazione MFCC ottenendo una sequenza $mfcc_{\mathcal X}$ di $t$ frame $f_{r,r} = 1,\,\dots,\,t$, ciascuno con $60$ dimensioni.
+\emptyln{}
+Per ogni modello $Gmm_i$ e ogni frame $f_r$ calcoliamo il \textbf{log-likelihood} $\log p \pt{f_r|Gmm_i}$, ovvero il logaritmo della \textbf{probabilità} che $f_r$ sia generato da $Gmm_i$ e aggreghiamo le probabilità mediando sui frame.
+\\
+Possiamo quindi classificare $mfcc_{\mathcal X}$ come appartenente allo speaker $k$:
+\begin{ceq}
+    k = \argmax_i{\frac{1}{t}\sum_{r=1}^t{\log p \pt{f_r|Gmm_i}}}
+\end{ceq}
+In \red{scikit learn} dopo aver addestrato il modello con:
+\begin{codeblock}[py]{}
+    gmm_i = sklearn.mixture.GaussianMixture(n_components = s)
+    gmm_i.fit(mfcc_i)
+\end{codeblock}
+si può usare il metodo: \texttt{gmm\_i.score(mfcc\_X)} che calcola già la media dei log-likelihood su tutti i frame $f_r$ di $mfcc_{\mathcal X}$.
+\emptyln{}
+In questo caso \texttt{gmm\_i.predict} non va bene, perché ritorna la componente (tra le $s$) che con maggiore probabilità ha generato ciascun frame $f_r$.
+\begin{note}
+    \texttt{score} ritorna la \textbf{media}, non la \textbf{somma}, per rendere la probabilità indipendente dal numero di frame
+\end{note}
+% subsubsection Classificazione di un Nuovo Audio (end)
+% subsection EM e Speaker Recognition (end)
+% section Expectation Maximization (end)
+\end{document}
+
