@@ -179,9 +179,143 @@ Some specific architectures can help to bridge the gap between the \hyperref[sub
     \item \textbf{Announcer-Listeners}: event-based coordination patterns;
 \end{itemize}
 %
-\subsubsection{Master-Workers}\label{sub:ed_master_workers} % (fold)
-
+\subsubsection{Master Workers}\label{sub:ed_master_workers} % (fold)
+The architecture is composed by a \textit{master} agent and a possibly dynamic set of \textit{worker} agents, interacting through a proper coordination medium functioning as a \textbf{bag of tasks}:
+\begin{itemize}
+    \item \textbf{master agent}:
+        \begin{itemize}
+            \item decompose the global \hyperref[def:task]{Task} in subtasks;
+            \item assign the subtasks by inserting their description in the bag;
+            \item collect \hyperref[def:task]{Tasks} result;
+        \end{itemize}
+    \item \textbf{worker agent}: get the \hyperref[def:task]{Task} to do from the bag, execute it and communicate the result, or proper \hyperref[def:monitor]{Monitor} data structures can be used to aggregate results;
+    \item \textbf{bag of \hyperref[def:task]{Tasks} resource}: typically implemented as a blackboard or a bounded buffer;
+\end{itemize}
+%
+\paragraph{Task Oriented Frameworks}\label{par:ed_task_oriented_frameworks} % (fold)
+A \hyperref[def:task]{Task} is considered as an abstract, discrete and independent \textbf{unit of work}, uncoupled from the notion of \textbf{thread}.
+\begin{note}
+    It will be executed by some thread or \hyperref[def:process]{Process} of the system
+\end{note}
+\begin{description}
+    \item[Task-Oriented Analysis \& Design] Analyzing the problem to identify exploitable concurrency, identifying \hyperref[def:task]{Task} and \hyperref[sub:ed_data_decomposition_pattern]{Data Decomposition} and their dependencies.
+    \item[Task as Programming Abstraction] Higher level than threads, higher than threads.
+\end{description}
+% paragraph Task Oriented Frameworks (end)
+%
+\paragraph{Tasks and Async Programming}\label{par:ed_tasks_and_async_programming} % (fold)
+The execution of a \hyperref[def:task]{Task} occurs \textit{asynchronously} with respect to the control flow that created and submitted the \hyperref[def:task]{Task}.
+\emptyln{}
+In \hyperref[par:ed_task_oriented_frameworks]{Task Oriented Frameworks}, there are two distinct roles:
+\begin{itemize}
+    \item who \textbf{submits} the task: playing the role of master;
+    \item who \textbf{executes} the task: worker threads inside the framework;
+\end{itemize}
+\begin{note}[Key Point]
+    The \hyperref[def:task]{Task} is executed \textbf{asynchronously} with respect to the control flow of the task submitter: \textit{task submission does not block waiting the task to be completed}
+    \begin{warning}[How the master can collect the {\hyperref[def:task]{Task}} results, computed asynchronously?]
+        \begin{itemize}
+            \item through a bag of results;
+            \item through a specifically-designed collector/aggregator \hyperref[def:monitor]{Monitor};
+            \item \textbf{future mechanisms};
+        \end{itemize}
+    \end{warning}
+\end{note}
+% paragraph Tasks and Async Programming (end)
+%
+\paragraph{Task and Structured Concurrency}\label{par:ed_task_and_structured_concurrency} % (fold)
+Simplify \hyperref[def:conc-prog]{Concurrent Programming} by introducing an API for \textbf{structured concurrency}:
+\begin{itemize}
+    \item treats groups of related \hyperref[def:task]{Tasks} running in different threads as a single unit of work;
+    \item streamlining error handling and cancellation;
+    \item improving reliability, and enhancing observability;
+\end{itemize}
+% paragraph Task and Structured Concurrency (end)
+%
+\paragraph{Future Mechanism}\label{par:ed_future_mechanism} % (fold)
+By issuing an asynchronous computation (\hyperref[def:task]{Task}), an object \textit{representing the future result} or the state of the computation itself is created and immediately returned.
+\\
+The object could provide operation for:
+\begin{itemize}
+    \item checking the state of the \hyperref[def:task]{Task} (\textit{poll});
+    \item blocking when the \hyperref[def:task]{Task} result is needed;
+    \item cancel the ongoing \hyperref[def:task]{Task}, when possible;
+    \item catching errors/exception related to the ongoing \hyperref[def:task]{Task};
+\end{itemize}
+\begin{note}
+    With \textbf{task+future}, we have async programming but \red{still allowing for blocking behavior}: in \textbf{event-driven programming} blocking behavior is no more allowed
+\end{note}
+% paragraph Future Mechanism (end)
 % subsubsection Master-Workers (end)
+%
+\subsubsection{Fork Join}\label{sub:ed_fork_join} % (fold)
+Applying the \hyperref[sub:ed_master_workers]{Master-Worker} architecture recursively: workers are themselves masters, producing \hyperref[def:task]{Tasks} and collecting results (it can be realized either using a bag of \hyperref[def:task]{Tasks} or directly).
+\begin{note}
+    Effective approach to implement a concurrent \textit{divide-and-conquer} strategies
+\end{note}
+\begin{example}{}{}
+    Adaptive quadrature problem or merge sort.
+\end{example}
+% subsubsection Fork-Join (end)
+%
+\subsubsection{Filter Pipeline}\label{sub:ed_filter_pipeline} % (fold)
+The architecture is composed by a \red{linear chain of agents} interacting through some \textit{pipe} or \textit{bounded buffer} or \textit{channel} resources:
+\begin{itemize}
+    \item \textbf{generator agent}: the agent starting the chain, generating the data to be processed by the pipeline;
+    \item \textbf{filter agent}: an intermediate agent of the chain, consuming input information from a pipe and producing information into another pipe;
+    \item \textbf{sink agent}: the agent terminating the chain collecting the results;
+\end{itemize}
+\begin{example}{}{}
+    Image processing.
+\end{example}
+% subsubsection Filter Pipeline (end)
+%
+\subsubsection{Shared Space}\label{sub:ed_shared_space} % (fold)
+The architecture is composed by a \red{set of agents} communicating and indirectly through a \textbf{shared space}, as a shared resource functioning as a blackboard-like coordination media.
+\\
+The \textbf{space-based} coordination media provides operations to add new information items and to query/retrieve/remove them, eventually including some synchronization feature:
+\begin{itemize}
+    \item \textbf{data-driven coordination};
+    \item temporal uncoupling;
+\end{itemize}
+% subsubsection Shared Space (end)
+%
+\subsubsection{Announcer Listeners}\label{sub:ed_announcer_listeners} % (fold)
+The architecture is composed by an \red{\textit{announcer} agent} and a \red{dynamic set of \textit{linear} agents}, interacting through and \textit{event-service}:
+\begin{itemize}
+    \item \textbf{announcer agent}: announce the occurrence of events on the event service;
+    \item \textbf{listener agent}: register on the \red{event service} to be notified of the occurrence of events interesting for the listener;
+    \item \textbf{event-service resource}: uncouple announcer and listeners interaction by collecting and dispatching events;
+\end{itemize}
+\begin{example}{}{}
+    Parallelization of event-driven applications, achieved by parallelizing the execution of event handlers.
+\end{example}
+% subsubsection Announcer Listeners (end)
+%
+\subsubsection{Revisiting the Model View Controller}\label{sub:ed_revisiting_the_model_view_controller} % (fold)
+\begin{critical}[Issue]
+    How to separate model/view/controller aspects in the design of complex \hyperref[def:conc-program]{Concurrent Programs}?
+\end{critical}
+A first mapping:
+\begin{itemize}
+    \item encapsulating control in agents: using active components of the program or encapsulating the control logic;
+    \item model as shared passive components: can be used by agents encapsulating mutex properties, including coordination media;
+    \item view as shared passive components: enabling and mediating the interaction with users observed and used by agents, it also can access to model resources to get the state;
+\end{itemize}
+\begin{critical}[Other problems]
+    A common design choice in existing GUI toolkit is to adopt a single active component to be responsible for managing the GUI aspects, with all GUI components are not thread-safe: \red{how to deal with it using the approach described so far?}
+    \emptyln{}
+    MVC adopts an \textbf{event-based} approach to interactions: \textbf{observe pattern}
+    \begin{tip}[Rethinking the observe pattern for concurrent systems]
+        Using a producer/consumer architecture:
+        \begin{itemize}
+            \item bounded-buffer is an event queue;
+            \item producers: who generates events;
+            \item consumer: who reacts and consumes events;
+        \end{itemize}
+    \end{tip}
+\end{critical}
+% subsubsection Revisiting the Model View Controller (end)
 % subsection Concurrent Architectures (end)
 % section Design Level (end)
 % chapter Elements of Concurrent Program Design (end)
