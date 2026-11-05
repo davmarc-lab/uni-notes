@@ -1362,18 +1362,23 @@ Per riempire la tabella procediamo verso l'alto, riga per riga, dove ogni riga c
             \end{cimage}
     \end{description}
 \end{remark}
-\begin{example}{}{}
+\begin{example}{Algoritmo CYK}{alg-cyk}
     La  \hyperref[def:cfg]{Grammatica} $G$ ha le seguenti produzioni:
-    \begin{ceq}
+    \[
         \begin{aligned}
             S&\to AB|BC \\
             A&\to BA|a \\
             B&\to CC|b \\
             C&\to AB|a
         \end{aligned}
-    \end{ceq}
-    Vogliamo verificare se la stringa $baaba$ appartiene a $L(G)$.
-    \emptyln{}
+    \]
+    \begin{cimage}
+        \includegraphics[width=.4\textwidth]{assets/20261105_102510.png}
+        \caption{}\label{fig:20261105_102510}
+    \end{cimage}
+    \begin{note}
+        Vogliamo verificare se la stringa $baaba$ appartiene a $L(G)$
+    \end{note}
     Per costruire la prima riga dal basso ci serviamo della regola \textbf{Base}: consideriamo solamente le variabili con una produzione il cui corpo sia $a$ ($A$ e $C$) o $b$ (solo $B$).
     Perciò sopra le posizioni occupate da $a$ vediamo l'elemento $\pg{A,C}$, e sopra quelle occupate da $b$ vediamo $\pg{B}$.
     In altre parole:
@@ -1402,9 +1407,184 @@ Per riempire la tabella procediamo verso l'alto, riga per riga, dove ogni riga c
 \end{example}
 %
 \paragraph{Generare gli Alberi Sintattici tramite Backpointers}\label{par:ll_generare_gli_alberi_sintattici_tramite_backpointers} % (fold)
-
+In caso $w\in L(G)$ possiamo usare l'\hyperref[sub:ll_algoritmo_cyk]{Algoritmo CYK} per \textbf{generare tutti i possibili \hyperref[def:alb-sint]{Alberi Sintattici}} di $w$ (\textit{parsing} di $w$).
+\emptyln{}
+Per farlo memorizziamo esplicitamente i \textbf{backpointers} ai simboli che hanno causato l'aggiunta di una variabile a un insieme.
+Se una variabile viene \red{aggiunta più volte allo stesso insieme} (come nell'\hyperref[ex:alg-cyk]{esempio} la variabile $S$ nei due insiemi $\pg{S,A,C}$) memorizziamo \textbf{tutte le coppie alternative di backpointers}.
+\begin{cimage}
+    \includegraphics[width=.4\textwidth]{assets/20261105_102759.png}
+\end{cimage}
+Successivamente si fa \textbf{traceback} a partire da $S$ dell'insieme $X_{1n}$ \textbf{seguendo i backpointers} per costruire tutti gli \hyperref[def:alb-sint]{Alberi Sintattici} di $w$.
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/20261105_102927.png}
+\end{cimage}
+\begin{note}
+    Il \textbf{traceback} costruisce una quantità \textbf{esponenziale} di alberi (un'alternativa per ogni variabile che ne ha diverse), a partire da una \textbf{rappresentazione polinomiale} della foresta di alberi.
+    Conservando delle informazioni sufficienti mentre si converte una \hyperref[def:cfg]{CFG} $G$ in \hyperref[def:cnf]{CNF} si possono poi \textbf{ricostruire} gli \hyperref[def:alb-sint]{Alberi Sintattici} di $w$ in $G$.
+\end{note}
 % paragraph Generare gli Alberi Sintattici tramite Backpointers (end)
 % subsubsection Algoritmo CYK (end)
 % subsection Appartenenza a un CFL (end)
+%
+\subsection{Verificare se un CFL è Vuoto}\label{sub:ll_verificare_se_un_cfl_vuoto} % (fold)
+Data una \hyperref[def:cfg]{Grammatica} $G$ per un \ac{cfl} $L$, il linguaggio $L(G)$ è \textbf{non vuoto} se il simbolo iniziale di $G$ è un \hyperref[def:simb-generante]{Generatore}, cioè se da $S$ derivi almeno una stringa.
+\begin{note}
+    $L$ è vuoto se e solo se $S$ non è \hyperref[def:simb-generante]{Generatore}
+\end{note}
+% subsection Verificare se un CFL è Vuoto (end)
 % section Proprietà di Decisione per i CFL (end)
+%
+\section{Proprietà di Chiusura dei CFL}\label{sec:ll_propriet_di_chiusura_dei_cfl} % (fold)
+\begin{theorem}{}{}
+    I \ac{cfl} sono chiusi rispetto ai seguenti operatori:
+    \begin{multicols}{2}
+        \begin{itemize}
+            \item unione;
+            \item concatenazione;
+            \item chiusura di Kleene;
+            \item chiusura positiva $+$;
+        \end{itemize}
+    \end{multicols}
+\end{theorem}
+\begin{outerproof}{}{}
+    \begin{description}
+        \item[Unione] Siano $L_1$ e $L_2$ due \ac{cfl}, allora $L_1\cup L_2$ è il linguaggio $s(L)$, dove $L$ p il linguaggio $\pg{1,2}$ e $s$ è la sostituzione definita da $s(1) = L_1$ e $s(2) = L_2$.
+        \item[Concatenazione] Siano $L_1$ e $L_2$ due \ac{cfl}, allora $L_1L_2$ è il linguaggio $s(L)$, dove $L$ è il linguaggio $\pg{12}$ e $s$ è la stessa sostituzione del caso precedente.
+        \item[Chiusura (*) e Chiusura positiva (+)] Sia $L_1$ un \ac{cfl}, $L$ il linguaggio $\pg{1}^*$ e $s$ la sostituzione $s(1) = L_1$, allora $L_1^* = s(L)$.
+            Analogamente, se $L$ è invece il linguaggio $\pg{1}^+$, allora $L_1^+ = s(L)$.
+    \end{description}
+\end{outerproof}
+\section{PAGINA 312 DEL LIBRO GUARDA FOTO}\label{sec:pagina_312_del_libro_guarda_foto} % (fold)
+
+% section PAGINA 312 DEL LIBRO GUARDA FOTO (end)
+%
+\subsection{Intersezione tra Due CFL}\label{sub:ll_intersezione_tra_due_cfl} % (fold)
+\begin{critical}
+    I \ac{cfl} \textbf{non sono chiusi} rispetto all'\textbf{intersezione}
+\end{critical}
+È possibile mostrarlo con un semplice esempio: sia $L_1 = \pg{0^n1^n2^i \,:\,n\ge 1, i\ge 1}$, allora $L_1$ è \ac{cfl} con \hyperref[def:cfg]{Grammatica}:
+\begin{ceq}
+    S\to AB \\
+    A\to 0A1|01 \\
+    B\to 2B|2
+\end{ceq}
+Inoltre, $L_2 = \pg{0^i1^n2^n\,:\,n\ge 1, i\ge 1}$ è \ac{cfl} con \hyperref[def:cfg]{Grammatica}:
+\begin{ceq}
+    S\to AB \\
+    A\to 0A|0 \\
+    B\to 1B2|12
+\end{ceq}
+Invece, $L_1 \cap L_2 = \pg{0^n1^n2^n\,:\,n\ge 1}$ \textbf{non è \ac{cfl}}.
+\begin{note}
+    Si dimostra intuitivamente avendo a disposizione un'unica pila, la riempio con gli $0$ e la svuoto con gli $1$, quindi non riesco a controllare che anche i $2$ siano tanti quanti gli $0$.
+    \begin{tip}[Servirebbero due pile distinte]
+    \end{tip}
+\end{note}
+% subsection Intersezione tra Due CFL (end)
+%
+\subsection{Intersezione tra CFL e un Linguaggio Regolare}\label{sub:ll_intersezione_tra_cfl_e_un_linguaggio_regolare} % (fold)
+\begin{theorem}{}{}
+    Se $L$ è un \ac{cfl} e $R$ un \hyperref[def:ling-reg]{Linguaggio Regolare}, allora $L\cap R$ è un \ac{CFL}.
+\end{theorem}
+\begin{outerproof}{}{}
+    Sia $L$ accettato dal \hyperref[def:pda]{PDA}:
+    \begin{ceq}
+        P = \pt{Q_P,\Si,\Gm,\dt_P,q_P,Z_0,F_P}
+    \end{ceq}
+    \hyperref[sub:ll_accettazione_per_stato_finale]{per Stato Finale}, e sia $R$ accettato dal \hyperref[sub:lr_dfa]{DFA}:
+    \begin{ceq}
+        A = \pt{Q_A,\Si,\dt_A,q_A,F_A}
+    \end{ceq}
+    Si costruisce un \hyperref[def:pda]{PDA} per $L\cap R$ secondo la figura:
+    \begin{cimage}
+        \includegraphics[width=.4\textwidth]{assets/20261105_105744.png}
+    \end{cimage}
+    Formalmente definiamo:
+    \begin{ceq}
+        P' = \pt{Q_P\times A_A, \Si,\Gm,\dt,\pt{q_P,q_a}, Z_0,F_P\times F_A}
+    \end{ceq}
+    dove
+    \begin{ceq}
+        \dt \pt{\pt{q,p}, a, X} = \pg{\pt{\pt{r,\hat\dt_A\pt{p,a}},\gm}: \pt{r,\gm}\in\dt_P \pt{q,a,X}}
+    \end{ceq}
+\end{outerproof}
+\begin{theorem}{}{}
+    Siano $L$, $L_1$ e $L_2$ \ac{cfl} e $R$ un \hyperref[def:ling-reg]{Linguaggio Regolare}, allora:
+    \begin{itemize}
+        \item $L \setminus R$ è \ac{cfl};
+        \item $\overline L$ non è necessariamente \ac{cfl};
+        \item $L_1\setminus L_2$ non è necessariamente \ac{cfl};
+    \end{itemize}
+\end{theorem}
+\begin{outerproof}{}{}
+    \begin{itemize}
+        \item $\overline R$ è regolare, $L\cap\overline R$ è \ac{cfl}, e $L\cap\overline R = L\setminus R$;
+        \item se $\overline L$ fosse sempre \ac{cfl}, seguirebbe che:
+            \begin{ceq}
+                L_1\cap L_2 = \overline{\overline{L_1}\cup \overline{L_2}}
+            \end{ceq}
+            sarebbe sempre \ac{cfl};
+        \item $\Si[*]$ è \ac{cfl}, quindi se $L_1\setminus L_2$ fosse sempre \ac{cfl}, allora lo sarebbe sempre anche $\Si[*]\setminus L = \overline L$;
+    \end{itemize}
+\end{outerproof}
+% subsection Intersezione tra CFL e un Linguaggio Regolare (end)
+%
+\subsection{Problemi Indecidibili per i CFL}\label{sub:ll_problemi_indecidibili_per_i_cfl} % (fold)
+I seguenti problemi sono indecidibili:
+\begin{tasks}(2)    
+    \task una data \hyperref[def:cfg]{CFG} $G$ è \hyperref[def:ambiguita]{Ambigua}?
+    \task l'\hyperref[sub:ll_intersezione_tra_due_cfl]{Intersezione di Due CFL} è \textbf{vuoto}?
+    \task due \ac{cfl} sono uguali?
+    \task un \ac{cfl} è universale, cioè uguale a $\Si[*]$?
+    \task un dato \ac{cfl} $L$ è \hyperref[def:ambig-inerente]{Inerentemente Ambiguo}?
+\end{tasks}
+% subsection Problemi Indecidibili per i CFL (end)
+% section Proprietà di Chiusura dei CFL (end)
+%
+\section{PDA Deterministici}\label{sec:ll_pda_deterministici} % (fold)
+\begin{definition}{PDA Deterministico}{dpda}
+    Un \hyperref[def:pda]{PDA} $P = \pt{Q,\Si,\Gm,\dt,q_0,Z_0,F}$ è \textbf{deterministico} se e solo se:
+    \begin{itemize}
+        \item ogni $\dt \pt{q,a,X}$, con $a\in\Si\cup \pg{\eps}$, contiene \textbf{al più} un elemento;
+        \item se $\dt \pt{q,a,X}$ non vuoto per un $a\in\Si$, allora $\dt \pt{q,\eps,X}$ è vuoto;
+    \end{itemize}
+\end{definition}
+\begin{example}{}{}
+    Definiamo $L_{wcwr} = \pg{wcw^R\,:\,w\in \pg{0,1}^*}$, allora $L_{wcwr}$ è riconosciuto dal seguente \textbf{DPDA}:
+    \begin{cimage}
+        \includegraphics[width=.6\textwidth]{assets/20261105_112035.png}
+    \end{cimage}
+\end{example}
+\begin{note}[Regolari $\mathbf{\subset L(DPDA)\subset CFL}$]
+\end{note}
+\begin{theorem}{}{}
+    Se $L$ è \hyperref[def:ling-reg]{Regolare}, allora $L=L(P)$ per qualche \hyperref[def:dpda]{DPDA} $P$
+\end{theorem}
+\begin{outerproof}{}{}
+    Dato che $L$ è \hyperref[def:ling-reg]{Regolare}, esiste un \hyperref[sub:lr_dfa]{DFA} $A$ tale che $L=L(A)$.
+    Sia:
+    \begin{ceq}
+        A = \pt{Q,\Si,\dt_A,q_0,F}
+    \end{ceq}
+    definiamo il \hyperref[def:dpda]{DPDA}:
+    \begin{ceq}
+        P = \pt{Q,\Si,\pg{Z_0}, \dt_P,q_0,Z_0,F}
+    \end{ceq}
+    dove:
+    \begin{ceq}
+        \dt_P \pt{q,a,Z_0} = \pg{\pt{\dt_A \pt{q,a},Z_0}}
+    \end{ceq}
+    per tutti i $p,q \in Q$ e $a \in \Si$
+\end{outerproof}
+%
+\subsection{DPDA e Non Ambiguità}\label{sub:ll_dpda_e_non_ambiguit} % (fold)
+La relazione tra riconoscimento \textbf{deterministico} e \textbf{non ambiguità} segue il seguente teorema.
+\begin{theorem}{}{}
+    Se $L=L(P)$ per qualche \hyperref[def:dpda]{DPDA} $P$, allora $L$ ha una \hyperref[def:cfg]{CFG} $G$ \textbf{non ambigua}.
+\end{theorem}
+% subsection DPDA e Non Ambiguità (end)
+% section PDA Deterministici (end)
+\section{DA FINIRE}\label{sec:da_finire} % (fold)
+
+% section DA FINIRE (end)
 % chapter Linguaggi Liberi dal Contesto(end)

@@ -10,4 +10,9 @@ return {
     pda = { cmd = "\\hyperref[def:pda]{PDA}", desc = "" },
     pda_full = { cmd = "\\hyperref[def:pda]{Automa a Pila}", desc = "" },
     pda_fulls = { cmd = "\\hyperref[def:pda]{Automi a Pila}", desc = "" },
+    dpda = { cmd = "\\hyperref[def:dpda]{DPDA}", desc = "DPDA" },
+    dpda_full = { cmd = "\\hyperref[def:dpda]{PDA Deterministico}", desc = "PDA Deterministico" },
+    dpda_fulls = { cmd = "\\hyperref[def:dpda]{PDA Deterministici}", desc = "PDA Deterministici" },
+    albero_sintattico = { cmd = "\\hyperref[def:alb-sint]{Albero Sintattico}", desc = "Albero Sintattico" },
+    alberi_sintattici = { cmd = "\\hyperref[def:alb-sint]{Alberi Sintattici}", desc = "Alberi Sintattici" },
 }
