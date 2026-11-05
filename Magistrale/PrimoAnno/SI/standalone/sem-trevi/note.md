@@ -49,7 +49,5 @@ Durante la valutazione del budget si considera anche il peso delle iniziative
 Struttura più centralizzata per evitare la ridondanza dei sistemi (due sistemi che effettuano le stesse cose).
 > Non selezionare un applicazione unica, ma per ogni processo si è selezionata la migliore applicazione per ognuno di essi
 
-## Progetti e Approcci diversi
-
-
+## HR Management
 Payroll System -> processo di elaborazione dei pagamenti (cedolini)
