@@ -15,4 +15,5 @@ return {
     dpda_fulls = { cmd = "\\hyperref[def:dpda]{PDA Deterministici}", desc = "PDA Deterministici" },
     albero_sintattico = { cmd = "\\hyperref[def:alb-sint]{Albero Sintattico}", desc = "Albero Sintattico" },
     alberi_sintattici = { cmd = "\\hyperref[def:alb-sint]{Alberi Sintattici}", desc = "Alberi Sintattici" },
+    pcfg = { cmd = "\\hyperref[def:pcfg]{PCFG}", desc = "PCFG" },
 }

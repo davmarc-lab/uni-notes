@@ -165,6 +165,11 @@ return {
         i(1),
         t("$"),
     }),
+    s({ trig = "neq", dscr = "Normal Equation block", indet = true }, {
+        t({ "\\[", fake_indent }),
+        i(1),
+        t({ "", "\\]" }),
+    }),
     s({ trig = "eq", dscr = "Equation block", indet = true }, {
         t({ "\\begin{ceq}", fake_indent }),
         i(1),

@@ -1,9 +1,9 @@
 \chapter{Language Models e Generative Models}\label{chap:language_models_e_generative_models} % (fold)
 \section{Chomsky Grammar Hierarchy}\label{sec:lm_chomsky_grammar_hierarchy} % (fold)
-\begin{definition}{Unrestricted Type-0}{lm-unrestricted}
+\begin{definition}{Unrestricted Type-0}{lm-unrestricted-gramm}
     \textbf{Unrestricted} \textit{Type-0} \hyperref[def:cfg]{Grammars} $G = \pt{V,T,P,S}$, has productions $\al\to\bt \in P$ with $\al\in \pt{V\cup T}^+$ and $\bt\in \pt{V\cup T}^*$.
 \end{definition}
-\begin{definition}{Context-Sensitive/Monotone Type-1}{lm-monotone}
+\begin{definition}{Context-Sensitive/Monotone Type-1}{lm-monotone-gramm}
     \textbf{Context-Sensitive/Monotone} \textit{Type-1} \hyperref[def:cfg]{Grammars} (*) restricts productions to:
     \begin{ceq}
         \al\to\bt\qquad\text{with } |\bt|\ge |\al|
@@ -35,10 +35,10 @@
         \item $bB\to bb$ turns other $B$s into $b$ only if adjacent;
     \end{itemize}
 \end{example}
-\begin{definition}{Context-Free Type-2}{lm-context-free}
+\begin{definition}{Context-Free Type-2}{lm-context-free-gramm}
     \textbf{Context-Free} \textit{Type-2} \hyperref[def:cfg]{Grammars} (*), has productions $A\to\beta$ with $A\in V$, $\beta\in \pt{V\cup T}^+$
 \end{definition}
-\begin{definition}{Regular Type-3}{lm-regular}
+\begin{definition}{Regular Type-3}{lm-regular-gramm}
     \textbf{Regular} \textit{Type-3} \hyperref[def:cfg]{Grammars} (*), has productions $A\to a$ or $A\to aB$ with $A,B\in V$ and $a\in T$.
 \end{definition}
 \begin{example}{Regular Type-3 Grammar}{}
@@ -78,16 +78,16 @@
 \end{example}
 %
 \subsection{Corresponding Language Hierarchy}\label{sub:lm_corresponding_language_hierarchy} % (fold)
-\begin{definition}{Semi-Decidable Type-0}{semi-decidable}
+\begin{definition}{Semi-Decidable Type-0}{semi-decidable-lang}
     \textbf{Semi-decidable} languages are recognized by a procedure (\textbf{Turing Machine}) that \textbf{halts and accepts} if the input string \textbf{belongs to the language}, otherwise it rejects or does not halt.
 \end{definition}
-\begin{definition}{Context-Sensitive Type-1}{context-sensitive}
+\begin{definition}{Context-Sensitive Type-1}{context-sensitive-lang}
     \textbf{Context-Sensitive} languages are recognized by a \textbf{non-deterministic algorithm} (Turing Machine that always halts) having \textbf{linear space} computational complexity.
 \end{definition}
-\begin{definition}{Context-Free Type-2}{lm-context-free}
+\begin{definition}{Context-Free Type-2}{lm-context-free-lang}
     \textbf{Context-Free} \textit{Type-2} languages are recognized by a non-deterministic \hyperref[def:pda]{Push-Down Automaton}.
 \end{definition}
-\begin{definition}{Regular Type-3}{lm-regular}
+\begin{definition}{Regular Type-3}{lm-regular-lang}
     \textbf{Regular} \textit{Type-3} languages are recognized by a (non-)\hyperref[sub:lr_dfa]{Deterministic Finite State Automaton}.
 \end{definition}
 \begin{cimage}
@@ -158,4 +158,31 @@ Tokens are considered the \textbf{alphabet of symbols} $\Sigma$ used for represe
     \hyperref[def:lm-ambiguity]{Ambiguity} is handled using a \red{probabilistic} approach, by \textit{assigning probabilities} to grammar productions (e.g. to select the \red{most probable} syntax tree).
 \end{remark}
 % section Phrase Structure Grammars (end)
+%
+\section{Probabilistic Grammars}\label{sec:lm_probabilistic_grammars} % (fold)
+\begin{definition}{Probabilistic Context-Free Grammars}{pcfg}
+    A \textbf{Probabilistic Context-Free Grammar} is a 5-tuple $G = \pt{V,\Sigma,P,S,D}$ where $\pt{V,\Sigma,P,S}$ is a \hyperref[def:cfg]{CFG} and $D$ is a function assigning a \textbf{probability} $p$ to each \textbf{production} in $P$, such that: for each variable $A \in V$, the \red{sum} of probabilities of $A$ productions must be $1$.
+    \begin{note}[Notation]
+        \[
+            A\to\beta \ps{p}
+        \]
+        \begin{tip}
+            Given a variable $A$, it will be expanded to sequence $\beta$ with probability $p$.
+        \end{tip}
+    \end{note}
+\end{definition}
+\begin{example}{}{}
+    Productions of a \hyperref[def:pcfg]{PCFG} variable $Adjs$:
+    \[
+        \begin{aligned}
+            &Adjs \to Adjective &\ps{0.8} \\
+            &|\ Adjective\ Adjs & \ps{0.2}
+        \end{aligned}
+    \]
+    Probabilities for $Adjs$ productions must \textbf{sum up to} $1$.
+\end{example}
+\begin{remark}{}{}
+    A \hyperref[def:pcfg]{PCFG} $\pt{V\Sigma,P,S,D}$ defines, for each variable $A \in V$, a \textbf{probability distribution} over the productions of $A$.
+\end{remark}
+% section Probabilistic Grammars (end)
 % chapter Language Models e Generative Models (end)
