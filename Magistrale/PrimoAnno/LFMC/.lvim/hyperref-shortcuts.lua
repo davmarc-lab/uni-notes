@@ -16,4 +16,10 @@ return {
     albero_sintattico = { cmd = "\\hyperref[def:alb-sint]{Albero Sintattico}", desc = "Albero Sintattico" },
     alberi_sintattici = { cmd = "\\hyperref[def:alb-sint]{Alberi Sintattici}", desc = "Alberi Sintattici" },
     pcfg = { cmd = "\\hyperref[def:pcfg]{PCFG}", desc = "PCFG" },
+    pcfgs = { cmd = "\\hyperref[def:pcfg]{PCFGs}", desc = "PCFGs" },
+    mdp = { cmd = "\\hyperref[def:mdp]{MDP}", desc = "MDP" },
+    mdps = { cmd = "\\hyperref[def:mdp]{MDPs}", desc = "MDPs" },
+    mc = { cmd = "\\hyperref[def:markov-chain]{MC}", desc = "Markov Chain" },
+    mc_full = { cmd = "\\hyperref[def:markov-chain]{Markov Chain}", desc = "Markov Chain" },
+    mcs = { cmd = "\\hyperref[def:markov-chain]{MCs}", desc = "Markov Chains" },
 }

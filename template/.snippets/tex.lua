@@ -83,6 +83,7 @@ return {
     make_wrappable("italic", "textit", "Italic text \\textit{}"),
     make_wrappable("tt", "texttt", "Code text \\texttt{}"),
     make_wrappable("ac", "ac", "Acronym \\ac{}"),
+    make_wrappable("text", "text", "Normal text \\text{}"),
 
     s({ trig = "link", desc = "Link (\\hyperref[]{})" }, {
         t("\\hyperref["),
@@ -165,20 +166,24 @@ return {
         i(1),
         t("$"),
     }),
-    s({ trig = "neq", dscr = "Normal Equation block", indet = true }, {
+    s({ trig = "eq", dscr = "Equation block", indet = true }, {
         t({ "\\[", fake_indent }),
         i(1),
         t({ "", "\\]" }),
+        i(0)
     }),
-    s({ trig = "eq", dscr = "Equation block", indet = true }, {
+    s({ trig = "neq", dscr = "Notion Equation block", indet = true }, {
         t({ "\\begin{ceq}", fake_indent }),
-        i(1),
-        t({ "", "\\end{ceq}", "" }),
+        i(0),
+        t({ "", "\\end{ceq}"}),
     }),
     s({ trig = "beq", dscr = "Numbered equation block", indet = true }, {
-        t({ "\\begin{equation}", fake_indent }),
+        t("\\begin{equation}\\label{"),
+        i(2),
+        t({"}", fake_indent}),
         i(1),
         t({ "", "\\end{equation}", "" }),
+        i(0)
     }),
     s({ trig = "begin", dscr = "Begin environment block", indet = true }, {
         t("\\begin{"),
@@ -234,6 +239,12 @@ return {
     make_wrappable("pt", "pt", "Left Right Round Brackets"),
     make_wrappable("ps", "ps", "Left Right Square Brackets"),
     make_wrappable("pg", "pg", "Left Right Curly Brackets"),
+    s({ trig = "cdot", dscr = "Central Dot \\cdot", indet = false }, {
+        t("\\cdot "),
+    }),
+    s({ trig = "ts", dscr = "To Star", indet = false }, {
+        t("\\to^*"),
+    }),
     s({ trig = "drt", dscr = "Derivative Grammar", indet = false }, {
         t("\\overset{*}{\\implies}"),
     }),
@@ -246,7 +257,7 @@ return {
     s({ trig = "aligned", dscr = "Aligned Block in Equations", indet = true }, {
         t({ "\\begin{aligned}", fake_indent .. "&" }),
         i(0),
-        t({ "", "\\end{aligned}", "" }),
+        t({ "", "\\end{aligned}"}),
     }),
     s({ trig = "vc", dscr = "From a1, ..., an", indet = false }, {
         t("\\vc{"),
@@ -256,4 +267,21 @@ return {
         t("}"),
         i(0)
     }),
+    s({ trig = "bayes", dscr = "Bayes", indet = false }, {
+        t("\\ba{"),
+        i(1),
+        t("}{"),
+        i(2),
+        t("}"),
+        i(0)
+    }),
+    s({ trig = "overset", dscr = "Overset", indet = false }, {
+        t("\\overset{"),
+        i(1),
+        t("}{"),
+        i(2),
+        t("}"),
+        i(0)
+    }),
+
 }
