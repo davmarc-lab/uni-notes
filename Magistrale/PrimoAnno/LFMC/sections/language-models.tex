@@ -788,15 +788,76 @@ Instead of using a \hyperref[def:pcfg]{Probabilistic Context-Free Grammar} to ge
 \begin{critical}[In {\hyperref[def:hmm]{Hidden Markov Model}} we do not set a fixed length to generated sequences]
     They repeat \textbf{until} end-of-sequence token \textbf{<EOS>} is generated
 \end{critical}
+\begin{warning}[Not all Terminating {\hyperref[def:hmm]{HMMs}} represent a {\hyperref[def:pfl]{Probabilistic Formal Language}}]
+\end{warning}
 \paragraph{Left to Right Mechanism}\label{par:lm_left_to_right_mechanism} % (fold)
 Left to Right generation mechanism is similar to \textbf{autoregressive} generation in neural networks.
 However, in neural networks next token generation $\ba{t_{i+1}}{\vc{t_1}{t_i}}$ is based directly on \textbf{previously generated tokens} $\vc{t_1}{t_i}$, and not done via \textbf{probabilistic} hidden states.
-%
-% ================================
-% SLIDE 84
-% ================================
 % paragraph Left to Right Mechanism (end)
 % subsubsection Terminating Hidden Markov Models (end)
+%
+\subsubsection{Mixture of BOW as a Terminating HMM}\label{sub:lm_mixture_of_bow_as_a_terminating_hmm} % (fold)
+\hyperref[sub:lm_mixture_of_bag_of_words]{Mixture of Bag-of-Words} model is just a \hyperref[sub:lm_terminating_hidden_markov_models]{Terminating Hidden Markov Model} where \textbf{states} are possible categories and:
+\begin{itemize}
+    \item state initial distribution is the \hyperref[sub:lm_mixture_of_bag_of_words]{Mixture of Bag-of-Words} \textbf{category distribution};
+    \item each state has a probability $1$ \red{self-loop};
+    \item emissions of each state are \textbf{conditional probabilities} over tokens of each \hyperref[sub:lm_mixture_of_bag_of_words]{Mixture of Bag-of-Words} category;
+\end{itemize}
+% subsubsection Mixture of BOW as a Terminating HMM (end)
+%
+\subsubsection{Consistent Terminating HMMs}\label{sub:lm_consistent_terminating_hmms} % (fold)
+A \textbf{Terminating} \hyperref[def:hmm]{Hidden Markov Model} is \textbf{consistent} if the \textbf{sum of the probabilities} of all $w\in\Sigma^*$ is $1$.
+\[
+    \sum_{w\in\Sigma^*}P(w) = 1
+\]
+\begin{note}
+    A consistent \hyperref[sub:lm_terminating_hidden_markov_models]{Terminating Hidden Markov Model} represents a \hyperref[def:pfl]{Probabilistic Formal Language}
+\end{note}
+%
+\paragraph{Consistent Terminating HMM Characterization}\label{par:lm_consistent_terminating_hmm_characterization} % (fold)
+A \hyperref[sub:lm_terminating_hidden_markov_models]{Terminating Hidden Markov Model} is \textbf{consistent} if and only if:
+\begin{itemize}
+    \item from each state that is reachable from an initial state $Categ$, such that $\pi(Categ) > 0$;
+    \item it is possible to reach a \textbf{terminating state} $Categ'$, such that $\ba{\text{<EOS>}}{Categ'} > 0$;
+\end{itemize}
+\begin{note}
+    Reachable/reach means that there is a \textbf{path of probabilistic transitions} having \textit{non-zero probability}
+\end{note}
+\begin{tip}
+    Similar to \hyperref[sub:lm_consistent_prg_characterization]{Consistent PRG Characterization}
+\end{tip}
+% paragraph Consistent Terminating HMM Characterization (end)
+% subsubsection Consistent Terminating HMMs (end)
 % subsection Hidden Markov Model (HMM) (end)
 % section Language Models (end)
+%
+\section{Generative/Language Model Equivalence}\label{sec:lm_generative_language_model_equivalence} % (fold)
+\begin{definition}{Models Equivalence}{models-equiv}
+    Two \hyperref[def:generative-model]{Generative Models} $M_1$ and $M_2$ with the same \textbf{data space} $D$ are \textbf{equivalent} if they represent the \textbf{same probability distribution} over $D$
+    \begin{note}
+        Unlike \textbf{strong equivalence}, the generation process is ignored
+    \end{note}
+    In particular, two \hyperref[acro:lm]{Language Models} $M_1$ and $M_2$ with the same alphabet $\Sigma$ are \textbf{equivalent} if they represent the same \textbf{probability distribution} over $\Sigma^*$.
+\end{definition}
+In general, for each \hyperref[sub:lm_mixture_of_bag_of_words]{Mixture of Bag-of-Words} model there is an \textbf{equivalent} \hyperref[def:pg-consistent]{Consistent} \textbf{Terminating} \hyperref[def:hmm]{Hidden Markov Model}.
+\begin{warning}[The vice versa does not hold]
+\end{warning}
+%
+\subsection{PRG and Terminating HMM Equivalence}\label{sub:lm_prg_and_terminating_hmm_equivalence} % (fold)
+For each \textbf{consistent} \hyperref[def:prg]{Probabilistic Regular Grammar} on $\Sigma$ there is an \hyperref[def:models-equiv]{Equivalent} \textbf{consistent} \hyperref[sub:lm_terminating_hidden_markov_models]{Terminating Hidden Markov Model} on $\Sigma$ and vice versa.
+\begin{outerproof}{}{}
+    \hyperref[def:prg]{Probabilistic Regular Grammars} generate strings \textbf{left-to-rigth} as \hyperref[def:hmm]{HMMs}.
+    If we start from a \hyperref[sub:lm_terminating_hidden_markov_models]{Terminating Hidden Markov Model}, we can take \textbf{variables} of the \hyperref[def:prg]{Probabilistic Regular Grammar} to be the \textbf{states} of the \hyperref[def:hmm]{Hidden Markov Model} and consider:
+    \begin{itemize}
+        \item $C\to oC'\ps{p \cdot p'}$, where $p$ is the probability that $C$ emits $o\neq \text{<EOS>}$ and $p'$ is the probability that $C$ \textbf{transitions} into $C'$;
+        \item $C\to \epsilon \ps{p}$, where $p$ is the probability that $C$ emits \textbf{<EOS>};
+    \end{itemize}
+    Then, we apply standard elimination of $\epsilon$ productions, which preserves represented \hyperref[def:pfl]{Probabilistic Formal Language}.
+\end{outerproof}
+Thus, \textbf{Probabilistic Regular Languages} is also a class of \hyperref[def:pfl]{Probabilistic Formal Languages} of \textbf{consistent} \hyperref[sub:lm_terminating_hidden_markov_models]{Terminating Hidden Markov Models}.
+\begin{note}
+    The class of \hyperref[sub:lm_mixture_of_bag_of_words]{Mixture of Bag-of-Words} \hyperref[def:pfl]{Probabilistic Formal Language} is a \textbf{strict subclass of PRLs}
+\end{note}
+% subsection PRG and Terminating HMM Equivalence (end)
+% section Generative/Language Model Equivalence (end)
 % chapter Language Models e Generative Models (end)
