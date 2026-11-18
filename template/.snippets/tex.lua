@@ -225,8 +225,10 @@ return {
     make_math_block("axiom", "axiom", "Axiom tcolorbox"),
     -- codeblock
     s({ trig = "codeblock", dscr = "Code Block", indet = true }, {
-        t("\\begin{codeblock}{"),
-        i(1),
+        t("\\begin{codeblock}["),
+        i(1, "bash"),
+        t("]{"),
+        i(2),
         t({ "}", "" }),
         f(function(_, snip)
             return snip.env.TM_SELECTED_TEXT

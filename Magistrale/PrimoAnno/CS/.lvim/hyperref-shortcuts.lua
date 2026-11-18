@@ -20,4 +20,8 @@ return {
     tasks = { cmd = "\\hyperref[def:task]{Tasks}", desc = "Tasks" },
     concurrent_program = { cmd = "\\hyperref[def:conc-program]{Concurrent Program}", desc = "Concurrent Program" },
     concurrent_programs = { cmd = "\\hyperref[def:conc-program]{Concurrent Programs}", desc = "Concurrent Programs" },
+    reactive_system = { cmd = "\\hyperref[def:react-system]{Reactive System}", desc = "Reactive System" },
+    reactive_systems = { cmd = "\\hyperref[def:react-system]{Reactive Systems}", desc = "Reactive Systems" },
+    event_loop = { cmd = "\\hyperref[sec:rs_event_loop]{Event Loop}", desc = "Event Loop" },
+    event_loops = { cmd = "\\hyperref[sec:rs_event_loop]{Event Loops}", desc = "Event Loops" },
 }

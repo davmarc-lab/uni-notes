@@ -140,3 +140,24 @@
     ndkeywords={@Deprecated, @JvmField, @JvmName, @JvmOverloads, @JvmStatic, @JvmSynthetic, Array, Byte, Double, Float, Int, Integer, Iterable, Long, Runnable, Short, String, Unit, it},
     sensitive=true
 }
+
+% JavaScript version 1.1 by Gary Hammock
+% Reference:
+%   B. Eich and C. Rand Mckinney, "JavaScript Language Specification
+%     (Preliminary Draft)", JavaScript 1.1.  1996-11-18.  [Online]
+%     http://hepunx.rl.ac.uk/~adye/jsspec11/titlepg2.htm
+%
+\lstdefinelanguage{js}{
+    morekeywords=[1]{await, async, case, catch, class, const, default, do, enum, export, extends, finally, from, implements, require, import, as, instanceof, let, static, super, switch, throw, try, break, continue, delete, else, for, function, if, in, new, return, this, typeof, var, void, while, with},
+    % Literals, primitive types, and reference types.
+    morekeywords=[2]{false, null, true, boolean, number, undefined,
+    Array, Boolean, Date, Math, Number, String, Object},
+    % Built-ins.
+    morekeywords=[3]{eval, parseInt, parseFloat, escape, unescape},
+    sensitive,
+    morecomment=[s]{/*}{*/},
+    morecomment=[l]//,
+    morecomment=[s]{/**}{*/}, % JavaDoc style comments
+    morestring=[b]',
+    morestring=[b]"
+}[keywords, comments, strings]
