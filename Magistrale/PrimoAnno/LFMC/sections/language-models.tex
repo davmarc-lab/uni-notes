@@ -780,7 +780,7 @@ Special token, like <EOS>, observation is not included in data alphabet $\Sigma$
 Instead of using a \hyperref[def:pcfg]{Probabilistic Context-Free Grammar} to generate such categories, they use \hyperref[def:markov-chain]{Markov Chain}:
 \begin{itemize}
     \item \textbf{states} represent all possible \textbf{categories};
-    \item a \textbf{probabilistic transition} $p$ from category $Categ$ to category $Categ'$ represents: given the \textbf{category} of the curren token to be $Categ$, the \textbf{probability} for the category of the next token of the sentence to be $Categ'$ is $p$;
+    \item a \textbf{probabilistic transition} $p$ from category $Categ$ to category $Categ'$ represents: given the \textbf{category} of the current token to be $Categ$, the \textbf{probability} for the category of the next token of the sentence to be $Categ'$ is $p$;
 \end{itemize}
 \begin{note}
     As for \hyperref[def:pcfg]{PCFGs}, we map each category to a probability distribution over tokens: alphabet $\Sigma$ symbols or \textbf{<EOS>} token

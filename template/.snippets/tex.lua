@@ -241,6 +241,30 @@ return {
     make_wrappable("pt", "pt", "Left Right Round Brackets"),
     make_wrappable("ps", "ps", "Left Right Square Brackets"),
     make_wrappable("pg", "pg", "Left Right Curly Brackets"),
+    s({ trig = "dfrac", dscr = "Display Fraction \\displaystyle\\frac", indet = false }, {
+        t("\\dfrac{"),
+        i(1, "1"),
+        t("}{"),
+        i(2, "2"),
+        t("}"),
+        i(0)
+    }),
+    s({ trig = "frac", dscr = "Fraction \\frac", indet = false }, {
+        t("\\frac{"),
+        i(1, "1"),
+        t("}{"),
+        i(2, "2"),
+        t("}"),
+        i(0)
+    }),
+    s({ trig = "sum", dscr = "Sum \\sum", indet = false }, {
+        t("\\sum_{"),
+        i(1),
+        t("}{"),
+        i(2),
+        t("}"),
+        i(0)
+    }),
     s({ trig = "cdot", dscr = "Central Dot \\cdot", indet = false }, {
         t("\\cdot "),
     }),
@@ -270,10 +294,12 @@ return {
         i(0)
     }),
     s({ trig = "bayes", dscr = "Bayes", indet = false }, {
-        t("\\ba{"),
+        t("\\ba["),
         i(1),
-        t("}{"),
+        t("]{"),
         i(2),
+        t("}{"),
+        i(3),
         t("}"),
         i(0)
     }),

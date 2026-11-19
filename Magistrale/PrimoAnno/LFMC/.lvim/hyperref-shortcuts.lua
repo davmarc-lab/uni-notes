@@ -22,4 +22,6 @@ return {
     mc = { cmd = "\\hyperref[def:markov-chain]{MC}", desc = "Markov Chain" },
     mc_full = { cmd = "\\hyperref[def:markov-chain]{Markov Chain}", desc = "Markov Chain" },
     mcs = { cmd = "\\hyperref[def:markov-chain]{MCs}", desc = "Markov Chains" },
+    syntax_tree = { cmd = "\\hyperref[def:pg-syntax-tree]{Syntax Tree}", desc = "Syntax Tree" },
+    syntax_trees = { cmd = "\\hyperref[def:pg-syntax-tree]{Syntax Trees}", desc = "Syntax Trees" },
 }
