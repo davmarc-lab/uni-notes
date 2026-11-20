@@ -24,4 +24,8 @@ return {
     reactive_systems = { cmd = "\\hyperref[def:react-system]{Reactive Systems}", desc = "Reactive Systems" },
     event_loop = { cmd = "\\hyperref[sec:rs_event_loop]{Event Loop}", desc = "Event Loop" },
     event_loops = { cmd = "\\hyperref[sec:rs_event_loop]{Event Loops}", desc = "Event Loops" },
+    promise = { cmd = "\\hyperref[def:promises]{Promise}", desc = "Promise" },
+    promises = { cmd = "\\hyperref[def:promises]{Promises}", desc = "Promises" },
+    coroutine = { cmd = "\\hyperref[sub:rs_co_routines]{Coroutine}", desc = "Coroutine" },
+    coroutines = { cmd = "\\hyperref[sub:rs_co_routines]{Coroutines}", desc = "Coroutines" },
 }

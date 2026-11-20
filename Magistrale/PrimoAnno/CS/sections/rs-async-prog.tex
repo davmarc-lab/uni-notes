@@ -316,8 +316,446 @@ Key feature for flattering the \textbf{pyramid of doom}, \textit{then} method re
         console.log(val); // 3
     });
 \end{codeblock}
+The value of each \hyperref[def:promises]{Promise} in a chain is whatever the previous \texttt{onComplete/onError} returns.
+\begin{codeblock}[js]{}
+    let myProm1 = delayWithRandom(1000,0.5);
+    let myProm2 = myProm1.then((v) => {
+        console.log(v);
+        return "done";
+    });
+    myProm2.then((v) => {
+        console.log(v);
+    });
+\end{codeblock}
+%
+\paragraph{Chaining Async Functions}\label{par:rs_chaining_async_functions} % (fold)
+To chain async functions, not only the first generating \hyperref[def:promises]{Promise}, we can return \hyperref[def:promises]{Promises} in the chain.
+\begin{codeblock}[js]{}
+    function delayWithRand(t){
+        let promise = new Promise((resolve,reject) => {
+            setTimeout(() => {
+                var r = Math.random();
+                resolve(r);
+            },t);
+        });
+        return promise;
+    }
 
+    let promise = delayWithRand(1000);
+    promise.then((r) => {
+        console.log("success: ",r);
+        return delayWithRand(1500);
+    }).then((r) => {
+        console.log("success: ",r);
+        return delayWithRand(500);
+    }).then((v) => {
+        console.log(v);
+    });
+\end{codeblock}
+% paragraph Chaining Async Functions (end)
 % subsubsection Promise Chaining (end)
+%
+\subsubsection{Parallel Execution}\label{sub:rs_pr_parallel_execution} % (fold)
+Both callbacks are called when \texttt{asyncFunc1} ends, with the same value hold by the \hyperref[def:promises]{Promise}.
+\begin{codeblock}[js]{}
+    let myPromise = asyncFunc1();
+    myPromise.then((v) => {
+        console.log(v);
+        return asyncFunc2();
+    });
+    myPromise.then((v) => {
+        console.log(v);
+        return asyncFunc3();
+    });
+\end{codeblock}
+% subsubsection Parallel Execution (end)
+%
+\subsubsection{Combining Promises -- All}\label{sub:rs_combining_promises_all} % (fold)
+Composing a set of independent asynchronous calls, to be executed in parallel with a join point.
+\begin{codeblock}[js]{}
+    let totalProm = Promise.all(promiseList);
+    totalProm.then(function(values){})
+\end{codeblock}
+The callback is called when all \hyperref[def:promises]{Promises} are resolved or at least rejected.
+\begin{example}{}{}
+    \begin{codeblock}[js]{}
+    let myProm1 = delayWithRand(1000);
+    let myProm2 = delayWithRand(2000);
+    let myTotalProm = Promise.all([myProm1, myProm2]);
+    myTotalProm.then((values) => {
+        console.log(values[0]);
+        console.log(values[1]);
+    });
+    \end{codeblock}
+\end{example}
+% subsubsection Combining Promises -- All (end)
+%
+\subsubsection{Combining Promises -- Race}\label{sub:rs_combining_promises_race} % (fold)
+Composing a set of independent asynchronous calls, but completing as soon as one completes.
+\begin{codeblock}[js]{}
+    let totalProm = Promise.race(promiseList);
+    totalProm.then(function(value){},
+    function(value){});
+\end{codeblock}
+The callback is called when a \hyperref[def:promises]{Promise} is resolved or rejected.
+\begin{example}{}{}
+    \begin{codeblock}[js]{}
+    let myProm1 = delayWithRand(1000);
+    let myProm2 = delayWithRand(2000);
+    let myTotalProm = Promise.race([myProm1, myProm2]);
+    myTotalProm.then((value) => {
+        console.log(value);
+    });
+    \end{codeblock}
+\end{example}
+% subsubsection Combining Promises -- Race (end)
+%
+\subsubsection{Promise Error Handling}\label{sub:rs_promise_error_handling} % (fold)
+\begin{note}[Rules]
+    \begin{itemize}
+        \item any handler that returns a value and does not throw an error passes on success to the next \hyperref[def:promises]{Promise}, including \texttt{onFailure} handlers;
+        \item any handler that throws an exception passes a \textbf{reject} on the next \hyperref[def:promises]{Promise};
+        \item an unhandled state is passed to the next \hyperref[def:promises]{Promise} in the chain:
+            \begin{itemize}
+                \item if there is no rejection handler and the \hyperref[def:promises]{Promise} is \textbf{rejected} then the state is passed to the next handler in the chain;
+                \item once the state has found a handler then processing resumes its normal handler in the chain;
+                \item similar to the synchronous case;
+            \end{itemize}
+    \end{itemize}
+\end{note}
+% subsubsection Promise Error Handling (end)
+%
+\subsubsection{Immediately Resolve}\label{sub:rs_immediately_resolve} % (fold)
+\texttt{Promise.resolve} API to build \hyperref[def:promises]{Promises} that can be immediately resolved, then can be used to chain a callback to be executed in next cycle of the \hyperref[sec:rs_event_loop]{Event Loop}.
+\begin{codeblock}[js]{}
+    console.log("this cycle");
+    Promise
+    .resolve("done")
+    .then(() => {
+        console.log("next cycle");
+    });
+\end{codeblock}
+% subsubsection Immediately Resolve (end)
+%
+\subsubsection{Tasks and Microtasks}\label{sub:rs_tasks_and_microtasks} % (fold)
+In JavaScript and Web world, the event queue, also called \textbf{dispatch queue}, hosts both \hyperref[def:task]{Tasks} and \textit{microtasks}.
+The event loop works as usual:
+\begin{itemize}
+    \item takes \hyperref[def:task]{Tasks} one at a time and allows the \hyperref[def:task]{Task} to run to completion before the next \hyperref[def:task]{Task} is serviced;
+    \item \hyperref[def:task]{Tasks} can also be preferentially dequeued (priorities);
+\end{itemize}
+Micro \hyperref[def:task]{Tasks} has been introduced as a lightweight version of the \hyperref[def:task]{Task}.
+They are guaranteed to be executed before the next \hyperref[def:task]{Task} starts, the microtasks queue is processed after each \hyperref[def:task]{Task} starts.
+\begin{codeblock}[js]{}
+    Promise.resolve().then(() => {});
+\end{codeblock}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/20261120_143058.png}
+\end{cimage}
+\begin{note}
+    While the event loop is executing \hyperref[def:task]{Tasks} from the microtask queue, the event queue is stuck: the app can't draw graphics, handle mouse clicks, rect to I/O, and so on
+\end{note}
+% subsubsection Tasks and Microtasks (end)
+%
+\subsubsection{The Problem with Promises}\label{sub:rs_the_problem_with_promises} % (fold)
+\begin{multicols}{2}
+    \begin{itemize}
+        \item we cannot pass parameters to functions used in a \texttt{then} block;
+        \item they cannot be used with loops or iterations;
+        \item they cannot be cancelled, and we have no control over the async \hyperref[def:task]{Task};
+        \item they are \textbf{eager}: when they are constructed they immediately begin to work;
+    \end{itemize}
+\end{multicols}
+% subsubsection The Problem with Promises (end)
 % subsection Promises (end)
+%
+\subsection{From Promises to Async/Await}\label{sub:rs_from_promises_to_async_await} % (fold)
+The language extension \textbf{async} \& \textbf{await} is the most recent and promising solution in async programming.
+\begin{note}[Idea]
+    The goal is to provide a \textbf{synch} programming style while keeping an \textbf{asynchronous core}.
+\end{note}
+\begin{codeblock}[js]{}
+    let p = asyncFunc();
+    let res = await p;
+    // <use res>
+\end{codeblock}
+\begin{quote}
+    Conceptually wait for \texttt{asyncFunc} result (yielding the control) and then continue with the program (getting back the control) when the \hyperref[def:promises]{Promise} is solved
+\end{quote}
+%
+\subsubsection{Await Operator}\label{sub:rs_await_operator} % (fold)
+\begin{codeblock}[js]{}
+    await promise;
+\end{codeblock}
+Can be applied to any \hyperref[def:promises]{Promise}, and it \textbf{suspends the function execution} until the \hyperref[def:promises]{Promise} is fulfilled.
+\begin{critical}[It does NOT block the control flow]
+    The control flow is \textbf{yield}, saving the current computation state
+\end{critical}
+It can be used only in the body of functions labelled as \textbf{async}:
+\begin{codeblock}[js]{}
+    async function f() {}
+
+    async function f1() {
+        await f();
+    }
+\end{codeblock}
+% subsubsection Await Operator (end)
+%
+\subsubsection{Async Functions}\label{sub:rs_async_functions} % (fold)
+A \texttt{async} function is a suspendible function returning a \hyperref[def:promises]{Promise}.
+\begin{codeblock}[js]{}
+    var myFunc = async () => {
+        return 1 + 2;
+    }
+\end{codeblock}
+The function is converted into an \texttt{AsyncFunction} object function: the function is just defined not executed.
+By calling the function, the code is executed as a normal function, in the same cycle, returning a \hyperref[def:promises]{Promise}.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/20261120_152510.png}
+\end{cimage}
+An \texttt{AsyncFunction} object contains the low-level machinery, based on co-routines, to allow for expressing the body of the asynchronous function using a synchronous style.
+\begin{warning}
+    Async functions can be called either with \texttt{await} or not, producing a different behavior.
+    \begin{codeblock}[js]{}
+    async function pause(t){
+        console.log("before");
+        let promise = new Promise((resolve, reject) => {
+            setTimeout(() => resolve() ,t);
+        });
+        await promise;
+        console.log("after");
+    }
+    \end{codeblock}
+    \begin{codeblock}[js]{Without}
+    console.log("before call");
+    pause(1000);
+    console.log("after call");
+    \end{codeblock}
+    \begin{codeblock}[js]{With}
+    async function main(){
+        console.log("before call");
+        await pause(1000);
+        console.log("after call");
+    }
+    main();
+    \end{codeblock}
+\end{warning}
+% subsubsection Async Functions (end)
+%
+\subsubsection{Await Details}\label{sub:rs_await_details} % (fold)
+The \texttt{await promise} converts a \hyperref[def:promises]{Promise} into a result or an exception just as if it was a result from a \textbf{synchronous function}.
+If the \hyperref[def:promises]{Promise} is resolved, the \texttt{await} operator extracts the resolved value and returns it; if the \hyperref[def:promises]{Promise} is rejected then the \texttt{await} throws an exception with the rejected value.
+% subsubsection Await Details (end)
+% subsection From Promises to Async/Await (end)
+%
+\subsection{Co-Routines}\label{sub:rs_co_routines} % (fold)
+\hyperref[sub:rs_await_operator]{Await} behave like a return that can be resumed: when a function executes an \texttt{await}, the thread returns to the calling program which receives the \hyperref[def:promises]{Promise} object created by the \hyperref[sub:rs_async_functions]{Async Function} in a \textbf{pending} state.
+The state of the computation is saved, to be restored when the \textbf{control} is back.
+The \hyperref[sub:rs_async_functions]{Async Function} is resumed asynchronously, as soon as the \hyperref[sec:rs_event_loop]{Event Loop} thread fetches the corresponding event in the \textbf{event queue}.
+\emptyln{}
+To release and resume the control in the implementation of \textit{await/async}, the \textbf{co-routine} mechanism is exploited:
+\begin{itemize}
+    \item old mechanisms adopted for cooperative scheduling;
+    \item brought back in asynchronous programming based on a single control flow;
+\end{itemize}
+\begin{note}[Benefits]
+    Asynchronous programming is greatly simplified: no need to explicitly use \hyperref[def:promises]{Promises}/then/chains for implementing the sequence execution pattern.
+    \\
+    The eagerness \& then pattern problem are solved, and they can be used with loop or iterations.
+    \begin{codeblock}[js]{}
+    async function waitFor(t){
+        console.log("waitFor - pre");
+        await delay(t);
+        console.log("waitFor - post");
+    }
+    async function main(){
+        console.log("Before");
+        for (let i = 0; i < 3; i++){
+            await waitFor(1000);
+            console.log("Step " + i);
+        }
+        console.log("After");
+    };
+    \end{codeblock}
+\end{note}
+\begin{critical}[Issues]
+    Some issues affecting async/wait:
+    \begin{itemize}
+        \item await can be used only inside an \hyperref[sub:rs_async_functions]{Async Function} body, but it cannot be used at the top level: it needs to introduce at least one main \hyperref[sub:rs_async_functions]{Async Function};
+        \item an \hyperref[sub:rs_async_functions]{Async Function} cannot resume while the thread is busy running other handlers: the \hyperref[sec:rs_event_loop]{Event Loop} semantics is preserved;
+        \item \textbf{blocks \texttt{\{\dots\}}} are no more guaranteed to be atomic: the execution of the code of a single block can span over multiple iterations of the  \hyperref[sec:rs_event_loop]{Event Loop} (\hyperref[def:race-cond]{Race Conditions});
+    \end{itemize}
+    \begin{example}{Composing Issue}{}
+        Needs to mix await/async with \hyperref[def:promises]{Promises}
+        \begin{codeblock}[js]{}
+        async function f(){
+            await delay(1000);
+            return 1 + 2;
+        }
+        async function g(){
+            await delay(5000);
+            return 2 + 3;
+        }
+        async function compose(){
+            console.log("before");
+            let r = await Promise.all([f(), g()]);
+            console.log("done: " + r);
+        }
+        compose();
+        \end{codeblock}
+    \end{example}
+    \begin{note}[Design Clash Issue]
+        Design clash between synchronous and asynchronous: strong discipline needed in mixing sync/async style to avoid programs whose behavior is difficult to understand
+        \begin{tip}
+            Need of higher level of abstractions/concepts that naturally integrate a sync and an async perspective
+        \end{tip}
+    \end{note}
+\end{critical}
+Generalization of the subroutine concept by allowing \textbf{execution} to be \textbf{suspended} and \textbf{resumed}:
+\begin{itemize}
+    \item for non-preemptive, cooperative multitasking;
+    \item basic building block for implementing cooperative \hyperref[def:task]{Tasks}, exceptions, \hyperref[sec:rs_event_loop]{Event Loops}, iterators, infinite lists and pipes;
+    \item not related to events and \hyperref[sec:rs_event_driven_programming]{Event-Driven Programming};
+\end{itemize}
+%
+\subsubsection{Coroutines as Generalized Routine}\label{sub:rs_coroutines_as_generalized_routine} % (fold)
+When calling a \hyperref[sub:rs_co_routines]{Coroutine} can exit by calling other \hyperref[sub:rs_co_routines]{Coroutines}, which may later return to the point where they were invoked in the original \hyperref[sub:rs_co_routines]{Coroutine}:\begin{itemize}
+    \item from the \hyperref[sub:rs_co_routines]{Coroutine}'s point of view, it is not exiting but \textit{calling another \hyperref[sub:rs_co_routines]{Coroutine}};
+    \item calling another \hyperref[sub:rs_co_routines]{Coroutine} can be done by ``yielding'' to it;
+\end{itemize}
+\begin{codeblock}[txt]{A Cooperative one-flow based Producer Consumer System}
+    var q := new queue
+
+    coroutine produce
+        loop
+            while q is not full
+                create some new items
+                add the items to q
+            yield to consume
+
+    coroutine consume
+        loop
+            while q is not empty
+                remove some items from q
+                use the items
+            yield to produce
+\end{codeblock}
+% subsubsection Coroutines as Generalized Routine (end)
+%
+\subsubsection{Coroutine Characteristics}\label{sub:rs_coroutine_characteristics} % (fold)
+A \hyperref[sub:rs_co_routines]{Coroutine} instance holds state, and varies between invocations: there can be multiple instances of a given \hyperref[sub:rs_co_routines]{Coroutine} at once.
+Traditional \textit{subroutines} are special cases of \hyperref[sub:rs_co_routines]{Coroutines} where any subroutine can be translated to a \hyperref[sub:rs_co_routines]{Coroutine} which does not call \textit{yield}.
+\emptyln{}
+They can be easily implemented just as a library on top of a language based on just subroutines and subroutine-like mechanism.
+% subsubsection Coroutine Characteristics (end)
+% subsection Co-Routines (end)
 % section Continuation-Based Asynchronous Programming (end)
+%
+\section{Concurrency Model Based on Coroutines}\label{sec:rs_concurrency_model_based_on_coroutines} % (fold)
+\hyperref[sub:rs_co_routines]{Coroutines} can be used as low-level mechanism to implement \red{lightweight threads}.
+One thread can have many \hyperref[sub:rs_co_routines]{Coroutines} inside it, but only one \hyperref[sub:rs_co_routines]{Coroutine} is in execution at a given time
+\begin{note}
+    Fast and cheap to create and to manage: no requiring context switching by the OS
+\end{note}
+Kotlin language main concepts example:
+\begin{itemize}
+    \item suspending computations;
+    \item \hyperref[sub:rs_co_routines]{Coroutine} dispatchers;
+    \item \hyperref[sub:rs_co_routines]{Coroutine} handlers;
+\end{itemize}
+\begin{example}{A Toy}{}
+    \begin{codeblock}[Kotlin]{}
+    import kotlinx.coroutines.*
+    fun main(args: Array<String>) = runBlocking {
+        println("before async call")
+        val result = async {
+            println("inside the async call")
+            delay(1000)
+            println("exiting the async call")
+            100
+        }
+        println("after the async call, before greet")
+        greetDelayed(200)
+        println("after greet trigger")
+        println("{result.await()}")
+    }
+    suspend fun greetDelayed(delayMillis: Long) {
+        delay(delayMillis)
+        println("Hello, World!")
+    }
+    \end{codeblock}
+    \begin{codeblock}[txt]{Output}
+    before async call
+    after the async call, before greet
+    inside the async call
+    Hello, World!
+    after greet trigger
+    exiting the async call
+    100
+    \end{codeblock}
+\end{example}
+%
+\subsection{Suspending Computations in Kotlin}\label{sub:rs_suspending_computations_in_kotlin} % (fold)
+Computations that can suspend their execution without blocking the thread in which they reside.
+A suspending computation allows the thread to be used for other computations until they need to be resumed.
+\begin{note}[Types]
+    \begin{itemize}
+        \item \textbf{suspending functions}, suspending computations in the shape of a function: modifier suspend;
+            \begin{example}{Suspending Function}{}
+                \begin{codeblock}[Kotlin]{}
+    suspend fun greetAfter(name: String, delayMillis: Long) {
+        delay(delayMillis)
+        println("Hello, {name}")
+    }
+                \end{codeblock}
+                \begin{itemize}
+                    \item the execution of \texttt{greetAfter()} will be suspended whe \texttt{delay()} is called;
+                    \item \texttt{delay()} is a suspending function itself, suspending the execution for a given duration;
+                    \item once \texttt{delay()} has been completed, \texttt{greetAfter()} will resume its execution normally;
+                    \item while \texttt{greetAfter()} is suspended, the thread of execution may be used to do other computations;
+                \end{itemize}
+            \end{example}
+        \item \textbf{suspending lambda}, like a normal lambda, but can suspend its own execution by calling other suspending functions;
+    \end{itemize}
+
+\end{note}
+% subsection Suspending Computations in Kotlin (end)
+%
+\subsubsection{Coroutine Dispatchers \& Builders}\label{sub:rs_coroutine_dispatchers_builders} % (fold)
+\begin{definition}{Coroutine Dispatcher}{kt-coroutine-dispatcher}
+    In order to decide what thread to start or resume a \hyperref[sub:rs_co_routines]{Coroutine}, a \textbf{coroutine dispatcher} is used.
+\end{definition}
+\begin{definition}{Coroutine Builder}{kt-coroutine-builder}
+    A function that takes a suspending lambda and creates a \hyperref[sub:rs_co_routines]{Coroutine} to run it.
+    \hyperref[sub:rs_co_routines]{Coroutine} builders provided by Kotlin:
+    \begin{itemize}
+        \item \texttt{async()} --- start a \hyperref[sub:rs_co_routines]{Coroutine} when a result is expected;
+        \item \texttt{launch()} --- start a \hyperref[sub:rs_co_routines]{Coroutine} that doesn't return a result;
+        \item \texttt{runBlocking()} --- bridge blocking code into suspendible code;
+    \end{itemize}
+\end{definition}
+% subsubsection Coroutine Dispatchers \& Builders (end)
+%
+\subsubsection{Fibers}\label{sub:rs_fibers} % (fold)
+\begin{definition}{Fiber}{coroutine-fiber}
+    A \textbf{fiber} is a lightweight thread of execution.
+    Like threads, fibers share address space, but differently fibers use \textit{cooperative multitasking} while threads use \textit{preemptive multitasking}.
+    \begin{note}
+        If threads typically depend on the kernel's thread scheduler to preempt a busy thread and resume another thread, fibers yield themselves to run another fiber while executing, so can be implemented using a single thread
+    \end{note}
+\end{definition}
+Fibers are like \hyperref[sub:rs_co_routines]{Coroutines}, but at different level of abstraction:
+\begin{itemize}
+    \item \hyperref[sub:rs_co_routines]{Coroutines} are a language-level construct, a form of control flow;
+    \item fibers are a system-level construct, viewed as threads that happen to not run in parallel;
+    \item fibers may be viewed as either an \textbf{implementation} of \hyperref[sub:rs_co_routines]{Coroutines} or a substrate on which to implement \hyperref[sub:rs_co_routines]{Coroutines};
+\end{itemize}
+% subsubsection Fibers (end)
+% section Concurrency Model Based on Coroutines (end)
+%
+\section{Virtual Threads vs Async Programming}\label{sec:rs_virtual_threads_vs_async_programming} % (fold)
+Virtual threads provide a better \textbf{modularity} and \textbf{encapsulation} for modularizing logical \hyperref[def:process]{Processes} and control flows.
+\\
+However, \textbf{virtual threads}, like physical threads, do not provide a first-class treatment for \textbf{events} and \textbf{reactive computations}: they must be implemented and managed at \textbf{application level}.
+% section Virtual Threads vs Async Programming (end)
 % chapter Reactive Systems and Asynchronous Programming (end)
