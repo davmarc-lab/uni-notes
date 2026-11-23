@@ -1,0 +1,37 @@
+% ltex: language=it
+\documentclass[12pt]{article}
+
+% Shared preamble from project root
+\usepackage{lecture}
+\usepackage{acronyms}
+
+\begin{document}
+\section{Da MLP a CNN}\label{sec:da_mlp_a_cnn} % (fold)
+Hubel \& Wiesel scoprono la presenza, nella corteccia visiva del gatto, di due tipologie di neuroni:
+\begin{itemize}
+    \item \textbf{simple cells}: agiscono come feature detector locali, fornendo \textbf{selettività};
+    \item \textbf{complex cells}: fondono (\red{pooling}) gli output di \textbf{simple cells} in un intorno, garantendo \textbf{invarianza};
+\end{itemize}
+\begin{note}[Neocognitron]
+    È una delle prime reti neurali che cerca di modellare questo comportamento
+\end{note}
+Le \acf{cnn} introdotte da LeCun a partire dal $1998$.
+Le principali differenze rispetto a \textbf{MLP} sono:
+\begin{itemize}
+    \item \textbf{processing locale}: i neuroni sono connessi solo \textbf{localmente} ai neuroni del livello precedente.
+        Ogni neurone esegue quindi un'elaborazione locale, portando a una forte \textbf{riduzione del numero di connessioni}.
+        \item \textbf{pesi condivisi}: i pesi sono \textbf{condivisi} a gruppi.
+            Neuroni diversi dello stesso livello eseguono lo stesso tipo di elaborazione su porzioni diverse dell'input, portando a una forte \textbf{riduzione del numero di pesi}.
+\end{itemize}
+\begin{example}{}{}
+    \begin{cimage}
+        \includegraphics[width=.2\textwidth]{assets/20261123_133201.png}
+    \end{cimage}
+    Ciascuno dei $4$ neuroni a destra è connesso solo a $3$ neuroni del livello precedente, con pesi condivisi.
+    In totale si hanno $12$ connessioni e $3$ pesi contro le $24$ connessioni e i $24$ pesi di una equivalente porzione di \textbf{MLP}.
+\end{example}
+\begin{tip}[Alternanza dei livelli di feature extraction e pooling]
+\end{tip}
+% section Da MLP a CNN (end)
+\end{document}
+
