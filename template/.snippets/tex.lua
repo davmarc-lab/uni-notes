@@ -85,6 +85,9 @@ return {
     make_wrappable("ac", "ac", "Acronym \\ac{}"),
     make_wrappable("text", "text", "Normal text \\text{}"),
 
+    s({ trig = "el", dscr = "Empty Line \\emptyln", indent = true }, {
+        t({ "\\emptyln{}", "" }),
+    }),
     s({ trig = "link", desc = "Link (\\hyperref[]{})" }, {
         t("\\hyperref["),
         i(2),

@@ -28,4 +28,6 @@ return {
     promises = { cmd = "\\hyperref[def:promises]{Promises}", desc = "Promises" },
     coroutine = { cmd = "\\hyperref[sub:rs_co_routines]{Coroutine}", desc = "Coroutine" },
     coroutines = { cmd = "\\hyperref[sub:rs_co_routines]{Coroutines}", desc = "Coroutines" },
+    cps = { cmd = "\\hyperref[def:cps]{CPS}", desc = "CPS" },
+    cps_full = { cmd = "\\hyperref[def:cps]{Continuation Passing Style}", desc = "Continuation Passing Style" },
 }
