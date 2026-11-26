@@ -186,14 +186,77 @@ In general, consider $M$ data features:
 \begin{warning}
     \hyperref[sub:lm_mixture_of_bag_of_words]{Mixture of Bag-of-Words} generates \textbf{wrong English sentences}, but it is, anyway, good at \textbf{classifying a given sentence}
 \end{warning}
-%
-\paragraph{Discriminative vs Generative Models}\label{par:in_discriminative_vs_generative_models} % (fold)
 \begin{definition}{Discriminative Model}{discriminative-model}
     Differently from \hyperref[def:generative-model]{Generative Models}, \textbf{discriminative models} are \textbf{specialized} in the \textbf{classification task}, evaluating its classification value/label; but a discriminative model cannot generate random words representative of a category
 \end{definition}
-
-% paragraph Discriminative vs Generative Models (end)
 % subsubsection Naive Bayes (end)
 % subsection Bayes Theorem (end)
+%
+\subsection{Observation Sequence Generation}\label{sub:in_observation_sequence_generation} % (fold)
+The \textbf{generation probability} of a string $w = o_{i:N}$, a sequence of observations $\vc{o_1}{o_N}$, via a state sequence $Seq = Categ_{1:N}$.
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/20261120_114545.png}
+\end{cimage}
+With $w = \text{true false true true}$, $Seq = \text{Sunny} \to \text{Sunny}\to \text{Rainy}\to \text{Rainy}$:
+\begin{ceq}
+    P(Seq,w) = P(Seq)\ba[]{w}{Seq} = P(Seq)\prod_{i=1}^{N(w)}\ba[]{o_i}{Categ_i} = \\
+    0.0672 \cdot 0.2 \cdot 0.2 \cdot 0.8 \cdot 0.9 \cdot 0.9 \\
+    \text{where } P(Seq) = 0.7 \cdot 0.8 \cdot 0.2 \cdot 0.6 = 0.0672
+\end{ceq}
+\begin{example}{HMM and Terminating HMM Inference Tasks}{}
+    Given \texttt{w = true false true false} generated via state sequences $Seq = \text{Sunny}\to \text{Sunny}\to \text{Rainy}\to \text{Rainy}$:
+    \begin{ceq}
+        P(Seq,w) = 0.00870912 \\
+        P(w) = \sum_{Seq\in Seq(w)}P(Seq,w) \text{ with } |Seq(w)| = 2^4
+    \end{ceq}
+    \begin{description}
+        \item[Maximum A Posteriori] It infers the state sequence $Seq'$ with \textbf{maximum} conditional probability:
+            \[
+                \ba[]{Seq'}{w} = \frac{P(Seq',w)}{P(w)}
+            \]
+            As for \hyperref[def:pcfg]{PCFGs} we can calculate:
+            \[
+                Seq' = \argmax_{Seq\in Seq(w)}{P(Seq,w)} = \argmax_{Seq\in Seq(w)}\frac{P(Seq,w)}{P(w)}
+            \]
+            we define $Seq(w)$ as the \textbf{set} of state sequences $Seq$ that can \textbf{generate} $w$, such that $|Seq| = N(w)$.
+            \begin{note}
+                For an \hyperref[def:hmm]{HMM} as $N(w) = |w|$, for a \hyperref[sub:lm_terminating_hidden_markov_models]{Terminating HMM} as $N(w) = |w| + 1$
+            \end{note}
+            In general, the \textbf{number} $|Seq(w)|$ of state sequences $Seq$ to consider is \textbf{exponential} in the length of $w$.
+            \begin{tip}[Viterbi Algorithm]
+            \end{tip}
+        \item[Posterior Probability Distribution] It infers given any $Seq \in Seq(w)$:
+            \[
+                \ba[]{Seq}{w} = \frac{P(Seq,w)}{P(w)}
+            \]
+            In general $P(w) = \sum_{Seq\in Seq(w)}P(Seq,w)$ is computed by the \textbf{observed string probability inference} task: the number $|Seq(w)|$ of state sequences $Seq$ to consider is \textbf{exponential} in the length of $w$.
+            \begin{tip}[Forward Algorithm]
+            \end{tip}
+    \end{description}
+    In some tasks \textbf{posterior probability distribution} may be \textbf{marginalized} by focusing on some component of sequences $Seq$ that can generate $w$.
+    \begin{example}{Filtering Focuses on the Last State}{}
+        It infers the \textbf{posterior probability distribution} over the last state $last(Seq)$ of sequences $Seq\in Seq(w)$:
+        \[
+            \ba[]{Categ}{w} = \frac{P(w,Categ) = \sum_{Seq\in Seq(w):last(Seq) = Categ}P(Seq,w)}{P(w)}
+        \]
+        Again, the number of state sequences $Seq$ to consider is \textbf{exponential} in the length of $w$.
+        \begin{note}[Actually]
+            Filtering can be done during inference on $w$, \textbf{inductively} over prefixes of the $N(w)$ observations using a \textbf{polynomial variant} of the \textbf{Forward Algorithm}.
+        \end{note}
+    \end{example}
+\end{example}
+% subsection Observation Sequence Generation (end)
 % section Mixture of BOW Inference Task (end)
+%
+\section{HMM Inference Algorithm}\label{sec:in_hmm_inference_algorithm} % (fold)
+We use the Sunny/Rain \hyperref[def:hmm]{HMM} to exemplify \textbf{Viterbi} and \textbf{Forward} inference algorithm.
+\emptyln{}
+We start from the \textbf{Viterbi Algorithm} that performs the \textbf{Maximum A Posteriori} inference task.
+Similar to the \hyperref[sub:in_pcyk_algorithm]{PCYK Algorithm} for \hyperref[def:pcfg]{PCFGs}, it \textbf{efficiently} infers the \textbf{state sequence} $Seq'$ such that the probability of \textbf{generating} $w$ via $Seq'$ is maximum:
+\[
+    Seq' = \argmax_{Seq\in Seq(w)}P(Seq,w)
+\]
+\begin{tip}[Computational Complexity: $O(n)$ with $n = |w|$]
+\end{tip}
+% section HMM Inference Algorithm (end)
 % chapter Inference Tasks (end)
