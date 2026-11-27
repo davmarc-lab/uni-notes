@@ -75,6 +75,30 @@ local function make_wrappable(trig, cmd, desc)
     })
 end
 
+local function make_math_double_operators(trig, cmd, desc)
+    return s({ trig = trig, dscr = desc, indet = false }, {
+        t("\\" .. cmd .. "_{"),
+        i(1),
+        t("}{"),
+        i(2),
+        t("}"),
+        i(0),
+    })
+end
+
+local function make_math_triple_operators(trig, cmd, desc)
+    return s({ trig = trig, dscr = desc, indet = false }, {
+        t("\\" .. cmd .. "_{"),
+        i(1),
+        t("}^{"),
+        i(2),
+        t("}{"),
+        i(3),
+        t("}"),
+        i(0),
+    })
+end
+
 return {
     -- ==== WRAPPERS ====
     make_wrappable("red", "red", "Red text \\red{}"),
@@ -173,20 +197,20 @@ return {
         t({ "\\[", fake_indent }),
         i(1),
         t({ "", "\\]" }),
-        i(0)
+        i(0),
     }),
     s({ trig = "neq", dscr = "Notion Equation block", indet = true }, {
         t({ "\\begin{ceq}", fake_indent }),
         i(0),
-        t({ "", "\\end{ceq}"}),
+        t({ "", "\\end{ceq}" }),
     }),
     s({ trig = "beq", dscr = "Numbered equation block", indet = true }, {
         t("\\begin{equation}\\label{"),
         i(2),
-        t({"}", fake_indent}),
+        t({ "}", fake_indent }),
         i(1),
         t({ "", "\\end{equation}", "" }),
-        i(0)
+        i(0),
     }),
     s({ trig = "begin", dscr = "Begin environment block", indet = true }, {
         t("\\begin{"),
@@ -250,7 +274,7 @@ return {
         t("}{"),
         i(2, "2"),
         t("}"),
-        i(0)
+        i(0),
     }),
     s({ trig = "frac", dscr = "Fraction \\frac", indet = false }, {
         t("\\frac{"),
@@ -258,15 +282,7 @@ return {
         t("}{"),
         i(2, "2"),
         t("}"),
-        i(0)
-    }),
-    s({ trig = "sum", dscr = "Sum \\sum", indet = false }, {
-        t("\\sum_{"),
-        i(1),
-        t("}{"),
-        i(2),
-        t("}"),
-        i(0)
+        i(0),
     }),
     s({ trig = "cdot", dscr = "Central Dot \\cdot", indet = false }, {
         t("\\cdot "),
@@ -286,7 +302,7 @@ return {
     s({ trig = "aligned", dscr = "Aligned Block in Equations", indet = true }, {
         t({ "\\begin{aligned}", fake_indent .. "&" }),
         i(0),
-        t({ "", "\\end{aligned}"}),
+        t({ "", "\\end{aligned}" }),
     }),
     s({ trig = "vc", dscr = "From a1, ..., an", indet = false }, {
         t("\\vc{"),
@@ -294,7 +310,17 @@ return {
         t("}{"),
         i(2),
         t("}"),
-        i(0)
+        i(0),
+    }),
+    s({ trig = "for", dscr = "For i from 0 to n", indet = false }, {
+        t("\\for["),
+        i(1),
+        t("]["),
+        i(2),
+        t("]["),
+        i(3),
+        t("]"),
+        i(0),
     }),
     s({ trig = "bayes", dscr = "Bayes", indet = false }, {
         t("\\ba["),
@@ -304,7 +330,7 @@ return {
         t("}{"),
         i(3),
         t("}"),
-        i(0)
+        i(0),
     }),
     s({ trig = "overset", dscr = "Overset", indet = false }, {
         t("\\overset{"),
@@ -312,7 +338,12 @@ return {
         t("}{"),
         i(2),
         t("}"),
-        i(0)
+        i(0),
     }),
-
+    make_math_triple_operators("sum", "sum", "Sum \\sum"),
+    make_math_triple_operators("prod", "prod", "Prod \\prod"),
+    make_math_double_operators("max", "max", "Max \\max"),
+    make_math_double_operators("min", "min", "Min \\min"),
+    make_math_double_operators("argmax", "argmax", "Argmax \\argmax"),
+    make_math_double_operators("argmin", "argmin", "Argmin \\argmin"),
 }

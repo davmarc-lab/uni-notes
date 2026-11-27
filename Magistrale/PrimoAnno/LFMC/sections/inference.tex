@@ -258,5 +258,309 @@ Similar to the \hyperref[sub:in_pcyk_algorithm]{PCYK Algorithm} for \hyperref[de
 \]
 \begin{tip}[Computational Complexity: $O(n)$ with $n = |w|$]
 \end{tip}
+%
+\subsection{Viterbi Algorithm}\label{sub:in_viterbi_algorithm} % (fold)
+A \textbf{cell} for each \textbf{observation}, in each one we will put all \hyperref[def:hmm]{HMM} \textbf{states}, each associated with a \textbf{probability}.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/20261127_111642.png}
+\end{cimage}
+In the $i$-th cell a state $Categ$ is associated with:
+\[
+    \max_{Seq\in Seq(\vc{o_1}{o_i}):last(Seq) = Categ}P(Seq,\,\vc{o_1}{o_i})
+\]
+\begin{note}
+    The \textbf{maximum} probability of generating the $i$-length \textbf{prefix} of the observation sequence via a \textbf{state sequence} $Seq$ whose final state is $Categ$.
+\end{note}
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/20261127_120520.png}
+\end{cimage}
+In the first cell, for each state we consider (in \red{red}) its \textbf{initial state probability}.
+Then we \textbf{evaluate} its probability by also considering \textbf{emission probability} of the observation.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/20261127_120701.png}
+\end{cimage}
+\begin{tip}
+    The general formula for state $Categ$ is:
+    \[
+        \max_{Seq\in Seq(\vc{o_1}{o_i}):last(Seq) = Categ}{P(Seq,\,\vc{o_1}{o_i})}
+    \]
+    \begin{note}
+        It means considering $1$-length state sequences whose last state is $Categ$
+    \end{note}
+\end{tip}
+In the \textbf{subsequent} cells, for each state we first consider, in \red{red}, its \textbf{maximum probability} just based on \textbf{incoming transitions}.
+\begin{cimage}
+    \includegraphics[width=.49\textwidth]{assets/20261127_121303.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_121504.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_121522.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_121546.png}
+\end{cimage}
+Then we \textbf{evaluate} its probability by also considering \textbf{emission probability} of the observation.
+\begin{cimage}
+    \includegraphics[width=.49\textwidth]{assets/20261127_121756.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_121818.png}
+\end{cimage}
+Again, in the $i$-th cell a state $Categ$ is associated with:
+\[
+    \max_{Seq\in Seq(\vc{o_1}{o_i}):last(Seq) = Categ}{P(Seq,\,\vc{o_1}{o_i})}
+\]
+Hence the probability achieved by the \textbf{best state sequence} ending in $Categ$.
+\begin{note}
+    In an implementation we keep a \textbf{backpointer} allowing us to follow the \textbf{arrow from} the \textbf{chosen predecessor} to the current state $Categ$ in the \textbf{reverse direction}.
+    \emptyln{}
+    Thus, similarly to \hyperref[sub:in_pcyk_algorithm]{PCYK}, we just keep a backpointer from state $Categ$ to the \textbf{predecessor state} yielding the \textbf{maximum probability}.
+    \begin{warning}
+        Its best sequence, extended to state $Categ$, achieves the \textbf{maximum probability} (it's $Categ$'s \textbf{best sequence})
+    \end{warning}
+\end{note}
+\begin{cimage}
+    \includegraphics[width=.49\textwidth]{assets/20261127_123100.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_123120.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_123349.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_123409.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_123426.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_123844.png}
+\end{cimage}
+\begin{cimage}
+    \includegraphics[width=.49\textwidth]{assets/20261127_123901.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_123917.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_125619.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_125826.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_140224.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_140245.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_140410.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_140427.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_140512.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_140616.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_140647.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_140743.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_143908.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_143940.png}
+\end{cimage}
+When the algorithm finishes, we have built a \textbf{best sequence} for each state of the last cell: sequences are obtained by \textbf{following backpointers}.
+\begin{note}
+    \begin{itemize}
+        \item Sequence ending in $R$ probability: $0.00870912$;
+        \item Sequence ending in $S$ probability: $0.00229376$;
+    \end{itemize}
+\end{note}
+%
+\subsubsection{Generation Probability via Best Sequence}\label{sub:in_generation_probability_via_best_sequence} % (fold)
+\begin{definition}{Viterbi Notation}{viterbi-notation}
+    We saw that, in the $i$-th cell of the \hyperref[sub:in_viterbi_algorithm]{Viterbi Algorithm}, a state $Categ$ is associated with probability:
+    \[
+        \max_{Seq\in Seq(\vc{o_1}{o_i}):last(Seq) = Categ}{P(Seq,\,\vc{o_1}{o_i})}
+    \]
+    This is denoted as:
+    \[
+        Viterbi \pt{\vc{o_1}{o_i},\,Categ}
+    \]
+\end{definition}
+The sequence $Seq'$ maximizing $P(Seq,\, w)$ is the probability of generating a string $w$ via $Seq$:
+\[
+    Seq' = \argmax_{Seq\in Seq(w)}{P(Seq,\, w)}
+\]
+Considering actual observations of string $w = o_{i:N}$:
+\begin{itemize}
+    \item for \hyperref[def:hmm]{HMMs}, where $N(w) = N$, the $w$ generation probability via $Seq'$ is:
+        \[
+            \max_{Categ\in Q}{Viterbi \pt{\vc{o_1}{o_N},\,Categ}}
+        \]
+    \item for \hyperref[sub:lm_terminating_hidden_markov_models]{Terminating HMMs}, where $N(w) = N+1$, due to the additional $o_{N+1} = \text{<EOS>}$ token, it is instead:
+        \[
+            \max_{Categ\in Q}{Viterbi \pt{\vc{o_1}{o_N},\,\text{<EOS>},\,Categ}}
+        \]
+\end{itemize}
+\begin{cimage}
+    \includegraphics[width=.8\textwidth]{assets/20261127_150306.png}
+\end{cimage}
+\begin{warning}
+    Given:
+    \begin{itemize}
+        \item the \textbf{high initial belief} that the first day is Sunny;
+        \item the fact that the \textbf{second observation is false};
+        \item the \textbf{low probability} of day-to-day weather changes;
+    \end{itemize}
+    \begin{critical}
+        A single true observation is not enough to switch to \textbf{Rainy}: here two consecutive true observations are needed
+    \end{critical}
+\end{warning}
+% subsubsection Generation Probability via Best Sequence (end)
+% subsection Viterbi Algorithm (end)
+%
+\subsection{Forward Algorithm}\label{sub:in_forward_algorithm} % (fold)
+The \textbf{Forward Algorithm} performs the observed string probability inference task.
+Similar to \hyperref[sub:in_inside_algorithm]{Inside Algorithm} for \hyperref[def:pcfg]{PCFGs}, it efficiently infers the probability:
+\[
+    P(w) = \sum_{Seq\in Seq(w)}^{}{P(Seq,\,w)}
+\]
+\begin{tip}[Computational Complexity $O(n) \text{ with } n = |w|$]
+\end{tip}
+A \textbf{cell} for each \textbf{observation}, in each one we will put all \hyperref[def:hmm]{HMM} \textbf{states}, each associated with a probability.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/20261127_111642.png}
+\end{cimage}
+In the $i$-th cell a state $Categ$ is associated with:
+\[
+    \max_{Seq\in Seq(\vc{o_1}{o_i}):last(Seq) = Categ}P(Seq,\,\vc{o_1}{o_i})
+\]
+\begin{note}
+    The overall probability of generating the $i$-length prefix of the observation sequence via any state sequence $Seq$ whose \textbf{final state} is $Categ$
+\end{note}
+In the first cell, for each state we consider (in \red{red}) its \textbf{initial state probability}.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/20261127_120520.png}
+\end{cimage}
+Then we \textbf{evaluate} its probability by also considering \textbf{emission probability} of the observation.
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/20261127_120701.png}
+\end{cimage}
+In the \textbf{subsequent} cells, for each state we first consider, in \red{red}, its \textbf{overall probability} just based on \textbf{incoming transitions}.
+\begin{cimage}
+    \includegraphics[width=.49\textwidth]{assets/20261127_121303.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_121504.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_121522.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_121546.png}
+\end{cimage}
+Again, in the $i$-th cell a state $Categ$ is associated with:
+\[
+    \sum_{Seq\in Seq \pt{\vc{o_1}{o_i}}:last(Seq) = Categ}^{}{P(Seq,\,\vc{o_1}{o_i}}
+\]
+Hence, the \textbf{overall} probability achieved by all state sequences ending in $Categ$
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/20261127_161711.png}
+\end{cimage}
+\begin{cimage}
+    \includegraphics[width=.49\textwidth]{assets/20261127_162127.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_162154.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_162217.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_162257.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_162932.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_162953.png}
+    \includegraphics[width=.6\textwidth]{assets/20261127_163038.png}
+\end{cimage}
+\begin{cimage}
+    \includegraphics[width=.49\textwidth]{assets/20261127_163147.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_163203.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_163221.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_163236.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_163253.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_163314.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_163328.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_163347.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_163636.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_163654.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_164803.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_164829.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_164844.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_164900.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_164950.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_165012.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_165032.png}
+    \includegraphics[width=.49\textwidth]{assets/20261127_165049.png}
+\end{cimage}
+When the algorithm finishes, we have built \textbf{all sequences}, grouped by the state they end with:
+\begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/20261127_165049.png}
+\end{cimage}
+\begin{itemize}
+    \item sequences ending in $R$ \textbf{overall} probability: $0.02799$;
+    \item sequences ending in $S$ \textbf{overall} probability: $0.008104$;
+    \item \textbf{generation probability} of the sequences of observations:
+        \[
+            0.02799 + 0.008104 = 0.036094
+        \]
+\end{itemize}
+%
+\subsubsection{Observed String Generation Probability}\label{sub:in_observed_string_generation_probability} % (fold)
+\begin{definition}{Forward Notation}{forward-notation}
+    As we saw, in the $i$-th cell of the \hyperref[sub:in_forward_algorithm]{Forward Algorithm}, a state $Categ$ is \textbf{associated with probability}:
+    \[
+        \sum_{Seq\in Seq(\vc{o_1}{o_i}):last(Seq) = Categ}^{}{P(Seq,\,\vc{o_1}{o_i})}
+    \]
+    It can be expressed as: $P(\vc{o_1}{o_i},\,Categ)$, we denote it as:
+    \[
+        Forward \pt{\vc{o_1}{o_i},\,Categ}
+    \]
+\end{definition}
+Observed string $w$ probability \textbf{inference}:
+\[
+    P(w) = \sum_{Seq\in Seq(w)}^{}{P(Seq,\,w)}
+\]
+Considering \textbf{actual observations} of string $w = o_{1:N}$:
+\begin{itemize}
+    \item for \hyperref[def:hmm]{HMMs}, where $N(w) = N$, $P(w)$ is:
+        \[
+            \sum_{Categ\in Q}^{}{Forward(\vc{o_1}{o_N},\,Categ)}
+        \]
+    \item for \hyperref[sub:lm_terminating_hidden_markov_models]{Terminating HMMs}, where $N(w) = N+1$, due to the additional $o_{N+1} = \text{<EOS>}$ token, $P(w)$ is instead:
+        \[
+            \sum_{Categ\in Q}^{}{Forward(\vc{o_1}{o_N},\,\text{<EOS>},\,Categ)}
+        \]
+\end{itemize}
+% subsubsection Observed String Generation Probability (end)
+%
+\subsubsection{Filtering}\label{sub:in_forw_filtering} % (fold)
+In some tasks, the \textbf{posterior probability distribution}:
+\[
+    \ba[]{Seq}{w} = \frac{P(Seq,\,w)}{P(w)}
+\]
+is \textbf{marginalized} by focusing on \textbf{some component} of sequences $Seq$ taht can generate $w$.
+\emptyln{}
+\textbf{Filtering} focuses on the \textbf{last state}: it infers the \textbf{posterior probability distribution} over the \textbf{last state} $last(Seq)$ of sequences $Seq\in Seq(w)$.
+\[
+    \ba[]{Categ}{w} = \frac{P(w,\,Categ) = \sum_{Seq\in Seq(w):last(Seq) = Categ}^{}{P(Seq,\,w)}}{P(w)}
+\]
+\begin{note}[Again]
+    The \textbf{number of state sequences} $Seq$ to consider is \textbf{exponential} in the length of $w$
+\end{note}
+\begin{example}{}{}
+    We can compute filtering of $w = \text{true false true true}$ using the results of the \textbf{standard \hyperref[sub:in_forward_algorithm]{Forward Algorithm}}.
+    \begin{note}
+        $Forward(\text{true, false, true, true},\,Categ)$
+    \end{note}
+    \begin{cimage}
+    \includegraphics[width=.6\textwidth]{assets/20261127_171336.png}
+    \end{cimage}
+    The sum ($P(w) = 0.036094$) of $P(w,\, Rainy)$ and $P(w,\,Sunny)$ is the \textbf{normalizing divisor}, the filtering yields \textbf{normalized} last state \textbf{posterior probabilities}:
+    \[
+        \begin{aligned}
+            &\ba[]{Rainy}{w} = &\frac{P(w,\,Rainy)}{P(w)} = \frac{0.02799}{0.036094} &\approx 0.775475 \\
+            &\ba[]{Sunny}{w} = &\frac{P(w,\,Sunny)}{P(w)} = \frac{0.008104}{0.036094} &\approx 0.224525
+        \end{aligned}
+    \]
+\end{example}
+Actually, filtering is defined over any length-$i$ prefix of the sequence of observations $\vc{o_1}{o_{N(w)}}$ of a string $w$.
+It infers, given any category $Categ$:
+\[
+    \ba[]{Categ}{\vc{o_1}{o_i}} = \frac{Froward(\vc{o_1}{o_i},\,Categ)}{P(\vc{o_1}{o_i})=\sum_{Categ'\in Q}^{}{Forward(\vc{o_1}{o_i},\,Categ)}}
+\]
+\begin{critical}
+    In any case, our belief that it is (\textbf{Sunny} or \textbf{Rainy}) based only on \textbf{current and past observations} and not on \textbf{future ones} $\pt{\vc{o_{i+1}}{o_{N(w)}}}$
+\end{critical}
+\begin{note}
+    A method computing \textbf{belief based on past, current} and also \textbf{future ones} exists and is called \textbf{smoothing}: given \textbf{noisy} object position observations, smoothing yields a \textbf{smoother estimated trajectory} than filtering
+\end{note}
+% subsubsection Filtering (end)
+%
+\subsubsection{Normalized Forward Algorithm}\label{sub:in_normalized_forward_algorithm} % (fold)
+While we do inference on a string $w$, we can compute filtering \textbf{inductively} over length-$i$ prefixes of the sequence of observations $\vc{o_1}{o_{N(w)}}$.
+\emptyln{}
+This is done with a \textbf{variant} of the \hyperref[sub:in_forward_algorithm]{Forward Algorithm} where we \textbf{``normalize''} \hyperref[sub:in_forward_algorithm]{Forward} probabilities (as we did, once ended, on last cell) in all \textbf{intermediate} cells.
+\begin{remark}{}{}
+    In the $i$-th cell of the \hyperref[sub:in_forward_algorithm]{Algorithm} a state $Categ$ is now \textbf{associated} with \textbf{normalized probability}:
+    \[
+        \ba[]{Categ}{\vc{o_1}{o_i}} = \frac{Forward(\vc{o_1}{o_i},\,Categ)}{P(\vc{o_1}{o_i})}
+    \]
+    In this way during inference, we compute at every intermediate step our \textbf{belief} that it is based on \textbf{current and past observations}.
+\end{remark}
+The algorithm proceeds exactly as the \hyperref[sub:in_forward_algorithm]{Forward Algorithm}, with an \textbf{additional probability normalization step} applied to state probabilities of the $i$-th cell, \textbf{once they are determined}.
+\begin{note}
+    It is easy to see that the \textbf{normalizing divisor} applied for the $i$-th cell (the sum of the state probabilities of the $i$-th cell) turns out to be $\ba[]{o_i}{\vc{o_1}{o_{i-1}}}$
+\end{note}
+\begin{critical}[MANCANO 2 SLIDES KEEP IT UP]
+\end{critical}
+% subsubsection Normalized Forward Algorithm (end)
+% subsection Forward Algorithm (end)
 % section HMM Inference Algorithm (end)
 % chapter Inference Tasks (end)
